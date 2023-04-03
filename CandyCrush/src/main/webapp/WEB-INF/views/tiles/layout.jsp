@@ -1,119 +1,56 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
-<!DOCTYPE html>
-<html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+		<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+			<!DOCTYPE html>
 
-<head>
-<meta charset="UTF-8">
-<title>게시판</title>
+			<html xmlns="http://www.w3.org/1999/xhtml">
 
-<link rel="canonical"
-	href="https://getbootstrap.com/docs/5.2/examples/footers/">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<style>
-table, tr, th, td {
-	border: 1px solid black;
-}
-</style>
+			<head>
+				<meta charset="utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<title>Target Material Design Bootstrap Admin Template</title>
+				<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+				<link rel="stylesheet" href="assets/materialize/css/materialize.min.css" media="screen,projection" />
+				<!-- Bootstrap Styles-->
+				<link href="assets/css/bootstrap.css" rel="stylesheet" />
+				<!-- FontAwesome Styles-->
+				<link href="assets/css/font-awesome.css" rel="stylesheet" />
+				<!-- Morris Chart Styles-->
+				<link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+				<!-- Custom Styles-->
+				<link href="assets/css/custom-styles.css" rel="stylesheet" />
+				<!-- Google Fonts-->
+				<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+				<link rel="stylesheet" href="assets/js/Lightweight-Chart/cssCharts.css">
+			</head>
 
-<!-- CSS only -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-	crossorigin="anonymous">
-<!-- JavaScript Bundle with Popper -->
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-	crossorigin="anonymous"></script>
-<style>
-.bd-placeholder-img {
-	font-size: 1.125rem;
-	text-anchor: middle;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	user-select: none;
-}
+			<body>
 
-@media ( min-width : 768px) {
-	.bd-placeholder-img-lg {
-		font-size: 3.5rem;
-	}
-}
+				<tiles:insertAttribute name="header" />
+				<tiles:insertAttribute name="content" />
 
-.b-example-divider {
-	height: 3rem;
-	background-color: rgba(0, 0, 0, .1);
-	border: solid rgba(0, 0, 0, .15);
-	border-width: 1px 0;
-	box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em
-		rgba(0, 0, 0, .15);
-}
+				<!-- jQuery Js -->
+				<script src="assets/js/jquery-1.10.2.js"></script>
 
-.b-example-vr {
-	flex-shrink: 0;
-	width: 1.5rem;
-	height: 100vh;
-}
+				<!-- Bootstrap Js -->
+				<script src="assets/js/bootstrap.min.js"></script>
 
-.bi {
-	vertical-align: -.125em;
-	fill: currentColor;
-}
+				<script src="assets/materialize/js/materialize.min.js"></script>
 
-.nav-scroller {
-	position: relative;
-	z-index: 2;
-	height: 2.75rem;
-	overflow-y: hidden;
-}
+				<!-- Metis Menu Js -->
+				<script src="assets/js/jquery.metisMenu.js"></script>
+				<!-- Morris Chart Js -->
+				<script src="assets/js/morris/raphael-2.1.0.min.js"></script>
+				<script src="assets/js/morris/morris.js"></script>
 
-.nav-scroller .nav {
-	display: flex;
-	flex-wrap: nowrap;
-	padding-bottom: 1rem;
-	margin-top: -1px;
-	overflow-x: auto;
-	text-align: center;
-	white-space: nowrap;
-	-webkit-overflow-scrolling: touch;
-}
-</style>
 
-</head>
+				<script src="assets/js/easypiechart.js"></script>
+				<script src="assets/js/easypiechart-data.js"></script>
 
-<body>
-	<header>
-		<tiles:insertAttribute name="header" />
-	</header>
+				<script src="assets/js/Lightweight-Chart/jquery.chart.js"></script>
 
-	<main>
-		<tiles:insertAttribute name="main" />
-	</main>
+				<!-- Custom Js -->
+				<script src="assets/js/custom-scripts.js"></script>
+			</body>
 
-	<footer>
-		<div class="container">
-			<footer class="py-3 my-4">
-				<ul class="nav justify-content-center border-bottom pb-3 mb-3">
-					<li class="nav-item"><a href="#"
-						class="nav-link px-2 text-muted">Home</a></li>
-					<li class="nav-item"><a href="#"
-						class="nav-link px-2 text-muted">Features</a></li>
-					<li class="nav-item"><a href="#"
-						class="nav-link px-2 text-muted">Pricing</a></li>
-					<li class="nav-item"><a href="#"
-						class="nav-link px-2 text-muted">FAQs</a></li>
-					<li class="nav-item"><a href="#"
-						class="nav-link px-2 text-muted">About</a></li>
-				</ul>
-				<p class="text-center text-muted">&copy; 2022 Company, Inc</p>
-			</footer>
-		</div>
-	</footer>
-
-</body>
-
-</html>
+			</html>
