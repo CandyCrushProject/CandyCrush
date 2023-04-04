@@ -13,8 +13,20 @@ public class MesController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home() {
+		return "redirect:dashboard";
+	}
+	
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login() {
+		return "login";
+	}
+	
+
+	@GetMapping("dashboard")
+	public String dashboard() {
 		return "process/dashboard";
 	}
+	
 	
 	@GetMapping("ulElements")
 	public String ulElements() {
@@ -32,4 +44,18 @@ public class MesController {
 	}
 	
 
+	@GetMapping("table")
+	public String table() {
+		return "process/table";
+	}
+
+
+	@GetMapping("form")
+	public String form() {
+		return "process/form";
+	}
+	@GetMapping("empty")
+	public String empty() {
+		return "process/empty";
+	}
 }
