@@ -157,88 +157,81 @@
 			<li class="divider"></li>
 			<li>
 		</ul>
-		<ul id="dropdown4"
-			class="dropdown-content dropdown-tasks w250 taskList">
-			<li><a href="#">
-					<div>
-						<strong>John Doe</strong> <span class="pull-right text-muted">
-							<em>Today</em>
-						</span>
-					</div>
-					<p>Lorem Ipsum has been the industry's standard dummy text ever
-						since the 1500s...</p>
-			</a></li>
-			<li class="divider"></li>
-			<li><a href="#">
-					<div>
-						<strong>John Smith</strong> <span class="pull-right text-muted">
-							<em>Yesterday</em>
-						</span>
-					</div>
-					<p>Lorem Ipsum has been the industry's standard dummy text ever
-						since an kwilnw...</p>
-			</a></li>
-			<li class="divider"></li>
-			<li><a href="#">
-					<div>
-						<strong>John Smith</strong> <span class="pull-right text-muted">
-							<em>Yesterday</em>
-						</span>
-					</div>
-					<p>Lorem Ipsum has been the industry's standard dummy text ever
-						since the...</p>
-			</a></li>
-			<li class="divider"></li>
-			<li><a class="text-center" href="#"> <strong>Read
-						All Messages</strong> <i class="fa fa-angle-right"></i>
-			</a></li>
-		</ul>
 		<!-- /. NAV SIDE  -->
 		<nav class="navbar-default navbar-side" role="navigation">
-		<div class="sidebar-collapse">
-			<ul class="nav" id="main-menu">
+			<div class="sidebar-collapse">
+				<ul class="nav" id="main-menu">
 
-				<li><a href="${pageContext.request.contextPath}/dashboard" class="waves-effect waves-dark"><i
-						class="fa fa-dashboard"></i> Dashboard</a></li>
-				<li><a href="${pageContext.request.contextPath}/ulElements" class="waves-effect waves-dark"><i
-						class="fa fa-desktop"></i> UI Elements</a></li>
-				<li><a href="${pageContext.request.contextPath}/chart"
-					class="waves-effect waves-effect waves-dark"><i
-						class="fa fa-bar-chart-o"></i> Charts</a></li>
-				<li><a href="${pageContext.request.contextPath}/tabpnel"
-					class="waves-effect waves-effect waves-dark"><i
-						class="fa fa-qrcode"></i> Tabs & Panels</a></li>
+					<li><a href="${pageContext.request.contextPath}/dashboard"
+						class="waves-effect waves-dark"><i class="fa fa-dashboard"></i>
+							Dashboard</a></li>
+					<li><a href="${pageContext.request.contextPath}/ulElements"
+						class="waves-effect waves-dark"><i class="fa fa-desktop"></i>
+							UI Elements</a></li>
+					<li><a href="${pageContext.request.contextPath}/chart"
+						class="waves-effect waves-effect waves-dark"><i
+							class="fa fa-bar-chart-o"></i> Charts</a></li>
+					<li><a href="${pageContext.request.contextPath}/tabpnel"
+						class="waves-effect waves-effect waves-dark"><i
+							class="fa fa-qrcode"></i> Tabs & Panels</a></li>
 
-				<li><a href="${pageContext.request.contextPath}/table" class="waves-effect waves-dark"><i
-						class="fa fa-table"></i> Responsive Tables</a></li>
-				<li><a href="${pageContext.request.contextPath}/form" class="waves-effect waves-dark"><i
-						class="fa fa-edit"></i> Forms </a></li>
+					<li><a href="${pageContext.request.contextPath}/table"
+						class="waves-effect waves-dark"><i class="fa fa-table"></i>
+							Responsive Tables</a></li>
+					<li><a href="${pageContext.request.contextPath}/form"
+						class="waves-effect waves-dark"><i class="fa fa-edit"></i>
+							Forms </a></li>
 
 
-				<li><a href="#" class="waves-effect waves-dark"><i
-						class="fa fa-sitemap"></i> Multi-Level Dropdown<span
-						class="fa arrow"></span></a>
-					<ul class="nav nav-second-level">
-						<li><a href="#" class="waves-effect waves-dark">Second
-								Level Link</a></li>
-						<li><a href="#" class="waves-effect waves-dark">Second
-								Level Link</a></li>
-						<li><a href="#" class="waves-effect waves-dark">Second
-								Level Link<span class="fa arrow"></span>
-						</a>
-							<ul class="nav nav-third-level">
-								<li><a href="#">Third Level Link</a></li>
-								<li><a href="#">Third Level Link</a></li>
-								<li><a href="#">Third Level Link</a></li>
+					<li><a href="#" class="waves-effect waves-dark"> <i
+							class="fa fa-sitemap"></i> Multi-Level Dropdown <span
+							class="fa arrow"></span></a>
+						<ul class="nav nav-second-level">
+							<li><a href="#" class="waves-effect waves-dark"> Second
+									Level Link </a></li>
+							<li><a href="#" class="waves-effect waves-dark">Second
+									Level Link</a></li>
+							<li><a href="#" class="waves-effect waves-dark">Second
+									Level Link<span class="fa arrow"></span>
+							</a>
+								<ul class="nav nav-third-level">
+									<li><a href="#">Third Level Link</a></li>
+									<li><a href="#">Third Level Link</a></li>
+									<li><a href="#">Third Level Link</a></li>
 
-							</ul></li>
-					</ul></li>
-				<li><a href="${pageContext.request.contextPath}/empty" class="waves-effect waves-dark"><i
-						class="fa fa-fw fa-file"></i> Empty Page</a></li>
-			</ul>
+								</ul></li>
+						</ul></li>
+					<li><a href="${pageContext.request.contextPath}/empty"
+						class="waves-effect waves-dark"> <i class="fa fa-fw fa-file"></i>
+							Empty Page
+					</a></li>
+					
+					<li><a href="#" class="waves-effect waves-dark"> <i
+							class="fa fa-sitemap"></i> 생산관리 <span
+							class="fa arrow"></span></a>
+						<ul class="nav nav-second-level">
+							<li>
+								<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
+								생산계획관리
+								</a>
+							</li>
+							<li><a href="#" class="waves-effect waves-dark">Second
+									Level Link</a></li>
+							<li><a href="#" class="waves-effect waves-dark">Second
+									Level Link<span class="fa arrow"></span>
+							</a>
+								<ul class="nav nav-third-level">
+									<li><a href="#">Third Level Link</a></li>
+									<li><a href="#">Third Level Link</a></li>
+									<li><a href="#">Third Level Link</a></li>
 
-		</div>
+								</ul></li>
+						</ul></li>
+					
+				</ul>
 
-	</nav>
+			</div>
+
+		</nav>
 	</div>
 </header>

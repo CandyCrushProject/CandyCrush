@@ -13,13 +13,21 @@ public class MesController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home() {
-		return "redirect:dashboard";
+		return "login";
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "login";
 	}
+	
+	@GetMapping("ProcManagement")
+	public String ProcManagement() {
+		return "admin/processMenu";
+	}
+	
+	
+	
 	
 
 	@GetMapping("dashboard")
