@@ -13,12 +13,12 @@
 	
 			
 		<!-- /admin/** 에 관해서는 ROLE_ADMIN 권한을 가진 회원(즉, 관리자만 접근 -->
-		<security:intercept-url pattern="/admin/**"
+		<security:intercept-url pattern="/WEB-INF/views/**"
 			access="hasAuthority('ROLE_ADMIN')" />
 			
 		<!-- 그 외 나머지 경로에 대해서는 인증을 했건 안했건 모두 접근이 가능 -->
-		<security:intercept-url pattern="/user/**"
-			access="isAuthenticated()" />
+		<security:intercept-url pattern="/WEB-INF/views/**"
+			access="hasAuthority('ROLE_USER')" />
 
 
 		<!-- 로그인 성공시,-->
