@@ -23,7 +23,7 @@ public class MesController {
 	
 	@GetMapping("ProcManagement")
 	public String ProcManagement() {
-		return "admin/processMenu";
+		return "admin/process/processMenu";
 	}
 	
 	
@@ -32,38 +32,38 @@ public class MesController {
 
 	@GetMapping("dashboard")
 	public String dashboard() {
-		return "process/dashboard";
+		return "sample/dashboard";
 	}
 	
 	
 	@GetMapping("ulElements")
 	public String ulElements() {
-		return "process/process";
+		return "sample/process";
 	}
 
 	@GetMapping("chart")
 	public String chart() {
-		return "process/chart";
+		return "sample/chart";
 	}
 	
 	@GetMapping("tabpnel")
 	public String tabpnel() {
-		return "process/tabpnel";
+		return "sample/tabpnel";
 	}
 	
 
 	@GetMapping("table")
 	public String table() {
-		return "process/table";
+		return "sample/table";
 	}
 
 
 	@GetMapping("form")
 	public String form() {
-		return "process/form";
+		return "sample/form";
 	}
 	@GetMapping("empty")
 	public String empty() {
-		return "process/empty";
+		return "sample/empty";
 	}
 }
