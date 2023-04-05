@@ -205,10 +205,9 @@
 						class="waves-effect waves-dark"> <i class="fa fa-fw fa-file"></i>
 							Empty Page
 					</a></li>
-					
+
 					<li><a href="#" class="waves-effect waves-dark"> <i
-							class="fa fa-sitemap"></i> 생산관리 <span
-							class="fa arrow"></span></a>
+							class="fa fa-sitemap"></i> 생산관리 <span class="fa arrow"></span></a>
 						<ul class="nav nav-second-level">
 							<li>
 								<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
@@ -252,6 +251,7 @@
 					
 				</ul>
 
+						</ul>
 			</div>
 
 		</nav>
