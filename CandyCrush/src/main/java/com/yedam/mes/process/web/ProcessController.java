@@ -1,14 +1,24 @@
 package com.yedam.mes.process.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.yedam.mes.process.service.ProcService;
 
 @Controller
 public class ProcessController {
 	
+	@Autowired
+	ProcService procService;
+	
 	// 생산관리 -> 생산계획관리
 	@GetMapping("ProcManagement")
-	public String ProcessPlanManagement() {
+	public String ProcessPlanManagement(Model model) {
+		model.addAttribute("order", procService.getOrder());
+
+		model.addAttribute("orderDtail", procService.getOrderDetail());
 		return "process/processManagement";
 	}
 	

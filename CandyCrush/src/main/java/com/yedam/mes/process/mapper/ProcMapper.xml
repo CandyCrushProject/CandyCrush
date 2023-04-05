@@ -3,7 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mes.process.mapper.ProcMapper">
+	<select id="selectOrder" resultType="OrdrShtVO">
+		SELECT *
+		  FROM order_sheet
+		 ORDER BY 1
+	</select>
+	<select id="selectOrderDetail" resultType="OrdrShtDtlVO">
+		SELECT *
+		  FROM order_sheet_detail
+		 ORDER BY 1
+	</select>
+	
 	<insert id="insertPlan" parameterType="ProcPlanVO" >
 		
 	</insert>
+	
 </mapper>
