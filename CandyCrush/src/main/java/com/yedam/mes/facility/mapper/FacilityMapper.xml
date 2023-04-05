@@ -5,21 +5,21 @@
   
    <mapper namespace = "com.yedam.mes.facility.mapper.FacilityMapper">
   <select id="selectFacilityStat" resultType="FacilityStatVO">
-		select f.FAC_CD,f.fac_nm,f.fac_dt,f.fac_cy,f.fac_rct_MTN,f.fac_info,s.fac_run
-		from
-		    (select f.fac_cd,f.fac_nm,f.fac_dt,f.fac_cy,i.FAC_RCT_MTN,f.fac_info
-		    from FAC f
-		    LEFT JOIN
-		        (
-		        select FAC_CD, max(FAC_MTN_DT) FAC_RCT_MTN 
-		        from FAC_INSP 
-		        group by FAC_CD 
-		        order by FAC_CD) i
-		    ON f.FAC_CD = i.FAC_CD) f
-		LEFT JOIN
-		FAC_STAT s
-		ON
-		f.fac_cd=s.fac_cd;
+select f.FAC_CD,f.fac_nm,f.fac_dt,f.fac_cy,f.fac_rct_MTN,f.fac_info,s.fac_run,NVL(FAC_RCT_MTN,f.fac_dt)+f.fac_cy MTN_PLANNED
+from
+    (select f.fac_cd,f.fac_nm,f.fac_dt,f.fac_cy,i.FAC_RCT_MTN,f.fac_info
+    from FAC f
+    LEFT JOIN
+        (
+        select FAC_CD, max(FAC_MTN_DT) FAC_RCT_MTN 
+        from FAC_INSP 
+        group by FAC_CD 
+        order by FAC_CD) i
+    ON f.FAC_CD = i.FAC_CD) f
+LEFT JOIN
+FAC_STAT s
+ON
+f.fac_cd=s.fac_cd
   </select>
   
   

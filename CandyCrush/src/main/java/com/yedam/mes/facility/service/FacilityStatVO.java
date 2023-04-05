@@ -9,7 +9,8 @@ public class FacilityStatVO {
 	private String facNm;
 	private Date facDt;
 	private String facCy;
-	private String facRctMtn;
+	private Date facRctMtn;
 	private String facInfo;
 	private String facRun;
+	private Date mtnPlanned;
 }
