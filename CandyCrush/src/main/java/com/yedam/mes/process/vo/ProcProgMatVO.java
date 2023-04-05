@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ProcProgMatVO {
+	// 공정자재
 	private String prmpWkNo;
 	private String cmCd;
 	private String prcmCd;
