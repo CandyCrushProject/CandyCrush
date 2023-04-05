@@ -9,7 +9,7 @@
 						<span class="icon-bar"></span>
 					</button>
 					<a class="navbar-brand waves-effect waves-dark" href="index.html"><i
-							class="large material-icons">track_changes</i> <strong>target</strong></a>
+							class="large material-icons">track_changes</i> <strong>Candy Crush</strong></a>
 
 					<div id="sideNav" href="">
 						<i class="material-icons dp48">toc</i>
@@ -330,26 +330,34 @@
 							</ul>
 						</li>
 
-						<li><a href="#" class="waves-effect waves-dark"> <i class="fa fa-sitemap"></i> 자재관리 <span
+						<li><a href="#" class="waves-effect waves-dark"> <i class="fa fa-sitemap"></i>자재관리<span
 									class="fa arrow"></span></a>
 							<ul class="nav nav-second-level">
 								<li>
 									<a href="${pageContext.request.contextPath}/mtrlOrder" class="waves-effect waves-dark">
-										자재발주
+										자재발주관리
 									</a>
 								</li>
-								<li><a href="#" class="waves-effect waves-dark">Second
-										Level Link</a></li>
-								<li><a href="#" class="waves-effect waves-dark">Second
-										Level Link<span class="fa arrow"></span>
+								<li>
+									<a href="${pageContext.request.contextPath}/mtrlOrderList" class="waves-effect waves-dark">
+										자재발주조회
 									</a>
-									<ul class="nav nav-third-level">
-										<li><a href="#">Third Level Link</a></li>
-										<li><a href="#">Third Level Link</a></li>
-										<li><a href="#">Third Level Link</a></li>
-									</ul>
 								</li>
-
+								<li>
+									<a href="${pageContext.request.contextPath}/mtrlInspCheck" class="waves-effect waves-dark">
+										자재입고검사조회<!-- <span class="fa arrow"></span> -->
+									</a>
+									<!-- <ul class="nav nav-third-level">
+										<li><a href="#">Third Level Link</a></li>
+										<li><a href="#">Third Level Link</a></li>
+										<li><a href="#">Third Level Link</a></li>
+									</ul> -->
+								</li>
+								<li>
+									<a href="${pageContext.request.contextPath}/mtrlInputManagement" class="waves-effect waves-dark">
+										자재입고관리
+									</a>
+								</li>
 
 
 
