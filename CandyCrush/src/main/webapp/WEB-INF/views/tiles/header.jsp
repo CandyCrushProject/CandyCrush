@@ -440,17 +440,17 @@
 							<ul class="nav nav-second-level">
 								<li>
 									<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
-										생산계획관리
+										설비관리
 									</a>
 								</li>
 								<li>
 									<a href="${pageContext.request.contextPath}/ProcOrder" class="waves-effect waves-dark">
-										생산지시관리
+										설비정비
 									</a>
 								</li>
 								<li>
 									<a href="${pageContext.request.contextPath}/ProdProcManagement" class="waves-effect waves-dark">
-										생산공정관리
+										설비뭐시깽이
 									</a>
 								</li>
 							</ul>
