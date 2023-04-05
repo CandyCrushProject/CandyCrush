@@ -209,13 +209,47 @@
 					<li><a href="#" class="waves-effect waves-dark"> <i
 							class="fa fa-sitemap"></i> 생산관리 <span class="fa arrow"></span></a>
 						<ul class="nav nav-second-level">
-							<li><a
-								href="${pageContext.request.contextPath}/ProcManagement"
-								class="waves-effect waves-dark"> 생산계획관리 </a></li>
-							<li><a href="${pageContext.request.contextPath}/ProcOrder"
-								class="waves-effect waves-dark"> 생산지시관리 </a></li>
-							<li><a href="${pageContext.request.contextPath}/ProdProcManagement"
-								class="waves-effect waves-dark"> 생산공정관리 </a></li>
+							<li>
+								<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
+								생산계획관리
+								</a>
+							</li>
+							<li><a href="#" class="waves-effect waves-dark">Second
+									Level Link</a></li>
+							<li><a href="#" class="waves-effect waves-dark">Second
+									Level Link<span class="fa arrow"></span>
+							</a>
+								<ul class="nav nav-third-level">
+									<li><a href="#">Third Level Link</a></li>
+									<li><a href="#">Third Level Link</a></li>
+									<li><a href="#">Third Level Link</a></li>
+
+								</ul></li>
+						</ul></li>
+						
+					  <li><a href="#" class="waves-effect waves-dark"> <i
+							class="fa fa-sitemap"></i> 자재관리 <span
+							class="fa arrow"></span></a>
+						<ul class="nav nav-second-level">
+							<li>
+								<a href="${pageContext.request.contextPath}/mtrlOrder" class="waves-effect waves-dark">
+								자재발주
+								</a>
+							</li>
+							<li><a href="#" class="waves-effect waves-dark">Second
+									Level Link</a></li>
+							<li><a href="#" class="waves-effect waves-dark">Second
+									Level Link<span class="fa arrow"></span>
+							</a>
+								<ul class="nav nav-third-level">
+									<li><a href="#">Third Level Link</a></li>
+									<li><a href="#">Third Level Link</a></li>
+									<li><a href="#">Third Level Link</a></li>
+
+								</ul></li>
+						</ul></li>
+					
+				</ul>
 
 						</ul>
 			</div>

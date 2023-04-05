@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.mes.material.mapper.MaterialMapper">
+	<!-- 자재 전체조회 -->
+	<select id="mtrlAllList" resultType="MaterialVO">
+		select * from CM_MTRL_MNG
+	</select>
+
+	<!-- 자재발주 전체조회 -->
+	<select id="mtrlOrderAllList" resultType="MaterialOrderVO">
+		select * from MTRL_ORDR
+	</select>
+
+</mapper>
