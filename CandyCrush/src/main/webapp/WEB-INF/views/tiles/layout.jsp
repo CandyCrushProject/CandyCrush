@@ -19,6 +19,8 @@
 				<link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
 				<!-- Custom Styles-->
 				<link href="assets/css/custom-styles.css" rel="stylesheet" />
+				<!-- CandyTab 우리 테이블 css -->
+				<link href="assets/css/candyTab.css" rel="stylesheet" />
 				<!-- Google Fonts-->
 				<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 				<link rel="stylesheet" href="assets/js/Lightweight-Chart/cssCharts.css">

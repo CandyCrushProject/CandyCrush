@@ -21,14 +21,6 @@ public class MesController {
 		return "login";
 	}
 	
-	@GetMapping("ProcManagement")
-	public String ProcManagement() {
-		return "admin/process/processMenu";
-	}
-	
-	
-	
-	
 
 	@GetMapping("dashboard")
 	public String dashboard() {
@@ -38,7 +30,7 @@ public class MesController {
 	
 	@GetMapping("ulElements")
 	public String ulElements() {
-		return "sample/process";
+		return "sample/uielements";
 	}
 
 	@GetMapping("chart")
