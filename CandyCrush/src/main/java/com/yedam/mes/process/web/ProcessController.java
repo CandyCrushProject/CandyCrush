@@ -16,9 +16,8 @@ public class ProcessController {
 	// 생산관리 -> 생산계획관리
 	@GetMapping("ProcManagement")
 	public String ProcessPlanManagement(Model model) {
-		model.addAttribute("order", procService.getOrder());
-
-		model.addAttribute("orderDtail", procService.getOrderDetail());
+		model.addAttribute("orderInfo", procService.getOrder());
+		System.out.println(procService.getOrder());
 		return "process/processManagement";
 	}
 	

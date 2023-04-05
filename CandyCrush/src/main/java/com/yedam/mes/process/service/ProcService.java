@@ -2,20 +2,18 @@ package com.yedam.mes.process.service;
 
 import java.util.List;
 
+import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcOrderVO;
 import com.yedam.mes.process.vo.ProcPerfVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 import com.yedam.mes.process.vo.ProcProgVO;
-import com.yedam.mes.sales.service.OrdrShtDtlVO;
-import com.yedam.mes.sales.service.OrdrShtVO;
 
 public interface ProcService {
 
 	/* 생산계획 매퍼 시작 */
 	
 	// 생산계획 - 주문서 읽어오기
-	public List<OrdrShtVO> getOrder();
-	public List<OrdrShtDtlVO> getOrderDetail();
+	public List<OrderPlanVO> getOrder();
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
 	public int addPlan(ProcPlanVO planVO);
