@@ -9,19 +9,20 @@
 	#floatBtn{
 		float: right;
 	}
-	#DelBtn{
+	#DelBtn,#AddBtn{
 		float: right;
+		margin-right: 10px;
 	}
 </style>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
 		<div class="header">
-			<h1 class="page-header">자재입고관리</h1>
+			<h1 class="page-header">자재출고관리</h1>
 			<ol class="breadcrumb">
 				<li><a href="#">candy</a></li>
 				<li><a href="#">자재관리</a></li>
-				<li class="active">자재입고관리</li>
+				<li class="active">자재출고관리</li>
 			</ol>
 
 		</div>
@@ -29,36 +30,28 @@
 		<div id="page-inner">
 			<div class="row">
 				<div class="col-md-12">
-					<!-- Advanced Tables -->
 					<div class="card">
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
 							<div>
-								<h5><b>입고등록</b></h5>
+								<h5><b>출고등록</b></h5>
 								<div id="floatBtn">
 									<button type="button" class="cndInsBtn">저장</button>
-									<button type="button" class="cndDelBtn">삭제</button>
 									<button type="reset" class="">초기화</button>
 								</div>
 								<div>
-									<label for="mtrlInput">입고일자</label>
-									<input type="date" id="mtrlInput" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">
-									<label for="mtrInputType">&nbsp;&nbsp;&nbsp;입고유형</label>
-									<input type="text" id="mtrInputType" style="width: 150px; border: 1px solid rgba(128, 128, 128, 0.61);">
-								</div>
-	
-								<h5><b>검사자료 조회</b></h5>
-								<div>
-									<label>업체명</label> 
-									<input type="text" style="width: 315px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
-									<button type="button" id="bgnSearchBtn" class="cndSrchBtn">검색</button>
-									<br/>
-									<label for="inspDate">검사자료</label>
-									<input type="date" id="inspDate"
-											style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
-									<input type="date" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
-									<button type="button" id="inspSearchBtn" class="">가져오기</button>
-									<br/>
+									<label for="outDt">출고일자</label>
+									<input type="date" id="outDt"
+											style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">
+
+									<label for="outNote">&nbsp;&nbsp;&nbsp;상세정보</label>
+									<input type="text" id="outNote" style="width: 150px; border: 1px solid rgba(128, 128, 128, 0.61);">
+
+									<label for="outType">&nbsp;&nbsp;&nbsp;출고유형</label>
+									<select style="display: inline; width: 100px;">
+										<option value="부서">부서</option>
+										<option value="협력업체">협력업체</option>
+									</select>
 								</div>
 							</div>
 							<div style="clear:both"></div>
@@ -68,30 +61,31 @@
 			</div> <!--END row-->
 			<div class="row">
 				<div class="col-md-8">
-					<!-- Lot 부여 테이블 -->
+					<!-- 출고DB Table 등록 테이블 -->
 					<div class="card">
 						<div class="card-action">
+							<button type="button" id="AddBtn" class="cndInsBtn">추가</button>
 							<button type="button" id="DelBtn" class="cndDelBtn">삭제</button>
 						</div>
 						<div style="clear:both"></div>
 						<div class="card-content">
 							<div class="table-responsive">
-								<div id="materialLotSave"></div>
+								<div id="materialOutAdd"></div>
 							</div>
 						</div>
 					</div>
-				</div><!-- End Lot 부여 테이블 -->
-				<!-- 입고목록 테이블 -->
+				</div><!-- End 출고DB Table 등록 테이블 -->
+				<!-- 출고목록 테이블 -->
 				<div class="col-md-4">
 					<!-- Advanced Tables -->
 					<div class="card">
-						<div class="card-action">입고목록</div>
+						<div class="card-action">출고목록</div>
 						<div class="card-content">
 							<div class="table-responsive">
-								<div id="mtrlInputList"></div>
+								<div id="materialOutCheck"></div>
 							</div>
 						</div>
-					</div> <!--End 입고목록 테이블 -->
+					</div> <!--End 출고목록 테이블 -->
 				</div>
 			</div> <!--END row-->
 		</div>
@@ -111,9 +105,9 @@
 			}
 		];
 
-		//자재목록
-		const materialLotSave = new Grid({
-			el: document.getElementById('materialLotSave'), // Container element
+		//출고등록
+		const materialOutAdd = new Grid({
+			el: document.getElementById('materialOutAdd'), // Container element
 			rowHeaders: ['checkbox'],
 			columns: [
 				{
@@ -141,20 +135,18 @@
 					name: ''
 				},
 				{
-					header: '발주번호',
+					header: 'LOT번호',
 					name: '',
 					sortingType: 'asc',
 					sortable: true
 				},
 				{
-					header: '입고수량',
+					header: 'LOT재고',
 					name: ''
 				},
 				{
-					header: '유통기한',
-					name: '',
-					sortingType: 'asc',
-					sortable: true
+					header: '출고량',
+					name: ''
 				}
 				
 			],
@@ -164,18 +156,19 @@
 				useClient: true,
 				type: 'scroll',
 				perPage: 30
-  		}
+			}
 		});
 
-		const mtrlInputList = new Grid({
-			el: document.getElementById('mtrlInputList'), // Container element
+		//출고목록
+		const materialOutCheck = new Grid({
+			el: document.getElementById('materialOutCheck'), // Container element
 			columns: [
 				{
-					header: '입고코드',
+					header: '출고번호',
 					name: '',
 				},
 				{
-					header: '입고일자',
+					header: '출고일자',
 					name: ''
 				},
 				{

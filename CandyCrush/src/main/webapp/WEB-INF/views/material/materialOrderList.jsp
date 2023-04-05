@@ -2,6 +2,11 @@
     pageEncoding="UTF-8"%>
 <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<style>
+	label{
+		width: 100px;
+	}
+</style>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -16,29 +21,47 @@
 		</div>
 
 		<div id="page-inner">
-			<!--자재발주 테이블-->
+			<div class="row">
+				<div class="col-md-12">
+					<!-- Advanced Tables -->
+					<div class="card">
+						<!--<div class="card-action">자재발주조회</div>-->
+						<div class="card-content">
+							<div>
+								<label>업체명</label>
+								<input type="text" style="width: 315px; border: 1px solid rgba(128, 128, 128, 0.61);">
+								<br/>
+								<label>발주신청일</label>
+								<input type="date"
+										style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
+								<input type="date" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
+								<button type="button" class="cndSrchBtn">검색</button>
+							</div>
+							<div style="clear:both"></div>
+						</div>
+					</div>
+				</div>
+			</div> <!--END row-->
 			<div class="row">
 				<div class="col-md-12">
 					<!-- Advanced Tables -->
 					<div class="card">
 						<div class="card-action">자재발주조회</div>
 						<div class="card-content">
-							
-						<div>
-							<span>업체명&nbsp;<input type="text" style="width: 150px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;</span> 
-							<span>발주신청일&nbsp;
-									<input type="date" style="width: 150px; border: 1px solid rgba(128, 128, 128, 0.61);">-
-									<input type="date" style="width: 150px; border: 1px solid rgba(128, 128, 128, 0.61);">
-							</span>
-							<button type="button" class="">검색</button>
-						</div>
-						<div style="clear:both"></div>
+							<!--<div>
+								<label>업체명</label>
+								<input type="text" style="width: 150px; border: 1px solid rgba(128, 128, 128, 0.61);">
+								<br/>
+								<label>발주신청일</label>
+								<input type="date" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;<input type="date" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">
+								<button type="button" class="cndSrchBtn">검색</button>
+							</div>
+							<div style="clear:both"></div>-->
 							<div class="table-responsive">
 								<div id="materialOrderList"></div>
 							</div>
 						</div>
 					</div>
-					<!--End Advanced Tables -->
 				</div>
 			</div> <!--END row-->
 		</div>
@@ -65,19 +88,27 @@
 			columns: [
 				{
 					header: '발주코드',
-					name: 'moCd'
+					name: 'moCd',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '발주명',
-					name: 'moTitle'
+					name: 'moTitle',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '발주신청일',
-					name: 'moReoDt'
+					name: 'moReoDt',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '발주완료일',
-					name: 'moCpltDt'
+					name: 'moCpltDt',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '업체코드',
@@ -89,7 +120,7 @@
 				}
 			],
 			data,
-			bodyHeight: 300,
+			bodyHeight: 420,
 			pageOptions: {
 				useClient: true,
 				type: 'scroll',

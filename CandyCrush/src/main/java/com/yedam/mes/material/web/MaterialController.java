@@ -37,9 +37,21 @@ public class MaterialController {
 		return "material/mtrlInspCheck";
 	}
 	
+	//자재입고검사관리(품질로빼버리기) 페이지
+	@GetMapping("mtrlInspManagement")
+	public String mtrlInspManagement(Model model) {
+		return "material/mtrlInspManagement";
+	}
+	
 	//자재입고관리 페이지
 	@GetMapping("mtrlInputManagement")
 	public String mtrlInputManagement(Model model) {
 		return "material/mtrlInputManagement";
+	}
+	
+	//자재출고관리 페이지
+	@GetMapping("mtrlOutputManagement")
+	public String mtrlOutputManagement(Model model) {
+		return "material/mtrlOutputManagement";
 	}
 }

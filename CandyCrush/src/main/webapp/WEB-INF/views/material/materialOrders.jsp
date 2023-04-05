@@ -4,10 +4,11 @@
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 <style>
 	label{
-		margin-right: 10px;
+		width: 70px;
+		margin-left: 10px;
 	}
 	#eunae{
-		text-align: center;
+		margin-left: 10px;
 	}
 	#eunae2{
 		float: right;
@@ -24,22 +25,22 @@
 				<li><a href="#">자재관리</a></li>
 				<li class="active">자재발주관리</li>
 			</ol>
-
 		</div>
-
 		<div id="page-inner">
-
 			<div class="row">
 				<div class="col-md-12">
 					<!--자재목록 테이블-->
 					<div class="card">
-						<div class="card-action">자재목록</div>
-						<div id="eunae">
-							<label for="mtrlName">원자재명<input type="text" id="mtrlName"></label> 
-							<label for="companyName">업체명<input type="text" id="companyName"></label>
-							<button id="search" class="">검색</button>
-						</div>
 						<div class="card-content">
+							<div id="eunae">
+							<label>원자재명</label>
+							<input type="text" id="mtrlName" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+							
+							<label>업체명</label>
+							<input type="text" id="companyName" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+							<button id="search" class="cndSrchBtn">검색</button>
+							</div>
+							<div class="card-action">자재목록</div>
 							<div class="table-responsive">
 								<div id="material"></div>
 							</div>
@@ -48,7 +49,6 @@
 					<!--End 자재목록 테이블 -->
 				</div>
 			</div> <!--END row-->
-
 			<!--자재발주 테이블-->
 			<div class="row">
 				<div class="col-md-12">
@@ -56,18 +56,21 @@
 					<div class="card">
 						<div class="card-action">자재발주</div>
 						<div class="card-content">
-							
-						<div id="eunae2">
-							<button id="orderDelete" class="cndDelBtn">삭제</button>
-							<button id="drderInsert" class="cndInsBtn">등록</button>
-						</div>
-						<div style="clear:both"></div>
+							<div id="eunae2">
+								<!-- <button id="orderDelete" class="cndDelBtn">삭제</button> -->
+								<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" aria-expanded="false">
+									Action 
+									<span class="caret"></span>
+								</button>
+								
+								<button id="drderInsert" class="cndInsBtn">등록</button>
+							</div>
+							<div style="clear:both"></div>
 							<div class="table-responsive">
 								<div id="materialOrder"></div>
 							</div>
 						</div>
 					</div>
-					<!--End Advanced Tables -->
 				</div>
 			</div> <!--END row-->
 		</div>
@@ -88,18 +91,34 @@
 			}
 		];
 
+
+		const data2=[
+			{
+				moCd : '3wfwef',
+				moTitle : '발주명',
+				moReoDt : '2023-04-05',
+				cmmCd : '001a',
+				moDlvDt : '2023-05-30'
+			}
+		];
+
+
 		//자재목록
 		const material = new Grid({
 			el: document.getElementById('material'), // Container element
-			rowHeaders: ['checkbox'],
+			rowHeaders: ['rowNum'],
 			columns: [
 				{
 					header: '자재코드',
-					name: 'cmmCd'
+					name: 'cmmCd',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '자재명',
-					name: 'cmmNm'
+					name: 'cmmNm',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '자재유형',
@@ -124,41 +143,52 @@
 				useClient: true,
 				type: 'scroll',
 				perPage: 30
-  		}
+			}
 		});
 
 		//자재발주
 		const materialOrder = new Grid({
 			el: document.getElementById('materialOrder'), // Container element
-			rowHeaders: ['checkbox'],
+			rowHeaders: ["checkbox"],
 			columns: [
 				{
 					header: '발주코드',
-					name: 'moCd'
+					name: 'moCd',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '발주명',
-					name: 'moTitle'
+					name: 'moTitle',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '발주신청일',
-					name: 'moReoDt'
+					name: 'moReoDt',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '자재코드',
-					name: 'cmmCd'
+					name: 'cmmCd',
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
 					header: '납기일',
-					name: 'moDlvDt'
+					name: 'moDlvDt',
+					sortingType: 'asc',
+					sortable: true
 				}
 			],
-			bodyHeight: 300,
+			data : data2,
+			bodyHeight: 400,
 			pageOptions: {
 				useClient: true,
 				type: 'scroll',
 				perPage: 30
-  			}
+			}
 		});
 
 		//Grid.applyTheme('striped'); // Call API of static method
