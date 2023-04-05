@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+   <mapper namespace = "com.yedam.mes.facility.mapper.FacilityMapper">
+  <select id="selectFacilityStat" resultType="FacilityStatVO">
+		select f.FAC_CD,f.fac_nm,f.fac_dt,f.fac_cy,f.fac_rct_MTN,f.fac_info,s.fac_run
+		from
+		    (select f.fac_cd,f.fac_nm,f.fac_dt,f.fac_cy,i.FAC_RCT_MTN,f.fac_info
+		    from FAC f
+		    LEFT JOIN
+		        (
+		        select FAC_CD, max(FAC_MTN_DT) FAC_RCT_MTN 
+		        from FAC_INSP 
+		        group by FAC_CD 
+		        order by FAC_CD) i
+		    ON f.FAC_CD = i.FAC_CD) f
+		LEFT JOIN
+		FAC_STAT s
+		ON
+		f.fac_cd=s.fac_cd;
+  </select>
+  
+  
+ <!--
+  <select id="getBoardNo" resultType="Integer">
+  	select nvl(max(board_no),0)+1 from board_tbl_01
+  </select>
+  
+  <insert id="insertBoard" parameterType='BoardVO'>
+  	insert into board_tbl_01
+  	(board_no,
+  	board_title,
+  	board_writer,
+  	board_content,
+  	board_image,
+  	board_date)
+  	VALUES
+  	(
+	  	#{boardNo},
+	  	#{boardTitle},
+	  	#{boardWriter},
+	  	#{boardContent},
+	  	#{boardImage},
+	  	#{boardDate})
+  </insert>
+  -->
+</mapper>
