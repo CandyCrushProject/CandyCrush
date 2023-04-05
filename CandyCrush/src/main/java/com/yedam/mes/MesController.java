@@ -15,7 +15,7 @@ public class MesController {
 	public String home() {
 		return "login";
 	}
-	
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "login";
