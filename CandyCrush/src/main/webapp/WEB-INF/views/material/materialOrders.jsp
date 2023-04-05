@@ -61,27 +61,6 @@
 						<div class="card-content">
 							<div class="table-responsive">
 								<div id="material"></div>
-								<!--<table class="table table-striped table-bordered table-hover"
-									id="dataTables-example">
-									<thead>
-										<tr>
-											<th>자재코드</th>
-											<th>자재명</th>
-											<th>업체코드</th>
-											<th>업체명</th>
-											<th>현재재고</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr class="odd gradeX">
-											<td>Trident</td>
-											<td>Internet Explorer 4.0</td>
-											<td>Win 95+</td>
-											<td class="center">4</td>
-											<td class="center">X</td>
-										</tr>
-									</tbody>
-								</table>-->
 							</div>
 						</div>
 					</div>
@@ -104,27 +83,6 @@
 						<div style="clear:both"></div>
 							<div class="table-responsive">
 								<div id="materialOrder"></div>
-								<!--<table class="table table-striped table-bordered table-hover"
-									id="dataTables-example">
-									<thead>
-										<tr>
-											<th>자재코드</th>
-											<th>자재명</th>
-											<th>업체코드</th>
-											<th>업체명</th>
-											<th>발주코드</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr class="odd gradeX">
-											<td>Trident</td>
-											<td>Internet Explorer 4.0</td>
-											<td>Win 95+</td>
-											<td class="center">4</td>
-											<td class="center">X</td>
-										</tr>
-									</tbody>
-								</table> -->
 							</div>
 						</div>
 					</div>
@@ -182,8 +140,6 @@
 				perPage: 30
   		}
 		});
-
-		material.resetData(newData); // Call API of instance's public method
 		
 		//자재발주
 		const materialOrder = new Grid({
@@ -226,7 +182,7 @@
   		}
 		});
 
-		materialOrder.resetData(newData); // Call API of instance's public method
+		//materialOrder.resetData(newData);
 
 		Grid.applyTheme('striped'); // Call API of static method
 	</script>
