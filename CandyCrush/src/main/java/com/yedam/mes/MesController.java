@@ -15,19 +15,11 @@ public class MesController {
 	public String home() {
 		return "login";
 	}
-	
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "login";
 	}
-	
-	@GetMapping("ProcManagement")
-	public String ProcManagement() {
-		return "admin/process/processMenu";
-	}
-	
-	
-	
 	
 
 	@GetMapping("dashboard")
@@ -38,7 +30,7 @@ public class MesController {
 	
 	@GetMapping("ulElements")
 	public String ulElements() {
-		return "sample/process";
+		return "sample/uielements";
 	}
 
 	@GetMapping("chart")
