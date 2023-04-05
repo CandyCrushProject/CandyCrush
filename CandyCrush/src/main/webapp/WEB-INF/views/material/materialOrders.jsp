@@ -3,25 +3,6 @@
 <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 <style>
-	button {
-    width: 100px;
-    text-decoration: none;
-    border: 1px solid black;
-    font-size: 16px;
-    background-color: rgb(255, 255, 255);
-    color: #000000;
-    border-radius: 5px;
-    box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
-    cursor: pointer;
-    outline: none;
-    transition: 0.2s all;
-	}
-
-	button:active {
-			transform: scale(0.98);
-			box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
-	}
-
 	label{
 		margin-right: 10px;
 	}
@@ -37,7 +18,7 @@
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
 		<div class="header">
-			<h1 class="page-header">자재발주</h1>
+			<h1 class="page-header">자재발주관리</h1>
 			<ol class="breadcrumb">
 				<li><a href="#">candy</a></li>
 				<li><a href="#">자재관리</a></li>
@@ -56,7 +37,7 @@
 						<div id="eunae">
 							<label for="mtrlName">원자재명<input type="text" id="mtrlName"></label> 
 							<label for="companyName">업체명<input type="text" id="companyName"></label>
-							<button id="search">검색</button>
+							<button id="search" class="">검색</button>
 						</div>
 						<div class="card-content">
 							<div class="table-responsive">
@@ -77,8 +58,8 @@
 						<div class="card-content">
 							
 						<div id="eunae2">
-							<button id="orderDelete">삭제</button>
-							<button id="drderInsert">등록</button>
+							<button id="orderDelete" class="cndDelBtn">삭제</button>
+							<button id="drderInsert" class="cndInsBtn">등록</button>
 						</div>
 						<div style="clear:both"></div>
 							<div class="table-responsive">
@@ -101,29 +82,9 @@
 				cmmCd: '10012',
 				cmmNm: 'Seoul',
 				cmmTyp: 'South Korea',
-				cmmSpec,
-				cmmUnit,
-				cmmSafStc,
-			},
-			{
-				id: '10013',
-				city: 'Tokyo',
-				country: 'Japan'    
-			},
-			{
-				id: '10014',
-				city: 'London',
-				country: 'England'
-			},
-			{
-				id: '10015',
-				city: 'Ljubljana',
-				country: 'Slovenia'
-			},
-			{
-				id: '10016',
-				city: 'Reykjavik',
-				country: 'Iceland'
+				cmmSpec: 'South Korea',
+				cmmUnit: 'South Korea',
+				cmmSafStc: 60,
 			}
 		];
 
@@ -192,7 +153,6 @@
 					name: 'moDlvDt'
 				}
 			],
-			data2,
 			bodyHeight: 300,
 			pageOptions: {
 				useClient: true,
