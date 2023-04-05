@@ -24,6 +24,15 @@
 				<!-- Google Fonts-->
 				<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 				<link rel="stylesheet" href="assets/js/Lightweight-Chart/cssCharts.css">
+				<style>
+					/*input checkbox css*/
+					input[type="checkbox"]:not(:checked), 
+					input[type="checkbox"]:checked {
+						position: relative !important;
+						left: 0 !important;
+						opacity: 1 !important;
+					}
+				</style>
 			</head>
 
 			<body>

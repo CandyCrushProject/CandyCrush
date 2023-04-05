@@ -330,7 +330,7 @@
 							</ul>
 						</li>
 
-						<li><a href="#" class="waves-effect waves-dark"> <i class="fa fa-sitemap"></i>자재관리<span
+						<li><a href="#" class="waves-effect waves-dark"> <i class="fa fa-sitemap"></i> 자재관리<span
 									class="fa arrow"></span></a>
 							<ul class="nav nav-second-level">
 								<li>
@@ -354,11 +354,20 @@
 									</ul> -->
 								</li>
 								<li>
+									<a href="${pageContext.request.contextPath}/mtrlInspManagement" class="waves-effect waves-dark">
+										자재입고검사관리(품질로빼기)
+									</a>
+								</li>
+								<li>
 									<a href="${pageContext.request.contextPath}/mtrlInputManagement" class="waves-effect waves-dark">
 										자재입고관리
 									</a>
 								</li>
-
+								<li>
+									<a href="${pageContext.request.contextPath}/mtrlOutputManagement" class="waves-effect waves-dark">
+										자재출고관리
+									</a>
+								</li>
 
 
 
