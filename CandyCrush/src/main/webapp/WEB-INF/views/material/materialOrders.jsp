@@ -95,10 +95,42 @@
 
 	<script>
 		const Grid = tui.Grid;
-		
+
+		const data = [
+			{
+				cmmCd: '10012',
+				cmmNm: 'Seoul',
+				cmmTyp: 'South Korea',
+				cmmSpec,
+				cmmUnit,
+				cmmSafStc,
+			},
+			{
+				id: '10013',
+				city: 'Tokyo',
+				country: 'Japan'    
+			},
+			{
+				id: '10014',
+				city: 'London',
+				country: 'England'
+			},
+			{
+				id: '10015',
+				city: 'Ljubljana',
+				country: 'Slovenia'
+			},
+			{
+				id: '10016',
+				city: 'Reykjavik',
+				country: 'Iceland'
+			}
+		];
+
 		//자재목록
 		const material = new Grid({
 			el: document.getElementById('material'), // Container element
+			rowHeaders: ['checkbox'],
 			columns: [
 				{
 					header: '자재코드',
@@ -125,14 +157,7 @@
 					name: 'cmmSafStc'
 				}
 			],
-			data: [
-				{
-					name: 'Beautiful Lies',
-					artist: 'Birdy',
-					release: '2016.03.26',
-					genre: 'Pop'
-				}
-			],
+			data,
 			bodyHeight: 300,
 			pageOptions: {
 				useClient: true,
@@ -140,10 +165,11 @@
 				perPage: 30
   		}
 		});
-		
+
 		//자재발주
 		const materialOrder = new Grid({
 			el: document.getElementById('materialOrder'), // Container element
+			rowHeaders: ['checkbox'],
 			columns: [
 				{
 					header: '발주코드',
@@ -166,24 +192,16 @@
 					name: 'moDlvDt'
 				}
 			],
-			data: [
-				{
-					name: 'Beautiful Lies',
-					artist: 'Birdy',
-					release: '2016.03.26',
-					genre: 'Pop'
-				}
-			],
+			data2,
 			bodyHeight: 300,
 			pageOptions: {
 				useClient: true,
 				type: 'scroll',
 				perPage: 30
-  		}
+  			}
 		});
 
-		//materialOrder.resetData(newData);
+		//Grid.applyTheme('striped'); // Call API of static method
 
-		Grid.applyTheme('striped'); // Call API of static method
-	</script>
+</script>
 </main>
