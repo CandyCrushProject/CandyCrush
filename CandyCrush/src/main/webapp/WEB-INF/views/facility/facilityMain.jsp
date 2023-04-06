@@ -20,10 +20,10 @@
 <!-- 모달 -->
 <!-- The Modal -->
 <c:forEach items="${statList }" var="stat">
-<div id="${stat.facCd}Modal" class="w3-modal">
+<div id="${stat.facCd}Modal" class="w3-modal" style="z-index: 100;">
   <div class="w3-modal-content">
     <div class="w3-container">
-      <span onclick="document.getElementById('${stat.facCd}Modal').style.display='none'"      class="w3-button w3-display-topright">&times;</span>
+      <span onclick="document.getElementById('${stat.facCd}Modal').style.display='none'"  class="w3-button w3-display-topright">&times;</span>
 			<h3>${stat.facNm} 상세정보</h3>
       <table class="candyTab">
 				<tbody>
@@ -69,7 +69,12 @@
 											<td>${stat.facCd }</td>
 											<td>${stat.facNm }</td>
 											<td>${stat.facRun }</td>
-											<td><button onclick="document.getElementById('${stat.facCd}Modal').style.display='block'"class="candyBtn">상세정보</button> </td>
+											
+											<td>
+												<button onclick="document.getElementById('${stat.facCd}Modal').style.display='block'">
+												<i class="fa-solid fa-clipboard"></i> 상세정보
+												</button> 
+												</td>
 										
 										</tr>
 										</c:forEach>

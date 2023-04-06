@@ -35,6 +35,28 @@
  	from fac_INSP
  	order by FAC_MTN_DT
   </select>
+  
+  <insert id="insertFacilityMaintenance" parameterType='FacilityMaintenanceVO'>
+  	insert into FAC_INSP
+  	(FAC_MTN,
+  	FAC_CD,
+  	FAC_RTN,
+  	FAC_MTN_DT,
+  	FAC_RSLT,
+  	FAC_ACT,
+  	FAC_ACT_DTL,
+  	FAC_MGR)
+  	VALUES
+  	(
+	  	#{facMtn},
+	  	#{facCd},
+	  	#{facRtn},
+	  	#{facMtnDt},
+	  	#{facRslt},
+	  	#{facAct},
+	  	#{facActDtl},
+	  	#{facMgr})
+  </insert>
  <!--
   <select id="getBoardNo" resultType="Integer">
   	select nvl(max(board_no),0)+1 from board_tbl_01

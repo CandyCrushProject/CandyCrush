@@ -458,7 +458,7 @@
 									</a>
 								</li>
 								<li>
-									<a href="${pageContext.request.contextPath}/ProdProcManagement" class="waves-effect waves-dark">
+									<a href="${pageContext.request.contextPath}/facilityOperation" class="waves-effect waves-dark">
 										설비 비가동 관리
 									</a>
 								</li>

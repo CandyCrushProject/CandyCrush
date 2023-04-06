@@ -8,4 +8,5 @@ import com.yedam.mes.facility.service.FacilityStatVO;
 public interface FacilityMapper {
 	public List<FacilityStatVO> selectFacilityStat();
 	public List<FacilityMaintenanceVO> selectFacilityMaintenance();
+	public int insertFacilityMaintenance(FacilityMaintenanceVO mtnVO);
 }

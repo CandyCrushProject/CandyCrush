@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import com.yedam.mes.facility.service.FacilityMaintenanceVO;
 import com.yedam.mes.facility.service.FacilityService;
 
 @Controller
@@ -22,5 +24,16 @@ public class FacilityController {
 		model.addAttribute("statList",facilityService.selectFacilityStat());
 		model.addAttribute("mtnList",facilityService.selectFacilityMaintenance());
 		return "facility/facilityMaintenance";
+	}
+	@PostMapping("insertFacilityMaintenance")
+	public String insertFacilityMaintenance(FacilityMaintenanceVO mtnVO) {
+		facilityService.insertFacilityMaintenance(mtnVO);
+		return "redirect:facilityMaintenance";
+	}
+	@GetMapping("facilityOperation")
+	public String facilityOperation(Model model) {
+		model.addAttribute("statList",facilityService.selectFacilityStat());
+		model.addAttribute("mtnList",facilityService.selectFacilityMaintenance());
+		return "facility/facilityOperation";
 	}
 }
