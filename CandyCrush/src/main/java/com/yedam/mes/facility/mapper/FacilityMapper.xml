@@ -5,24 +5,36 @@
   
    <mapper namespace = "com.yedam.mes.facility.mapper.FacilityMapper">
   <select id="selectFacilityStat" resultType="FacilityStatVO">
-select f.FAC_CD,f.fac_nm,f.fac_dt,f.fac_cy,f.fac_rct_MTN,f.fac_info,s.fac_run,NVL(FAC_RCT_MTN,f.fac_dt)+f.fac_cy MTN_PLANNED
-from
-    (select f.fac_cd,f.fac_nm,f.fac_dt,f.fac_cy,i.FAC_RCT_MTN,f.fac_info
-    from FAC f
-    LEFT JOIN
-        (
-        select FAC_CD, max(FAC_MTN_DT) FAC_RCT_MTN 
-        from FAC_INSP 
-        group by FAC_CD 
-        order by FAC_CD) i
-    ON f.FAC_CD = i.FAC_CD) f
-LEFT JOIN
-FAC_STAT s
-ON
-f.fac_cd=s.fac_cd
+	select f.FAC_CD,f.fac_nm,f.fac_dt,f.fac_cy,f.fac_rct_MTN,f.fac_info,s.fac_run,NVL(FAC_RCT_MTN,f.fac_dt)+f.fac_cy MTN_PLANNED
+	from
+	    (select f.fac_cd,f.fac_nm,f.fac_dt,f.fac_cy,i.FAC_RCT_MTN,f.fac_info
+	    from FAC f
+	    LEFT JOIN
+	        (
+	        select FAC_CD, max(FAC_MTN_DT) FAC_RCT_MTN 
+	        from FAC_INSP 
+	        group by FAC_CD 
+	        order by FAC_CD) i
+	    ON f.FAC_CD = i.FAC_CD) f
+	LEFT JOIN
+	FAC_STAT s
+	ON
+	f.fac_cd=s.fac_cd
   </select>
   
-  
+    <select id="selectFacilityMaintenance" resultType="FacilityMaintenanceVO">
+	select 
+	fac_mtn,
+	fac_cd,
+	fac_rtn,
+	fac_mtn_dt,
+	fac_rslt,
+	fac_act,
+	fac_act_dtl,
+	fac_mgr
+ 	from fac_INSP
+ 	order by FAC_MTN_DT
+  </select>
  <!--
   <select id="getBoardNo" resultType="Integer">
   	select nvl(max(board_no),0)+1 from board_tbl_01
