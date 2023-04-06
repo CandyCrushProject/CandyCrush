@@ -7,7 +7,6 @@ public class OrderPlanVO {
 	
 	// 생산계획에서 정보 부를때 쓸거
 	private String orshNo;
-	private String prodCd;
 	private String caNo;
 	private String caNm;
 	private String orshDt;

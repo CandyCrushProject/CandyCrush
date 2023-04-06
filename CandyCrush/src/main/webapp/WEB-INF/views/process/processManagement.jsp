@@ -2,13 +2,29 @@
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 		<link rel="stylesheet" href="assets/css/processManagement.css">
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<!-- 그리드 -->
 		<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 		<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+		<!-- 폰트 어썸 -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
 		<script>
-			function addPlan() {
-				document.getElementById('order').style.display = 'none';
+			function addOrder(orshNo) {
+				console.log(orshNo);
+
+				$.ajax({
+					url: "getOrder",
+					method: "post",
+					data: { "orshNo": orshNo },
+					dataType: "text",
+					contentType: "application/x-www-form-urlencoded; charset=utf-8",
+					success: function (res) {
+						document.getElementById('order').style.display = 'none'
+						console.log("성공");
+					}, error: function (rej) {
+						console.log("실패");
+					}
+				});
 			}
 		</script>
 		<main>
@@ -34,13 +50,14 @@
 										</tr>
 									</thead>
 									<tbody>
+
 										<c:forEach var="order" items="${orderInfo}" varStatus="status">
 											<tr>
 												<td>${order.orshNo}</td>
 												<td>${order.caNm}</td>
-												<td>${order.cprCd}</td>
+												<td>${order.cprNm}</td>
 												<td>
-													<button onclick="addPlan()">등록</button>
+													<button type="button" onclick="addOrder('${order.orshNo}')">등록</button>
 												</td>
 											</tr>
 										</c:forEach>
@@ -75,8 +92,6 @@
 								<div class="card-content">
 									<div class="procPlan">
 										<ul>
-											<li class="procPlanBtn-l">생산계획일자</li>
-											<li class="procPlanBtn-l"><input type="date"></li>
 											<li class="procPlanBtn-r">
 												<button>
 													<i class="fa-solid fa-plus"></i> 등록
@@ -102,6 +117,7 @@
 													<th>생산계획코드</th>
 													<th>주문서번호</th>
 													<th>거래처명</th>
+													<th>제품명</th>
 													<th>주문수량</th>
 													<th>납기일자</th>
 												</tr>
@@ -109,10 +125,11 @@
 											<tbody>
 												<tr>
 													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
+													<td><input type="text" value="${opInfo.orshNo}"></td>
+													<td><input type="text" value="${opInfo.caNm}"></td>
+													<td><input type="text" value="${opInfo.cprNm}"></td>
+													<td><input type="text" value="${opInfo.ordrDtlCnt}"></td>
+													<td><input type="text" value="${opInfo.dlvryDt}"></td>
 												</tr>
 											</tbody>
 										</table>
