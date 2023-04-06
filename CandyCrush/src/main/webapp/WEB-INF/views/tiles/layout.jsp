@@ -9,9 +9,35 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>CandyCrushMES</title>
+	
+	<!-- jQuery Js -->
+	<script src="assets/js/jquery-1.10.2.js"></script>
+	
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+
+	<script src="assets/materialize/js/materialize.min.js"></script>
+
+	<!-- Metis Menu Js -->
+	<script src="assets/js/jquery.metisMenu.js"></script>
+	
+	<!-- Morris Chart Js -->
+	<script src="assets/js/morris/raphael-2.1.0.min.js"></script>
+	<script src="assets/js/morris/morris.js"></script>
+	
+	<script src="assets/js/easypiechart.js"></script>
+	<script src="assets/js/easypiechart-data.js"></script>
+
+	<script src="assets/js/Lightweight-Chart/jquery.chart.js"></script>
+
+	<!-- Custom Js -->
+	<script src="assets/js/custom-scripts.js"></script>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="assets/materialize/css/materialize.min.css" media="screen,projection" />
 	
+	<!-- Bootstrap Js -->
+	<script src="assets/js/bootstrap.min.js"></script>
 	<!-- Bootstrap Styles-->
 	<link href="assets/css/bootstrap.css" rel="stylesheet" />
 	
@@ -57,6 +83,10 @@
 			width: 150px !important;
 		}
 	</style> -->
+	<style>
+			.modal { padding-right: 0px !important; }
+			.modal-open { padding-right: 0px !important; }
+	</style>
 </head>
 
 <body>
@@ -64,31 +94,6 @@
 	<tiles:insertAttribute name="header" />
 	<tiles:insertAttribute name="content" />
 
-	<!-- jQuery Js -->
-	<script src="assets/js/jquery-1.10.2.js"></script>
-	
-	<!-- jQuery -->
-	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-
-	<!-- Bootstrap Js -->
-	<script src="assets/js/bootstrap.min.js"></script>
-
-	<script src="assets/materialize/js/materialize.min.js"></script>
-
-	<!-- Metis Menu Js -->
-	<script src="assets/js/jquery.metisMenu.js"></script>
-	
-	<!-- Morris Chart Js -->
-	<script src="assets/js/morris/raphael-2.1.0.min.js"></script>
-	<script src="assets/js/morris/morris.js"></script>
-	
-	<script src="assets/js/easypiechart.js"></script>
-	<script src="assets/js/easypiechart-data.js"></script>
-
-	<script src="assets/js/Lightweight-Chart/jquery.chart.js"></script>
-
-	<!-- Custom Js -->
-	<script src="assets/js/custom-scripts.js"></script>
 </body>
 
 </html>
