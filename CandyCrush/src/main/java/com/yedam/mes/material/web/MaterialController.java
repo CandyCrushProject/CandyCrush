@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yedam.mes.material.service.AccountVO;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;
 
@@ -20,20 +21,30 @@ public class MaterialController {
 	
 	//자재발주관리 페이지
 	@GetMapping("mtrlOrder")
-	public String mtrlOrder() {
+	public String mtrlOrder(Model model) {
+		//model.addAttribute("moList", service.mtrlAllList());
+		model.addAttribute("accountList", service.accountCheck());
 		return "material/materialOrders";
 	}
 	
+	//자재발주관리/자재검색기능
 	@PostMapping("mtrlSearch")
 	@ResponseBody
 	public List<MaterialVO> mtrlSearch(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String cmmNm){
 		return service.mtrlSearch(caNm, cmmNm);
 	}
 	
+	//자재발주관리/모달/업체검색
+	@PostMapping("accountCheck")
+	@ResponseBody
+	public List<AccountVO> accountCheck(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String cmmNm){
+		return service.accountCheckModal(caNm, cmmNm);
+	}
+	
 	//자재발주조회 페이지
 	@GetMapping("mtrlOrderList")
 	public String mtrlOrderList(Model model) {
-		model.addAttribute("moList", service.mtrlAllList());
+		
 		
 		return "material/materialOrderList";
 	}

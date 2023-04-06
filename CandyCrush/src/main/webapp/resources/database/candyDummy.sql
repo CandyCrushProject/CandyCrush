@@ -1,37 +1,39 @@
--- 주문서 더미데이터
-INSERT INTO order_sheet (orsh_no, prod_cd, ca_no, orsh_dt, orsh_pr)
-                 VALUES ('candyorder00001', 'candyprod001', '캔디크러쉬', TO_DATE('20230405', 'yyyy/MM/dd'), '계획완료');
-                 
-INSERT INTO order_sheet (orsh_no, prod_cd, ca_no, orsh_dt)
-                 VALUES ('candyorder00002', 'candyprod002', '캔디크러쉬', TO_DATE('20230405', 'yyyy/MM/dd'));
-
-INSERT INTO order_sheet (orsh_no, prod_cd, ca_no, orsh_dt, orsh_pr)
-                 VALUES ('candyorder00003', 'candyprod003', '캔디크러쉬', TO_DATE('20230405', 'yyyy/MM/dd'), '생산중');
-                 
-INSERT INTO order_sheet (orsh_no, prod_cd, ca_no, orsh_dt, orsh_pr)
-                 VALUES ('candyorder00004', 'candyprod004', '캔디크러쉬', TO_DATE('20230405', 'yyyy/MM/dd'), '출고완료');
-                 
-INSERT INTO order_sheet (orsh_no, prod_cd, ca_no, orsh_dt, orsh_pr)
-                 VALUES ('candyorder00005', 'candyprod005', '캔디크러쉬', TO_DATE('20230405', 'yyyy/MM/dd'), '생산완료');
+-- 주문서 order_sheet
+CREATE SEQUENCE order_sheet_seq;
+DELETE FROM order_sheet;
+INSERT INTO order_sheet (orsh_no, cpr_cd, ca_no, orsh_dt, orsh_pr)
+                 VALUES ('candyorder'|| order_sheet_seq.nextval, 'candyprod001', 'yedam001', TO_DATE('20230405', 'yyyy/MM/dd'), '계획완료'); 
+INSERT INTO order_sheet (orsh_no, CPR_CD, ca_no, orsh_dt)
+                 VALUES ('candyorder'|| order_sheet_seq.nextval, 'candyprod002', 'yedam002', TO_DATE('20230405', 'yyyy/MM/dd'));
+INSERT INTO order_sheet (orsh_no, CPR_CD, ca_no, orsh_dt, orsh_pr)
+                 VALUES ('candyorder'|| order_sheet_seq.nextval, 'candyprod003', 'yedam003', TO_DATE('20230405', 'yyyy/MM/dd'), '생산중');
+INSERT INTO order_sheet (orsh_no, CPR_CD, ca_no, orsh_dt, orsh_pr)
+                 VALUES ('candyorder'|| order_sheet_seq.nextval, 'candyprod004', 'yedam004', TO_DATE('20230405', 'yyyy/MM/dd'), '출고완료');
+INSERT INTO order_sheet (orsh_no, CPR_CD, ca_no, orsh_dt, orsh_pr)
+                 VALUES ('candyorder'|| order_sheet_seq.nextval, 'candyprod005', 'yedam005', TO_DATE('20230405', 'yyyy/MM/dd'), '생산완료');
 
 SELECT * FROM order_sheet;
 
--- 설비 더미데이터 
-insert into FAC VALUES('FAC1','1호기테스트용',30,'1호기 정보','2022/01/01');
-insert into FAC VALUES('FAC2','2호기테스트용',20,'2호기 정보','2023/01/01');
+-- 주문서 디테일 order_sheet_detail
+SELECT * FROM order_sheet_detail;
+CREATE SEQUENCE order_sheet_detail_seq;
+DROP SEQUENCE oder_dtail_seq;
+DELETE FROM order_sheet_detail;
 
-insert into FAC_INSP VALUES('MTN01','FAC1','정기','2022/01/01','합격','테스트점검1','테스트점검 상세1','김ㅇㅈ');
-insert into FAC_INSP VALUES('MTN02','FAC1','정기','2022/01/05','합격','테스트점검2','테스트점검 상세2','김ㅇㅈ');
+INSERT INTO order_sheet_detail
+                        VALUES ('orderdetail'||order_sheet_detail_seq.NEXTVAL , 500, '20230323', 'banana001', 'candyorder3');
+INSERT INTO order_sheet_detail
+                        VALUES ('orderdetail'||order_sheet_detail_seq.NEXTVAL , 300, '20220707', 'banana001', 'candyorder3');
+INSERT INTO order_sheet_detail
+                        VALUES ('orderdetail'||order_sheet_detail_seq.NEXTVAL , 100, '20230101', 'banana001', 'candyorder3');
+INSERT INTO order_sheet_detail
+                        VALUES ('orderdetail'||order_sheet_detail_seq.NEXTVAL , 50, '20230217', 'banana001', 'candyorder3');
+INSERT INTO order_sheet_detail
+                        VALUES ('orderdetail'||order_sheet_detail_seq.NEXTVAL , 700, '20221111', 'banana001', 'candyorder3');
 
-insert into FAC_DWN_MNG VALUES('FDM01','ㄱㅇㅈ','2022/12/11','2023/01/11','FAC1','더미 비가동코드');
-insert into FAC_DWN_MNG VALUES('FDM02','ㄱㅇㅈ','2022/12/11',NULL,'FAC1','더미 비가동코드');
-insert into FAC_DWN_MNG VALUES('FDM03','ㄱㅇㅈ','2023/01/11','2023/03/11','FAC2','더미 비가동코드');
-insert into FAC_STAT VALUES('FAC1','N');
-insert into FAC_STAT VALUES('FAC2','Y');
+-- 제품관리 CM_PRODUCT_MNG
+INSERT INTO CM_PRODUCT_MNG
+                    VALUES( 'choco001', '초코맛캔디', 'kg', 'kg', sysdate, sysdate, '제품유형');
 
--- 제품관리 더미 데이터
-insert into CM_PRODUCT_MNG
-values( 'pro' || cpr_seq.nextval, 'test', 'kg', 'kg', sysdate, sysdate, '제품유형');
-
-select * from CM_PRODUCT_MNG;
-CREATE SEQUENCE cpr_seq;                
+SELECT * FROM CM_PRODUCT_MNG;
+COMMIT;

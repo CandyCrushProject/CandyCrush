@@ -21,6 +21,6 @@ public class OrdrShtController {
 		model.addAttribute("ordrShtList", service.ordrShtAllList());
 		System.out.println(service.ordrShtAllList());
 		
-		return "sales/OrderSheet";
+		return "sales/orderSheet";
 	}
 }

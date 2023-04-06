@@ -7,7 +7,18 @@
 	<!-- 전체조회 -->
 	<select id="ordrShtAllList" resultType="OrdrShtVO">
 		SELECT orsh_no, cpr_cd, ca_no, orsh_dt, orsh_pr 
- 		  FROM order_sheet
+		  FROM order_sheet
+ 		<where>
+ 			<if test="orsh_no != null and !orsh_no.equals('')">
+ 				orsh_no LIKE '%' || #{orshNo} || '%' AND
+ 			</if>
+ 			<if test="cpr_cd != null and !cpr_cd.equals('')">
+ 				cpr_cd LIKE '%' || #{cpr_cd} || '%' AND
+ 			</if>
+ 			<if test="orsh_dt != null and !orsh_dt.equals('')">
+ 				orsh_dt between TO_CHAR(#{orshStrDt}, 'yyyy-MM-dd') and TO_CHAR(#{orshEndDt}, 'yyyy-MM-dd')
+ 			</if>
+ 		</where>
  		 ORDER BY orsh_no
 	</select>
 	

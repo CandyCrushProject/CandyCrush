@@ -3,12 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 
-
-<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-
-<link rel="stylesheet" href="assets/css/input.css">
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -31,14 +25,14 @@
 						<div class="card-content">
 							<div>
 								<label>거래처명</label>
-								<input type="text" style="width: 300px; border: 1px solid rgba(128, 128, 128, 0.61);">
-								<button class="srchBtn">
+								<input type="text">
+								<button id="ordrSrchBtn" class="srchBtn">
 									<i class="fa-solid fa-magnifying-glass"></i>
 								</button>
 							</div>
 							<div>
 								<label for="companyName">제품명</label>
-								<input type="text" style="width: 300px; border: 1px solid rgba(128, 128, 128, 0.61);">
+								<input type="text">
 								<button class="srchBtn">
 									<i class="fa-solid fa-magnifying-glass"></i>
 								</button>
@@ -49,16 +43,16 @@
 							</div>
 							<div style="clear:both"></div>
 						</div>
-						<button class="cndSelBtn" type="button">조회</button>
+						<button id="ordrBtn" class="cndSelBtn" type="button">조회</button>
 					</div>
 				</div>
 			</div> <!--END row-->
 			<div class="row">
 				<div class="col-md-12">
 					<div class="btnBox">
-						<button class="cndInsBtn" type="button">등록</button>
-						<button class="cndUdtBtn" type="button">수정</button>
-						<button class="cndDelBtn" type="button">삭제</button>
+						<button id="ordrBtn" class="cndInsBtn" type="button">등록</button>
+						<button id="ordrBtn" class="cndUdtBtn" type="button">수정</button>
+						<button id="ordrDelBtn" class="cndDelBtn" type="button">삭제</button>
 					</div>
 					<!-- Advanced Tables -->
 					<div class="card">
@@ -76,6 +70,36 @@
 	</div>
 
 	<script>
+		let ordrBtn = document.getElementById("ordrBtn"); //조회버튼
+		let delBtn = document.getElementById("delBtn"); //삭제버튼
+		let ordrSrchBtn = document.getElementById("ordrSrchBtn"); //모달 거래처 검색 버튼
+		let confirmBtn = document.getElementById("confirmBtn"); //거래처 모달창 확인버튼
+		let vendNmInput = document.getElementById("vendNm"); //거래처명 검색 인풋박스
+		let selStrtDt = ""; //주문일자 검색
+		let selendDt = ""; //주문일자 검색
+		let vendNm = ""; //거래처명 검색
+		let checkLen = 0; //체크박스 선택 개수
+		let vendSearch = ""; //모달창 거래처명 저장변수
+		
+		 //조회버튼 눌렀을때 
+	    function search() {
+	      start = document.getElementById("selStrtDt").value;
+	      end = document.getElementById("selendDt").value;
+	      vendNm = document.getElementById("vendNm").value.toUpperCase();
+	      $.ajax({
+	        url: "orderSearch",
+	        method: "post",
+	        data: { start: start, end: end, vendNm: vendNm },
+	        success: function (data) {
+	          grid.resetData(data); //그리드 적용
+	        },
+	        error: function (reject) {
+	          console.log(reject);
+	        },
+	      });
+	    }
+
+
 		const Grid = tui.Grid;
 		let orderData = [
 			<c:forEach items="${ordrShtList}" var="ordrSht">
@@ -129,7 +153,7 @@
 				useClient: true,
 				type: 'scroll',
 				perPage: 30
-  		}
+  			}
 		});
 </script>
 </main>
