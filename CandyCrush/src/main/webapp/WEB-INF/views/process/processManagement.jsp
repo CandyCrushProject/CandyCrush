@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
 		<link rel="stylesheet" href="assets/css/processManagement.css">
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 		<!-- 그리드 -->
@@ -8,68 +10,82 @@
 		<!-- 폰트 어썸 -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 		<script>
-			function addOrder(orshNo) {
-				console.log(orshNo);
 
+			function oderList() {
 				$.ajax({
-					url: "getOrder",
-					method: "post",
-					data: { "orshNo": orshNo },
-					dataType: "text",
-					contentType: "application/x-www-form-urlencoded; charset=utf-8",
-					success: function (res) {
-						document.getElementById('order').style.display = 'none'
-						console.log("성공");
-					}, error: function (rej) {
-						console.log("실패");
+					url: 'getOrder',
+					type: 'GET',
+					dataType: 'json',
+					success: function (data) {
+						console.log(data.result);
+						// 성공적으로 응답 받았을 때 처리할 로직
+						var tbody = $("#orderSheetTab"); // tbody 선택
+						tbody.empty(); // tbody 비우기
+
+						// 데이터 반복문 처리
+						$.each(data.result, function (index, item) {
+							var row = $("<tr>");
+							// td 생성		
+							row.append($("<td>").attr("hidden", true).text(item.caNm));
+							row.append($("<td>").attr("hidden", true).text(item.cprNm));
+							row.append($("<th scope='row'>").text(index + 1));
+							row.append($("<td>").text(item.orshNo));
+							row.append($("<td>").text(item.caNm));
+							row.append($("<td>").text(item.cprNm));
+							var button = $("<button>", {
+								type: "button",
+								class: "btn btn-primary addBtn",
+								text: "등록",
+								style: "background-color: #0d6efd;"
+							});
+							row.append(button);
+
+							tbody.append(row);
+						})
+						// 모달 창 열기
+						$('#order').modal('show');
+					},
+					error: function (xhr, status, error) {
+						// 요청이 실패했을 때 처리할 로직
+						console.error('요청 실패:', error);
 					}
 				});
 			}
+
 		</script>
 		<main>
-			<!-- The Modal -->
-			<div id="order" class="w3-modal">
-				<div class="w3-modal-content">
-					<div class="w3-container">
-						<button onclick="document.getElementById('order').style.display='none'" class="w3-display-topright"
-							style="border: none;">
-							<i class="fa-solid fa-xmark fa-xl"></i>
-						</button>
-						<h3 style="margin: 30px; margin-bottom: 60px;">주문서 조회</h3>
-						<div class="row">
-							<div class="col-md-1"></div>
-							<div class="col-md-10">
-								<table class="candyTab">
-									<thead>
-										<tr>
-											<th>주문번호</th>
-											<th>거래처명</th>
-											<th>제품명</th>
-											<th>계획등록</th>
-										</tr>
-									</thead>
-									<tbody>
-
-										<c:forEach var="order" items="${orderInfo}" varStatus="status">
-											<tr>
-												<td>${order.orshNo}</td>
-												<td>${order.caNm}</td>
-												<td>${order.cprNm}</td>
-												<td>
-													<button type="button" onclick="addOrder('${order.orshNo}')">등록</button>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody>
-								</table>
-							</div>
-							<div class="col-md-1"></div>
+			<div class="modal fade" id="order" tabindex="-1">
+				<div class="modal-dialog modal-lg modal-dialog-scrollable">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">미지시 주문서 조회</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
-						<div style="margin-top: 60px;"></div>
+						<div class="modal-body">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th scope="col"></th>
+										<th scope="col">주문코드</th>
+										<th scope="col">거래처</th>
+										<th scope="col">제품명</th>
+										<th scope="col">등록</th>
+									</tr>
+								</thead>
+								<tbody id=orderSheetTab>
+								</tbody>
+							</table>
+							<!-- End Multi Columns Form -->
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
 					</div>
 				</div>
 			</div>
+
 
 			<!-- /. NAV SIDE  -->
 			<div id="page-wrapper">
@@ -98,7 +114,8 @@
 												</button>
 											</li>
 											<li class="procPlanBtn-r">
-												<button onclick="document.getElementById('order').style.display='block'">
+												<button id="oderBtn" type="button" class=" btn btn-primary" data-bs-toggle="modal"
+													data-bs-target="#order" onclick="oderList()">
 													<i class="fa-solid fa-clipboard"></i> 주문서
 												</button>
 											</li>
