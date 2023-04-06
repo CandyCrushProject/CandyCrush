@@ -266,10 +266,7 @@
 				{
 					header: '설비코드',
 					name: 'facCd',
-					sortable: true,
-					filter: {
-				        type: 'select'
-				      }
+					sortable: true
 				},
 				{
 					header: '점검구분',
@@ -280,18 +277,12 @@
 					name: 'facMtnDt',
 					sortable: true,
 					sortingType: 'desc',
-					 options: {
-					        format: 'yyyy-MM-dd'						        
-					      }
 					
 				},
 				{
 					header: '점검결과',
 					name: 'facRslt',
-					sortable: true,
-					filter: {
-				        type: 'select'
-				      }
+					sortable: true
 				},
 				{
 					header: '점검명',
@@ -306,10 +297,6 @@
 				{
 					header: '담당자',
 					name: 'facMgr'
-						,
-						filter: {
-					        type: 'select'
-					      }
 				}
 			],
 			data,
