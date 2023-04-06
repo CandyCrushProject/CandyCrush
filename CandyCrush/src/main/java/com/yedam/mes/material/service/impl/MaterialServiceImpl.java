@@ -2,6 +2,7 @@ package com.yedam.mes.material.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,11 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public List<MaterialOrderVO> mtrlOrderAllList() {
 		return mapper.mtrlOrderAllList();
+	}
+
+	@Override
+	public List<MaterialVO> mtrlSearch(@Param("caNm") String caNm, @Param("cmmNm") String cmmNm) {
+		System.out.println(caNm + ", " + cmmNm);
+		return mapper.mtrlSearch(caNm, cmmNm);
 	}
 }
