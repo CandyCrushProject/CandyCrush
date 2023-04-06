@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.yedam.mes.sales.mapper.OrdrShtMapper">
+	<!-- 전체조회 -->
+	<select id="ordrShtAllList" resultType="OrdrShtVO">
+		SELECT orsh_no, cpr_cd, ca_no, orsh_dt, orsh_pr 
+ 		  FROM order_sheet
+ 		 ORDER BY orsh_no
+	</select>
+	
+	
+</mapper>

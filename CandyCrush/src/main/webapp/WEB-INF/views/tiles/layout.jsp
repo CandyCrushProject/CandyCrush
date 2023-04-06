@@ -13,14 +13,25 @@
 				<link rel="stylesheet" href="assets/materialize/css/materialize.min.css" media="screen,projection" />
 				<!-- Bootstrap Styles-->
 				<link href="assets/css/bootstrap.css" rel="stylesheet" />
+				
 				<!-- FontAwesome Styles-->
 				<link href="assets/css/font-awesome.css" rel="stylesheet" />
+				
+				<!-- Fontawesome -->
+				<script src="https://kit.fontawesome.com/9fc370938e.js" crossorigin="anonymous"></script>
+				
 				<!-- Morris Chart Styles-->
 				<link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+				
 				<!-- Custom Styles-->
 				<link href="assets/css/custom-styles.css" rel="stylesheet" />
+				
 				<!-- CandyTab 우리 테이블 css -->
 				<link href="assets/css/candyTab.css" rel="stylesheet" />
+				
+				<!-- CandyButton -->
+				<link rel="stylesheet" href="assets/css/candyButton.css">
+				
 				<!-- Google Fonts-->
 				<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 				<link rel="stylesheet" href="assets/js/Lightweight-Chart/cssCharts.css">
@@ -31,6 +42,7 @@
 						position: relative !important;
 						left: 0 !important;
 						opacity: 1 !important;
+						width: 100% !important;
 					}
 				</style>
 			</head>

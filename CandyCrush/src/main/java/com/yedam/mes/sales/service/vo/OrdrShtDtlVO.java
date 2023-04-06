@@ -1,4 +1,4 @@
-package com.yedam.mes.sales.service;
+package com.yedam.mes.sales.service.vo;
 
 import java.util.Date;
 
