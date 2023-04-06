@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yedam.mes.facility.service.FacilityService;
 
@@ -17,5 +16,11 @@ public class FacilityController {
 	public String statList(Model model) {
 		model.addAttribute("statList",facilityService.selectFacilityStat());
 		return "facility/facilityMain";
+	}
+	@GetMapping("facilityMaintenance")
+	public String facilityMaintenance(Model model) {
+		model.addAttribute("statList",facilityService.selectFacilityStat());
+		model.addAttribute("mtnList",facilityService.selectFacilityMaintenance());
+		return "facility/facilityMaintenance";
 	}
 }

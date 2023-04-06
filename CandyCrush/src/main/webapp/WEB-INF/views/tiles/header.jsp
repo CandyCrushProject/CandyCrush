@@ -448,18 +448,18 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
-										설비관리
+									<a href="${pageContext.request.contextPath}/facilityMain" class="waves-effect waves-dark">
+										설비조회
 									</a>
 								</li>
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcOrder" class="waves-effect waves-dark">
+									<a href="${pageContext.request.contextPath}/facilityMaintenance" class="waves-effect waves-dark">
 										설비정비
 									</a>
 								</li>
 								<li>
 									<a href="${pageContext.request.contextPath}/ProdProcManagement" class="waves-effect waves-dark">
-										설비뭐시깽이
+										설비 비가동 관리
 									</a>
 								</li>
 							</ul>
