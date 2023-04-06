@@ -23,5 +23,10 @@ public class FacilityServiceImpl implements FacilityService {
 		// TODO Auto-generated method stub
 		return facilityMapper.selectFacilityMaintenance();
 	}
+	@Override
+	public int insertFacilityMaintenance(FacilityMaintenanceVO mtnVO) {
+		// TODO Auto-generated method stub
+		return facilityMapper.insertFacilityMaintenance(mtnVO);
+	}
 
 }
