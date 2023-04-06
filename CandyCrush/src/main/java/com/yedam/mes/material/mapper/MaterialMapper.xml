@@ -5,7 +5,26 @@
 <mapper namespace="com.yedam.mes.material.mapper.MaterialMapper">
 	<!-- 자재 전체조회 -->
 	<select id="mtrlAllList" resultType="MaterialVO">
-		select * from CM_MTRL_MNG
+		SELECT * FROM CM_MTRL_MNG
+	</select>
+	
+	<!-- 업체명조회 -->
+	<select id="accountCheck" resultType="AccountVO">
+		SELECT ca_no, ca_nm, ca_mng, ca_mng_ph, ca_bsns_num
+		FROM CM_ACCOUNT
+	</select>
+		
+	<!-- 모달창 업체검색 -->
+	<select id="accountCheckModal" resultType="AccountVO">
+		SELECT ca_no, ca_nm, ca_mng, ca_mng_ph, ca_bsns_num
+		FROM CM_ACCOUNT
+		WHERE 1=1
+			<if test="caNm != null and !caNm.equals('')">
+			AND ca_no = #{caNm}
+			</if>
+			<if test="cmmNm != null and !cmmNm.equals('')">
+			AND cmm_nm = #{cmmNm}
+			</if>
 	</select>
 	
 	<!-- 업체명 또는 자재명을 통한 자재검색 -->
@@ -15,10 +34,10 @@
 		ON cmm.ca_no = ca.ca_no
 		WHERE 1 = 1
 			<if test="caNm != null and !caNm.equals('')">
-			AND ca_nm = #{caNm} 
+			AND ca_nm LIKE '%' || #{caNm} || '%' 
 			</if>
 			<if test="cmmNm != null and !cmmNm.equals('')">
-			AND cmm_nm = #{cmmNm}
+			AND cmm_nm = LIKE '%' || #{cmmNm} || '%' 
 			</if>
 
 		ORDER BY cmm_cd
@@ -26,7 +45,7 @@
 
 	<!-- 자재발주 전체조회 -->
 	<select id="mtrlOrderAllList" resultType="MaterialOrderVO">
-		select * from MTRL_ORDR
+		SELECT * FROM MTRL_ORDR
 	</select>
 
 </mapper>
