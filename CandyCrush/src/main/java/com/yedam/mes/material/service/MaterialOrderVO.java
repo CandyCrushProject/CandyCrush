@@ -21,5 +21,6 @@ public class MaterialOrderVO {
 	private Date moUdtDt;
 	private String moMng;
 	private String caNo;
+	private String caNm;
 	private String cmmCd;
 }

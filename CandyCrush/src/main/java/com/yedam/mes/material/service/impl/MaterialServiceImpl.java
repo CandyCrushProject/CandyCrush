@@ -27,20 +27,24 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialOrderVO> mtrlOrderAllList() {
 		return mapper.mtrlOrderAllList();
 	}
-
+	//업체명 또는 자재명을 통한 자재검색
 	@Override
 	public List<MaterialVO> mtrlSearch(@Param("caNm") String caNm, @Param("cmmNm") String cmmNm) {
-		System.out.println(caNm + ", " + cmmNm);
 		return mapper.mtrlSearch(caNm, cmmNm);
 	}
-
+	//업체조회
 	@Override
 	public List<AccountVO> accountCheck() {
 		return mapper.accountCheck();
 	}
-
+	//모달 업체검색
 	@Override
-	public List<AccountVO> accountCheckModal(@Param("caNm") String caNm, @Param("cmmNm") String cmmNm) {
-		return mapper.accountCheckModal(caNm, cmmNm);
+	public List<AccountVO> accountCheckModal(@Param("caNm") String caNm, @Param("caNo") String caNo) {
+		return mapper.accountCheckModal(caNm, caNo);
+	}
+	//자재목록에서 자재코드 클릭하면 자재발주로 리스트를 뿌린다
+	@Override
+	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd) {
+		return mapper.mtrlOrderOneCheck(cmmCd);
 	}
 }
