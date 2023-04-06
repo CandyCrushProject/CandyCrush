@@ -2,10 +2,12 @@
 	pageEncoding="UTF-8"%>
 <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 <style>
 	label{
 		width: 70px;
 		margin-left: 10px;
+		color : black;
 	}
 	#eunae{
 		margin-left: 10px;
@@ -33,12 +35,12 @@
 					<div class="card">
 						<div class="card-content">
 							<div id="eunae">
-							<label>원자재명</label>
+							<label for="mtrlName">원자재명</label>
 							<input type="text" id="mtrlName" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
 							
-							<label>업체명</label>
+							<label for="companyName">업체명</label>
 							<input type="text" id="companyName" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
-							<button id="search" class="cndSrchBtn">검색</button>
+							<button id="search" class="cndSrchBtn" onclick="search()">검색</button>
 							</div>
 							<div class="card-action">자재목록</div>
 							<div class="table-responsive">
@@ -80,18 +82,6 @@
 	<script>
 		const Grid = tui.Grid;
 
-		const data = [
-			{
-				cmmCd: '10012',
-				cmmNm: 'Seoul',
-				cmmTyp: 'South Korea',
-				cmmSpec: 'South Korea',
-				cmmUnit: 'South Korea',
-				cmmSafStc: 60,
-			}
-		];
-
-
 		const data2=[
 			{
 				moCd : '3wfwef',
@@ -101,6 +91,29 @@
 				moDlvDt : '2023-05-30'
 			}
 		];
+
+//-----------------------------------Ajax
+		let cmmNm = null;
+		let caNm = null;
+		
+		//자재목록
+		function search(){
+			cmmNm = document.getElementById('mtrlName').value; //원자재명
+			caNm = document.getElementById('companyName').value //업체명
+			$.ajax({
+					url : "mtrlSearch",
+					method :"POST",
+					dataType : "JSON",
+					data : {cmmNm : cmmNm, caNm : caNm},
+					success : function(data){
+						material.resetData(data);
+					} 
+			});
+		}
+
+		//발주
+		
+//---------------------------------------
 
 
 		//자재목록
@@ -137,7 +150,6 @@
 					name: 'cmmSafStc'
 				}
 			],
-			data,
 			bodyHeight: 300,
 			pageOptions: {
 				useClient: true,

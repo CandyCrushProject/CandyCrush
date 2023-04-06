@@ -1,12 +1,17 @@
 package com.yedam.mes.material.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.mes.material.service.MaterialService;
+import com.yedam.mes.material.service.MaterialVO;
 
 @Controller
 public class MaterialController {
@@ -15,11 +20,14 @@ public class MaterialController {
 	
 	//자재발주관리 페이지
 	@GetMapping("mtrlOrder")
-	public String mtrlOrder(Model model) {
-		model.addAttribute("material",service.mtrlAllList());
-		model.addAttribute("materialOrder",service.mtrlOrderAllList());
-	
+	public String mtrlOrder() {
 		return "material/materialOrders";
+	}
+	
+	@PostMapping("mtrlSearch")
+	@ResponseBody
+	public List<MaterialVO> mtrlSearch(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String cmmNm){
+		return service.mtrlSearch(caNm, cmmNm);
 	}
 	
 	//자재발주조회 페이지
