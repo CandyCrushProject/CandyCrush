@@ -255,18 +255,18 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
-										생산계획관리
+									<a href="${pageContext.request.contextPath}/OrdrShtList" class="waves-effect waves-dark">
+										주문서관리
 									</a>
 								</li>
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcOrder" class="waves-effect waves-dark">
-										생산지시관리
+									<a href="${pageContext.request.contextPath}/" class="waves-effect waves-dark">
+										???관리
 									</a>
 								</li>
 								<li>
-									<a href="${pageContext.request.contextPath}/ProdProcManagement" class="waves-effect waves-dark">
-										생산공정관리
+									<a href="${pageContext.request.contextPath}/" class="waves-effect waves-dark">
+										???관리
 									</a>
 								</li>
 

@@ -1,0 +1,220 @@
+button {
+    margin: 7px;
+    box-sizing: border-box;
+}
+
+/* 검색 돋보기 아이콘 */
+.srchBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: #f8e6e0;
+    color: #6e6e6e;
+}
+
+.srchBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.srchBtn:active {
+    transform: scale(1.1);
+}
+
+/* 검색 버튼 */
+.cndSrchBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: #f8e6e0;
+    color: #6e6e6e;
+}
+
+.cndSrchBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.cndSrchBtn:active {
+    transform: scale(1.1);
+}
+
+/*  */
+.cndSelBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: aliceblue;
+    color: #1e6b7b;
+}
+
+.cndSelBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.cndSelBtn:active {
+    transform: scale(1.1);
+}
+
+/* 수정 버튼 */
+.cndUdtBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: #77af9c;
+    color: #d7fff1;
+}
+
+.cndUdtBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.cndUdtBtn:active {
+    transform: scale(1.1);
+}
+
+/* plus 아이콘 버튼 */
+.plusBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: #6aafe6;
+    color: #d4dfe6;
+}
+
+.plusBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.plusBtn:active {
+    transform: scale(1.1);
+}
+
+/* 등록 버튼 */
+.cndInsBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: #6aafe6;
+    color: #d4dfe6;
+}
+
+.cndInsBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.cndInsBtn:active {
+    transform: scale(1.1);
+}
+
+/* minus 아이콘 버튼 */
+.minusBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: #f199bc;
+    color: #d4dfe6;
+}
+
+.minusBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.minusBtn:active {
+    transform: scale(1.1);
+}
+
+/* 삭제 버튼 */
+.cndDelBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: #f199bc;
+    color: #d4dfe6;
+}
+
+.cndDelBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.cndDelBtn:active {
+    transform: scale(1.1);
+}
+
+/* 초기화 버튼 */
+.cndRstBtn {
+    border: none;
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.25s;
+    background-color: #a3a1a1;
+    color: #e3dede;
+}
+
+.cndRstBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.cndRstBtn:active {
+    transform: scale(1.1);
+}
