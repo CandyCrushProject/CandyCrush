@@ -4,16 +4,35 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mes.process.mapper.ProcMapper">
 	<select id="selectOrder" resultType="OrderPlanVO">
-		SELECT o.orsh_no as orsh_no, prod_cd, o.ca_no, ordr_dtl_cnt, TO_CHAR(dlvry_dt,'rrrr-MM-dd') as dlvry_dt, TO_CHAR(orsh_dt,'rrrr-MM-dd') as orsh_dt, orsh_pr, d.cpr_cd as cpr_cd, cpr_nm, ca_nm
+		SELECT o.orsh_no as orsh_no
+		     , o.ca_no as ca_no
+		     , ordr_dtl_cnt
+		     , TO_CHAR(dlvry_dt,'rrrr-MM-dd') as dlvry_dt
+		     , TO_CHAR(orsh_dt,'rrrr-MM-dd') as orsh_dt
+		     , orsh_pr
+		     , d.cpr_cd as cpr_cd
+		     , cpr_nm
+		     , ca_nm
   		  FROM order_sheet o , order_sheet_detail d , cm_product_mng p , cm_account a
 		 WHERE o.orsh_no = d.orsh_no
 		   AND d.cpr_cd = p.cpr_cd(+)
-           and o.ca_no = a.ca_no(+)
+           AND o.ca_no = a.ca_no(+)
 		 ORDER BY 1
 	</select>
-	
-	<insert id="insertPlan" parameterType="ProcPlanVO" >
-		
-	</insert>
-	
+	<select id="selectOneOrder" parameterType="OrderPlanVO" resultType="OrderPlanVO">
+		SELECT o.orsh_no as orsh_no
+		     , o.ca_no as ca_no
+		     , ordr_dtl_cnt
+		     , TO_CHAR(dlvry_dt,'rrrr-MM-dd') as dlvry_dt
+		     , TO_CHAR(orsh_dt,'rrrr-MM-dd') as orsh_dt
+		     , orsh_pr
+		     , d.cpr_cd as cpr_cd
+		     , cpr_nm
+		     , ca_nm
+  		  FROM order_sheet o , order_sheet_detail d , cm_product_mng p , cm_account a
+		 WHERE o.orsh_no = d.orsh_no
+		   AND d.cpr_cd = p.cpr_cd(+)
+           AND o.ca_no = a.ca_no(+)
+           AND o.orsh_no = #{orshNo}
+	</select>
 </mapper>
