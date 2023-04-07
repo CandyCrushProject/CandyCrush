@@ -8,5 +8,6 @@ public interface FacilityService {
 	public int insertFacilityMaintenance(FacilityMaintenanceVO mtnVO);
 	public List<FacilityOperationVO> selectFacilityOperation();
 	public List<FacilityDownVO> getFacilityDownCode();
-	public List<FacilityOperationStatVO> FacilityOperationStat();
+	public List<FacilityOperationStatVO> facilityOperationStat();
+	public int getNextDownCode();
 }

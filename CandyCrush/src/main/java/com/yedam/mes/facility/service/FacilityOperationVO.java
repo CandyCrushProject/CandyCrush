@@ -11,9 +11,9 @@ public class FacilityOperationVO {
 	private String facCd;
 	private String facNm;
 	private String fdmMgr;
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date fdmStop;
-	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date fdmRun;
 	private String cfdCd;
 	private String facRun;

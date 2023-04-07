@@ -42,8 +42,13 @@ public class FacilityServiceImpl implements FacilityService {
 		return facilityMapper.getFacilityDownCode();
 	}
 	@Override
-	public List<FacilityOperationStatVO> FacilityOperationStat() {
+	public List<FacilityOperationStatVO> facilityOperationStat() {
 		// TODO Auto-generated method stub
 		return facilityMapper.facilityOperationStat();
+	}
+	@Override
+	public int getNextDownCode() {
+		// TODO Auto-generated method stub
+		return facilityMapper.getNextDownCode();
 	}
 }

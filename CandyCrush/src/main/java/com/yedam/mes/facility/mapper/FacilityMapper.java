@@ -15,4 +15,5 @@ public interface FacilityMapper {
 	public List<FacilityOperationVO> selectFacilityOperation();
 	public List<FacilityDownVO> getFacilityDownCode();
 	public List<FacilityOperationStatVO> facilityOperationStat();
+	public int getNextDownCode();
 }

@@ -19,31 +19,147 @@
 		<div id="page-inner">
 <!-- 모달 -->
 <!-- The Modal -->
-<c:forEach items="${statList }" var="stat">
+<c:forEach items="${opStatList }" var="stat">
 <div id="${stat.facCd}Modal" class="w3-modal" style="z-index: 100;">
   <div class="w3-modal-content">
     <div class="w3-container">
       <span onclick="document.getElementById('${stat.facCd}Modal').style.display='none'"  class="w3-button w3-display-topright">&times;</span>
-			<h3>${stat.facNm} 상세정보</h3>
-      <table class="candyTab">
-				<tbody>
-						<tr><th>설비코드</th><td>${stat.facCd}</td></tr>
-						<tr><th>설비명</th><td>${stat.facNm}</td></tr>
-						<tr><th>도입일자</th><td><fmt:formatDate value="${stat.facDt}" pattern="yyyy-MM-dd"/></td></tr>
-						<tr><th>점검주기</th><td>${stat.facCy}일</td></tr>
-						<tr><th>최근 점검일</th><td><fmt:formatDate value="${stat.facRctMtn}" pattern="yyyy-MM-dd"/></td></tr>
-						<tr><th>점검예정일</th><td><fmt:formatDate value="${stat.mtnPlanned}" pattern="yyyy-MM-dd"/></td></tr>
-						<tr><th>현재 가동정보</th> <td>${stat.facRun}</td></tr>
-				</tbody>
-			</table>
+
+			<c:choose>
+			<c:when test="${stat.facRun eq 'Y'}">			<!-- 가동중인 설비 정지클릭시 정지양식 모달 호출 -->
+				<h3>가동정지</h3>
+	      		<form id="OperationStopForm" action="" method="post" >
+							<table>
+								<tr>
+									<td>
+										<label for="facCd">비가동번호</label>
+									</td>
+									<td>
+										<input type="text" value="${stat.facCd }" name="facCd" style="display: inline; width: 70%;" readonly>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label for="facCd">설비코드</label>
+									</td>
+									<td>
+										<input type="text" value="${stat.facCd }" name="facCd" style="display: inline; width: 70%;" readonly>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label for="facNm">설비명</label>
+									</td>
+									<td>
+										<input type="text" value="${stat.facNm }" name="facNm" style="display: inline; width: 70%;" readonly>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label for="fdmMgr">담당자</label>
+									</td>
+									<td>
+										<input type="text" name="fdmMgr" style="display: inline; width: 70%;" required>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label for="fdmStop">가동정지시간</label>
+									</td>
+									<td>
+										<input class="fdmTimeInput" type="datetime-local" name="fdmStop" style="display: inline; width: 70%;" required>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label for="cfdCd">비가동코드</label>
+									</td>
+									<td>
+									<select name="cfdCd" id="cfdCdSelect" form="mtnInsertForm" style="display: inline; width: 70%;" required>
+											<option value="">--Please choose an option--</option>
+											<c:forEach items="${dwnList }" var="dwn">
+											<option value="${dwn.cfdCd }">${dwn.cfdCd } | ${dwn.cfdTitle }</option>
+										</c:forEach>
+									</select>
+								</td>
+								</tr>
+							</table>
+							<button class="cndInsBtn" type="submit">등록</button>
+							<button class="cndDelBtn" onclick="document.getElementById('mtnInsertModal').style.display='none'">닫기</button>
+						</form>
+			</c:when>
+
+			<c:otherwise>
+								<!-- 비가동중인 설비 재가동시 재가동양식 모달출력 -->
+				<h3>재가동</h3>
+				<table>
+					<tr>
+						<td>
+							<label for="facCd">설비코드</label>
+						</td>
+						<td>
+							 <input type="text" value="${stat.facCd }" name="facCd" style="display: inline; width: 70%;" readonly>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="facNm">설비명</label>
+						</td>
+						<td>
+							 <input type="text" value="${stat.facNm }" name="facNm" style="display: inline; width: 70%;" readonly>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="fdmMgr">담당자</label>
+						</td>
+						<td>
+							 <input type="text" name="fdmMgr" value="fdmMgr" style="display: inline; width: 70%;" readonly>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="fdmStop">가동정지시간</label>
+						</td>
+						<td>
+							 <input type="datetime-local" name="fdmStop" value="<fmt:formatDate value="${stat.rctStp}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="display: inline; width: 70%;" readonly>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="fdmRun">재가동시간</label>
+						</td>
+						<td>
+							 <input class="fdmTimeInput" type="datetime-local" name="fdmRun" style="display: inline; width: 70%;" required>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="cfdCd">비가동코드</label>
+						</td>
+						<td>
+						<select name="cfdCd" id="cfdCdSelect" form="mtnInsertForm" value="${dwn.cfdCd } " style="display: inline; width: 70%;" readonly>
+								<option value="">--Please choose an option--</option>
+								<c:forEach items="${dwnList }" var="dwn">
+								<option value="${dwn.cfdCd }">${dwn.cfdCd } | ${dwn.cfdTitle }</option>
+							</c:forEach>
+						</select>
+					</td>
+					</tr>
+				</table>
+				<button class="cndInsBtn" type="submit">등록</button>
+				<button class="cndDelBtn" onclick="document.getElementById('mtnInsertModal').style.display='none'">닫기</button>
+			</form>
+			</c:otherwise>
+			</c:choose>
     </div>
   </div>
 </div>
 </c:forEach>
-<!-- 모달 -->
+<!-- 모달끝 -->
 
 <!-- The Modal -->
-<c:forEach items="${statList }" var="stat">
+<c:forEach items="${opStatList }" var="stat">
 <div id="${stat.facCd}Modal" class="w3-modal" style="z-index: 100;">
   <div class="w3-modal-content">
     <div class="w3-container">
@@ -52,19 +168,13 @@
       <table class="candyTab">
 				<tbody>
 						<tr><th>설비코드</th><td>${stat.facCd}</td></tr>
-						<tr><th>설비명</th><td>${stat.facNm}</td></tr>
-						<tr><th>도입일자</th><td><fmt:formatDate value="${stat.facDt}" pattern="yyyy-MM-dd"/></td></tr>
-						<tr><th>점검주기</th><td>${stat.facCy}일</td></tr>
-						<tr><th>최근 점검일</th><td><fmt:formatDate value="${stat.facRctMtn}" pattern="yyyy-MM-dd"/></td></tr>
-						<tr><th>점검예정일</th><td><fmt:formatDate value="${stat.mtnPlanned}" pattern="yyyy-MM-dd"/></td></tr>
-						<tr><th>현재 가동정보</th> <td>${stat.facRun}</td></tr>
 				</tbody>
 			</table>
     </div>
   </div>
 </div>
 </c:forEach>
-<!-- 모달 -->
+<!-- 모달끝 -->
 
 			<div class="row">
 				<div class="col-md-12">
@@ -88,31 +198,29 @@
 										</tr>
 									</thead>
 									<tbody>
-											<c:forEach items="${statList }" var="stat">
-										<tr class="Run${stat.facRun}">
+										<c:forEach items="${opStatList }" var="stat">
+											<tr class="Run${stat.facRun}">
 											<td>${stat.facCd }</td>
 											<td>${stat.facNm }</td>
 											<td>${stat.facRun }</td>
-											
 											<td>
 												<c:choose>
 													<c:when test="${stat.facRun eq 'N'}">
-														<button onclick="document.getElementById('${stat.facCd}Modal').style.display='block'">
+														<button onclick="document.getElementById('${stat.facCd}Modal').style.display='block';init();" class="cndRstBtn ">
 															<i class="fa-solid fa-clipboard"></i> 재가동시작
 														</button>
 													</c:when>
 													<c:otherwise>
-														<button  onclick="document.getElementById('${stat.facCd}Modal').style.display='block'">
+														<button  onclick="document.getElementById('${stat.facCd}Modal').style.display='block';init();" class="cndDelBtn ">
 														<i class="fa-solid fa-clipboard"></i> 가동중지
 														</button>
 													</c:otherwise>
 												</c:choose>
 
 												</td>
-										
-										</tr>
+									
+											</tr>
 										</c:forEach>
-										
 									</tbody>
 								</table>
 							</div>
@@ -139,6 +247,7 @@
 	</div>
 
 	<script>
+	//radio 클릭에따른 가동/비가동 필터링
 		function div_OnOff(v){
 		 // 라디오 버튼 value 값 조건 비교
 		 if(v == "runAll"){
@@ -167,8 +276,24 @@
 			}
 
 		 }
-		}
+		};
 		
+	//모달시간 input에 현재시간 넣기
+		init();
+		function init(){
+			
+			let stopDtInput=document.getElementsByClassName("fdmTimeInput");
+			for(let i = 0; i <stopDtInput.length; i++){
+				stopDtInput[i].value=timestamp();
+				console.log("Initializing");
+			}
+		};
+	//현재시간 htmlinput format
+		function timestamp(){
+		    var today = new Date();
+		    today.setHours(today.getHours() + 9);
+		    return today.toISOString().replace('T', ' ').substring(0, 19);
+		}
 		
 		
 		
@@ -181,8 +306,8 @@
 					facCd:'${opStat.facCd}',
 					facNm:'${opStat.facNm}',
 					fdmMgr:'${opStat.fdmMgr}',
-					fdmStop:'${opStat.fdmStop}',
-					fdmRun:'${opStat.fdmRun}',
+					fdmStop:"<fmt:formatDate value="${opStat.fdmStop}" pattern="yyyy-MM-dd"/>",
+					fdmRun:"<fmt:formatDate value="${opStat.fdmRun}" pattern="yyyy-MM-dd"/>",
 					cfdCd:'${opStat.cfdCd}',
 					facRun:'${opStat.facRun}',
 					facInfo:'${opStat.facInfo}',
@@ -191,7 +316,7 @@
 				},
 			</c:forEach>
 		];
-		
+		console.log(orderData);
 		
 		const opList = new Grid({
 			el: document.getElementById('operationList'), // Container element
@@ -230,7 +355,7 @@
 				},
 				{
 					header: '비가동코드',
-					name: 'facInfo',
+					name: 'cfdCd',
 					sortable: true
 				},
 				{
