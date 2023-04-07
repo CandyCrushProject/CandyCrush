@@ -2,6 +2,7 @@
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
+
 		<link rel="stylesheet" href="assets/css/processManagement.css">
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 		<!-- 그리드 -->
@@ -9,62 +10,122 @@
 		<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 		<!-- 폰트 어썸 -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-		<script>
-
-			function oderList() {
-				$.ajax({
-					url: 'getOrder',
-					type: 'GET',
-					dataType: 'json',
-					success: function (data) {
-						console.log(data.result);
-						// 성공적으로 응답 받았을 때 처리할 로직
-						var tbody = $("#orderSheetTab"); // tbody 선택
-						tbody.empty(); // tbody 비우기
-
-						// 데이터 반복문 처리
-						$.each(data.result, function (index, item) {
-							var row = $("<tr>");
-							// td 생성		
-							row.append($("<td>").attr("hidden", true).text(item.caNm));
-							row.append($("<td>").attr("hidden", true).text(item.cprNm));
-							row.append($("<th scope='row'>").text(index + 1));
-							row.append($("<td>").text(item.orshNo));
-							row.append($("<td>").text(item.caNm));
-							row.append($("<td>").text(item.cprNm));
-							var button = $("<button>", {
-								type: "button",
-								class: "btn btn-primary addBtn",
-								text: "등록",
-								style: "background-color: #0d6efd;"
-							});
-							row.append(button);
-
-							tbody.append(row);
-						})
-						// 모달 창 열기
-						$('#order').modal('show');
-					},
-					error: function (xhr, status, error) {
-						// 요청이 실패했을 때 처리할 로직
-						console.error('요청 실패:', error);
-					}
-				});
+		<style>
+			#orderSheetTab td {
+				vertical-align: middle;
 			}
-
-		</script>
+		</style>
 		<main>
-			<div class="modal fade" id="order" tabindex="-1">
+			<!-- 생산계획 작성 -->
+			<div class="modal fade" id="createPlan" tabindex="-1">
 				<div class="modal-dialog modal-lg modal-dialog-scrollable">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title">미지시 주문서 조회</h5>
+							<h5 class="modal-title">새로운 생산계획 작성</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
-							<table class="table table-hover">
+							<form id="planForm" name="newPlan" action="newPlanInsert" method="POST" onsubmit="return false"
+								class="row g-3">
+								<h5 class="modal-title">주문서 정보</h5>
+								<div class="col-md-6">
+									<label class="form-label">주문번호</label> <input type="text" class="form-control" id="orderNo"
+										name="orderNo" value="PLN9000" readonly>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">제품명</label> <input type="text" class="form-control" name="prdtNm"
+										id="prdtNm" value="">
+									<input type="hidden" class="form-control" id="edctsCd" name="edctsCd" readonly>
+								</div>
+								<div class="col-md-12">
+									<label class="form-label">거래처명</label> <input type="text" class="form-control" id="vendNm" value=""
+										readonly> <input type="hidden" class="form-control" value="" readonly>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">주문일자</label> <input type="date" class="form-control" id="orderDt" value=""
+										readonly>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">납기일자</label> <input type="date" class="form-control" id="paprdDt"
+										name="paprdDt" value="">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">주문수량</label> <input type="text" class="form-control" id="orderCnt"
+										name="orderCnt" value="">
+								</div>
+								<hr>
+								<h5 class="modal-title">생산계획</h5>
+								<input type="hidden" class="form-control" name="nowSt" value="미지시" readonly>
+								<div class="col-md-6">
+									<label class="form-label">생산계획코드</label> <input type="text" class="form-control" name="planCd"
+										value="${nextPlanCd }" readonly>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">생산계획명</label> <input type="text" name="planName" class="form-control">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">생산계획일자</label> <input type="date" class="form-control" id="currentDate"
+										readonly>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">생산시작 예정일</label> <input type="date" name="wkToDt" class="form-control">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">BOM선택</label> <select id="bomSelect" name="bomCd" class="form-select"
+										aria-label="Default select example">
+										<option disabled selected>BOM선택</option>
+										<c:forEach var="item" items="${bomInfo}">
+											<option data-cd="${item.edctsCd }" value="${item.bomCd}">${item.bomCd}/
+												${item.standard}</option>
+										</c:forEach>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label">우선순위</label> <select name="prefRank" class="form-select"
+										aria-label="Default select example">
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+									</select>
+								</div>
+								<hr>
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th scope="col"></th>
+											<th scope="col">자재명(단위)</th>
+											<th scope="col">자재소모량</th>
+											<th scope="col">자재유형</th>
+											<th scope="col">투입공정</th>
+										</tr>
+									</thead>
+									<tbody id="rscTable">
+
+									</tbody>
+								</table>
+							</form>
+							<hr>
+							<!-- End Multi Columns Form -->
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button id="newPlanSubmit" type="button" class="btn btn-primary">Save
+								changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Modal Dialog Scrollable-->
+
+			<!-- 조문서 조회 modal시작 -->
+			<div class="modal fade" id="order" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog modal-lg modal-dialog-scrollable">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">주문서 조회</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table table-hover" style="text-align: center;">
 								<thead>
 									<tr>
 										<th scope="col"></th>
@@ -80,12 +141,12 @@
 							<!-- End Multi Columns Form -->
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="cndRstBtn" data-dismiss="modal">Close</button>
 						</div>
 					</div>
 				</div>
 			</div>
-
+			<!-- 조문서 조회 Modal 끝-->
 
 			<!-- /. NAV SIDE  -->
 			<div id="page-wrapper">
@@ -109,18 +170,17 @@
 									<div class="procPlan">
 										<ul>
 											<li class="procPlanBtn-r">
-												<button>
+												<button class="cndInsBtn">
 													<i class="fa-solid fa-plus"></i> 등록
 												</button>
 											</li>
 											<li class="procPlanBtn-r">
-												<button id="oderBtn" type="button" class=" btn btn-primary" data-bs-toggle="modal"
-													data-bs-target="#order" onclick="oderList()">
+												<button id="oderBtn" type="button" class="cndSrchBtn" data-toggle="modal" data-target="#order">
 													<i class="fa-solid fa-clipboard"></i> 주문서
 												</button>
 											</li>
 											<li class="procPlanBtn-r">
-												<button>
+												<button class="cndRstBtn">
 													<i class="fa-solid fa-rotate-right"></i> 초기화
 												</button>
 											</li>
@@ -142,11 +202,11 @@
 											<tbody>
 												<tr>
 													<td></td>
-													<td><input type="text" value="${opInfo.orshNo}"></td>
-													<td><input type="text" value="${opInfo.caNm}"></td>
-													<td><input type="text" value="${opInfo.cprNm}"></td>
-													<td><input type="text" value="${opInfo.ordrDtlCnt}"></td>
-													<td><input type="text" value="${opInfo.dlvryDt}"></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
 												</tr>
 											</tbody>
 										</table>
@@ -322,3 +382,77 @@
 
 
 		</main>
+		<script>
+			$(document).ready(function () {
+				// $('#order').hide();
+				$('#oderBtn').on('click', function () {
+					$.ajax({
+						url: 'getOrder',
+						type: 'GET',
+						dataType: 'json',
+						success: function (data) {
+							console.log(data.result);
+							// 성공적으로 응답 받았을 때 처리할 로직
+							var tbody = $("#orderSheetTab"); // tbody 선택
+							tbody.empty(); // tbody 비우기
+
+							// 데이터 반복문 처리
+							$.each(data.result, function (index, item) {
+								console.log(item.caNm);
+
+								var row = $('<tr>');
+								// td 생성		
+								row.append($("<td>").attr("hidden", true).text(item.caNm));
+								row.append($("<td>").attr("hidden", true).text(item.cprNm));
+								row.append($("<th scope='row'>").text(index + 1));
+								row.append($("<td>").text(item.orshNo));
+								row.append($("<td>").text(item.caNm));
+								row.append($("<td>").text(item.cprNm));
+								var td = $("<td>");
+								var button = $("<button>", {
+									type: "button",
+									class: "addBtn cndInsBtn",
+									text: "등록",
+								});
+								td.append(button);
+								row.append(td);
+
+								tbody.append(row);
+							})
+							// 모달 창 열기
+							// $('#order').show();
+							$('#order').modal('show');
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				});
+			});
+
+
+			/* 주문서정보 -> 생산계획작성 */
+			$(document).on("click", ".addBtn", function () {
+				var orderArray = [];
+				var row = $(this).closest("tr");
+				row.find("td").each(function () {
+					orderArray.push($(this).text());
+				});
+				$("#orderNo").val(orderArray[2]);
+				$("#prdtNm").val(orderArray[4]);
+				$("#edctsCd").val(orderArray[0]);
+				$("#vendNm").val(orderArray[3]);
+				$("#orderDt").val(orderArray[6]);
+				$("#paprdDt").val(orderArray[7]);
+				$("#orderCnt").val(orderArray[5]);
+
+				// 현재 모달창 닫기
+				$('#orderSheet').modal('hide');
+
+				// 다른 모달창 열기
+				$('#createPlan').modal('show');
+			});
+
+
+		</script>

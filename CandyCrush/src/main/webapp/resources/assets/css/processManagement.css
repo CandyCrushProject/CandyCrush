@@ -8,33 +8,19 @@
 	float: right;
 }
 
-		.itag {
-			position: relative;
-			top: 5px;
-			right: 3px;
-		}
+.itag {
+	position: relative;
+	top: 5px;
+	right: 3px;
+}
+
 .procPlan ul li {
 	margin-left: 10px;
 	margin-right: 10px;
 	line-height: 35px;
 }
 
-.procPlan button {
-	width: 100px;
-	text-decoration: none;
-	border: 1px solid black;
-	font-size: 16px;
-	background-color: rgb(255, 255, 255);
-	color: #000000;
-	border-radius: 5px;
-	cursor: pointer;
-	outline: none;
-	transition: 0.2s all;
-}
 
-.procPlan button:active {
-	transform: scale(0.98);
-}
 
 .procPlan input[type="date"] {
 	margin: 0;
@@ -47,4 +33,3 @@
 .procPlanCraete {
 	margin-top: 25px;
 }
-

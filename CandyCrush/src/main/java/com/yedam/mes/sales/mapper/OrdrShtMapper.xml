@@ -5,7 +5,7 @@
   
 <mapper namespace="com.yedam.mes.sales.mapper.OrdrShtMapper">
 	<!-- 전체조회 -->
-	<select id="ordrShtAllList" resultType="OrdrShtVO">
+	<!-- <select id="ordrShtAllList" resultType="OrdrShtVO">
 		SELECT orsh_no, cpr_cd, ca_no, orsh_dt, orsh_pr 
 		  FROM order_sheet
  		<where>
@@ -16,11 +16,11 @@
  				cpr_cd LIKE '%' || #{cpr_cd} || '%' AND
  			</if>
  			<if test="orsh_dt != null and !orsh_dt.equals('')">
- 				orsh_dt between TO_CHAR(#{orshStrDt}, 'yyyy-MM-dd') and TO_CHAR(#{orshEndDt}, 'yyyy-MM-dd')
+ 				TO_CHAR(orsh_dt, 'yyyy-MM-dd') between TO_CHAR(#{orshStrDt}, 'yyyy-MM-dd') and TO_CHAR(#{orshEndDt}, 'yyyy-MM-dd')
  			</if>
  		</where>
  		 ORDER BY orsh_no
-	</select>
+	</select> -->
 	
 	
 </mapper>
