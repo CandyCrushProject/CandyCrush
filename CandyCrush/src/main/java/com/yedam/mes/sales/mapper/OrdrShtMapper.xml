@@ -5,7 +5,7 @@
   
 <mapper namespace="com.yedam.mes.sales.mapper.OrdrShtMapper">
 	<!-- 전체조회 -->
-	<!-- <select id="ordrShtAllList" resultType="OrdrShtVO">
+	<select id="ordrShtAllList" resultType="OrdrShtVO">
 		SELECT orsh_no, cpr_cd, ca_no, orsh_dt, orsh_pr 
 		  FROM order_sheet
  		<where>
@@ -20,7 +20,7 @@
  			</if>
  		</where>
  		 ORDER BY orsh_no
-	</select> -->
+	</select>
 	
 	
 </mapper>
