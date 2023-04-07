@@ -32,7 +32,7 @@
 							<table>
 								<tr>
 									<td>
-										<label for="facCd">비가동번호</label>
+										<label for="facCd">비가동번호 여기부터수정해라 애송이~~</label> 
 									</td>
 									<td>
 										<input type="text" value="${stat.facCd }" name="facCd" style="display: inline; width: 70%;" readonly>
