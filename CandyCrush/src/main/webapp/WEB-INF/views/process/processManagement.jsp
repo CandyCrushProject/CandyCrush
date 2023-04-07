@@ -20,12 +20,12 @@
 			<div class="modal fade" id="createPlan" tabindex="-1">
 				<div class="modal-dialog modal-lg modal-dialog-scrollable">
 					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">생산계획 등록</h5>
-						</div>
-						<div class="modal-body">
-							<form id="planForm" name="newPlan" action="newPlanInsert" method="POST" onsubmit="return false"
-								class="row g-3">
+						<form id="planForm" name="newPlan" action="insertProcPlan" method="POST" onsubmit="return false"
+							class="row g-3">
+							<div class="modal-header">
+								<h5 class="modal-title">생산계획 등록</h5>
+							</div>
+							<div class="modal-body">
 								<h5 class="modal-title">주문서 정보</h5>
 								<input type="hidden" class="form-control" id="orshPr" name="orshPr" readonly>
 								<div class="col-md-4">
@@ -34,12 +34,12 @@
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">제품명</label>
-									<input type="text" class="form-control" name="cprNm" id="cprNm" value="">
+									<input type="text" class="form-control" name="cprNm" id="cprNm" value="" readonly>
 									<input type="hidden" class="form-control" id="cprCd" name="cprCd" readonly>
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">주문수량</label>
-									<input type="text" class="form-control" id="ordrDtlCnt" name="ordrDtlCnt" value="">
+									<input type="text" class="form-control" id="ordrDtlCnt" name="ordrDtlCnt" value="" readonly>
 								</div>
 								<div class="col-md-3">
 									<label class="form-label">거래처명</label>
@@ -64,15 +64,11 @@
 								<h5 class="modal-title">생산계획</h5>
 								<input type="hidden" class="form-control" name="prpldStatus" value="미지시" readonly>
 								<input type="hidden" class="form-control" name="prplStatus" value="계획완료" readonly>
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<label class="form-label">생산계획코드</label>
-									<input type="text" class="form-control" name="prplCd" value="" readonly>
+									<input type="text" class="form-control" name="prplCd" id="prplCd" value="${prplCd}" readonly>
 								</div>
-								<div class="col-md-4">
-									<label class="form-label">생산계획명</label>
-									<input type="text" name="planName" class="form-control">
-								</div>
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<label class="form-label">생산계획수량</label>
 									<input type="text" name="prpldCnt" class="form-control">
 								</div>
@@ -82,7 +78,7 @@
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">생산작업일자</label>
-									<input type="date" name="prstDt" class="form-control">
+									<input type="date" name="prplDlvryDt" class="form-control">
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">작업우선순위</label>
@@ -109,14 +105,15 @@
 
 									</tbody>
 								</table>
-							</form>
-							<hr>
-							<!-- End Multi Columns Form -->
-						</div>
-						<div class="modal-footer">
-							<button type="button" id="newPlanSubmit" class="cndInsBtn">등록</button>
-							<button type="button" class="cndDelBtn" data-dismiss="modal">취소</button>
-						</div>
+
+								<hr>
+								<!-- End Multi Columns Form -->
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="cndInsBtn" id="addPlanBtn">등록</button>
+								<button type="button" class="cndDelBtn" data-dismiss="modal">취소</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -388,6 +385,12 @@
 
 		</main>
 		<script>
+			function printAlert(message) {
+				if (message == null || message == "") return;
+				alert(message);
+
+			}
+			printAlert(`${message}`);
 			$(document).ready(function () {
 				// $('#order').hide();
 				$('#oderBtn').on('click', function () {
@@ -406,6 +409,7 @@
 								console.log(item.caNo);
 								var row = $('<tr>');
 								// td 생성		
+								row.append($("<td>").attr("hidden", true).text());
 								row.append($("<td>").attr("hidden", true).text(item.caNo));
 								row.append($("<td>").attr("hidden", true).text(item.cprCd));
 								row.append($("<td>").attr("hidden", true).text(item.orshDt));
@@ -447,15 +451,17 @@
 				row.find("td").each(function () {
 					orderArray.push($(this).text());
 				});
-				$("#caNo").val(orderArray[0]);
-				$("#cprCd").val(orderArray[1]);
-				$("#orshDt").val(orderArray[2]);
-				$("#orshPr").val(orderArray[3]);
-				$("#ordrDtlCnt").val(orderArray[4]);
-				$("#dlvryDt").val(orderArray[5]);
-				$("#orshNo").val(orderArray[6]);
-				$("#caNm").val(orderArray[7]);
-				$("#cprNm").val(orderArray[8]);
+
+				console.log($("#prplCd").val());
+				$("#caNo").val(orderArray[1]);
+				$("#cprCd").val(orderArray[2]);
+				$("#orshDt").val(orderArray[3]);
+				$("#orshPr").val(orderArray[4]);
+				$("#ordrDtlCnt").val(orderArray[5]);
+				$("#dlvryDt").val(orderArray[6]);
+				$("#orshNo").val(orderArray[7]);
+				$("#caNm").val(orderArray[8]);
+				$("#cprNm").val(orderArray[9]);
 
 				// 현재 모달창 닫기
 				$('#order').modal('hide');
@@ -463,6 +469,82 @@
 				// 다른 모달창 열기
 				$('#createPlan').modal('show');
 			});
+			$(document).ready(function () {
+				$('#addPlanBtn').on('click', function () {
+					console.log($('#caNo').val());
+					$('#createPlan').modal('hide');
+					newPlan.submit();
+				});
+			});
+			$(document).ready(function () {
+				$("#cprNm").on('click', function () {
+					// 선택된 옵션의 값을 가져와서 처리
+					var selectedBom = $(this).val();
+					console.log(selectedBom);
+					$.ajax({
+						url: 'getBomInfo',
+						type: 'GET',
+						data: {
+							bomCd: selectedBom
+						},
+						dataType: 'json',
+						success: function (data) {
+							// 성공적으로 응답 받았을 때 처리할 로직
+							console.log('요청 성공:', data.BomRscInfo);
+							var tbody = $("#rscTable"); // tbody 선택
+							tbody.empty(); // tbody 비우기
 
+							// 데이터 반복문 처리
+							$.each(data.BomRscInfo, function (index, item) {
+								var row = $("<tr>");
 
+								// td 생성		
+								row.append($("<th scope='row'>").text(index + 1));
+								row.append($("<td>").text(item.rscNm));
+								row.append($("<td>").text(item.useCnt + "(" + item.unit + ")"));
+								row.append($("<td>").text(item.rscTyp));
+								row.append($("<td>").text(item.prcsNm));
+
+								tbody.append(row);
+							});
+
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				});
+			});
+
+			/* 체크박스 연결 */
+			// tbody의 체크박스
+			const tbodyCheckbox = document.querySelectorAll('#proPlanChk input[type="checkbox"]');
+			// thead의 체크박스
+			const theadCheckbox = document.querySelector('th input[type="checkbox"]');
+
+			// tbody의 체크박스의 상태를 모니터링하여 thead의 체크박스 상태를 변경
+			function updateTheadCheckbox() {
+				// tbody의 체크박스 중 하나라도 체크가 안되어 있으면 thead의 체크박스를 체크 해제
+				if ([...tbodyCheckbox].some((checkbox) => !checkbox.checked)) {
+					theadCheckbox.checked = false;
+				} else {
+					// tbody의 체크박스가 모두 체크 되어 있으면 thead의 체크박스를 체크
+					theadCheckbox.checked = true;
+				}
+			}
+
+			// tbody의 체크박스를 클릭할 때마다 thead의 체크박스 상태 업데이트
+			tbodyCheckbox.forEach((checkbox) => {
+				checkbox.addEventListener('click', () => {
+					updateTheadCheckbox();
+				});
+			});
+
+			// thead의 체크박스를 클릭할 때마다 tbody의 체크박스 상태 업데이트
+			theadCheckbox.addEventListener('click', () => {
+				tbodyCheckbox.forEach((checkbox) => {
+					checkbox.checked = theadCheckbox.checked;
+				});
+			});
 		</script>
