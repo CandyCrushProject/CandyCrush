@@ -17,4 +17,6 @@ public interface MaterialService {
 	public List<MaterialVO> mtrlSearch(@Param("caNm") String caNm, @Param("cmmNm") String cmmNm);
 	//자재목록에서 자재코드 클릭하면 자재발주로 리스트를 뿌린다
 	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd);
+	//자재발주코드 자동생성
+	public MaterialOrderVO getMtrlOrderCode();
 }

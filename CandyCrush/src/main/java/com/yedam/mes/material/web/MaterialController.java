@@ -26,6 +26,7 @@ public class MaterialController {
 	public String mtrlOrder(Model model) {
 		//model.addAttribute("moList", service.mtrlAllList());
 		model.addAttribute("accountList", service.accountCheck());
+		model.addAttribute("getmtrlOrderCode", service.getMtrlOrderCode());
 		return "material/materialOrders";
 	}
 	

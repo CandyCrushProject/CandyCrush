@@ -47,4 +47,9 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd) {
 		return mapper.mtrlOrderOneCheck(cmmCd);
 	}
+	//자재발주코드 자동생성
+	@Override
+	public MaterialOrderVO getMtrlOrderCode() {
+		return mapper.getMtrlOrderCode();
+	}
 }
