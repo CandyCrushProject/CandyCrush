@@ -21,71 +21,77 @@
 				<div class="modal-dialog modal-lg modal-dialog-scrollable">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title">새로운 생산계획 작성</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							<h5 class="modal-title">생산계획 등록</h5>
 						</div>
 						<div class="modal-body">
 							<form id="planForm" name="newPlan" action="newPlanInsert" method="POST" onsubmit="return false"
 								class="row g-3">
 								<h5 class="modal-title">주문서 정보</h5>
-								<div class="col-md-6">
-									<label class="form-label">주문번호</label> <input type="text" class="form-control" id="orderNo"
-										name="orderNo" value="PLN9000" readonly>
+								<input type="hidden" class="form-control" id="orshPr" name="orshPr" readonly>
+								<div class="col-md-4">
+									<label class="form-label">주문번호</label>
+									<input type="text" class="form-control" id="orshNo" name="orshNo" value="" readonly>
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">제품명</label> <input type="text" class="form-control" name="prdtNm"
-										id="prdtNm" value="">
-									<input type="hidden" class="form-control" id="edctsCd" name="edctsCd" readonly>
+								<div class="col-md-4">
+									<label class="form-label">제품명</label>
+									<input type="text" class="form-control" name="cprNm" id="cprNm" value="">
+									<input type="hidden" class="form-control" id="cprCd" name="cprCd" readonly>
 								</div>
-								<div class="col-md-12">
-									<label class="form-label">거래처명</label> <input type="text" class="form-control" id="vendNm" value=""
-										readonly> <input type="hidden" class="form-control" value="" readonly>
+								<div class="col-md-4">
+									<label class="form-label">주문수량</label>
+									<input type="text" class="form-control" id="ordrDtlCnt" name="ordrDtlCnt" value="">
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">주문일자</label> <input type="date" class="form-control" id="orderDt" value=""
-										readonly>
+								<div class="col-md-3">
+									<label class="form-label">거래처명</label>
+									<input type="text" class="form-control" id="caNm" name="caNm" value="" readonly>
+									<input type="hidden" class="form-control" id="caNo" name="caNo" value="" readonly>
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">납기일자</label> <input type="date" class="form-control" id="paprdDt"
-										name="paprdDt" value="">
+								<div class="col-md-3">
+									<label class="form-label">주문일자</label>
+									<input type="date" class="form-control" id="orshDt" name="orshDt" value="" readonly>
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">주문수량</label> <input type="text" class="form-control" id="orderCnt"
-										name="orderCnt" value="">
+								<div class="col-md-3">
+									<label class="form-label">납기일자</label>
+									<input type="date" class="form-control" id="dlvryDy" name="dlvryDy" value="">
 								</div>
+								<div class="col-md-3">
+									<label class="form-label">생산요청수량</label>
+									<input type="text" class="form-control" id="prplReqCnt" name="prplReqCnt" value="">
+								</div>
+
 								<hr>
+
 								<h5 class="modal-title">생산계획</h5>
-								<input type="hidden" class="form-control" name="nowSt" value="미지시" readonly>
-								<div class="col-md-6">
-									<label class="form-label">생산계획코드</label> <input type="text" class="form-control" name="planCd"
-										value="${nextPlanCd }" readonly>
+								<input type="hidden" class="form-control" name="prpldStatus" value="미지시" readonly>
+								<input type="hidden" class="form-control" name="prplStatus" value="계획완료" readonly>
+								<div class="col-md-4">
+									<label class="form-label">생산계획코드</label>
+									<input type="text" class="form-control" name="prplCd" value="" readonly>
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">생산계획명</label> <input type="text" name="planName" class="form-control">
+								<div class="col-md-4">
+									<label class="form-label">생산계획명</label>
+									<input type="text" name="planName" class="form-control">
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">생산계획일자</label> <input type="date" class="form-control" id="currentDate"
-										readonly>
+								<div class="col-md-4">
+									<label class="form-label">생산계획수량</label>
+									<input type="text" name="prpldCnt" class="form-control">
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">생산시작 예정일</label> <input type="date" name="wkToDt" class="form-control">
+								<div class="col-md-4">
+									<label class="form-label">계획담당자</label>
+									<input type="text" name="prpldMng" class="form-control">
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">BOM선택</label> <select id="bomSelect" name="bomCd" class="form-select"
-										aria-label="Default select example">
-										<option disabled selected>BOM선택</option>
-										<c:forEach var="item" items="${bomInfo}">
-											<option data-cd="${item.edctsCd }" value="${item.bomCd}">${item.bomCd}/
-												${item.standard}</option>
-										</c:forEach>
-									</select>
+								<div class="col-md-4">
+									<label class="form-label">생산작업일자</label>
+									<input type="date" name="prstDt" class="form-control">
 								</div>
-								<div class="col-md-6">
-									<label class="form-label">우선순위</label> <select name="prefRank" class="form-select"
-										aria-label="Default select example">
+								<div class="col-md-4">
+									<label class="form-label">작업우선순위</label>
+									<select name="prpldWorkTskPri" class="form-select" style="height: 55px;">
 										<option value="1">1</option>
 										<option value="2">2</option>
 										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
 									</select>
 								</div>
 								<hr>
@@ -108,9 +114,8 @@
 							<!-- End Multi Columns Form -->
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button id="newPlanSubmit" type="button" class="btn btn-primary">Save
-								changes</button>
+							<button type="button" id="newPlanSubmit" class="cndInsBtn">등록</button>
+							<button type="button" class="cndDelBtn" data-dismiss="modal">취소</button>
 						</div>
 					</div>
 				</div>
@@ -398,12 +403,15 @@
 
 							// 데이터 반복문 처리
 							$.each(data.result, function (index, item) {
-								console.log(item.caNm);
-
+								console.log(item.caNo);
 								var row = $('<tr>');
 								// td 생성		
-								row.append($("<td>").attr("hidden", true).text(item.caNm));
-								row.append($("<td>").attr("hidden", true).text(item.cprNm));
+								row.append($("<td>").attr("hidden", true).text(item.caNo));
+								row.append($("<td>").attr("hidden", true).text(item.cprCd));
+								row.append($("<td>").attr("hidden", true).text(item.orshDt));
+								row.append($("<td>").attr("hidden", true).text(item.orshPr));
+								row.append($("<td>").attr("hidden", true).text(item.ordrDtlCnt));
+								row.append($("<td>").attr("hidden", true).text(item.dlvryDt));
 								row.append($("<th scope='row'>").text(index + 1));
 								row.append($("<td>").text(item.orshNo));
 								row.append($("<td>").text(item.caNm));
@@ -439,16 +447,18 @@
 				row.find("td").each(function () {
 					orderArray.push($(this).text());
 				});
-				$("#orderNo").val(orderArray[2]);
-				$("#prdtNm").val(orderArray[4]);
-				$("#edctsCd").val(orderArray[0]);
-				$("#vendNm").val(orderArray[3]);
-				$("#orderDt").val(orderArray[6]);
-				$("#paprdDt").val(orderArray[7]);
-				$("#orderCnt").val(orderArray[5]);
+				$("#caNo").val(orderArray[0]);
+				$("#cprCd").val(orderArray[1]);
+				$("#orshDt").val(orderArray[2]);
+				$("#orshPr").val(orderArray[3]);
+				$("#ordrDtlCnt").val(orderArray[4]);
+				$("#dlvryDt").val(orderArray[5]);
+				$("#orshNo").val(orderArray[6]);
+				$("#caNm").val(orderArray[7]);
+				$("#cprNm").val(orderArray[8]);
 
 				// 현재 모달창 닫기
-				$('#orderSheet').modal('hide');
+				$('#order').modal('hide');
 
 				// 다른 모달창 열기
 				$('#createPlan').modal('show');
