@@ -12,11 +12,10 @@
 	
 	<!-- jQuery Js -->
 	<script src="assets/js/jquery-1.10.2.js"></script>
-	
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 
-
+	
 	<script src="assets/materialize/js/materialize.min.js"></script>
 
 	<!-- Metis Menu Js -->
@@ -30,7 +29,13 @@
 	<script src="assets/js/easypiechart-data.js"></script>
 
 	<script src="assets/js/Lightweight-Chart/jquery.chart.js"></script>
-
+	
+	<!-- w3schools -->
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	
+	<!-- SweetAlert -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+	
 	<!-- Custom Js -->
 	<script src="assets/js/custom-scripts.js"></script>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
