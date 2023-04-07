@@ -9,7 +9,7 @@
 	</select>
 	
 	<!-- 업체명조회 -->
-	<select id="accountCheck" resultType="AccountVO">
+	<select id="accountCheck" resultType="MtrlAccountVO">
 		SELECT ca_no, ca_nm, ca_mng, ca_mng_ph, ca_bsns_num
 		FROM CM_ACCOUNT
 		WHERE CA_TYP = '매입처'
@@ -17,7 +17,7 @@
 	</select>
 		
 	<!-- 모달창 업체검색 -->
-	<select id="accountCheckModal" resultType="AccountVO">
+	<select id="accountCheckModal" resultType="MtrlAccountVO">
 		SELECT ca_no, ca_nm, ca_mng, ca_mng_ph, ca_bsns_num
 		FROM CM_ACCOUNT
 		WHERE CA_TYP = '매입처'
@@ -33,7 +33,7 @@
 	<!-- 업체명 또는 자재명을 통한 자재검색 -->
 	<select id="mtrlSearch" resultType="MaterialVO">
 		SELECT cmm.cmm_cd, cmm_nm, cmm_typ, cmm_spec,
-		        cmm_unit, cmm_saf_stc, MOT_CNT, MIN_CNT,
+		        cmm_unit, cmm_saf_stc, MOT_CNT, MIN_CNT,  ca_nm, cmm.ca_no,
 		        TO_NUMBER(min_cnt) - TO_NUMBER(mot_cnt) AS "cmm_inven"
 		FROM cm_account ca JOIN cm_mtrl_mng cmm
 		ON ca.ca_no = cmm.ca_no
@@ -60,26 +60,28 @@
 	
 	<!-- 자재발주 단건조회 -->
 	<select id="mtrlOrderOneCheck" resultType="MaterialOrderVO">
-		SELECT mo_cd, mo_title, mo_reo_dt, mo.ca_no,
-        ca_nm, mo.cmm_cd, mo_dlv_dt,
-        TO_NUMBER(min_cnt) - TO_NUMBER(mot_cnt) AS "CMM_INVEN"
-		FROM mtrl_ordr mo JOIN cm_mtrl_mng cmm
-		ON mo.cmm_cd = cmm.cmm_cd
-		JOIN cm_account ca
-		ON cmm.ca_no = ca.ca_no
-		 JOIN cm_mtrl_lot cml
-		  ON cmm.cmm_cd = cml.cmm_cd
-		   JOIN mtrl_otpt mot
-		    ON cml.cml_nm = mot.cml_nm
-		    JOIN mtrl_input min
-		     ON mot.min_cd = min.min_cd
-		WHERE mo.cmm_cd =  #{cmmCd}
+		SELECT mo.mo_cd, mo_title, mo_reo_dt, mod.cmm_cd, mo_req_dt, mod.ca_no, ca_nm
+				,TO_NUMBER(min_cnt) - TO_NUMBER(mot_cnt) AS "CMM_INVEN"
+		FROM mtrl_order mo 
+		 JOIN mtrl_order_detail mod
+		  ON mo.mo_cd = mod.mo_cd
+		   JOIN cm_account ca
+		    ON mod.ca_no = ca.ca_no
+		     JOIN cm_mtrl_mng cmm
+		      ON mod.cmm_cd = cmm.cmm_cd
+			   JOIN cm_mtrl_lot cml
+			    ON mod.cmm_cd = cml.cmm_cd
+			     JOIN mtrl_otpt mot
+			      ON cml.cml_nm = mot.cml_nm
+			       JOIN mtrl_input min
+			        ON mot.min_cd = min.min_cd
+		WHERE cmm.cmm_cd = #{cmmCd}
 	</select>
 	
 	<!-- 자재발주코드 자동생성 -->
 	<select id="getMtrlOrderCode" resultType="MaterialOrderVO">
-		SELECT NVL(MAX(SUBSTR(mo_cd, 3, 4)), 0) + 1 "mo_cd"
-		FROM mtrl_ordr
+		SELECT 'mo' || to_char(NVL(MAX(SUBSTR(mo_cd, 3, 4)), 0) + 1) || to_char(sysdate, 'yymmdd') "mo_cd"
+		FROM mtrl_order
 	</select>
 
 </mapper>

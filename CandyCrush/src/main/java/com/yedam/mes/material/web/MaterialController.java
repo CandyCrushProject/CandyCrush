@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.yedam.mes.material.service.AccountVO;
+import com.yedam.mes.material.service.MtrlAccountVO;
 import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;
@@ -40,7 +40,7 @@ public class MaterialController {
 	//자재발주관리/모달/업체검색
 	@PostMapping("accountCheck")
 	@ResponseBody
-	public List<AccountVO> accountCheck(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo){
+	public List<MtrlAccountVO> accountCheck(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo){
 		return service.accountCheckModal(caNm, caNo);
 	}
 	

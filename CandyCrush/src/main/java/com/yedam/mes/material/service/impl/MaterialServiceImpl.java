@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.yedam.mes.material.mapper.MaterialMapper;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;
-import com.yedam.mes.material.service.AccountVO;
+import com.yedam.mes.material.service.MtrlAccountVO;
 import com.yedam.mes.material.service.MaterialOrderVO;
 
 //구현클래스 : 빈을 등록되는 대상
@@ -34,12 +34,12 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 	//업체조회
 	@Override
-	public List<AccountVO> accountCheck() {
+	public List<MtrlAccountVO> accountCheck() {
 		return mapper.accountCheck();
 	}
 	//모달 업체검색
 	@Override
-	public List<AccountVO> accountCheckModal(@Param("caNm") String caNm, @Param("caNo") String caNo) {
+	public List<MtrlAccountVO> accountCheckModal(@Param("caNm") String caNm, @Param("caNo") String caNo) {
 		return mapper.accountCheckModal(caNm, caNo);
 	}
 	//자재목록에서 자재코드 클릭하면 자재발주로 리스트를 뿌린다

@@ -18,6 +18,7 @@ public class MaterialVO {
 	private Date cmmStartDt;//등록일
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date cmmUpdDt;	//수정일
+	private String caNo;	//거래처코드
 	private String caNm;	//거래처명
 	private int motCnt;		//출고재고
 	private int minCnt;		//입고재고
