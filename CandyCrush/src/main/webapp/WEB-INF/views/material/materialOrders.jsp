@@ -6,6 +6,8 @@
 <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 
 <style>
 	label{
@@ -23,14 +25,14 @@
 	#companyName{
 		cursor:pointer;
 	}
-	input[type="text"]{
-		width: 90%;
-	}
 	.srchBtn{
 		float: right;
 		height: 100px;
 		position: relative;
 		bottom: 40px;
+	}
+	input[type="text"]{
+		width: 90%;
 	}
 </style>
 <main>
@@ -38,14 +40,13 @@
 	<div id="modal" class="w3-modal" style="z-index: 100;">
 		<div class="w3-modal-content">
 			<div class="w3-container">
-				<!-- onclick="document.getElementById('${stat.facCd}Modal').style.display='none'" -->
 				<span class="w3-button w3-display-topright" onclick="document.getElementById('modal').style.display='none'">&times;</span>
 				<h3>업체검색</h3>
 				<div>
-					<input type="text" id="modalCaNm" placeholder="업체명">
+					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;">
 					<br/>
-					<input type="text" id="modalCaCd" placeholder="업체코드">
-					<button class="srchBtn" onclick="modalAccount();">
+					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;">
+					<button class="srchBtn">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</button>
 				</div>
@@ -53,6 +54,7 @@
 			</div>
 		</div>
 	</div><!-- End Modal -->
+
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
 		<div class="header">
@@ -63,8 +65,6 @@
 				<li class="active">자재발주관리</li>
 			</ol>
 		</div>
-		
-		
 		
 		<div id="page-inner">
 			<div class="row">
@@ -140,6 +140,23 @@
 		let modalCaNm = null;
 		let modalCaCd = null;
 		
+		const metarialGetData = (cmmNm = undefined, caNm = undefined) => {
+			$.ajax({
+				url : "mtrlSearch",
+				method :"POST",
+				dataType : "JSON",
+				data : {cmmNm : cmmNm, caNm : caNm},
+				success : function(data){
+					material.resetData(data);
+				} 
+			});
+		}
+		metarialGetData();
+
+		document.getElementById("mtrlName").addEventListener("input", () => {
+			search();
+		});
+		
 		//자재검색
 		function search(){
 			cmmNm = document.getElementById('mtrlName').value; //원자재명
@@ -155,14 +172,27 @@
 				} 
 			});
 		}
-
-		function modalAccount(){
+		
+		//모달/업체명검색
+		function modalAccountSearch(){
 			modalCaNm = document.getElementById('modalCaNm').value;
 			modalCaCd = document.getElementById('modalCaCd').value;
+
+			$.ajax({
+				url : "accountCheck",
+				method :"POST",
+				dataType : "JSON",
+				data : {caNm : modalCaNm, caNo : modalCaCd},
+				success : function(data){
+					//console.log(data);
+					caModal.resetData(data);
+				} 
+			});
 		}
 
-		//모달/업체명검색
-
+		document.getElementById("modalCaNm").addEventListener("input", () => {
+			modalAccountSearch();
+		});
 		//발주
 		
 //---------------------------------------
@@ -201,6 +231,50 @@
 			}
 		});
 		caModal.resetData(accountList);	// 그리드에 값 입력
+
+		//모달창 tr 선택하면 돌아가는 click event
+		caModal.on("click", (e) => {
+			let caNm = caModal.getData()[e.rowKey].caNm;
+			/** 
+			 * 클릭 시 들고오는 properties 목록 API 문서 (100% 정확하지 않음)
+			 * https://nhn.github.io/tui.grid/latest/Grid#event-click
+			 * nativeEvent => get Event Object
+			 * targetType => 컬럼명 클릭 시 : columeHeader, row 클릭 시 : cell
+			 * rowKey => cell의 위치 (즉 1번째 행 클릭 시 0을 가져옴, 4번째 row 클릭 시 3.)
+			 * columnName => 클릭 한 해당 컬럼의 text 읽어오는 것 같음 
+			 * instance => 지금 활성화 되어 있는 grid의 속성 값 가져옴.
+			 * */ 
+			/*console.log("nativeEvent :")
+			console.log(e.nativeEvent)
+			console.log("targetType :" +  e.targetType)
+			console.log("rowKey :" +  e.rowKey)
+			console.log("columnName :" +  e.columnName)
+			console.log("instance :")
+			console.log(e.instance)*/
+
+			/** 
+			 * Grid instance methods
+			 * https://nhn.github.io/tui.grid/latest/Grid#getRow
+			 * 
+			 */
+			/*console.log(caModal.getElement(e.rowKey, e.columnName))
+			console.log(caModal.getCellClassName(e.rowKey, e.columnName));
+			console.log(caModal.getColumn(e.columnName));*/
+
+			if (e.targetType !== "columnHeader") {
+				Swal.fire({
+					icon: 'success',
+					title: '업체명 선택완료',
+					text: '업체명 : ' + caNm,
+				});
+				$("#companyName").val(caNm);
+				$("#modal").hide();						//display none
+				//$("#modal").show();					//display block
+				//$("#modal").css("z_index", "0");		//css 조정
+				//$("#modal").css("display", "none");	//css 조정
+				
+			}
+		});
 
 		//자재목록
 		const material = new Grid({
@@ -268,6 +342,16 @@
 					sortable: true
 				},
 				{
+					header: '업체코드',
+					name: 'caNo',
+					sortingType: 'asc',
+					sortable: true
+				},
+				{
+					header: '업체명',
+					name: 'caNm'
+				},
+				{
 					header: '자재코드',
 					name: 'cmmCd',
 					sortingType: 'asc',
@@ -287,6 +371,28 @@
 				perPage: 30
 			}
 		});
+
+//-----------------------------------Ajax
+		let cmmCd = null;
+
+		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
+		material.on("dblclick", (e) => {
+			cmmCd = material.getData()[e.rowKey].cmmCd;
+			console.log(cmmCd);
+			$.ajax({
+				url : "mtrlOrderOneCheck",
+				method :"POST",
+				dataType : "JSON",
+				data : {cmmCd : cmmCd},
+				success : function(data){
+					materialOrder.resetData(data);
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+			});
+		});
+//---------------------------------------
 
 </script>
 </main>

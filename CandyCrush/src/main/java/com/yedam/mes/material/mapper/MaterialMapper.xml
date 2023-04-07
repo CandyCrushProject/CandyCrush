@@ -12,19 +12,22 @@
 	<select id="accountCheck" resultType="AccountVO">
 		SELECT ca_no, ca_nm, ca_mng, ca_mng_ph, ca_bsns_num
 		FROM CM_ACCOUNT
+		WHERE CA_TYP = '매입처'
+		ORDER BY ca_no
 	</select>
 		
 	<!-- 모달창 업체검색 -->
 	<select id="accountCheckModal" resultType="AccountVO">
 		SELECT ca_no, ca_nm, ca_mng, ca_mng_ph, ca_bsns_num
 		FROM CM_ACCOUNT
-		WHERE 1=1
+		WHERE CA_TYP = '매입처'
+			<if test="caNo != null and !caNo.equals('')">
+			AND ca_no LIKE '%' || #{caNo} || '%'
+			</if>
 			<if test="caNm != null and !caNm.equals('')">
-			AND ca_no = #{caNm}
+			AND ca_nm LIKE '%' || #{caNm} || '%'
 			</if>
-			<if test="cmmNm != null and !cmmNm.equals('')">
-			AND cmm_nm = #{cmmNm}
-			</if>
+		ORDER BY ca_no
 	</select>
 	
 	<!-- 업체명 또는 자재명을 통한 자재검색 -->
@@ -34,18 +37,27 @@
 		ON cmm.ca_no = ca.ca_no
 		WHERE 1 = 1
 			<if test="caNm != null and !caNm.equals('')">
-			AND ca_nm LIKE '%' || #{caNm} || '%' 
+			AND ca_nm LIKE '%' || #{caNm} || '%'
 			</if>
 			<if test="cmmNm != null and !cmmNm.equals('')">
-			AND cmm_nm = LIKE '%' || #{cmmNm} || '%' 
+			AND cmm_nm LIKE '%' || #{cmmNm} || '%' 
 			</if>
-
 		ORDER BY cmm_cd
 	</select>
 
 	<!-- 자재발주 전체조회 -->
 	<select id="mtrlOrderAllList" resultType="MaterialOrderVO">
 		SELECT * FROM MTRL_ORDR
+	</select>
+	
+	<!-- 자재발주 단건조회 -->
+	<select id="mtrlOrderOneCheck" resultType="MaterialOrderVO">
+		SELECT mo_cd, mo_title, mo_reo_dt, mo.ca_no, ca_nm, mo.cmm_cd, mo_dlv_dt
+		FROM MTRL_ORDR mo JOIN CM_MTRL_MNG cmm
+		ON mo.cmm_cd = cmm.cmm_cd
+		JOIN CM_ACCOUNT ca
+		ON cmm.ca_no = ca.ca_no
+		WHERE mo.cmm_cd = #{cmmCd}
 	</select>
 
 </mapper>

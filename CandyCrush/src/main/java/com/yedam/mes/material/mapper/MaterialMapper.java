@@ -16,9 +16,11 @@ public interface MaterialMapper {
 	//업체조회
 	public List<AccountVO> accountCheck();
 	//모달 업체검색
-	public List<AccountVO> accountCheckModal(@Param("caNm") String caNm, @Param("cmmNm") String cmmNm);
+	public List<AccountVO> accountCheckModal(@Param("caNm") String caNm, @Param("caNo") String caNo);
 	//업체명 또는 자재명을 통한 자재검색
 	public List<MaterialVO> mtrlSearch(@Param("caNm") String caNm, @Param("cmmNm") String cmmNm);
+	//자재목록에서 자재코드 클릭하면 자재발주로 리스트를 뿌린다
+	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd);
 	
 	
 }

@@ -2,6 +2,7 @@ package com.yedam.mes.material.web;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.mes.material.service.AccountVO;
+import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;
 
@@ -37,17 +39,23 @@ public class MaterialController {
 	//자재발주관리/모달/업체검색
 	@PostMapping("accountCheck")
 	@ResponseBody
-	public List<AccountVO> accountCheck(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String cmmNm){
-		return service.accountCheckModal(caNm, cmmNm);
+	public List<AccountVO> accountCheck(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo){
+		return service.accountCheckModal(caNm, caNo);
 	}
 	
 	//자재발주조회 페이지
 	@GetMapping("mtrlOrderList")
 	public String mtrlOrderList(Model model) {
-		
-		
 		return "material/materialOrderList";
 	}
+	
+	//자재발주관리/자재목록 -> 자재발주로 List 뿌리기
+	@PostMapping("mtrlOrderOneCheck")
+	@ResponseBody
+	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd){
+		return service.mtrlOrderOneCheck(cmmCd);
+	}
+	
 	
 	//자재입고검사조회 페이지
 	@GetMapping("mtrlInspCheck")
