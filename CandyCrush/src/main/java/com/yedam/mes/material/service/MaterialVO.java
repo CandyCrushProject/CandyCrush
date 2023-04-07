@@ -19,4 +19,7 @@ public class MaterialVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date cmmUpdDt;	//수정일
 	private String caNm;	//거래처명
+	private int motCnt;		//출고재고
+	private int minCnt;		//입고재고
+	private int cmmInven;	//입고재고-출고재고
 }

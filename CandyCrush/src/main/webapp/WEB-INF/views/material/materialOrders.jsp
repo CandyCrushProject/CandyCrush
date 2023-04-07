@@ -3,17 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 
 <style>
 	label{
 		width: 70px;
 		margin-left: 10px;
 		color : black;
+		background-color: ;
 	}
 	#eunae{
 		margin-left: 10px;
@@ -113,7 +111,16 @@
 	</div>
 
 	<script>
+		//Tost Ui Grid 선언
 		const Grid = tui.Grid;
+		//Toast Ui Grid theme
+		/*Grid.applyTheme('default', {
+			cell: {
+				evenRow: {
+					background: '#fee'
+				}
+			}
+		});*/
 
 		//Modal Grid 빠르게 띄우는 방법
 		$('#companyName').click(function(){
@@ -306,8 +313,39 @@
 					name: 'cmmUnit'
 				},
 				{
+					header: '입고재고',
+					name: 'minCnt'
+				},
+				{
+					header: '출고재고',
+					name: 'motCnt'
+				},
+				{
+					header: '현재재고',
+					name: 'cmmInven'
+				},
+				{
 					header: '안전재고',
-					name: 'cmmSafStc'
+					name: 'cmmSafStc',
+					/*_attributes: {
+						className: {
+							column: { name: ['someClassName'] }
+						}
+					}*/
+					formatter: function(rowdata) {
+						//let rowData = value.row.;
+						let cmmInven = rowdata.row.cmmInven;		//현재재고
+						let cmmSafStc = rowdata.row.cmmSafStc;	//안전재고
+						let backgroudColor = "";
+
+						if (cmmInven < cmmSafStc){
+							backgroudColor = "red";
+						} else {
+							backgroudColor = "green";
+						}
+						return '<span style="color:'   //style="width:100%;height:100%;
+										+backgroudColor+'";>'+cmmSafStc+'</span>';
+					}
 				}
 			],
 			bodyHeight: 300,
@@ -361,7 +399,10 @@
 					header: '납기일',
 					name: 'moDlvDt',
 					sortingType: 'asc',
-					sortable: true
+					sortable: true,
+					formatter: function (e) {
+						return dateChange(e.value);
+					},
 				}
 			],
 			bodyHeight: 400,
@@ -372,13 +413,26 @@
 			}
 		});
 
+		//날짜변환 함수
+		function dateChange(data) {
+      let newData = new Date(data);
+      let result =
+				newData.getFullYear() +
+        "-" +
+        (newData.getMonth() < 10
+          ? "0" + (newData.getMonth() + 1)
+          : newData.getMonth() + 1) +
+        "-" +
+        (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+      return result;
+    }
+
 //-----------------------------------Ajax
 		let cmmCd = null;
 
 		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
 		material.on("dblclick", (e) => {
 			cmmCd = material.getData()[e.rowKey].cmmCd;
-			console.log(cmmCd);
 			$.ajax({
 				url : "mtrlOrderOneCheck",
 				method :"POST",
