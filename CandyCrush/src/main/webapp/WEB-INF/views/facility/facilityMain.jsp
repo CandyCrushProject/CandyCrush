@@ -72,9 +72,9 @@
 											
 											<td>
 												<button onclick="document.getElementById('${stat.facCd}Modal').style.display='block'">
-												<i class="fa-solid fa-clipboard"></i> 상세정보
+													<i class="fa-solid fa-clipboard"></i> 상세정보
 												</button> 
-												</td>
+											</td>
 										
 										</tr>
 										</c:forEach>

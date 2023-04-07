@@ -3,8 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -19,190 +17,192 @@
 		</div>
 
 		<div id="page-inner">
-
 <!-- 모달 -->
 <!-- The Modal -->
-<div id="mtnInsertModal" class="w3-modal" style="z-index: 100;">
+<c:forEach items="${statList }" var="stat">
+<div id="${stat.facCd}Modal" class="w3-modal" style="z-index: 100;">
   <div class="w3-modal-content">
     <div class="w3-container">
-      <span onclick="document.getElementById('mtnInsertModal').style.display='none'"      class="w3-button w3-display-topright">&times;</span>
-			<h3>점검일지 기록</h3>
-			<form id="mtnInsertForm" action="insertFacilityMaintenance" method="post" >
-				<table>
-					<tr>
-						<td>
-							<label for="facMtn">점검코드</label>
-						</td>
-						<td>
-							 <input type="text" name="facMtn" style="display: inline; width: 70%;" required required>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="facMgr">담당자</label>
-						</td>
-						<td>
-							 <input type="text" name="facMgr" style="display: inline; width: 70%;" required required>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="facCd">설비</label>
-						</td>
-						<td>
-						<select name="facCd" id="facCdSelect" form="mtnInsertForm" style="display: inline; width: 70%;" required>
-								<option value="">--Please choose an option--</option>
-								<c:forEach items="${statList }" var="stat">
-								<option value="${stat.facCd }">${stat.facCd } | ${stat.facNm }</option>
-							</c:forEach>
-						</select>
-					</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="facRtn">분류</label>
-						</td>
-						<td><select name="facRtn" style="display: inline; width: 70%;" required>
-								<option value="">--Please choose an option--</option>
-								<option value="정기">정기</option>
-								<option value="비정기">비정기</option>
-						</td>
-							
-						</select>
-					</tr>
-					<tr>
-						<td><label for="facMtnDt">점검일</label>
-						</td>
-						<td>
-						 <input type="date" name="facMtnDt" style="display: inline; width: 70%;" required>
-						</td>
-					</tr>
-					<tr>
-					<td>
-						<label for="facRslt">점검결과</label>
-					</td>
-					<td>
-						<select name="facRslt" style="display: inline; width: 70%;" required>
-								<option value="">--Please choose an option--</option>
-								<option value="합격">합격</option>
-								<option value="불합격">불합격</option>
-						</select>
-					</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="facAct" required>점검내역</label>
-						</td>
-						<td>
-						 <input type="text" name="facAct" style="display: inline; width: 70%;" required>
-						</td>
-					</tr>
-					<tr>
-						<td><label for="facActDtl" >점검내역 상세</label>
-						</td>
-						<td>
-						 <input type="text" name="facActDtl" style="display: inline; width: 70%;" required>
-						</td>
-					</tr>
-				</table>
-				<button class="cndInsBtn" type="submit">등록</button>
-				<button class="cndDelBtn" onclick="document.getElementById('mtnInsertModal').style.display='none'">닫기</button>
-			</form>
+      <span onclick="document.getElementById('${stat.facCd}Modal').style.display='none'"  class="w3-button w3-display-topright">&times;</span>
+			<h3>${stat.facNm} 상세정보</h3>
+      <table class="candyTab">
+				<tbody>
+						<tr><th>설비코드</th><td>${stat.facCd}</td></tr>
+						<tr><th>설비명</th><td>${stat.facNm}</td></tr>
+						<tr><th>도입일자</th><td><fmt:formatDate value="${stat.facDt}" pattern="yyyy-MM-dd"/></td></tr>
+						<tr><th>점검주기</th><td>${stat.facCy}일</td></tr>
+						<tr><th>최근 점검일</th><td><fmt:formatDate value="${stat.facRctMtn}" pattern="yyyy-MM-dd"/></td></tr>
+						<tr><th>점검예정일</th><td><fmt:formatDate value="${stat.mtnPlanned}" pattern="yyyy-MM-dd"/></td></tr>
+						<tr><th>현재 가동정보</th> <td>${stat.facRun}</td></tr>
+				</tbody>
+			</table>
     </div>
   </div>
 </div>
-<!-- 모달끝 -->
+</c:forEach>
+<!-- 모달 -->
 
-
-<!-- 데이터 전달용 -->
-<span id="statInfo" style="display: none;">
-	<c:forEach items="${statList }" var="stat">
-		{
-		"facCd": "${stat.facCd}",
-		"facNm": "${stat.facNm}",
-		"facDt": "<fmt:formatDate value="${stat.facDt}" pattern="yyyy-MM-dd"/>",
-		"facCy": "${stat.facCy}일",
-		"facRctMtn": "<fmt:formatDate value="${stat.facRctMtn}" pattern="yyyy-MM-dd"/>",
-		"mtnPlanned": "<fmt:formatDate value="${stat.mtnPlanned}" pattern="yyyy-MM-dd"/>",
-		"facRun": "${stat.facRun}" 
-	},
-	</c:forEach>
-</span>
-<span id="mtnInfo" style="display: none;">
-	<c:forEach items="${mtnList }" var="mtn">
-		{
-		"facMtn": "${mtn.facMtn}",
-		"facCd": "${mtn.facCd}",
-		"facRtn": "${mtn.facRtn}",
-		"facMtnDt": "<fmt:formatDate value="${mtn.facMtnDt}" pattern="yyyy-MM-dd"/>",
-		"facRslt": "${mtn.facRslt}",
-		"facAct": "${mtn.facAct}",
-		"facActDtl": "${mtn.facActDtl}",
-		"facMgr": "${mtn.facMgr}" 
-	},
-	</c:forEach>
-</span>
-	<!-- 데이터전달용 끝 -->
-
-
-
-
+<!-- The Modal -->
+<c:forEach items="${statList }" var="stat">
+<div id="${stat.facCd}Modal" class="w3-modal" style="z-index: 100;">
+  <div class="w3-modal-content">
+    <div class="w3-container">
+      <span onclick="document.getElementById('${stat.facCd}Modal').style.display='none'"  class="w3-button w3-display-topright">&times;</span>
+			<h3>${stat.facNm} 상세정보</h3>
+      <table class="candyTab">
+				<tbody>
+						<tr><th>설비코드</th><td>${stat.facCd}</td></tr>
+						<tr><th>설비명</th><td>${stat.facNm}</td></tr>
+						<tr><th>도입일자</th><td><fmt:formatDate value="${stat.facDt}" pattern="yyyy-MM-dd"/></td></tr>
+						<tr><th>점검주기</th><td>${stat.facCy}일</td></tr>
+						<tr><th>최근 점검일</th><td><fmt:formatDate value="${stat.facRctMtn}" pattern="yyyy-MM-dd"/></td></tr>
+						<tr><th>점검예정일</th><td><fmt:formatDate value="${stat.mtnPlanned}" pattern="yyyy-MM-dd"/></td></tr>
+						<tr><th>현재 가동정보</th> <td>${stat.facRun}</td></tr>
+				</tbody>
+			</table>
+    </div>
+  </div>
+</div>
+</c:forEach>
+<!-- 모달 -->
 
 			<div class="row">
 				<div class="col-md-12">
 					<!-- Advanced Tables -->
 					<div class="card">
-						<div class="card-action">점검예정이 가까운장비<br>
+						<div class="card-action">가동 설비 조회<br>
+							<input type="radio" name="runFilter" id="runAll" value="runAll" onclick="div_OnOff(this.value);"/><label for="runAll" >전체</label>
+							<input type="radio" name="runFilter" id="runRun" value="runRun" onclick="div_OnOff(this.value);"/><label for="runRun" >가동</label>
+							<input type="radio" name="runFilter" id="runStop" value="runStop" onclick="div_OnOff(this.value);"/><label for="runStop" >비가동</label>
 						</div>
 						<div class="card-content">
-							<div id="statListGrid"></div>
+							<div class="table-responsive">
+								<table class="table table-striped table-bordered table-hover candyTab"
+									id="dataTables-example">
+									<thead>
+										<tr>
+											<th>설비코드</th>
+											<th>설비명</th>
+											<th>설비가동여부</th>
+											<th>가동관리</th>
+										</tr>
+									</thead>
+									<tbody>
+											<c:forEach items="${statList }" var="stat">
+										<tr class="Run${stat.facRun}">
+											<td>${stat.facCd }</td>
+											<td>${stat.facNm }</td>
+											<td>${stat.facRun }</td>
+											
+											<td>
+												<c:choose>
+													<c:when test="${stat.facRun eq 'N'}">
+														<button onclick="document.getElementById('${stat.facCd}Modal').style.display='block'">
+															<i class="fa-solid fa-clipboard"></i> 재가동시작
+														</button>
+													</c:when>
+													<c:otherwise>
+														<button  onclick="document.getElementById('${stat.facCd}Modal').style.display='block'">
+														<i class="fa-solid fa-clipboard"></i> 가동중지
+														</button>
+													</c:otherwise>
+												</c:choose>
+
+												</td>
+										
+										</tr>
+										</c:forEach>
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!--End Advanced Tables -->
+					<!-- Advanced Tables -->
+					<div class="card">
+						<div class="card-action">비가동 내역<br>
+							
+						</div>
+						<div class="card-content">
+							<div class="table-responsive">
+								<div id="operationList"></div>
+							</div>
 						</div>
 					</div>
 					<!--End Advanced Tables -->
 				</div>
 			</div>
-			<!-- /. ROW  -->
-			<div class="row">
-				<div class="col-md-12">
-					<!--   Kitchen Sink -->
-					<div class="card">
-						<div class="card-action">점검이력</div>
-						<button onclick="document.getElementById('mtnInsertModal').style.display='block'" style="display: inline;" class="cndInsBtn">점검내역입력</button>
-						<div class="card-content">
-							<div class="table-responsive">
-								<div id="mtnListGrid"></div>
-							</div>
-						</div>
-						</div>
-					</div>
-					<!-- End  Kitchen Sink -->
-				</div>
-			</div>
-			<!-- /. ROW  -->
-			<div class="row">
-				<div class="col-md-6">
-
-				</div>
-			</div>
-			<!-- /. ROW  -->
 
 		</div>
 		<!-- /. PAGE INNER  -->
 	</div>
 
 	<script>
+		function div_OnOff(v){
+		 // 라디오 버튼 value 값 조건 비교
+		 if(v == "runAll"){
+			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+		 		document.getElementsByClassName("RunY")[i].style.display = ""
+			}
+			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+		 		document.getElementsByClassName("RunN")[i].style.display = ""
+			}
+		 }
+		 else if(v=="runRun"){
+			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+		 		document.getElementsByClassName("RunY")[i].style.display = ""
+			}
+			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+		 		document.getElementsByClassName("RunN")[i].style.display = "None"
+			}
+		}
+		 
+		 else if(v=="runStop"){
+			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+		 		document.getElementsByClassName("RunY")[i].style.display = "None"
+			}
+			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+		 		document.getElementsByClassName("RunN")[i].style.display = ""
+			}
+
+		 }
+		}
+		
+		
+		
+		
+		
 		const Grid = tui.Grid;
-
-
-		// 설비점검예정일----------------------------------------------------------------
-		let statList=document.getElementById("statInfo").innerHTML
-		let statJsonString='['+statList.trim().slice(0,-1)+']'
-		let statJsonPharsed=JSON.parse(statJsonString);
-		let data = statJsonPharsed;
-		const statListGrid = new Grid({
-			el: document.getElementById('statListGrid'), // Container element
-			//rowHeaders: ['checkbox'],
+		let orderData = [
+			<c:forEach items="${opList}" var="opStat">
+				{
+					fdmCd:'${opStat.fdmCd}',
+					facCd:'${opStat.facCd}',
+					facNm:'${opStat.facNm}',
+					fdmMgr:'${opStat.fdmMgr}',
+					fdmStop:'${opStat.fdmStop}',
+					fdmRun:'${opStat.fdmRun}',
+					cfdCd:'${opStat.cfdCd}',
+					facRun:'${opStat.facRun}',
+					facInfo:'${opStat.facInfo}',
+					cfdTitle:'${opStat.cfdTitle}',
+					cfdContent:'${opStat.cfdContent}',
+				},
+			</c:forEach>
+		];
+		
+		
+		const opList = new Grid({
+			el: document.getElementById('operationList'), // Container element
+			data: orderData,
 			columns: [
+				{
+					header: '비가동번호',
+					name: 'fdmCd',
+					sortingType: 'asc',
+					sortable: true
+				},
 				{
 					header: '설비코드',
 					name: 'facCd',
@@ -214,98 +214,38 @@
 					sortable: true
 				},
 				{
-					header: '최근점검일',
-					name: 'facRctMtn'
-				},
-				{
-					header: '점검예정일',
-					name: 'mtnPlanned',
-					sortable: true,
-					sortingType: 'desc',
-					
-				},
-				{
-					header: '도입일',
-					name: 'facDt',
-					sortable: true
-				},
-				{
-					header: '점검주기',
-					name: 'facCy',
-					sortable: true
-				},
-				
-				{
-					header: '현재가동정보',
-					name: 'facRun'
-				}
-			],
-			data,
-			bodyHeight: 200,
-			pageOptions: {
-				useClient: true,
-				type: 'scroll',
-				perPage: 30
-  		}
-		});
-	
-		// 설비점검기록----------------------------------------------------------------
-		let mtnList=document.getElementById("mtnInfo").innerHTML
-		let mtnJsonString='['+mtnList.trim().slice(0,-1)+']'
-		let mtnJsonPharsed=JSON.parse(mtnJsonString);
-		data=mtnJsonPharsed;
-		const mtnListGrid = new Grid({
-			el: document.getElementById('mtnListGrid'), // Container element
-			//rowHeaders: ['checkbox'],
-			columns: [
-				{
-					header: '점검코드',
-					name: 'facMtn',
-					sortable: true
-				},
-				{
-					header: '설비코드',
-					name: 'facCd',
-					sortable: true
-				},
-				{
-					header: '점검구분',
-					name: 'facRtn'
-				},
-				{
-					header: '점검일',
-					name: 'facMtnDt',
-					sortable: true,
-					sortingType: 'desc',
-					
-				},
-				{
-					header: '점검결과',
-					name: 'facRslt',
-					sortable: true
-				},
-				{
-					header: '점검명',
-					name: 'facAct',
-					sortable: true
-				},
-				
-				{
-					header: '점검상세',
-					name: 'facActDtl'
-				},
-				{
 					header: '담당자',
-					name: 'facMgr'
-				}
+					name: 'fdmMgr',
+					sortable: true
+				},
+				{
+					header: '비가동일시',
+					name: 'fdmStop',
+					sortable: true
+				},
+				{
+					header: '가동일시',
+					name: 'fdmRun',
+					sortable: true
+				},
+				{
+					header: '비가동코드',
+					name: 'facInfo',
+					sortable: true
+				},
+				{
+					header: '비가동명',
+					name: 'cfdTitle',
+					sortable: true
+				},
+				
 			],
-			data,
-			bodyHeight: 200,
+			bodyHeight: 500,
 			pageOptions: {
 				useClient: true,
 				type: 'scroll',
 				perPage: 30
-  		}
+  			}
 		});
 	</script>
 </main>
