@@ -35,7 +35,7 @@ pageEncoding="UTF-8"%>
 							<h5><b>입고등록</b></h5>
 							<div id="floatBtn">
                                 <button type="button" class="cndInsBtn">저장</button>
-                                <button type="reset" class="">초기화</button>
+                                <button type="reset" class="cndRstBtn">초기화</button>
                             </div>
 							<div>
 								<label for="mtrlInput">입고일자</label>
@@ -54,7 +54,7 @@ pageEncoding="UTF-8"%>
 								<input type="date" id="inspDate"
 										style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
 								<input type="date" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
-								<button type="button" id="inspSearchBtn" class="">가져오기</button>
+								<button type="button" id="inspSearchBtn" class="cndSrchBtn">가져오기</button>
 								<br/>
 							</div>
 						</div>

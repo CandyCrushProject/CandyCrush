@@ -32,9 +32,17 @@
 	
 	<!-- 업체명 또는 자재명을 통한 자재검색 -->
 	<select id="mtrlSearch" resultType="MaterialVO">
-		SELECT cmm_cd, cmm_nm, cmm_typ, cmm_spec, cmm_unit, cmm_saf_stc
-		FROM CM_MTRL_MNG cmm JOIN CM_ACCOUNT ca
-		ON cmm.ca_no = ca.ca_no
+		SELECT cmm.cmm_cd, cmm_nm, cmm_typ, cmm_spec,
+		        cmm_unit, cmm_saf_stc, MOT_CNT, MIN_CNT,
+		        TO_NUMBER(min_cnt) - TO_NUMBER(mot_cnt) AS "cmm_inven"
+		FROM cm_account ca JOIN cm_mtrl_mng cmm
+		ON ca.ca_no = cmm.ca_no
+		 JOIN cm_mtrl_lot clot
+		  ON cmm.cmm_cd = clot.cmm_cd
+		    JOIN mtrl_otpt mot
+		        ON clot.cml_nm = mot.cml_nm
+		            JOIN mtrl_input min
+		                ON mot.min_cd = min.min_cd
 		WHERE 1 = 1
 			<if test="caNm != null and !caNm.equals('')">
 			AND ca_nm LIKE '%' || #{caNm} || '%'
