@@ -23,4 +23,5 @@ public class MaterialOrderVO {
 	private String caNo;
 	private String caNm;
 	private String cmmCd;
+	private int cmmInven;	//입고재고-출고재고
 }

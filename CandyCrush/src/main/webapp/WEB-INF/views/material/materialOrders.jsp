@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <style>
@@ -44,7 +46,7 @@
 					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;">
 					<br/>
 					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;">
-					<button class="srchBtn">
+					<button class="srchBtn" id="modalBtn">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</button>
 				</div>
@@ -114,13 +116,7 @@
 		//Tost Ui Grid 선언
 		const Grid = tui.Grid;
 		//Toast Ui Grid theme
-		/*Grid.applyTheme('default', {
-			cell: {
-				evenRow: {
-					background: '#fee'
-				}
-			}
-		});*/
+		Grid.applyTheme('clean');
 
 		//Modal Grid 빠르게 띄우는 방법
 		$('#companyName').click(function(){
@@ -140,6 +136,8 @@
 													},
 												</c:forEach>
 											];
+
+		let getMtrlOrder
 //-----------------------------------Ajax
 		let cmmNm = null;
 		let caNm = null;
@@ -178,7 +176,7 @@
 					material.resetData(data);
 				} 
 			});
-		}
+		};
 		
 		//모달/업체명검색
 		function modalAccountSearch(){
@@ -196,6 +194,11 @@
 				} 
 			});
 		}
+
+		//modal account search Btn event
+		$("#modalBtn").on('click',(e)=>{
+			modalAccountSearch();
+		})
 
 		document.getElementById("modalCaNm").addEventListener("input", () => {
 			modalAccountSearch();
@@ -242,32 +245,6 @@
 		//모달창 tr 선택하면 돌아가는 click event
 		caModal.on("click", (e) => {
 			let caNm = caModal.getData()[e.rowKey].caNm;
-			/** 
-			 * 클릭 시 들고오는 properties 목록 API 문서 (100% 정확하지 않음)
-			 * https://nhn.github.io/tui.grid/latest/Grid#event-click
-			 * nativeEvent => get Event Object
-			 * targetType => 컬럼명 클릭 시 : columeHeader, row 클릭 시 : cell
-			 * rowKey => cell의 위치 (즉 1번째 행 클릭 시 0을 가져옴, 4번째 row 클릭 시 3.)
-			 * columnName => 클릭 한 해당 컬럼의 text 읽어오는 것 같음 
-			 * instance => 지금 활성화 되어 있는 grid의 속성 값 가져옴.
-			 * */ 
-			/*console.log("nativeEvent :")
-			console.log(e.nativeEvent)
-			console.log("targetType :" +  e.targetType)
-			console.log("rowKey :" +  e.rowKey)
-			console.log("columnName :" +  e.columnName)
-			console.log("instance :")
-			console.log(e.instance)*/
-
-			/** 
-			 * Grid instance methods
-			 * https://nhn.github.io/tui.grid/latest/Grid#getRow
-			 * 
-			 */
-			/*console.log(caModal.getElement(e.rowKey, e.columnName))
-			console.log(caModal.getCellClassName(e.rowKey, e.columnName));
-			console.log(caModal.getColumn(e.columnName));*/
-
 			if (e.targetType !== "columnHeader") {
 				Swal.fire({
 					icon: 'success',
@@ -275,11 +252,7 @@
 					text: '업체명 : ' + caNm,
 				});
 				$("#companyName").val(caNm);
-				$("#modal").hide();						//display none
-				//$("#modal").show();					//display block
-				//$("#modal").css("z_index", "0");		//css 조정
-				//$("#modal").css("display", "none");	//css 조정
-				
+				$("#modal").hide();	
 			}
 		});
 
@@ -327,11 +300,6 @@
 				{
 					header: '안전재고',
 					name: 'cmmSafStc',
-					/*_attributes: {
-						className: {
-							column: { name: ['someClassName'] }
-						}
-					}*/
 					formatter: function(rowdata) {
 						//let rowData = value.row.;
 						let cmmInven = rowdata.row.cmmInven;		//현재재고
@@ -343,7 +311,7 @@
 						} else {
 							backgroudColor = "green";
 						}
-						return '<span style="color:'   //style="width:100%;height:100%;
+						return '<span style="color:'
 										+backgroudColor+'";>'+cmmSafStc+'</span>';
 					}
 				}
@@ -365,7 +333,7 @@
 					header: '발주코드',
 					name: 'moCd',
 					sortingType: 'asc',
-					sortable: true
+					sortable: true,
 				},
 				{
 					header: '발주명',
@@ -396,10 +364,26 @@
 					sortable: true
 				},
 				{
+					header: '발주수량',
+					name: 'moCnt',
+          editor: 'text'
+				},
+				{
+					header: '현재재고',
+					name: 'cmmInven'
+				},
+				{
 					header: '납기일',
 					name: 'moDlvDt',
 					sortingType: 'asc',
 					sortable: true,
+					editor: {
+						type: 'datePicker',
+						options: {
+							format: 'yyyy-MM-dd',
+							language: 'ko'
+						}
+					},
 					formatter: function (e) {
 						return dateChange(e.value);
 					},
@@ -429,6 +413,7 @@
 
 //-----------------------------------Ajax
 		let cmmCd = null;
+		let myObj = null;
 
 		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
 		material.on("dblclick", (e) => {
@@ -439,7 +424,7 @@
 				dataType : "JSON",
 				data : {cmmCd : cmmCd},
 				success : function(data){
-					materialOrder.resetData(data);
+					materialOrder.resetData(Object(data));
 				},
 				error : function(reject){
 					console.log(reject);
