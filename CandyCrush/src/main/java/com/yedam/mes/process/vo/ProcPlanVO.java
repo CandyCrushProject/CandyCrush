@@ -26,5 +26,5 @@ public class ProcPlanVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date prstDt; // 생산작업일자
 	private String prpldMng; // 담당자
-	private String prpldStatus; // 현재상환
+	private String prpldStatus; // 현재상황
 }

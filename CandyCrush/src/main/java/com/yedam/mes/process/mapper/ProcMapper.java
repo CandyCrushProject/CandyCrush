@@ -17,8 +17,9 @@ public interface ProcMapper {
 	public OrderPlanVO selectOneOrder(OrderPlanVO opVO);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
+	public ProcPlanVO getPlanCode();
 	public int insertPlan(ProcPlanVO planVO);
-	
+	public int insertPlanDetail(ProcPlanVO planVO);
 	// 제품공정확인 - 제품마다 사용되는 공정정보
 	
 	// 사용가능자재 - 제품에 들어가는 자재

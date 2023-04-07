@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,17 +30,23 @@ public class ProcessController {
 	
 	@GetMapping("getOrder")
 	@ResponseBody
-	public Map<String, Object> getOrderSheet() {
+	public Map<String, Object> getOrderSheet(Model model) {
 	    Map<String, Object> resultMap = new HashMap<>();
 	    resultMap.put("result", procService.getOrder());
-		System.out.println(resultMap);
+	    model.addAttribute("prplCd", procService.getPlanCode().getPrplCd());
 		return resultMap;
 	}
 	@PostMapping("insertProcPlan")
 	public String insertProcPlan(ProcPlanVO ppVO, RedirectAttributes rrtt) {
-		
-		
-		
+		int result = procService.addPlan(ppVO);
+		int result2 = procService.addPlanDetail(ppVO);
+		String message = null;
+		if(result == 1 && result2 == 1) {
+			message = "등록에 성공했습니다.";
+		} else {
+			message = "등록에 실패했습니다.";
+		} 
+		rrtt.addFlashAttribute("message",message);
 		return "redirect:ProcManagement";
 	}
 	

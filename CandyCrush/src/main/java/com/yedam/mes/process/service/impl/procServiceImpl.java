@@ -25,15 +25,23 @@ public class procServiceImpl implements ProcService {
 	}
 
 	@Override
+	public ProcPlanVO getPlanCode() {
+		return procMapper.getPlanCode();
+	}
+	@Override
 	public OrderPlanVO getOneOrder(OrderPlanVO opVO) {
 		return procMapper.selectOneOrder(opVO);
 	}
 
 	@Override
 	public int addPlan(ProcPlanVO planVO) {
-		return 0;
+		return procMapper.insertPlan(planVO);
 	}
 
+	@Override
+	public int addPlanDetail(ProcPlanVO planVO) {
+		return procMapper.insertPlanDetail(planVO);
+	}
 	@Override
 	public ProcPlanVO getPlan(ProcPlanVO planVO) {
 		return null;
@@ -63,6 +71,8 @@ public class procServiceImpl implements ProcService {
 	public List<ProcProgVO> getProgList(ProcProgVO progVO) {
 		return null;
 	}
+
+
 
 
 
