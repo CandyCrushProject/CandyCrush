@@ -110,7 +110,13 @@
   </select>
   
   <select id="getFacilityDownCode" resultType="FacilityDownVO">
-  select * from CM_FAC_DWN_CODE
+ 	 select cfd_cd,cfd_title,cfd_content from CM_FAC_DWN_CODE
   </select>
   
+  
+  <select id="getNextDownCode" resultType="Integer">
+  	select max(numcode)+1
+	from (select substr(fdm_cd,4) as numcode
+    from FAC_DWN_MNG)
+  </select>
 </mapper>

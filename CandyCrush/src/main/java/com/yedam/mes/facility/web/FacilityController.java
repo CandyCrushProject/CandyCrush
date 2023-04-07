@@ -32,9 +32,10 @@ public class FacilityController {
 	}
 	@GetMapping("facilityOperation")
 	public String facilityOperation(Model model) {
-		model.addAttribute("statList",facilityService.FacilityOperationStat());
+		model.addAttribute("opStatList",facilityService.facilityOperationStat());
 		model.addAttribute("opList",facilityService.selectFacilityOperation());
 		model.addAttribute("dwnList",facilityService.getFacilityDownCode());
+		model.addAttribute("NxtDownCode",facilityService.getNextDownCode());
 		return "facility/facilityOperation";
 	}
 }
