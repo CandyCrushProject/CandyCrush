@@ -9,4 +9,7 @@ public interface OrdrShtService {
 	// 전체조회
 	public List<OrdrShtVO> ordrShtAllList();
 	
+	// 검색조회
+	public List<OrdrShtVO> ordrShtSrchList();
+	
 }

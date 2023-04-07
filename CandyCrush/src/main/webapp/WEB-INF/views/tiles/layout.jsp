@@ -66,7 +66,7 @@
 	<link href="assets/css/candyTab.css" rel="stylesheet" />
 	
 	<!-- 태그 공통 css -->
-	<link rel="stylesheet" href="assets/css/input.css">
+	<link rel="stylesheet" href="assets/css/common.css">
 	
 	<!-- CandyButton -->
 	<link rel="stylesheet" href="assets/css/candyButton.css">

@@ -64,6 +64,8 @@
 			</div>
 		</div>
 	</div><!-- End Modal -->
+
+
 	
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -85,21 +87,21 @@
 						<div class="card-content">
 							<div>
 								<label for="acctnNm">거래처명</label> <!-- 거래처명 label -->
-								<input type="text" id="ordrCmpnyNm" style="width: 200px;"> <!-- 거래처명 input -->
+								<input type="text" id="ordrCmpnyNm" style="width: 50%;"> <!-- 거래처명 input -->
 								<button id="mdlCaNmSrchBtn" class="srchBtn"> <!-- 거래처 모달창 버튼 -->
 									<i class="fa-solid fa-magnifying-glass"></i>
 								</button> <!-- 거래처 모달창 버튼 -->
 							</div>
 							<div>
 								<label for="prodNm">제품명</label> <!-- 제품명 label -->
-								<input type="text" id="prodNm" style="width: 200px;"/> <!-- 제품명 input -->
+								<input type="text" id="prodNm" style="width: 50%;"/> <!-- 제품명 input -->
 								<button id="prdNmSrchBtn" class="srchBtn"> <!-- 제품명 모달 버튼-->
 									<i class="fa-solid fa-magnifying-glass"></i>
 								</button> <!-- end 조회버튼-->
 							</div>
 							<div>
 								<label for="companyName">주문일자</label> <!-- 주문일자 label -->
-								<input type="date" id="selStrtDt"> - <input type="date" id="selendDt"> <!-- date input -->
+								<input type="date" id="selStrtDt" style="width: 50%;"> - <input type="date" id="selendDt" style="width: 50%;"> <!-- date input -->
 							</div>
 						</div>
 						<!-- 조회버튼 -->
@@ -110,12 +112,6 @@
 			</div> <!--END row-->
 			<div class="row">
 				<div class="col-md-12">
-					<!-- 버튼 박스 -->
-					<div class="btnBox">
-						<button id="ordrBtn" class="cndInsBtn" type="button" onclick="search()">등록</button> 
-						<button id="ordrBtn" class="cndUdtBtn" type="button">수정</button>
-						<button id="ordrDelBtn" class="cndDelBtn" type="button">삭제</button>
-					</div> <!-- end 버튼 박스 -->
 					<!-- Advanced Tables -->
 					<div class="card">
 						<div class="card-action">주문서조회</div>
@@ -140,11 +136,12 @@
 		<c:forEach items="${ordrShtList}" var="ordrSht">
 			{
 				orshNo: '${ordrSht.orshNo}',
-			cprCd: '${ordrSht.cprCd}',
-			caNo: '${ordrSht.caNo}',
-			orshDt: '${ordrSht.orshDt}',
-			orshPr: '${ordrSht.orshPr}'
-    },
+				cprCd: '${ordrSht.cprCd}',
+				caNo: '${ordrSht.caNo}',
+				orshDt: "<fmt:formatDate value='${ordrSht.orshDt}' pattern='yyyy-MM-dd'/>",
+				orshPr: '${ordrSht.orshPr}'
+				
+    	},
 		</c:forEach>
 	];
 
@@ -175,8 +172,11 @@
 			{
 				header: '주문일자',
 				name: 'orshDt',
+				// formatter: function (data) {
+				// 	return dateChange(data.value);
+				// },
 				sortingType: 'asc',
-				sortable: true
+				sortable: true,
 			},
 			{
 				header: '현재상황',
@@ -192,4 +192,3 @@
 	});
 
 </script>
-

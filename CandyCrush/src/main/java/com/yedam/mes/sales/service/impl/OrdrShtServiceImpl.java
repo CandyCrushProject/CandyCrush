@@ -21,6 +21,12 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return mapper.ordrShtAllList();
 	}
+
+	@Override
+	public List<OrdrShtVO> ordrShtSrchList() {
+		
+		return mapper.ordrShtSrchList();
+	}
 	
 	// 주문서 등록
 	

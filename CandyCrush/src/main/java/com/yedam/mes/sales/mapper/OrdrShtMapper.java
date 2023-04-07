@@ -8,4 +8,6 @@ public interface OrdrShtMapper {
 	
 	// 전체조회
 	public List<OrdrShtVO> ordrShtAllList();
+
+	public List<OrdrShtVO> ordrShtSrchList();
 }

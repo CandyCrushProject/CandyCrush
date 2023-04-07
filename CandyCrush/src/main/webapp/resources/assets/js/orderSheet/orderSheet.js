@@ -15,13 +15,12 @@ $(document).ready(function(){
   // 거래처 모달
   $('#mdlCaNmSrchBtn').on('click',function () {
     document.getElementById('accntNmMdl').style.display = 'block';
-    //setTimeout(() => caModal.refreshLayout(), 0);
+    setTimeout(() => caModal.refreshLayout(), 0);
   });
 
   // 제품명 모달
   $('#prdNmSrchBtn').on('click', function () {
     document.getElementById('prdNmMdl').style.display = 'block';
-    //setTimeout(() => caModal.refreshLayout(), 0);
   });
 });
 
