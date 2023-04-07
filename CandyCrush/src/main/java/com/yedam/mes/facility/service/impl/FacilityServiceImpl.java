@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mes.facility.mapper.FacilityMapper;
+import com.yedam.mes.facility.service.FacilityDownVO;
 import com.yedam.mes.facility.service.FacilityMaintenanceVO;
+import com.yedam.mes.facility.service.FacilityOperationStatVO;
+import com.yedam.mes.facility.service.FacilityOperationVO;
 import com.yedam.mes.facility.service.FacilityService;
 import com.yedam.mes.facility.service.FacilityStatVO;
 @Service
@@ -28,5 +31,19 @@ public class FacilityServiceImpl implements FacilityService {
 		// TODO Auto-generated method stub
 		return facilityMapper.insertFacilityMaintenance(mtnVO);
 	}
-
+	@Override
+	public List<FacilityOperationVO> selectFacilityOperation() {
+		// TODO Auto-generated method stub
+		return facilityMapper.selectFacilityOperation();
+	}
+	@Override
+	public List<FacilityDownVO> getFacilityDownCode() {
+		// TODO Auto-generated method stub
+		return facilityMapper.getFacilityDownCode();
+	}
+	@Override
+	public List<FacilityOperationStatVO> FacilityOperationStat() {
+		// TODO Auto-generated method stub
+		return facilityMapper.facilityOperationStat();
+	}
 }
