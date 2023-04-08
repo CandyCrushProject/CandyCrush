@@ -14,7 +14,7 @@ public class MaterialOrderVO {
 	private Date moReoDt;
 	private int moCnt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date moDlvDt;
+	private Date moReqDt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date moCpltDt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

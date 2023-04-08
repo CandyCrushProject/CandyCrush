@@ -3,7 +3,7 @@ package com.yedam.mes.material.service;
 import lombok.Data;
 
 @Data
-public class AccountVO {
+public class MtrlAccountVO {
 	private String caNo;
 	private String caNm;
 	private String caBsnsNum;
