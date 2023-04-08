@@ -22,7 +22,9 @@ public interface MaterialService {
 	
 	//--발주등록
 	//발주관리 헤더
-	public int orderHeaderInsert(MaterialOrderVO vo);
+	//public int orderHeaderInsert(MaterialOrderVO vo);
 	//발주관리 디테일
-	public int orderDetailInsert(List<MaterialOrderVO> vo);
+	//public int orderDetailInsert(List<MaterialOrderVO> vo);
+	//발주관리헤더 + 발주관리디테일
+	public int orderInsert(MaterialOrderVO vo, List<MaterialOrderVO> listVO);
 }

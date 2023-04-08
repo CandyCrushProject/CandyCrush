@@ -28,7 +28,11 @@ public interface MaterialMapper {
 	//발주관리 헤더
 	public int orderHeaderInsert(MaterialOrderVO vo);
 	//발주관리 디테일
-	public int orderDetailInsert(List<MaterialOrderVO> vo);
+	public int orderDetailInsert(MaterialOrderVO vo);
+	
+	
+	
+	
 	
 	
 }

@@ -11,10 +11,10 @@ public class MaterialOrderVO {
 	private String moCd;
 	private String moTitle;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date moReoDt;
+	private Date moReoDt;	//발주신청일
 	private int moCnt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date moReqDt;
+	private Date moReqDt;	//납기요청일
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date moCpltDt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

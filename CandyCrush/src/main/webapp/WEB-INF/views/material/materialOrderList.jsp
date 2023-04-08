@@ -1,8 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<style>
+	#caNmModal{
+		cursor:pointer;
+	}
+</style>
 
 <main>
+	<!-- The Modal -->
+	<div id="modal" class="w3-modal" style="z-index: 100;">
+		<div class="w3-modal-content">
+			<div class="w3-container">
+				<span class="w3-button w3-display-topright" onclick="document.getElementById('modal').style.display='none'">&times;</span>
+				<h3>업체검색</h3>
+				<div>
+					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;">
+					<br/>
+					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;">
+					<button class="srchBtn" id="modalBtn">
+						<i class="fa-solid fa-magnifying-glass"></i>
+					</button>
+				</div>
+				<div id="caModal"></div>
+			</div>
+		</div>
+	</div><!-- End Modal -->
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
 		<div class="header">
@@ -22,15 +44,17 @@
 					<div class="card">
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
-							<div>
+							<div id="inputReset">
 								<label>업체명</label>
-								<input type="text" style="width: 315px; border: 1px solid rgba(128, 128, 128, 0.61);">
+								<input type="text" id="caNmModal" style="width: 315px; border: 1px solid rgba(128, 128, 128, 0.61);">
 								<br/>
 								<label>발주신청일</label>
-								<input type="date"
-										style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
-								<input type="date" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
+								<input type="date" id="startDate"
+									style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
+								<input type="date" id="endDate"
+									style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
 								<button type="button" class="cndSrchBtn">검색</button>
+								<button type="button" class="cndRstBtn" id="restBtn">초기화</button>
 							</div>
 							<div style="clear:both"></div>
 						</div>
@@ -43,15 +67,6 @@
 					<div class="card">
 						<div class="card-action">자재발주조회</div>
 						<div class="card-content">
-							<!--<div>
-								<label>업체명</label>
-								<input type="text" style="width: 150px; border: 1px solid rgba(128, 128, 128, 0.61);">
-								<br/>
-								<label>발주신청일</label>
-								<input type="date" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;<input type="date" style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">
-								<button type="button" class="cndSrchBtn">검색</button>
-							</div>
-							<div style="clear:both"></div>-->
 							<div class="table-responsive">
 								<div id="materialOrderList"></div>
 							</div>
@@ -65,17 +80,22 @@
 
 	<script>
 		const Grid = tui.Grid;
-		const data = [
-			{
-				moCd: '34aea324',
-				moTitle: '발주명test',
-				moReoDt: '2023-03-31',
-				moCpltDt: '2023-04-05',
-				caNo: 'eklhf32',
-				caNm: '머시기'
-			}
-		];
+		//리셋버튼 누르면 input value 초기화해준다.
+		$('#restBtn').on('click', ()=>{
+			$('#inputReset').find('input').each(function(){
+				$(this).val('');
+			});
+		});
 
+		//업체명 input 클릭하면 업체명 모달창 뛰우기
+		$('#caNmModal').on('click',(e)=>{
+			document.getElementById('modal').style.display='block';
+			//Modal Grid 빠르게 띄우는 방법
+			setTimeout(()=> caModal.refreshLayout() , 0);
+		})
+
+
+//----------------------------------------Grid 부분
 		//자재목록
 		const materialOrderList = new Grid({
 			el: document.getElementById('materialOrderList'), // Container element
@@ -114,13 +134,12 @@
 					name: 'caNm'
 				}
 			],
-			data,
 			bodyHeight: 420,
 			pageOptions: {
 				useClient: true,
 				type: 'scroll',
 				perPage: 30
-  			}
+			}
 		});
 </script>
 </main>

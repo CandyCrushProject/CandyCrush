@@ -64,26 +64,23 @@ public class MaterialController {
 	@PostMapping("mtrlOrder")
 	@ResponseBody
 	public Boolean orderInsertProcess(@RequestBody List<MaterialOrderVO> vo){
-		System.out.println(vo.get(0).getMoCd());
+		//System.out.println(vo.get(0).getMoCd()); --> 배열 중 첫번째 object에 moCd 값을 print
 		
+		//vo 인스턴스 선언
 		MaterialOrderVO newVo = new MaterialOrderVO();
-		newVo.setMoCd(vo.get(0).getMoCd());
-		newVo.setMoTitle(vo.get(0).getMoTitle());
-		newVo.setMoReoDt(vo.get(0).getMoReoDt());
-		//System.out.println(newVo.getMoCd());
-		System.out.println(newVo.getMoCd() + ", " + newVo.getMoTitle() + ", " + newVo.getMoReoDt());
+		newVo.setMoCd(vo.get(0).getMoCd());			// moCd 값을 가져와서 db에 전달
+		newVo.setMoTitle(vo.get(0).getMoTitle());	// moTitle 값을 가져와서 db에 전달
+		newVo.setMoReoDt(vo.get(0).getMoReoDt());	// moReoDt 값을 가져와서 db에 전달
+		//System.out.println(newVo.getMoCd() + ", " + newVo.getMoTitle() + ", " + newVo.getMoReoDt());
 		
 		Boolean response = true;
-		int result = service.orderHeaderInsert(newVo);
-		int result2 = service.orderDetailInsert(vo);
-		
-		if(result != 1 || result2 != 1) {
+		int result = service.orderInsert(newVo, vo); 	//발주관리헤더, 발주관리디테일
+		System.out.println(result);
+		if(result < 1) {
 			response = false;
 		}
 		
 		return response;
-		
-		
 	}
 	
 	
