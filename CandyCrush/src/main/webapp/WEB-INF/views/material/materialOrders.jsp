@@ -455,10 +455,12 @@
 			return years + "-" + month + "-" + day;
 		}
 		
+
 		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
 		material.on("dblclick", (e) => {
-			const rowData = material.getRow(e.rowKey);
-			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,
+			const rowData = material.getRow(e.rowKey);	
+			//console.log(materialOrder.getRow(e.rowKey));
+			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
 			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
 			if (materialOrder.getRow(e.rowKey) === null) {
 				rowData.moCd = '${getmtrlOrderCode.moCd}';	 //발주코드
@@ -467,20 +469,8 @@
 				rowData.moDlvDt = getToday();				//납기요청일
 				var orderSafStc = rowData.cmmInven;			//안전재고
 				
-				//발주수량 입력할 때 안전재고보다 소량으로 기재할 시 
-				//안전재고 숫자가 빨간색으로 보이게 (정상작동안됨)
-				materialOrder.on('afterChange',(ev)=> {
-					let orderMoInven = ev.changes[0].value;	//발주수량
-					if(orderSafStc > orderMoInven){
-						fontColor = 'red';
-					} else {
-						orderSafStc = 'green';
-					}
-					return '<span style="color:'
-								+orderSafStc+'";>'+orderSafStc+'</span>';
-				})
-
 				materialOrder.appendRow(rowData);
+				materialOrder.sort("cmmCd", true);
 			} else {
 				Swal.fire({
 					icon: 'warning',
@@ -488,43 +478,64 @@
 					text: "(" + rowData.cmmCd + ")" + rowData.caNm + "은(는) 이미 있습니다.",
 				});
 			}
-
-
-
-
-			/*$('#orderInsert').on('click',(e) => {
-				console.log(e);
-				const orderRowData = materialOrder.getRow(e.rowKey);
-				console.log(orderRowData);
-			})*/
-
-			
-			// var today = new Date();
-			// let todayResult = today.getFullYear() + "-" +
-			// 					(today.getMonth() < 10
-			// 					? "0" + (today.getMonth() + 1)
-			// 					: today.getMonth() + 1) +
-			// 					"-" + (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
-			// cmmCd = material.getData()[e.rowKey].cmmCd;
-			// cmmNm = material.getData()[e.rowKey].cmmNm;
-			// caNo = material.getData()[e.rowKey].caNo;
-			// caNm2 = material.getData()[e.rowKey].caNm;
-			// cmmInven = material.getData()[e.rowKey].cmmInven;
-
-			// let data = [
-			// 	{
-			// 		moCd : '${getmtrlOrderCode.moCd}',
-			// 		moReoDt : todayResult,
-			// 		cmmCd : cmmCd,
-			// 		cmmNm : cmmNm,
-			// 		caNo : caNo,
-			// 		caNm : caNm2,
-			// 		cmmInven : cmmInven,
-			// 		moDlvDt : todayResult
-			// 	}
-			// ]
-			//materialOrder.resetData(data);
 		});
+
+		//발주목록 체크박스 이벤트
+		materialOrder.on('check', (ev) => {
+			//발주 등록버튼 이벤트
+			//orderInsertFnc();
+		});
+
+		$('#orderInsert').on('click',(ev)=>{
+			const rows = materialOrder.getCheckedRows();
+			console.log(rows);
+			if (rows.length !== 0) {
+				console.log("있음");
+				$.ajax({
+					url : "mtrlOrder",
+					method :"POST",
+					data : JSON.stringify(rows),
+					//dataType : "JSON",
+					contentType : "application/json",
+					success : function(data){
+						console.log(data);
+					} 
+				});
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: '경고',
+					text: "선택된 자재가 없거나 데이터가 없습니다.",
+				});
+			}
+		})
+		
+		function orderInsertFnc(){
+			console.log(materialOrder.getData());
+			
+		}
+		
+
+		//발주수량 입력할 때 안전재고보다 소량으로 기재할 시 
+		//안전재고 숫자가 빨간색으로 보이게 (정상작동안됨/추후에 하는걸로!!)
+		/*materialOrder.on("click", (e) => {
+			console.log(e)
+		})*/
+		/*materialOrder.on('editingFinish',(ev)=> {
+			const changedRowData = materialOrder.getRow(ev.rowKey);
+			const orderListSaf = changedRowData.cmmSafStc;		//안전재고
+			const orderListMocnt = changedRowData.moCnt;		//발주수량
+
+			const orderRow = materialOrder.getRow(ev.rowKey);
+			if (orderListMocnt >= orderListSaf) {
+				console.log("괜찮");
+				fontColor = 'red';
+				orderRow = '<span style="color:'+fontColor+'";>'+orderListSaf+'</span>';
+			} else {
+				console.log("위험");
+				fontColor = 'green';
+			}
+		});*/
 //---------------------------------------
 
 </script>

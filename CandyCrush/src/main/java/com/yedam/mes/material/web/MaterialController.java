@@ -1,6 +1,7 @@
 package com.yedam.mes.material.web;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,18 +9,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.yedam.mes.material.service.MtrlAccountVO;
 import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;
+import com.yedam.mes.material.service.MtrlAccountVO;
 
 @Controller
 public class MaterialController {
 	@Autowired
 	MaterialService service;
+	
 	
 	//자재발주관리 페이지
 	@GetMapping("mtrlOrder")
@@ -55,6 +58,32 @@ public class MaterialController {
 	@ResponseBody
 	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd){
 		return service.mtrlOrderOneCheck(cmmCd);
+	}
+	
+	//자재발주관리/자재발주 헤더와 디테일에 데이터 등록
+	@PostMapping("mtrlOrder")
+	@ResponseBody
+	public Boolean orderInsertProcess(@RequestBody List<MaterialOrderVO> vo){
+		System.out.println(vo.get(0).getMoCd());
+		
+		MaterialOrderVO newVo = new MaterialOrderVO();
+		newVo.setMoCd(vo.get(0).getMoCd());
+		newVo.setMoTitle(vo.get(0).getMoTitle());
+		newVo.setMoReoDt(vo.get(0).getMoReoDt());
+		//System.out.println(newVo.getMoCd());
+		System.out.println(newVo.getMoCd() + ", " + newVo.getMoTitle() + ", " + newVo.getMoReoDt());
+		
+		Boolean response = true;
+		int result = service.orderHeaderInsert(newVo);
+		int result2 = service.orderDetailInsert(vo);
+		
+		if(result != 1 || result2 != 1) {
+			response = false;
+		}
+		
+		return response;
+		
+		
 	}
 	
 	

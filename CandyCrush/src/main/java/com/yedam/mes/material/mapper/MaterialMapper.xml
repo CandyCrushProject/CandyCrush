@@ -83,5 +83,20 @@
 		SELECT 'mo' || to_char(NVL(MAX(SUBSTR(mo_cd, 3, 4)), 0) + 1) || to_char(sysdate, 'yymmdd') "mo_cd"
 		FROM mtrl_order
 	</select>
+	
+	<!-- 발주관리 헤더 INSERT -->
+	<insert id="orderHeaderInsert" parameterType="MaterialOrderVO">
+		INSERT INTO MTRL_ORDER(mo_cd, mo_title, mo_reo_dt)
+		VALUES(#{moCd},#{moTitle},TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'))
+	</insert>
+	
+	<!-- 발주관리디테일 INSERT -->
+	<insert id="orderDetailInsert" parameterType="MaterialOrderVO">
+		INSERT INTO mtrl_order_detail(mo_cd, mo_cnt, mo_req_dt, ca_no, cmm_cd)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			("${moCd}", "${moCnt}", TO_CHAR("${moReqDt}", 'yyyy-MM-dd'), "${caNo}", "${cmmCd}")
+		</foreach>
+	</insert>
 
 </mapper>

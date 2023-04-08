@@ -24,5 +24,11 @@ public interface MaterialMapper {
 	//자재발주코드 자동생성
 	public MaterialOrderVO getMtrlOrderCode();
 	
+	//--발주등록
+	//발주관리 헤더
+	public int orderHeaderInsert(MaterialOrderVO vo);
+	//발주관리 디테일
+	public int orderDetailInsert(List<MaterialOrderVO> vo);
+	
 	
 }

@@ -52,4 +52,16 @@ public class MaterialServiceImpl implements MaterialService {
 	public MaterialOrderVO getMtrlOrderCode() {
 		return mapper.getMtrlOrderCode();
 	}
+
+	//--발주등록
+	//발주관리 헤더
+	@Override
+	public int orderHeaderInsert(MaterialOrderVO vo) {
+		return mapper.orderHeaderInsert(vo);
+	}
+	//발주관리 디테일
+	@Override
+	public int orderDetailInsert(List<MaterialOrderVO> vo) {
+		return mapper.orderDetailInsert(vo);
+	}
 }
