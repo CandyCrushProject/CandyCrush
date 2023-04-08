@@ -32,10 +32,10 @@
 							<table>
 								<tr>
 									<td>
-										<label for="facCd">비가동번호 여기부터수정해라 애송이~~</label> 
+										<label for="NxtDownCode">비가동번호 여기부터수정해라 애송이~~다운코드</label> 
 									</td>
 									<td>
-										<input type="text" value="${stat.facCd }" name="facCd" style="display: inline; width: 70%;" readonly>
+										<input type="text" value="fdm${NxtDownCode }" name="fdmCd" style="display: inline; width: 70%;" >
 									</td>
 								</tr>
 								<tr>
