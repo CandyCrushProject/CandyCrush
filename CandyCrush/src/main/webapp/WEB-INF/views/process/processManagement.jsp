@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
 		<link rel="stylesheet" href="assets/css/processManagement.css">
@@ -39,7 +39,7 @@
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">주문수량</label>
-									<input type="text" class="form-control" id="ordrDtlCnt" name="ordrDtlCnt" value="" readonly>
+									<input type="number" class="form-control" id="ordrDtlCnt" name="ordrDtlCnt" value="" readonly>
 								</div>
 								<div class="col-md-3">
 									<label class="form-label">거래처명</label>
@@ -52,11 +52,12 @@
 								</div>
 								<div class="col-md-3">
 									<label class="form-label">납기일자</label>
-									<input type="date" class="form-control" id="dlvryDy" name="dlvryDy" value="">
+									<input type="hidden" class="form-control" id="dlvryDy" name="dlvryDy" value="" readonly>
+									<input type="date" class="form-control" id="prplDlvryDt" name="prplDlvryDt" value="" readonly>
 								</div>
 								<div class="col-md-3">
 									<label class="form-label">생산요청수량</label>
-									<input type="text" class="form-control" id="prplReqCnt" name="prplReqCnt" value="">
+									<input type="number" class="form-control" id="prplReqCnt" name="prplReqCnt" value="">
 								</div>
 
 								<hr>
@@ -66,11 +67,12 @@
 								<input type="hidden" class="form-control" name="prplStatus" value="계획완료" readonly>
 								<div class="col-md-6">
 									<label class="form-label">생산계획코드</label>
-									<input type="text" class="form-control" name="prplCd" id="prplCd" value="${prplCd}" readonly>
+									<input type="text" class="form-control" name="prplCd" id="prplCd" readonly>
+									<input type="hidden" class="form-control" name="prpldCd" id="prpldCd" readonly>
 								</div>
 								<div class="col-md-6">
 									<label class="form-label">생산계획수량</label>
-									<input type="text" name="prpldCnt" class="form-control">
+									<input type="number" name="prpldCnt" class="form-control">
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">계획담당자</label>
@@ -78,7 +80,7 @@
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">생산작업일자</label>
-									<input type="date" name="prplDlvryDt" class="form-control">
+									<input type="date" name="prstDt" id="prstDt" class="form-control">
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">작업우선순위</label>
@@ -399,17 +401,16 @@
 						type: 'GET',
 						dataType: 'json',
 						success: function (data) {
-							console.log(data.result);
+							console.log(data.prplCd);
 							// 성공적으로 응답 받았을 때 처리할 로직
 							var tbody = $("#orderSheetTab"); // tbody 선택
 							tbody.empty(); // tbody 비우기
 
 							// 데이터 반복문 처리
 							$.each(data.result, function (index, item) {
-								console.log(item.caNo);
 								var row = $('<tr>');
 								// td 생성		
-								row.append($("<td>").attr("hidden", true).text());
+								row.append($("<td>").attr("hidden", true).text(data.prplCd));
 								row.append($("<td>").attr("hidden", true).text(item.caNo));
 								row.append($("<td>").attr("hidden", true).text(item.cprCd));
 								row.append($("<td>").attr("hidden", true).text(item.orshDt));
@@ -420,6 +421,7 @@
 								row.append($("<td>").text(item.orshNo));
 								row.append($("<td>").text(item.caNm));
 								row.append($("<td>").text(item.cprNm));
+								row.append($("<td>").attr("hidden", true).text(data.prpldCd));
 								var td = $("<td>");
 								var button = $("<button>", {
 									type: "button",
@@ -442,7 +444,16 @@
 					});
 				});
 			});
-
+	// 날짜 포맷 변경 함수
+	function formatDate(time) {
+	    var date = new Date(time);
+	    var year = date.getFullYear();
+	    var month = ("0" + (date.getMonth() + 1)).slice(-2);
+	    var day = ("0" + date.getDate()).slice(-2);
+	    var formattedDate = year + "-" + month + "-" + day;
+	    return formattedDate;
+	}
+	
 
 			/* 주문서정보 -> 생산계획작성 */
 			$(document).on("click", ".addBtn", function () {
@@ -452,16 +463,18 @@
 					orderArray.push($(this).text());
 				});
 
-				console.log($("#prplCd").val());
+				$("#prplCd").val(orderArray[0]);
 				$("#caNo").val(orderArray[1]);
 				$("#cprCd").val(orderArray[2]);
 				$("#orshDt").val(orderArray[3]);
 				$("#orshPr").val(orderArray[4]);
 				$("#ordrDtlCnt").val(orderArray[5]);
 				$("#dlvryDt").val(orderArray[6]);
+				$("#prplDlvryDt").val(orderArray[6]);
 				$("#orshNo").val(orderArray[7]);
 				$("#caNm").val(orderArray[8]);
 				$("#cprNm").val(orderArray[9]);
+				$("#prpldCd").val(orderArray[10]);
 
 				// 현재 모달창 닫기
 				$('#order').modal('hide');
@@ -471,7 +484,12 @@
 			});
 			$(document).ready(function () {
 				$('#addPlanBtn').on('click', function () {
-					console.log($('#caNo').val());
+					var orshDt = formatDate($('#orshDt').val());
+					var prplDlvryDt = formatDate($('#prplDlvryDt').val());
+					var prstDt = formatDate($('#prstDt').val());
+					$('#orshDt').val(orshDt);
+					$('#prstDt').val(prstDt);
+					$('#prplDlvryDt').val(prplDlvryDt);
 					$('#createPlan').modal('hide');
 					newPlan.submit();
 				});
