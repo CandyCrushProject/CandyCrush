@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mes.facility.mapper.FacilityMapper;
-import com.yedam.mes.facility.service.FacilityDownVO;
-import com.yedam.mes.facility.service.FacilityMaintenanceVO;
-import com.yedam.mes.facility.service.FacilityOperationStatVO;
-import com.yedam.mes.facility.service.FacilityOperationVO;
 import com.yedam.mes.facility.service.FacilityService;
-import com.yedam.mes.facility.service.FacilityStatVO;
+import com.yedam.mes.facility.service.vo.FacilityDownVO;
+import com.yedam.mes.facility.service.vo.FacilityMaintenanceVO;
+import com.yedam.mes.facility.service.vo.FacilityOperationStatVO;
+import com.yedam.mes.facility.service.vo.FacilityOperationVO;
+import com.yedam.mes.facility.service.vo.FacilityStatVO;
 @Service
 public class FacilityServiceImpl implements FacilityService {
 	@Autowired
