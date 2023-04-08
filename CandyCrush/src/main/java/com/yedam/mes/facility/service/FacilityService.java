@@ -2,6 +2,12 @@ package com.yedam.mes.facility.service;
 
 import java.util.List;
 
+import com.yedam.mes.facility.service.vo.FacilityDownVO;
+import com.yedam.mes.facility.service.vo.FacilityMaintenanceVO;
+import com.yedam.mes.facility.service.vo.FacilityOperationStatVO;
+import com.yedam.mes.facility.service.vo.FacilityOperationVO;
+import com.yedam.mes.facility.service.vo.FacilityStatVO;
+
 public interface FacilityService {
 	public List<FacilityStatVO> selectFacilityStat();
 	public List<FacilityMaintenanceVO> selectFacilityMaintenance();

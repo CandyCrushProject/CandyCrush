@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.yedam.mes.facility.service.FacilityMaintenanceVO;
 import com.yedam.mes.facility.service.FacilityService;
+import com.yedam.mes.facility.service.vo.FacilityMaintenanceVO;
 
 @Controller
 public class FacilityController {

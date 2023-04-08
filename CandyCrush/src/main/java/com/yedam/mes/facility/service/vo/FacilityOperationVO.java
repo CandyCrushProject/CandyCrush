@@ -1,4 +1,4 @@
-package com.yedam.mes.facility.service;
+package com.yedam.mes.facility.service.vo;
 
 import java.util.Date;
 
