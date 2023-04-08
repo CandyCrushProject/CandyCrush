@@ -34,6 +34,7 @@ public class ProcessController {
 	    Map<String, Object> resultMap = new HashMap<>();
 	    resultMap.put("result", procService.getOrder());
 	    resultMap.put("prplCd", procService.getPlanCode());
+	    resultMap.put("prpldCd", procService.getPlanDetailCode());
 	    
 		return resultMap;
 	}

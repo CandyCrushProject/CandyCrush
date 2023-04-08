@@ -18,6 +18,7 @@ public interface ProcMapper {
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
 	public String getPlanCode();
+	public String getPlanDetailCode();
 	public int insertPlan(ProcPlanVO planVO);
 	public int insertPlanDetail(ProcPlanVO planVO);
 	// 제품공정확인 - 제품마다 사용되는 공정정보

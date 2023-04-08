@@ -29,6 +29,10 @@ public class procServiceImpl implements ProcService {
 		return procMapper.getPlanCode();
 	}
 	@Override
+	public String getPlanDetailCode() {
+		return procMapper.getPlanDetailCode();
+	}
+	@Override
 	public OrderPlanVO getOneOrder(OrderPlanVO opVO) {
 		return procMapper.selectOneOrder(opVO);
 	}

@@ -39,7 +39,7 @@
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">주문수량</label>
-									<input type="text" class="form-control" id="ordrDtlCnt" name="ordrDtlCnt" value="" readonly>
+									<input type="number" class="form-control" id="ordrDtlCnt" name="ordrDtlCnt" value="" readonly>
 								</div>
 								<div class="col-md-3">
 									<label class="form-label">거래처명</label>
@@ -57,7 +57,7 @@
 								</div>
 								<div class="col-md-3">
 									<label class="form-label">생산요청수량</label>
-									<input type="text" class="form-control" id="prplReqCnt" name="prplReqCnt" value="">
+									<input type="number" class="form-control" id="prplReqCnt" name="prplReqCnt" value="">
 								</div>
 
 								<hr>
@@ -68,10 +68,11 @@
 								<div class="col-md-6">
 									<label class="form-label">생산계획코드</label>
 									<input type="text" class="form-control" name="prplCd" id="prplCd" readonly>
+									<input type="hidden" class="form-control" name="prpldCd" id="prpldCd" readonly>
 								</div>
 								<div class="col-md-6">
 									<label class="form-label">생산계획수량</label>
-									<input type="text" name="prpldCnt" class="form-control">
+									<input type="number" name="prpldCnt" class="form-control">
 								</div>
 								<div class="col-md-4">
 									<label class="form-label">계획담당자</label>
@@ -420,6 +421,7 @@
 								row.append($("<td>").text(item.orshNo));
 								row.append($("<td>").text(item.caNm));
 								row.append($("<td>").text(item.cprNm));
+								row.append($("<td>").attr("hidden", true).text(data.prpldCd));
 								var td = $("<td>");
 								var button = $("<button>", {
 									type: "button",
@@ -472,6 +474,7 @@
 				$("#orshNo").val(orderArray[7]);
 				$("#caNm").val(orderArray[8]);
 				$("#cprNm").val(orderArray[9]);
+				$("#prpldCd").val(orderArray[10]);
 
 				// 현재 모달창 닫기
 				$('#order').modal('hide');

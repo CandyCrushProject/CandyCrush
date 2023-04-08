@@ -19,6 +19,7 @@ public interface ProcService {
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
 	public String getPlanCode();
+	public String getPlanDetailCode();
 	public int addPlan(ProcPlanVO planVO);
 	public int addPlanDetail(ProcPlanVO planVO);
 	

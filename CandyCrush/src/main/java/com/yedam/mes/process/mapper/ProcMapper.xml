@@ -7,6 +7,10 @@
 		SELECT 'plan'||TO_CHAR(SYSDATE,'yyyyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'0999')) as prpl_cd
 		  FROM DUAL
 	</select>
+	<select id="getPlanDetailCode" resultType="String">
+		SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyyyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'0999')) as prpld_cd
+		  FROM DUAL
+	</select>
 	<select id="selectOrder" resultType="OrderPlanVO">
 		SELECT o.orsh_no as orsh_no
 			 , o.ca_no as ca_no
@@ -47,13 +51,12 @@
 		AND o.orsh_no = #{orshNo}
 	</select>
 	<insert id="insertPlan" parameterType="ProcPlanVO">
-		INSERT INTO proc_plan (prpl_cd,orsh_no,prpl_req_cnt, prpl_dt,prpl_dlvry_dt,prpl_status)
+		INSERT INTO proc_plan (prpl_cd,orsh_no,prpl_req_cnt,prpl_dlvry_dt,prpl_status)
 		VALUES
 		 	 ( #{prplCd}
 		 	 , #{orshNo}
 		 	 , #{prplReqCnt}
-		 	 , SYSDATE
-		 	 , #{prplDlvryDt}
+		 	 , TO_CHAR(#{prplDlvryDt},'yyyy-MM-dd')
 		 	 , '계획완료'
 		 	 )
 
@@ -63,11 +66,11 @@
 		INSERT INTO
 		proc_plan_detail
 		VALUES
-		('plandtl'||TO_CHAR(SYSDATE,'yyyyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'0009'))
+		( #{prpldCd}
 		, #{prpldWorkTskPri}
 		, #{cprCd}
 		, #{prpldCnt}
-		, #{prstDt}
+		, TO_CHAR(#{prstDt}, 'yyyy-MM-dd')
 		, #{prpldMng}
 		, '계획완료'
 		, #{prpl_cd}
