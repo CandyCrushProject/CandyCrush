@@ -30,10 +30,11 @@ public class ProcessController {
 	
 	@GetMapping("getOrder")
 	@ResponseBody
-	public Map<String, Object> getOrderSheet(Model model) {
+	public Map<String, Object> getOrderSheet() {
 	    Map<String, Object> resultMap = new HashMap<>();
 	    resultMap.put("result", procService.getOrder());
-	    model.addAttribute("prplCd", procService.getPlanCode().getPrplCd());
+	    resultMap.put("prplCd", procService.getPlanCode());
+	    
 		return resultMap;
 	}
 	@PostMapping("insertProcPlan")

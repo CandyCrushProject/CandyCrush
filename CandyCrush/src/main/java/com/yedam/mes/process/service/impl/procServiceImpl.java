@@ -25,7 +25,7 @@ public class procServiceImpl implements ProcService {
 	}
 
 	@Override
-	public ProcPlanVO getPlanCode() {
+	public String getPlanCode() {
 		return procMapper.getPlanCode();
 	}
 	@Override

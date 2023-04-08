@@ -3,9 +3,9 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mes.process.mapper.ProcMapper">
-	<select id="getPlanCode" resultType="ProcPlanVO">
-		SELECT 'plan'||TO_CHAR(SYSDATE,'yyyyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'0000')) as prpl_cd
-		  FROM proc_plan
+	<select id="getPlanCode" resultType="String">
+		SELECT 'plan'||TO_CHAR(SYSDATE,'yyyyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'0999')) as prpl_cd
+		  FROM DUAL
 	</select>
 	<select id="selectOrder" resultType="OrderPlanVO">
 		SELECT o.orsh_no as orsh_no
@@ -52,7 +52,7 @@
 		 	 ( #{prplCd}
 		 	 , #{orshNo}
 		 	 , #{prplReqCnt}
-		 	 , TO_CHAR(SYSDATE, 'rrrr-YY-dd')
+		 	 , SYSDATE
 		 	 , #{prplDlvryDt}
 		 	 , '계획완료'
 		 	 )
@@ -63,7 +63,7 @@
 		INSERT INTO
 		proc_plan_detail
 		VALUES
-		('plandtl'||TO_CHAR(SYSDATE,'yyyyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'0000'))
+		('plandtl'||TO_CHAR(SYSDATE,'yyyyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'0009'))
 		, #{prpldWorkTskPri}
 		, #{cprCd}
 		, #{prpldCnt}
