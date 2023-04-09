@@ -47,12 +47,6 @@ public class MaterialController {
 		return service.accountCheckModal(caNm, caNo);
 	}
 	
-	//자재발주조회 페이지
-	@GetMapping("mtrlOrderList")
-	public String mtrlOrderList(Model model) {
-		return "material/materialOrderList";
-	}
-	
 	//자재발주관리/자재목록 -> 자재발주로 List 뿌리기
 	@PostMapping("mtrlOrderOneCheck")
 	@ResponseBody
@@ -64,29 +58,48 @@ public class MaterialController {
 	@PostMapping("mtrlOrder")
 	@ResponseBody
 	public Boolean orderInsertProcess(@RequestBody List<MaterialOrderVO> vo){
-		System.out.println(vo.get(0).getMoCd());
+		//System.out.println(vo.get(0).getMoCd()); --> 배열 중 첫번째 object에 moCd 값을 print
 		
+		//vo 인스턴스 선언
 		MaterialOrderVO newVo = new MaterialOrderVO();
-		newVo.setMoCd(vo.get(0).getMoCd());
-		newVo.setMoTitle(vo.get(0).getMoTitle());
-		newVo.setMoReoDt(vo.get(0).getMoReoDt());
-		//System.out.println(newVo.getMoCd());
-		System.out.println(newVo.getMoCd() + ", " + newVo.getMoTitle() + ", " + newVo.getMoReoDt());
+		newVo.setMoCd(vo.get(0).getMoCd());			// moCd 값을 가져와서 db에 전달
+		newVo.setMoTitle(vo.get(0).getMoTitle());	// moTitle 값을 가져와서 db에 전달
+		newVo.setMoReoDt(vo.get(0).getMoReoDt());	// moReoDt 값을 가져와서 db에 전달
+		//System.out.println(newVo.getMoCd() + ", " + newVo.getMoTitle() + ", " + newVo.getMoReoDt());
 		
 		Boolean response = true;
-		int result = service.orderHeaderInsert(newVo);
-		int result2 = service.orderDetailInsert(vo);
-		
-		if(result != 1 || result2 != 1) {
+		int result = service.orderInsert(newVo, vo); 	//발주관리헤더, 발주관리디테일
+		System.out.println(result);
+		if(result < 1) {
 			response = false;
 		}
 		
 		return response;
-		
-		
 	}
 	
+	//------------------------------------------------------------------------
 	
+	//자재발주조회 페이지
+	@GetMapping("mtrlOrderList")
+	public String mtrlOrderList(Model model) {
+		model.addAttribute("accountList", service.accountCheck());
+		return "material/materialOrderList";
+	}
+	
+	//자재발주조회 / 업체명 또는 발주신청일 시작일자~종료일자 검색
+	@PostMapping("mtrlOrderDateSearch")
+	@ResponseBody
+	public List<MaterialOrderVO> mtrlOrderDateSearch(@RequestParam(required = false) String caNm, @RequestParam(required = false) String start, @RequestParam(required = false) String end) {
+		return service.mtrlOrderDateSearch(caNm, start, end);
+	}
+	//자재발주조회 / 발주코드 더블클릭하면 해당되는 발주코드에 대한 상세정보를 Modal로 띄어준다 
+	@PostMapping("mtrlOrderDetailList")
+	@ResponseBody
+	public List<MaterialOrderVO> mtrlOrderDetailList(@Param("moCd") String moCd){
+		return service.mtrlOrderDetailList(moCd);
+	}
+	
+	//------------------------------------------------------------------------
 	//자재입고검사조회 페이지
 	@GetMapping("mtrlInspCheck")
 	public String mtrlInsp(Model model) {
