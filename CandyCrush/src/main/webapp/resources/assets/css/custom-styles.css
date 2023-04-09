@@ -111,7 +111,8 @@ label {
 	z-index: 2;
 	position: fixed;
 	width: 260px;
-	top: 80px;
+	height: 100%;
+	top: 60px;
 	box-shadow: none;
 }
 
