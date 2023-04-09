@@ -49,7 +49,7 @@
 				<h3>상세발주목록</h3>
 				<div style="clear:both"></div>
 				<div id="rigth">
-					<button type="button" id="pdfBtn" class="cndInsBtn" onclick="location.href='pdf'">PDF</button>
+					<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
 					<button type="button" class="cndUdtBtn">수정</button>
 				</div>
 				<label for="modalMocd">발주코드</label>
@@ -338,6 +338,7 @@
 		//발주목록 행 더블클릭하면 나오는 모달창 안에 있는 발주상세 Grid
 		const moModal = new Grid({
 			el: document.getElementById('moModal'),
+			rowHeaders: ["checkbox"],
 			columns: [
 				{
 					header: '자재코드',
@@ -377,7 +378,15 @@
 				},
 				{
 					header: '예상재고량',
-					name: 'cmmEstInven'
+					name: 'cmmEstInven',
+					_attributes: {
+						className: {
+							column: {
+								type: ['blue'],
+								genre: ['blue']
+							}
+						}
+					}
 				},
 				{
 					header: '납기요청일',
@@ -392,12 +401,35 @@
 			}
 		});
 
-		/*$("#pdfBtn").on('click', function(){
-			let pdfMtrlCd = $("#modalMocd").val();
-			//console.log(pdfMtrlCd); //발주코드
-
-			window.open('materialOrderList?bdfMtrlCd=' + pdfMtrlCd,
-						'자재발주관리.PDF','width=1000, height=1000');
-		})*/
+		//엑셀버튼 클릭 이벤트
+		const options = {
+			includeHiddenColumns: true,
+			onlySelected: true,
+			fileName: 'mtrlExport',
+		};
+		
+		$("#excelBtn").on('click', function(){
+			Swal.fire({
+				title: '엑셀파일로 받아보시겠습니까?',
+				text: "원하지 않는다면 취소를 눌러주세요",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: '확인',
+				cancelButtonText: '취소',
+				reverseButtons: true, // 버튼 순서 거꾸로
+				
+			}).then((result) => {
+				if (result.isConfirmed) {
+					moModal.export('xlsx', options);
+				} else {
+					Swal.fire({
+						title: '취소되었습니다',
+						icon : 'success'
+					});
+				}
+			});
+		});
 </script>
 </main>
