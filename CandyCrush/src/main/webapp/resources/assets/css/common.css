@@ -1,11 +1,11 @@
 
 input {
   	width: 300px;		/*!important*/
-  	border: 1px solid rgba(128, 128, 128, 0.61) !important;
+  	border: 1px solid rgba(128, 128, 128, 0.61);
 }
 
 label{
-	width: 100px !important;
+	width: 100px;
 }
 
 input[type="checkbox"]:not(:checked), 
@@ -17,5 +17,5 @@ input[type="checkbox"]:checked {
 }
 
 input[type="date"] {
-	border: 1px solid rgba(128, 128, 128, 0.61) !important
+	border: 1px solid rgba(128, 128, 128, 0.61);
 }
