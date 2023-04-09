@@ -7,9 +7,8 @@ public class ProcPlanVO {
 	// 생산계획
 	private String prplCd; // 생산계획코드
 	private String orshNo; // 주문서번호
-	private int prplReqCnt; // 생산요청수량
 	private String prplDt; // 생산계획일자
-	private String prplDlvryDt; // 납기일자
+	private String prplSuceDt; // 납기일자
 	private String prplStatus; // 완료여부
 
 	//생산계획디테일

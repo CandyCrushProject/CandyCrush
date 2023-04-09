@@ -25,6 +25,10 @@ public class procServiceImpl implements ProcService {
 	}
 
 	@Override
+	public int updateOrderStatus(OrderPlanVO opVO) {
+		return procMapper.updateOrderStatus(opVO);
+	}
+	@Override
 	public String getPlanCode() {
 		return procMapper.getPlanCode();
 	}
@@ -75,6 +79,7 @@ public class procServiceImpl implements ProcService {
 	public List<ProcProgVO> getProgList(ProcProgVO progVO) {
 		return null;
 	}
+
 
 
 

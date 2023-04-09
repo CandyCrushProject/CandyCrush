@@ -14,7 +14,7 @@ public interface ProcService {
 	
 	// 생산계획 - 주문서 읽어오기
 	public List<OrderPlanVO> getOrder();
-
+	public int updateOrderStatus(OrderPlanVO opVO);
 	public OrderPlanVO getOneOrder(OrderPlanVO opVO);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거

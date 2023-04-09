@@ -3,11 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
-<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
 	label{
 		width: 70px;
@@ -394,7 +389,7 @@
 				},
 				{
 					header: '납기요청일',
-					name: 'moDlvDt',
+					name: 'moReqDt',
 					sortingType: 'asc',
 					sortable: true,
 					editor: {
@@ -458,19 +453,17 @@
 
 		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
 		material.on("dblclick", (e) => {
-			const rowData = material.getRow(e.rowKey);	
-			//console.log(materialOrder.getRow(e.rowKey));
+			const rowData = material.getRow(e.rowKey);
 			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
 			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
 			if (materialOrder.getRow(e.rowKey) === null) {
 				rowData.moCd = '${getmtrlOrderCode.moCd}';	 //발주코드
 				rowData.moTitle = '원자재 외';				  //발주명
 				rowData.moReoDt = getToday();				//발주신청일
-				rowData.moDlvDt = getToday();				//납기요청일
+				rowData.moReqDt = getToday();				//납기요청일
 				var orderSafStc = rowData.cmmInven;			//안전재고
-				
-				materialOrder.appendRow(rowData);
-				materialOrder.sort("cmmCd", true);
+				materialOrder.appendRow(rowData);			//자재목록 Grid에서 해당되는 행을 더블클릭하면 자재발주 Grid에 append!
+				materialOrder.sort("cmmCd", true);			//정렬 안해주면 그리드 고장남
 			} else {
 				Swal.fire({
 					icon: 'warning',
@@ -480,17 +473,11 @@
 			}
 		});
 
-		//발주목록 체크박스 이벤트
-		materialOrder.on('check', (ev) => {
-			//발주 등록버튼 이벤트
-			//orderInsertFnc();
-		});
-
+		//발주등록버튼 클릭 이벤트
 		$('#orderInsert').on('click',(ev)=>{
 			const rows = materialOrder.getCheckedRows();
-			console.log(rows);
 			if (rows.length !== 0) {
-				console.log("있음");
+				//console.log("있음");
 				$.ajax({
 					url : "mtrlOrder",
 					method :"POST",
@@ -498,7 +485,13 @@
 					//dataType : "JSON",
 					contentType : "application/json",
 					success : function(data){
-						console.log(data);
+						const rowsMoCd = rows[0].moCd; 			//발주번호 들고옴
+						Swal.fire({
+							icon: 'success',
+							title: "발주완료",
+							text:  "발주번호 : " + rowsMoCd
+						});
+						materialOrder.removeCheckedRows();		//자재발주 Grid 체크한 모든 행을 remove!
 					} 
 				});
 			} else {
@@ -508,7 +501,7 @@
 					text: "선택된 자재가 없거나 데이터가 없습니다.",
 				});
 			}
-		})
+		});
 		
 		function orderInsertFnc(){
 			console.log(materialOrder.getData());
