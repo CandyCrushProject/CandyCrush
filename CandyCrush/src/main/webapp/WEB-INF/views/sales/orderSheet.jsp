@@ -32,8 +32,7 @@
 				<h3>업체검색</h3>
 				<div>
 					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;">
-					<br />
-					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;">
+					<br/>
 					<button class="srchBtn">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</button>
@@ -101,7 +100,7 @@
 							</div>
 							<div>
 								<label for="companyName">주문일자</label> <!-- 주문일자 label -->
-								<input type="date" id="selStrtDt" style="width: 50%;"> - <input type="date" id="selendDt" style="width: 50%;"> <!-- date input -->
+								<input type="date" id="selStrtDt" style="width: 35%;"> - <input type="date" id="selendDt" style="width: 35%;"> <!-- date input -->
 							</div>
 						</div>
 						<!-- 조회버튼 -->
@@ -124,8 +123,7 @@
 					</div>
 				</div>
 			</div> <!--END row-->
-		</div>
-		<!-- /. PAGE INNER  -->
+		</div> <!-- /. PAGE INNER  -->
 	</div>
 </main>
 
@@ -135,12 +133,11 @@
 	let orderData = [
 		<c:forEach items="${ordrShtList}" var="ordrSht">
 			{
-				orshNo: '${ordrSht.orshNo}',
-				cprCd: '${ordrSht.cprCd}',
-				caNo: '${ordrSht.caNo}',
+				orshNo: '${ordrSht.orshNo}', // 주문서번호	
+				caNo: '${ordrSht.caNo}', // 거래처코드
+				caNm: '${ordrSht.caNm}', // 거래처명
 				orshDt: "<fmt:formatDate value='${ordrSht.orshDt}' pattern='yyyy-MM-dd'/>",
-				orshPr: '${ordrSht.orshPr}'
-				
+				dlvryDt: "<fmt:formatDate value='${ordrSht.dlvryDt}' pattern='yyyy-MM-dd'/>"
     	},
 		</c:forEach>
 	];
@@ -158,14 +155,14 @@
 				sortable: true
 			},
 			{
-				header: '제품코드',
-				name: 'cprCd',
+				header: '거래처코드',
+				name: 'caNo',
 				sortingType: 'asc',
 				sortable: true
 			},
 			{
-				header: '거래처코드',
-				name: 'caNo',
+				header: '거래처명',
+				name: 'caNm',
 				sortingType: 'asc',
 				sortable: true
 			},
@@ -179,8 +176,8 @@
 				sortable: true,
 			},
 			{
-				header: '현재상황',
-				name: 'orshPr'
+				header: '납기일자',
+				name: 'dlvryDt'
 			}
 		],
 		bodyHeight: 500,

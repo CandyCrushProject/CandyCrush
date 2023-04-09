@@ -21,7 +21,8 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return mapper.ordrShtAllList();
 	}
-
+	
+	// 검색조회
 	@Override
 	public List<OrdrShtVO> ordrShtSrchList() {
 		
