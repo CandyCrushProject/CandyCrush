@@ -36,6 +36,16 @@ public class ProcessController {
 	    
 		return resultMap;
 	}
+	
+	@GetMapping("getOrderList")
+	@ResponseBody
+	public Map<String, Object> getOrderSheetList(OrderPlanVO opVO) {
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("result", procService.getOrderList(opVO));
+	    
+		return resultMap;
+	}
+	
 	@GetMapping("getProcPlanCode")
 	@ResponseBody
 	public Map<String, Object> getProcPlanCode() {

@@ -3,15 +3,33 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mes.process.mapper.ProcMapper">
+	<!-- 생산계획코드 생성 -->
 	<select id="getPlanCode" resultType="String">
 		SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
 		  FROM DUAL
 	</select>
+	<!-- 생산계획상세코드 생성 -->
 	<select id="getPlanDetailCode" resultType="String">
 		SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
 		  FROM DUAL
 	</select>
+	<!-- 주문서리스트 -->
 	<select id="selectOrder" resultType="OrderPlanVO">
+		SELECT s.orsh_no as orsh_no
+		     , COUNT(ordr_dtl_cd) as ordr_cd_cnt
+		     , s.ca_no as ca_no
+		     , ca_nm
+		     , TO_CHAR(dlvry_dt,'rrrr-MM-dd') as dlvry_dt
+		     , TO_CHAR(orsh_dt,'rrrr-MM-dd') as orsh_dt
+		  FROM order_sheet s, order_sheet_detail d, cm_account a
+		 WHERE s.orsh_no = d.orsh_no(+)
+		   AND s.ca_no = a.ca_no(+)
+		   AND orsh_pr = '접수완료'
+		 GROUP BY s.orsh_no, s.ca_no,ca_nm, orsh_dt, dlvry_dt
+		 ORDER BY orsh_no
+	</select>
+	<!-- 주문건의 다건 -->
+	<select id="selectOrderDetail" parameterType="OrderPlanVO" resultType="OrderPlanVO">
 		SELECT o.orsh_no as orsh_no
 			 , o.ca_no as ca_no
 			 , ca_nm
@@ -31,28 +49,9 @@
 		   AND d.cpr_cd = p.cpr_cd(+)
 		   AND o.ca_no = a.ca_no(+)
 	       AND d.orsh_pr = '접수완료'
-		 ORDER BY 1
-	</select>
-	<select id="selectOneOrder" parameterType="OrderPlanVO" resultType="OrderPlanVO">
-		SELECT o.orsh_no as orsh_no
-			 , o.ca_no as ca_no
-			 , ca_nm
-			 , ordr_dtl_cnt
-			 , ordr_dtl_cd
-			 , TO_CHAR(dlvry_dt,'rrrr-MM-dd') as dlvry_dt
-			 , TO_CHAR(orsh_dt,'rrrr-MM-dd') as orsh_dt
-			 , orsh_pr
-			 , d.cpr_cd as cpr_cd
-			 , p.cpr_nm as cpr_nm
-			 , TO_CHAR(d.stt_cng_dt,'rrrr-MM-dd') as stt_cng_dt
-		  FROM order_sheet o
-			 , order_sheet_detail d
-			 , cm_product_mng p
-			 , cm_account a
-		 WHERE o.orsh_no = d.orsh_no(+)
-		   AND d.cpr_cd = p.cpr_cd(+)
-		   AND o.ca_no = a.ca_no(+)
-		   AND o.orsh_no = #{orshNo}
+           AND d.orsh_no = #{orshNo}
+           AND o.ca_no = #{caNo}
+		 ORDER BY 5
 	</select>
 	<update id="updateOrderStatus" parameterType="OrderPlanVO">
 		UPDATE order_sheet_detail
