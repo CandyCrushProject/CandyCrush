@@ -6,13 +6,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.yedam.mes.process.service.ProcService;
+import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 
 @Controller
@@ -33,20 +33,28 @@ public class ProcessController {
 	public Map<String, Object> getOrderSheet() {
 	    Map<String, Object> resultMap = new HashMap<>();
 	    resultMap.put("result", procService.getOrder());
+	    
+		return resultMap;
+	}
+	@GetMapping("getProcPlanCode")
+	@ResponseBody
+	public Map<String, Object> getProcPlanCode() {
+	    Map<String, Object> resultMap = new HashMap<>();
 	    resultMap.put("prplCd", procService.getPlanCode());
 	    resultMap.put("prpldCd", procService.getPlanDetailCode());
 	    
 		return resultMap;
 	}
 	@PostMapping("insertProcPlan")
-	public String insertProcPlan(ProcPlanVO ppVO, RedirectAttributes rrtt) {
-		int result = procService.addPlan(ppVO);
-		int result2 = procService.addPlanDetail(ppVO);
+	public String insertProcPlan(ProcPlanVO ppVO, OrderPlanVO opVO, RedirectAttributes rrtt) {
+		int update = procService.updateOrderStatus(opVO);
+		int insert = procService.addPlan(ppVO);
+		int insert2 = procService.addPlanDetail(ppVO);
 		String message = null;
-		if(result == 1 && result2 == 1) {
-			message = "등록에 성공했습니다.";
+		if(insert != -1 && insert2 != -1 && update != -1) {
+			message = "실패";
 		} else {
-			message = "등록에 실패했습니다.";
+			message = "성공";
 		} 
 		rrtt.addFlashAttribute("message",message);
 		return "redirect:ProcManagement";

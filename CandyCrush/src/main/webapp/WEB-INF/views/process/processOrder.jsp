@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<link rel="stylesheet" href="assets/css/processOrder.css">
+	<link rel="stylesheet" href="assets/css/processOrder.css">
 	<main>
 		<!-- /. NAV SIDE  -->
 		<div id="page-wrapper">
@@ -49,16 +49,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td>qeqw231</td>
-												<td>초코맛된장</td>
-												<td>qweasd124fsd</td>
-												<td>2023-04-10</td>
-												<td>300</td>
-												<td>315</td>
-												<td>김돌팔</td>
-												<td>2023-04-05</td>
-											</tr>
+											<div id="procPlanList"></div>
 										</tbody>
 									</table>
 								</div>
@@ -78,7 +69,9 @@
 				<div class="row">
 					<div class="col-md-8">
 						<div class="card">
-							<div class="card-action"><h3>공정자재</h3></div>
+							<div class="card-action">
+								<h3>공정자재</h3>
+							</div>
 							<div class="card-content">
 								<div class="prodProc">
 									<table class="candyTab">
@@ -113,7 +106,9 @@
 					</div>
 					<div class="col-md-4">
 						<div class="card">
-							<div class="card-action"><h3>자재지시</h3></div>
+							<div class="card-action">
+								<h3>자재지시</h3>
+							</div>
 							<div class="card-content">
 								<div class="prodProc">
 									<table class="candyTab">
