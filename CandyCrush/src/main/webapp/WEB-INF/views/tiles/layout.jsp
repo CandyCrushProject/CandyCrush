@@ -59,6 +59,13 @@
 	<!-- Custom Styles-->
 	<link href="assets/css/custom-styles.css" rel="stylesheet" />
 	
+	<!-- Toast UI xlsx -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+	
+	<!-- Toast UI DatePicker -->
+	<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+	<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+
 	<!-- Toast UI -->
 	<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 	<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>

@@ -7,30 +7,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mes.material.mapper.MaterialMapper;
+import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;
 import com.yedam.mes.material.service.MtrlAccountVO;
-import com.yedam.mes.material.service.MaterialOrderVO;
 
 //구현클래스 : 빈을 등록되는 대상
 @Service
 public class MaterialServiceImpl implements MaterialService {
 	@Autowired
 	MaterialMapper mapper;
-
-	@Override
-	public List<MaterialVO> mtrlAllList() {
-		return mapper.mtrlAllList();
-	}
-	
-	@Override
-	public List<MaterialOrderVO> mtrlOrderAllList() {
-		return mapper.mtrlOrderAllList();
-	}
 	//업체명 또는 자재명을 통한 자재검색
 	@Override
 	public List<MaterialVO> mtrlSearch(@Param("caNm") String caNm, @Param("cmmNm") String cmmNm) {
 		return mapper.mtrlSearch(caNm, cmmNm);
+	}
+	//업체명 또는 자재명을 통한 자재검색
+	@Override
+	public List<MaterialOrderVO> mtrlOrderDateSearch(String caNm, String start, String end) {
+		return mapper.mtrlOrderDateSearch(caNm, start, end);
 	}
 	//업체조회
 	@Override
@@ -47,21 +42,28 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd) {
 		return mapper.mtrlOrderOneCheck(cmmCd);
 	}
+	//자재발주목록에서 발주코드 클릭하면 발주상세목록을 모달로 띄운다 / 20230409
+	@Override
+	public List<MaterialOrderVO> mtrlOrderDetailList(String moCd) {
+		return mapper.mtrlOrderDetailList(moCd);
+	}
 	//자재발주코드 자동생성
 	@Override
 	public MaterialOrderVO getMtrlOrderCode() {
 		return mapper.getMtrlOrderCode();
 	}
-
-	//--발주등록
-	//발주관리 헤더
+		
+	//자재발주헤더 + 자재발주디테일 INSERT
 	@Override
-	public int orderHeaderInsert(MaterialOrderVO vo) {
-		return mapper.orderHeaderInsert(vo);
-	}
-	//발주관리 디테일
-	@Override
-	public int orderDetailInsert(List<MaterialOrderVO> vo) {
-		return mapper.orderDetailInsert(vo);
+	public int orderInsert(MaterialOrderVO vo, List<MaterialOrderVO> listVO) {
+		int cnt = 0;
+		
+		cnt = mapper.orderHeaderInsert(vo);
+		
+		for(MaterialOrderVO matlVO: listVO) {
+			cnt += mapper.orderDetailInsert(matlVO);
+		}
+		
+		return cnt;
 	}
 }
