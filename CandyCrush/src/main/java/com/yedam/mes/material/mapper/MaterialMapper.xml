@@ -126,5 +126,14 @@
 		VALUES
 			(#{moCd}, #{moCnt}, TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'), #{caNo}, #{cmmCd})
 	</insert>
+	
+	<!-- 발주조회디테일 UPDATE-->
+	<update id="orderDetailUpdate" parameterType="MaterialOrderVO">
+		UPDATE MTRL_ORDER_DETAIL
+		   SET mo_cnt = #{moCnt},
+		       mo_req_dt = TO_DATE('#{moReqDt}', 'yyyy-MM-dd')
+		WHERE  mo_cd = #{moCd}
+		  AND  cmm_cd = #{cmmCd}
+	</update>
 
 </mapper>

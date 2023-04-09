@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.mes.sales.service.OrdrShtService;
@@ -32,14 +33,8 @@ public class OrdrShtController {
 	// 조회검색 페이지
 	@PostMapping("ordrShtSrch")
 	@ResponseBody
-	public List<OrdrShtVO> ordrShtSrchList(Model model) {
-		return service.ordrShtSrchList();
+	public List<OrdrShtVO> ordrShtSrchList(@RequestParam(required = false) String caNm, @RequestParam(required = false) String orshStrDt, @RequestParam(required = false) String orshEndDt) {
+		return service.ordrShtSrchList(caNm, orshStrDt, orshEndDt);
 	}
 	
-//	//자재발주관리/자재검색기능
-//	@PostMapping("mtrlSearch")
-//	@ResponseBody
-//	public List<MaterialVO> mtrlSearch(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String cmmNm){
-//		return service.mtrlSearch(caNm, cmmNm);
-////	}
 }
