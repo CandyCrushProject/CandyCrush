@@ -5,9 +5,6 @@
 
 			<link rel="stylesheet" href="assets/css/processManagement.css">
 			<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-			<!-- 그리드 -->
-			<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-			<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 			<!-- 폰트 어썸 -->
 			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 			<style>
@@ -36,6 +33,39 @@
 				}
 			</style>
 			<main>
+				<div class="modal fade" id="order" tabindex="-1">
+					<div class="modal-dialog modal-lg modal-dialog-scrollable">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">주문서 조회</h5>
+							</div>
+							<div class="modal-body">
+								<div class="procPlanCraete">
+									<h5>주문서 정보</h5>
+									<table class="candyTab">
+										<thead>
+											<tr>
+												<th scope="col">No</th>
+												<th scope="col">주문코드</th>
+												<th scope="col">주문건수</th>
+												<th scope="col">거래처</th>
+												<th scope="col">주문일자</th>
+												<th scope="col">납품일자</th>
+												<th scope="col">등록</th>
+											</tr>
+										</thead>
+										<tbody id=orderSheetTab>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="cndRstBtn" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<!-- /. NAV SIDE  -->
 				<div id="page-wrapper">
 					<div class="header">
@@ -51,14 +81,12 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="card">
-									<div class="card-action">
-										<h3>주문서 조회</h3>
-									</div>
 									<div class="card-content">
 										<div class="procPlan">
 											<ul>
 												<li class="procPlanBtn-r">
-													<button id="oderBtn" type="button" class="cndSrchBtn hi">
+													<button id="oderBtn" type="button" class="cndSrchBtn hi" data-toggle="modal"
+														data-target="#order">
 														<i class="fa-solid fa-clipboard"></i> 주문서
 													</button>
 												</li>
@@ -66,32 +94,32 @@
 										</div>
 										<div class="floatEnd"></div>
 										<div class="procPlanCraete">
-											<h5>주문서 정보</h5>
+											<h5 style="padding-bottom: 20px;">주문서 정보</h5>
 											<table class="candyTab">
 												<thead>
 													<tr>
 														<th scope="col">No</th>
-														<th scope="col">주문코드</th>
-														<th scope="col">거래처</th>
+														<th scope="col">주문상세코드</th>
+														<th scope="col">주문수량</th>
 														<th scope="col">제품명</th>
+														<th scope="col">거래처명</th>
+														<th scope="col">납기일자</th>
+														<th scope="col">현재상태</th>
 														<th scope="col">등록</th>
 													</tr>
+													<form action="">
 												</thead>
-												<tbody id=orderSheetTab>
+												<tbody id="orderDetail">
 												</tbody>
+												</form>
 											</table>
 										</div>
 										<div class="clearBoth">
 											<br />
 										</div>
-
-
 									</div>
 								</div>
-
 							</div>
-
-							<!-- /. PAGE INNER  -->
 						</div>
 
 						<div class="row inpw">
@@ -109,7 +137,7 @@
 													</button>
 												</li>
 												<li class="procPlanBtn-r">
-													<button type="button" class="cndRstBtn hi">
+													<button type="button" class="cndRstBtn hi" id="resetBtn">
 														<i class="fa-solid fa-rotate-right"></i> 초기화
 													</button>
 												</li>
@@ -191,21 +219,12 @@
 										<div class="clearBoth">
 											<br />
 										</div>
-
-
 									</div>
 								</div>
-
 							</div>
-
-
 						</div>
-
-						<!-- /. PAGE WRAPPER  -->
 					</div>
 				</div>
-
-
 			</main>
 			<script>
 				function printAlert(message) {
@@ -219,7 +238,29 @@
 				}
 				printAlert(`${message}`);
 				$(document).ready(function () {
+
+					$('#resetBtn').on('click', function () {
+						$("#orshNo").val('');
+						$("#cprNm").val('');
+						$("#ordrDtlCnt").val('');
+						$("#orshDt").val('');
+						$("#dlvryDt").val('');
+						$("#prplCd").val('');
+						$("#prpldCnt").val('');
+						$("#prpldMng").val('');
+						$("#prstDt").val('');
+					});
 					$('#oderBtn').on('click', function () {
+						$("#orshNo").val('');
+						$("#cprNm").val('');
+						$("#ordrDtlCnt").val('');
+						$("#orshDt").val('');
+						$("#dlvryDt").val('');
+						$("#prplCd").val('');
+						$("#prpldCnt").val('');
+						$("#prpldMng").val('');
+						$("#prstDt").val('');
+
 						$.ajax({
 							url: 'getOrder',
 							type: 'GET',
@@ -232,30 +273,27 @@
 								// 데이터 반복문 처리
 								$.each(data.result, function (index, item) {
 									var row = $('<tr>');
-									// td 생성		
 									row.append($("<td>").attr("hidden", true).text(item.caNo));
-									row.append($("<td>").attr("hidden", true).text(item.cprCd));
-									row.append($("<td>").attr("hidden", true).text(item.orshDt));
-									row.append($("<td>").attr("hidden", true).text(item.orshPr));
-									row.append($("<td>").attr("hidden", true).text(item.ordrDtlCnt));
-									row.append($("<td>").attr("hidden", true).text(item.dlvryDt));
 									row.append($("<th scope='row'>").text(index + 1));
 									row.append($("<td>").text(item.orshNo));
+									row.append($("<td>").text(item.ordrCdCnt));
 									row.append($("<td>").text(item.caNm));
-									row.append($("<td>").text(item.cprNm));
-									row.append($("<td>").attr("hidden", true).text(item.sttCngDt));
-									row.append($("<td>").attr("hidden", true).text(item.ordrDtlCd));
+									row.append($("<td>").text(item.orshDt));
+									row.append($("<td>").text(item.dlvryDt));
 									var td = $("<td>");
-									var button = $("<button>", {
+									td.append($("<button>", {
 										type: "button",
 										class: "addBtn cndInsBtn hi",
-										text: "등록"
-									});
-									td.append(button);
+										text: "등록",
+									}).on('click', function () {
+										sunakingloveyou(item.orshNo, item.caNo);
+									}));
 									row.append(td);
 
 									tbody.append(row);
 								})
+								// 모달 창 열기
+								$('#order').modal('show');
 							},
 							error: function (xhr, status, error) {
 								// 요청이 실패했을 때 처리할 로직
@@ -264,6 +302,58 @@
 						});
 					});
 				});
+
+				function sunakingloveyou(suna, king) {
+					let addData = {
+						orshNo: suna,
+						caNo: king
+					};
+					$.ajax({
+						url: 'getOrderList',
+						type: 'GET',
+						data: addData,
+						dataType: 'json',
+						success: function (data) {
+							console.log(data);
+							// 성공적으로 응답 받았을 때 처리할 로직
+							var tbody = $("#orderDetail"); // tbody 선택
+							tbody.empty(); // tbody 비우기
+
+							// 데이터 반복문 처리
+							$.each(data.result, function (index, item) {
+								var row = $('<tr>');
+								// td 생성		
+								row.append($("<td>").attr("hidden", true).text(item.orshNo));
+								row.append($("<td>").attr("hidden", true).text(item.caNo));
+								row.append($("<td>").attr("hidden", true).text(item.orshDt));
+								row.append($("<td>").attr("hidden", true).text(item.cprCd));
+								row.append($("<td>").attr("hidden", true).text(item.sttCngDt));
+								row.append($("<th scope='row'>").text(index + 1));
+								row.append($("<td>").text(item.ordrDtlCd));
+								row.append($("<td>").text(item.ordrDtlCnt));
+								row.append($("<td>").text(item.cprNm));
+								row.append($("<td>").text(item.caNm));
+								row.append($("<td>").text(item.dlvryDt));
+								row.append($("<td>").text(item.orshPr));
+								var td = $("<td>");
+								var button = $("<button>", {
+									type: "button",
+									class: "planBtn cndInsBtn hi",
+									text: "등록"
+								});
+								td.append(button);
+								row.append(td);
+
+								tbody.append(row);
+							})
+							$('#order').modal('hide');
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				}
 				// 날짜 포맷 변경 함수
 				function formatDate(time) {
 					var date = new Date(time);
@@ -276,44 +366,33 @@
 
 
 				/* 주문서정보 -> 생산계획작성 */
-				$(document).on("click", ".addBtn", function () {
+				$(document).on("click", ".planBtn", function () {
 					var orderArray = [];
 					var row = $(this).closest("tr");
 					row.find("td").each(function () {
 						orderArray.push($(this).text());
 					});
 
+
 					$.ajax({
-						url: 'getOrder',
+						url: 'getProcPlanCode',
 						type: 'GET',
 						dataType: 'json',
 						success: function (data) {
-
-							$("#caNo").val(orderArray[0]);
-							$("#cprCd").val(orderArray[1]);
+							$("#orshNo").val(orderArray[0]);
+							$("#caNo").val(orderArray[1]);
 							$("#orshDt").val(orderArray[2]);
-							$("#orshPr").val(orderArray[3]);
-							$("#ordrDtlCnt").val(orderArray[4]);
-							$("#dlvryDt").val(orderArray[5]);
-							$("#orshNo").val(orderArray[6]);
-							$("#caNm").val(orderArray[7]);
-							$("#cprNm").val(orderArray[8]);
-							$("#sttCngDt").val(orderArray[9]);
-							$("#ordrDtlCd").val(orderArray[10]);
-							$.ajax({
-								url: 'getProcPlanCode',
-								type: 'GET',
-								dataType: 'json',
-								success: function (data) {
-									$("#prplCd").val(data.prplCd);
-									$("#prpldCd").val(data.prpldCd);
-
-								},
-								error: function (xhr, status, error) {
-									// 요청이 실패했을 때 처리할 로직
-									console.error('요청 실패:', error);
-								}
-							});
+							$("#cprCd").val(orderArray[3]);
+							$("#sttCngDt").val(orderArray[4]);
+							$("#ordrDtlCd").val(orderArray[5]);
+							$("#ordrDtlCnt").val(orderArray[6]);
+							$("#cprNm").val(orderArray[7]);
+							$("#caNm").val(orderArray[8]);
+							$("#dlvryDt").val(orderArray[9]);
+							$("#orshPr").val(orderArray[10]);
+							$("#prplCd").val(data.prplCd);
+							$("#prpldCd").val(data.prpldCd);
+							// 현재 모달창 닫기
 
 						},
 						error: function (xhr, status, error) {
@@ -321,7 +400,6 @@
 							console.error('요청 실패:', error);
 						}
 					});
-
 				});
 				$(document).ready(function () {
 					$('#addPlanBtn').on('click', function () {

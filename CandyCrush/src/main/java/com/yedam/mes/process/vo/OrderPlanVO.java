@@ -17,4 +17,5 @@ public class OrderPlanVO {
 	private String cprCd; // 제품코드
 	private String cprNm; // 제품명
 	private String sttCngDt; // 상태변경일자
+	private int ordrCdCnt; // 주문건수
 }
