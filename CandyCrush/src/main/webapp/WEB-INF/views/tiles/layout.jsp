@@ -1,6 +1,6 @@
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -58,6 +58,10 @@
 	
 	<!-- Custom Styles-->
 	<link href="assets/css/custom-styles.css" rel="stylesheet" />
+	
+	<!-- DataPicker -->
+	<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+	<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 	
 	<!-- Toast UI -->
 	<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />

@@ -6,9 +6,14 @@
 <mapper namespace="com.yedam.mes.sales.mapper.OrdrShtMapper">
 	<!-- 전체조회 -->
 	<select id="ordrShtAllList" resultType="OrdrShtVO">
-		SELECT orsh_no, cpr_cd, ca_no, TO_DATE(orsh_dt, 'rrrr-MM-dd') as orsh_dt, orsh_pr 
-		  FROM order_sheet
- 		 ORDER BY orsh_no
+		SELECT orsh.orsh_no
+		     , cmacc.ca_no
+		     , cmacc.ca_nm
+		     , TO_DATE(orsh.orsh_dt, 'rrrr-MM-dd') as orsh_dt
+		     , TO_DATE(orsh.dlvry_dt, 'rrrr-MM-dd') as dlvry_dt
+		  FROM order_sheet orsh JOIN cm_account cmacc
+		                          ON orsh.ca_no = cmacc.ca_no
+		 ORDER BY 1
 	</select>
 	
 	<!-- 검색조회 -->
