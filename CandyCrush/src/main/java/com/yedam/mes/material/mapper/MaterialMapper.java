@@ -32,8 +32,11 @@ public interface MaterialMapper {
 	//발주관리 디테일
 	public int orderDetailInsert(MaterialOrderVO vo);
 	
-	
-	
+	//발주 디테일 데이터 수정
+	public int orderDetailUpdate(@Param("moCnt") int moCnt,
+								 @Param("moReqDt") String moReqDt,
+								 @Param("moCd") String moCd,
+								 @Param("cmmCd") String cmmCd);
 	
 	
 	

@@ -66,4 +66,10 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return cnt;
 	}
+	
+	//발주 디테일 데이터 UPDATE
+	@Override
+	public int orderDetailUpdate(@Param("moCnt") int moCnt, @Param("moReqDt") String moReqDt, @Param("moCd") String moCd, @Param("cmmCd") String cmmCd) {
+		return mapper.orderDetailUpdate(moCnt, moReqDt, moCd, cmmCd);
+	}
 }
