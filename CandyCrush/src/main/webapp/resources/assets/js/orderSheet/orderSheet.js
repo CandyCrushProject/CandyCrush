@@ -1,11 +1,8 @@
-let ordrBtn = document.getElementById("ordrBtn"); //조회버튼
-let delBtn = document.getElementById("delBtn"); //삭제버튼
+//let ordrBtn = document.getElementById("ordrBtn"); //조회버튼
+//let delBtn = document.getElementById("delBtn"); //삭제버튼
 // let mdlCaNmSrch = document.getElementById("mdlCaNmSrch"); //모달 거래처 검색 버튼
-let confirmBtn = document.getElementById("confirmBtn"); //거래처 모달창 확인버튼
-let acctnNmInput = document.getElementById("acctnNm"); //거래처명 검색 인풋박스
-let selStrtDt = ""; //주문일자 검색
-let selendDt = ""; //주문일자 검색
-let acctnNm = ""; //거래처명 검색
+//let confirmBtn = document.getElementById("confirmBtn"); //거래처 모달창 확인버튼
+//let acctnNmInput = document.getElementById("acctnNm"); //거래처명 검색 인풋박스
 //let checkLen = 0; //체크박스 선택 개수
 //let vendSearch = ""; //모달창 거래처명 저장변수
 
@@ -15,53 +12,54 @@ $(document).ready(function(){
   // 거래처 모달
   $('#mdlCaNmSrchBtn').on('click',function () {
     document.getElementById('accntNmMdl').style.display = 'block';
-    setTimeout(() => caModal.refreshLayout(), 0);
+    //setTimeout(() => caModal.refreshLayout(), 0);
   });
 
   // 제품명 모달
   $('#prdNmSrchBtn').on('click', function () {
     document.getElementById('prdNmMdl').style.display = 'block';
   });
+
+  // 조회버튼 눌렀을 때 검색
+  $('#ordrSchBtn').on('click', (e) => {
+    ordrShtSearch();
+  });
 });
 
-// 거래처 모달
-// function modalAccountSearch() {
-//   mdlCaNmSrch = document.getElementById('mdlCaNmSrch').value;
-//   modalCaCd = document.getElementById('modalCaCd').value;
+//---------------------------------------------------------------------------------------------
+// 검색 조회
+let caNm = null; // 거래처명
+let orshStrDt = null; // 시작날짜
+let orshEndDt = null; // 끝 날짜
 
-//   $.ajax({
-//     url: "accountCheck",
-//     method: "POST",
-//     dataType: "JSON",
-//     data: { caNm: mdlCaNm, caNo: modalCaCd },
-//     success: function (data) {
-//       //console.log(data);
-//       caModal.resetData(data);
-//     }
-//   });
-// }
+// 거래처명, 제품명, 발주신청일 시작일자, 발주신청일 종료일자
+/*const ordrShtGetData = (caNm = undefined, orshStrDt = undefined, orshEndDt = undefined) => {
+  $.ajax({
+    url : "ordrShtSrch",
+    method :"POST",
+    dataType : "JSON",
+    data : {caNm : caNm, orshStrDt : orshStrDt, orshEndDt : orshEndDt},
+    success : function(data) {
+      console.log(data);
+      orderList.resetData(data);
+    } 
+  });
+};
+ordrShtGetData();*/
 
-// document.getElementById("mdlCaNmSrch").addEventListener("click", () => {
-//   modalAccountSearch();
-// });
+function ordrShtSearch() {
+  caNm = $("#ordrCmpnyNm").val(); // 거래처명 value
+  orshStrDt = $("#selStrtDt").val(); // 시작 날짜 value
+  orshEndDt = $("#selendDt").val();  // 끝나는 날짜 value
 
-
-//조회버튼 눌렀을때 
-// function search() {
-//   selStrtDt = document.getElementById("selStrtDt").value; // 시작 날짜 저장
-//   selendDt = document.getElementById("selendDt").value; // 끝나는 날짜 저장
-//   acctnNm = document.getElementById("vendNm").value.toUpperCase(); // 거래처명 저장
-//   $.ajax({
-//     url: "orderSearch",
-//     method: "post",
-//     dataType: "JSON",
-//     data: {start: start, end: end, vendNm: vendNm },
-//     success: function (data) {
-//       grid.resetData(data); //그리드 적용
-//     },
-//     error: function (reject) {
-//       console.log(reject);
-//     },
-//   });
-// }
-
+  $.ajax({
+    url : "ordrShtSrch",
+    method :"POST",
+    dataType : "JSON",
+    data : {caNm : caNm, orshStrDt : orshStrDt, orshEndDt : orshEndDt},
+    success : function(data) {
+      console.log(data);
+      orderList.resetData(data);
+    } 
+  });
+};

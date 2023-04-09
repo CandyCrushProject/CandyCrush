@@ -17,11 +17,11 @@ public class OrdrShtVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dlvryDt; // 납기일자
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date orshStrDt; // 조회할때 시작날짜
+	// @DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String orshStrDt; // 조회할때 시작날짜
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date orshEndDt; // 조회할때 마지막날짜
+	// @DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String orshEndDt; // 조회할때 마지막날짜
 	
 	// 주문서상세
 	private String ordrDtlCd; // 주문코드

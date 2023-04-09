@@ -92,19 +92,12 @@
 								</button> <!-- 거래처 모달창 버튼 -->
 							</div>
 							<div>
-								<label for="prodNm">제품명</label> <!-- 제품명 label -->
-								<input type="text" id="prodNm" style="width: 50%;"/> <!-- 제품명 input -->
-								<button id="prdNmSrchBtn" class="srchBtn"> <!-- 제품명 모달 버튼-->
-									<i class="fa-solid fa-magnifying-glass"></i>
-								</button> <!-- end 조회버튼-->
-							</div>
-							<div>
 								<label for="companyName">주문일자</label> <!-- 주문일자 label -->
 								<input type="date" id="selStrtDt" style="width: 35%;"> - <input type="date" id="selendDt" style="width: 35%;"> <!-- date input -->
 							</div>
 						</div>
 						<!-- 조회버튼 -->
-						<button id="ordrBtn" class="cndSelBtn" type="button">조회</button>
+						<button id="ordrSchBtn" class="cndSelBtn" type="button">조회</button>
 						<!-- end 조회버튼 -->
 					</div>
 				</div>

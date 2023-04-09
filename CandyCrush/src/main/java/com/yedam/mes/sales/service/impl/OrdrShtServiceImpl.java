@@ -21,13 +21,16 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return mapper.ordrShtAllList();
 	}
-	
+
 	// 검색조회
 	@Override
-	public List<OrdrShtVO> ordrShtSrchList() {
-		
-		return mapper.ordrShtSrchList();
+	public List<OrdrShtVO> ordrShtSrchList(String caNm, String orshStrDt, String orshEndDt) {
+		// TODO Auto-generated method stub
+		return mapper.ordrShtSrchList(caNm, orshStrDt, orshEndDt);
 	}
+	
+	// 검색조회
+	
 	
 	// 주문서 등록
 	
