@@ -50,7 +50,7 @@
 				<div style="clear:both"></div>
 				<div id="rigth">
 					<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
-					<button type="button" class="cndUdtBtn">수정</button>
+					<button type="button" id="dateUpdateBtn" class="cndUdtBtn">수정</button>
 				</div>
 				<label for="modalMocd">발주코드</label>
 				<input type="text" id="modalMocd" style="width: 90%;" readonly>
@@ -126,6 +126,19 @@
 			//Modal Grid 빠르게 띄우는 방법
 			setTimeout(()=> caModal.refreshLayout() , 0);
 		}); 
+		
+		//데이터가공
+		const date = new Date();
+
+		const years = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0");
+		const month2 = String(date.getMonth() + 2).padStart(2, "0");
+		const day = String(date.getDate()).padStart(2, "0");
+		
+		//당일 날짜 
+		const getToday = years+ "-" + month + "-" + day;
+		//당일 날짜 기준 한달 뒤 날짜
+		const getOneMonthLater = years+ "-" + month2 + "-" + day;
 
 		//업체정보조회 :  Model Class -> c tag
 		let accountList =  [
@@ -338,7 +351,6 @@
 		//발주목록 행 더블클릭하면 나오는 모달창 안에 있는 발주상세 Grid
 		const moModal = new Grid({
 			el: document.getElementById('moModal'),
-			rowHeaders: ["checkbox"],
 			columns: [
 				{
 					header: '자재코드',
@@ -366,7 +378,8 @@
 				},
 				{
 					header: '발주수량',
-					name: 'moCnt'
+					name: 'moCnt',
+					editor: 'text'
 				},
 				{
 					header: '현재재고',
@@ -379,18 +392,27 @@
 				{
 					header: '예상재고량',
 					name: 'cmmEstInven',
-					_attributes: {
-						className: {
-							column: {
-								type: ['blue'],
-								genre: ['blue']
-							}
-						}
+					formatter: function(rowdata) {
+						let cmmEstInven = rowdata.row.cmmEstInven;
+						let color = "blue";
+						return '<span style="color:' + color + '";>'
+						+ cmmEstInven  + '</span>';
 					}
 				},
 				{
 					header: '납기요청일',
-					name: 'moReqDt'
+					name: 'moReqDt',
+					editor: {
+						type: 'datePicker',
+						options: {
+							format: 'yyyy-MM-dd',
+							selectableRanges : [[getToday, getOneMonthLater]],
+							language: 'ko',
+						}
+					},
+					formatter: function (e) {
+						return dateChange(e.value);
+					},
 				}
 			],
 			bodyHeight: 420,
@@ -431,5 +453,49 @@
 				}
 			});
 		});
+
+		$('#dateUpdateBtn').on('click',(e)=>{
+			let rowDate2 = moModal.getData(e.rowKey);
+
+			let moCd = $('#modalMocd').val();
+			let moCnt = "";
+			let moReqDt = "";
+			let cmmCd = "";
+
+			for(let i = 0 ; i < rowDate2.length ; i++){
+				moCnt = rowDate2[i].moCnt;
+				moReqDt = rowDate2[i].moReqDt;
+				cmmCd = rowDate2[i].cmmCd;
+
+				/*console.log(moCnt);
+				console.log(moReqDt);
+				console.log(cmmCd);*/
+
+				$.ajax({
+					url : "mtrlOrderDetailUpdate",
+					method : "POST",
+					dataType : "JSON",
+					data : { moCd : moCd, moCnt : moCnt, moReqDt : moReqDt, cmmCd : cmmCd },
+					success : function(result){
+						console.log(result);
+					}
+				});
+			}
+
+		})
+
+//---------------------------------------------------------------------------------------------------------------------
+		//날짜변환 함수
+		function dateChange(data) {
+		let newData = new Date(data);
+		let result = newData.getFullYear() + "-" +
+					(newData.getMonth() < 10
+					? "0" + (newData.getMonth() + 1)
+					: newData.getMonth() + 1) +
+					"-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+		return result;
+		};
+
+
 </script>
 </main>

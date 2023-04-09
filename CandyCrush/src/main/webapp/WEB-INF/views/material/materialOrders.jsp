@@ -503,12 +503,6 @@
 			}
 		});
 		
-		function orderInsertFnc(){
-			console.log(materialOrder.getData());
-			
-		}
-		
-
 		//발주수량 입력할 때 안전재고보다 소량으로 기재할 시 
 		//안전재고 숫자가 빨간색으로 보이게 (정상작동안됨/추후에 하는걸로!!)
 		/*materialOrder.on("click", (e) => {

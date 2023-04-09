@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -69,7 +70,6 @@ public class MaterialController {
 		
 		Boolean response = true;
 		int result = service.orderInsert(newVo, vo); 	//발주관리헤더, 발주관리디테일
-		System.out.println(result);
 		if(result < 1) {
 			response = false;
 		}
@@ -97,6 +97,20 @@ public class MaterialController {
 	@ResponseBody
 	public List<MaterialOrderVO> mtrlOrderDetailList(@Param("moCd") String moCd){
 		return service.mtrlOrderDetailList(moCd);
+	}
+	
+	@PostMapping("mtrlOrderDetailUpdate")
+	@ResponseBody
+	public Boolean mtrlOrderDetailUpdate(@RequestParam(required = false) int moCnt, @RequestParam(required = false) String moReqDt,
+														@RequestParam(required = false) String moCd, @RequestParam(required = false) String cmmCd){
+		int result = service.orderDetailUpdate(moCnt, moReqDt, moCd, cmmCd);
+		Boolean response = true;
+		
+		if(result < 1) {
+			response = false;
+		};
+		
+		return response;
 	}
 	
 	//------------------------------------------------------------------------

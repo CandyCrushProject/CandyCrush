@@ -23,10 +23,16 @@ public interface MaterialService {
 	public MaterialOrderVO getMtrlOrderCode();
 	
 	//--발주등록
-	//발주관리 헤더
+	//발주관리 헤더, 발주관리 디테일
 	//public int orderHeaderInsert(MaterialOrderVO vo);
-	//발주관리 디테일
 	//public int orderDetailInsert(List<MaterialOrderVO> vo);
+	
 	//발주관리헤더 + 발주관리디테일
 	public int orderInsert(MaterialOrderVO vo, List<MaterialOrderVO> listVO);
+	
+	//발주 디테일 데이터 수정
+	public int orderDetailUpdate(@Param("moCnt") int moCnt,
+								 @Param("moReqDt") String moReqDt,
+								 @Param("moCd") String moCd,
+								 @Param("cmmCd") String cmmCd);
 }
