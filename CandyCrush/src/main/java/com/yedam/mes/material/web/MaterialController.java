@@ -47,12 +47,6 @@ public class MaterialController {
 		return service.accountCheckModal(caNm, caNo);
 	}
 	
-	//자재발주조회 페이지
-	@GetMapping("mtrlOrderList")
-	public String mtrlOrderList(Model model) {
-		return "material/materialOrderList";
-	}
-	
 	//자재발주관리/자재목록 -> 자재발주로 List 뿌리기
 	@PostMapping("mtrlOrderOneCheck")
 	@ResponseBody
@@ -83,7 +77,29 @@ public class MaterialController {
 		return response;
 	}
 	
+	//------------------------------------------------------------------------
 	
+	//자재발주조회 페이지
+	@GetMapping("mtrlOrderList")
+	public String mtrlOrderList(Model model) {
+		model.addAttribute("accountList", service.accountCheck());
+		return "material/materialOrderList";
+	}
+	
+	//자재발주조회 / 업체명 또는 발주신청일 시작일자~종료일자 검색
+	@PostMapping("mtrlOrderDateSearch")
+	@ResponseBody
+	public List<MaterialOrderVO> mtrlOrderDateSearch(@RequestParam(required = false) String caNm, @RequestParam(required = false) String start, @RequestParam(required = false) String end) {
+		return service.mtrlOrderDateSearch(caNm, start, end);
+	}
+	//자재발주조회 / 발주코드 더블클릭하면 해당되는 발주코드에 대한 상세정보를 Modal로 띄어준다 
+	@PostMapping("mtrlOrderDetailList")
+	@ResponseBody
+	public List<MaterialOrderVO> mtrlOrderDetailList(@Param("moCd") String moCd){
+		return service.mtrlOrderDetailList(moCd);
+	}
+	
+	//------------------------------------------------------------------------
 	//자재입고검사조회 페이지
 	@GetMapping("mtrlInspCheck")
 	public String mtrlInsp(Model model) {

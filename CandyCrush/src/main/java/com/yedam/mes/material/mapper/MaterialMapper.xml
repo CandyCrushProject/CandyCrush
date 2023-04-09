@@ -3,11 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mes.material.mapper.MaterialMapper">
-	<!-- 자재 전체조회 -->
-	<select id="mtrlAllList" resultType="MaterialVO">
-		SELECT * FROM CM_MTRL_MNG
-	</select>
-	
 	<!-- 업체명조회 -->
 	<select id="accountCheck" resultType="MtrlAccountVO">
 		SELECT ca_no, ca_nm, ca_mng, ca_mng_ph, ca_bsns_num
@@ -52,10 +47,23 @@
 			</if>
 		ORDER BY cmm_cd
 	</select>
-
-	<!-- 자재발주 전체조회 -->
-	<select id="mtrlOrderAllList" resultType="MaterialOrderVO">
-		SELECT * FROM MTRL_ORDR
+	
+	<!-- 업체명 & 발주신청일 시작일자 ~ 종료일자  -->
+	<select id="mtrlOrderDateSearch" resultType="MaterialOrderVO">
+		SELECT DISTINCT mod.ca_no, ca_nm, mo.mo_cd, TO_CHAR(mo_reo_dt, 'YYYY-MM-DD') "mo_reo_dt",
+				mo_title, TO_CHAR(mo_cplt_dt,'YYYY-MM-DD') "mo_cplt_dt"
+		FROM mtrl_order mo JOIN mtrl_order_detail mod
+		    ON mo.mo_cd = mod.mo_cd
+		        JOIN cm_account ca
+		            ON mod.ca_no = ca.ca_no
+		WHERE 1=1
+		<if test="start != null and !start.equals('') and end!= null and !end.equals('')">
+		AND mo_reo_dt BETWEEN #{start} AND #{end}
+		</if>
+		<if test="caNm != null and !caNm.equals('')">
+		AND ca_nm LIKE '%' || #{caNm} || '%'
+		</if>
+		ORDER BY 1 asc
 	</select>
 	
 	<!-- 자재발주 단건조회 -->
@@ -76,6 +84,28 @@
 			       JOIN mtrl_input min
 			        ON mot.min_cd = min.min_cd
 		WHERE cmm.cmm_cd = #{cmmCd}
+	</select>
+	<!-- 자재발주 디테일 단건조회 -->
+	<!-- 발주코드, 업체코드, 업체명, 자재코드, 자재명, 발주수량, 안전재고, 납기요청일, 현재재고, 예상재고량 -->
+	<select id="mtrlOrderDetailList" resultType="MaterialOrderVO">
+		SELECT mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, mo_cnt, cmm_saf_stc, mo_req_dt,
+		        TO_NUMBER(min_cnt) - TO_NUMBER(mot_cnt) AS "cmm_inven",
+		        TO_NUMBER(min_cnt) - TO_NUMBER(mot_cnt) + TO_NUMBER(mo_cnt) "cmm_est_inven"
+		FROM mtrl_order mo
+			JOIN mtrl_order_detail mod
+			  ON mo.mo_cd = mod.mo_cd
+			   JOIN cm_account ca
+			    ON mod.ca_no = ca.ca_no
+			     JOIN cm_mtrl_mng cmm
+			      ON mod.cmm_cd = cmm.cmm_cd
+				   JOIN cm_mtrl_lot cml
+				    ON mod.cmm_cd = cml.cmm_cd
+				     JOIN mtrl_otpt mot
+				      ON cml.cml_nm = mot.cml_nm
+				       JOIN mtrl_input min
+				        ON mot.min_cd = min.min_cd
+		where mo.mo_cd = #{moCd}
+		order by 4 asc
 	</select>
 	
 	<!-- 자재발주코드 자동생성 -->

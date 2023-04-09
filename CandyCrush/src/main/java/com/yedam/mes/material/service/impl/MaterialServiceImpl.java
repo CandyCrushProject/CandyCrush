@@ -17,20 +17,15 @@ import com.yedam.mes.material.service.MtrlAccountVO;
 public class MaterialServiceImpl implements MaterialService {
 	@Autowired
 	MaterialMapper mapper;
-
-	@Override
-	public List<MaterialVO> mtrlAllList() {
-		return mapper.mtrlAllList();
-	}
-	
-	@Override
-	public List<MaterialOrderVO> mtrlOrderAllList() {
-		return mapper.mtrlOrderAllList();
-	}
 	//업체명 또는 자재명을 통한 자재검색
 	@Override
 	public List<MaterialVO> mtrlSearch(@Param("caNm") String caNm, @Param("cmmNm") String cmmNm) {
 		return mapper.mtrlSearch(caNm, cmmNm);
+	}
+	//업체명 또는 자재명을 통한 자재검색
+	@Override
+	public List<MaterialOrderVO> mtrlOrderDateSearch(String caNm, String start, String end) {
+		return mapper.mtrlOrderDateSearch(caNm, start, end);
 	}
 	//업체조회
 	@Override
@@ -46,6 +41,11 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd) {
 		return mapper.mtrlOrderOneCheck(cmmCd);
+	}
+	//자재발주목록에서 발주코드 클릭하면 발주상세목록을 모달로 띄운다 / 20230409
+	@Override
+	public List<MaterialOrderVO> mtrlOrderDetailList(String moCd) {
+		return mapper.mtrlOrderDetailList(moCd);
 	}
 	//자재발주코드 자동생성
 	@Override

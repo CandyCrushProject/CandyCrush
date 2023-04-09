@@ -473,16 +473,11 @@
 			}
 		});
 
-		//발주목록 체크박스 이벤트
-		materialOrder.on('check', (ev) => {
-			//발주 등록버튼 이벤트
-			//orderInsertFnc();
-		});
-
+		//발주등록버튼 클릭 이벤트
 		$('#orderInsert').on('click',(ev)=>{
 			const rows = materialOrder.getCheckedRows();
 			if (rows.length !== 0) {
-				console.log("있음");
+				//console.log("있음");
 				$.ajax({
 					url : "mtrlOrder",
 					method :"POST",
