@@ -31,6 +31,11 @@
 					border: none;
 					border-bottom: 1px solid #9e9e9e;
 				}
+
+				#orderSheetTab tr:hover {
+					cursor: pointer;
+					background-color: antiquewhite;
+				}
 			</style>
 			<main>
 				<div class="modal fade" id="order" tabindex="-1">
@@ -51,7 +56,6 @@
 												<th scope="col">거래처</th>
 												<th scope="col">주문일자</th>
 												<th scope="col">납품일자</th>
-												<th scope="col">등록</th>
 											</tr>
 										</thead>
 										<tbody id=orderSheetTab>
@@ -94,7 +98,7 @@
 										</div>
 										<div class="floatEnd"></div>
 										<div class="procPlanCraete">
-											<h5 style="padding-bottom: 20px;">주문서 정보</h5>
+											<h4 style="padding-bottom: 20px;">주문서 정보</h4>
 											<table class="candyTab">
 												<thead>
 													<tr>
@@ -105,13 +109,10 @@
 														<th scope="col">거래처명</th>
 														<th scope="col">납기일자</th>
 														<th scope="col">현재상태</th>
-														<th scope="col">등록</th>
 													</tr>
-													<form action="">
 												</thead>
 												<tbody id="orderDetail">
 												</tbody>
-												</form>
 											</table>
 										</div>
 										<div class="clearBoth">
@@ -185,6 +186,7 @@
 															<th>생산계획수량</th>
 															<th>담당자</th>
 															<th>생산작업일자</th>
+															<th>생산완료목표일</th>
 															<th>작업우선순위</th>
 														</tr>
 													</thead>
@@ -202,6 +204,9 @@
 															</td>
 															<td>
 																<input type="date" name="prstDt" id="prstDt">
+															</td>
+															<td>
+																<input type="date" name="prplSuceDt" id="prplSuceDt">
 															</td>
 															<td>
 																<select name="prpldWorkTskPri" style="height: 54px;">
@@ -223,6 +228,38 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card">
+									<div class="card-action">
+										<h3>자재BOM정보</h3>
+									</div>
+									<div class="card-content">
+										<!-- BOM -->
+										<div class="prodProc">
+											<table class="candyTab tabb">
+												<thead>
+													<tr>
+														<th>No</th>
+														<th>제품명</th>
+														<th>자재명</th>
+														<th>공정명</th>
+														<th>자재소모수량/포대</th>
+													</tr>
+												</thead>
+												<tbody id="bomMtrlSheet">
+												</tbody>
+											</table>
+										</div>
+										<div class="clearBoth">
+											<br />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
 					</div>
 				</div>
 			</main>
@@ -234,9 +271,45 @@
 						title: '등록되었습니다.',
 						text: '생산계획의 등록이 완료되었습니다.',
 					});
-
 				}
 				printAlert(`${message}`);
+				function getBomDate(orshNo, cprCd) {
+					$.ajax({
+						url: 'getBomInfo',
+						type: 'GET',
+						data: {
+							orshNo: orshNo,
+							cprCd: cprCd
+						},
+						dataType: 'json',
+						success: function (data) {
+							// 성공적으로 응답 받았을 때 처리할 로직
+							var tbody = $("#bomMtrlSheet"); // tbody 선택
+							tbody.empty(); // tbody 비우기
+
+							// 데이터 반복문 처리
+							$.each(data.bomInfo, function (index, item) {
+								var row = $('<tr>');
+								// td 생성		
+								row.append($("<td>").attr("hidden", true).text(item.cbmtCd));
+								row.append($("<td>").attr("hidden", true).text(item.cmmCd));
+								row.append($("<td>").attr("hidden", true).text(item.cmCd));
+								row.append($("<td>").attr("hidden", true).text(item.cprCd));
+								row.append($("<th scope='row'>").text(index + 1));
+								row.append($("<td>").text(item.cprNm));
+								row.append($("<td>").text(item.cmmNm));
+								row.append($("<td>").text(item.cmNm));
+								row.append($("<td>").text(item.cbmtQtt));
+
+								tbody.append(row);
+							})
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				}
 				$(document).ready(function () {
 
 					$('#resetBtn').on('click', function () {
@@ -249,6 +322,7 @@
 						$("#prpldCnt").val('');
 						$("#prpldMng").val('');
 						$("#prstDt").val('');
+						$("#prplSuceDt").val('');
 					});
 					$('#oderBtn').on('click', function () {
 						$("#orshNo").val('');
@@ -260,6 +334,7 @@
 						$("#prpldCnt").val('');
 						$("#prpldMng").val('');
 						$("#prstDt").val('');
+						$("#prplSuceDt").val('');
 
 						$.ajax({
 							url: 'getOrder',
@@ -272,7 +347,9 @@
 
 								// 데이터 반복문 처리
 								$.each(data.result, function (index, item) {
-									var row = $('<tr>');
+									var row = $("<tr>").on('dblclick', function () {
+										getOrderDate(item.orshNo, item.caNo);
+									});
 									row.append($("<td>").attr("hidden", true).text(item.caNo));
 									row.append($("<th scope='row'>").text(index + 1));
 									row.append($("<td>").text(item.orshNo));
@@ -280,15 +357,6 @@
 									row.append($("<td>").text(item.caNm));
 									row.append($("<td>").text(item.orshDt));
 									row.append($("<td>").text(item.dlvryDt));
-									var td = $("<td>");
-									td.append($("<button>", {
-										type: "button",
-										class: "addBtn cndInsBtn hi",
-										text: "등록",
-									}).on('click', function () {
-										sunakingloveyou(item.orshNo, item.caNo);
-									}));
-									row.append(td);
 
 									tbody.append(row);
 								})
@@ -303,18 +371,17 @@
 					});
 				});
 
-				function sunakingloveyou(suna, king) {
+				function getOrderDate(orshNo, caNo) {
 					let addData = {
-						orshNo: suna,
-						caNo: king
+						orshNo: orshNo,
+						caNo: caNo
 					};
 					$.ajax({
-						url: 'getOrderList',
+						url: 'getOrderDetail',
 						type: 'GET',
 						data: addData,
 						dataType: 'json',
 						success: function (data) {
-							console.log(data);
 							// 성공적으로 응답 받았을 때 처리할 로직
 							var tbody = $("#orderDetail"); // tbody 선택
 							tbody.empty(); // tbody 비우기
@@ -340,6 +407,8 @@
 									type: "button",
 									class: "planBtn cndInsBtn hi",
 									text: "등록"
+								}).on('click', function () {
+									getBomDate(item.orshNo, item.cprCd);
 								});
 								td.append(button);
 								row.append(td);
@@ -392,7 +461,6 @@
 							$("#orshPr").val(orderArray[10]);
 							$("#prplCd").val(data.prplCd);
 							$("#prpldCd").val(data.prpldCd);
-							// 현재 모달창 닫기
 
 						},
 						error: function (xhr, status, error) {
@@ -435,13 +503,25 @@
 							});
 							return false;
 						}
+						if ($('#prplSuceDt').val() == "") {
+							Swal.fire({
+								icon: 'error',
+								title: '빈칸이 있습니다',
+								text: '생산완료목표일을 선택해주세요',
+							});
+							return false;
+						}
 						var orshDt = formatDate($('#orshDt').val());
 						var prplDlvryDt = formatDate($('#prplDlvryDt').val());
 						var prstDt = formatDate($('#prstDt').val());
+						var prplSuceDt = formatDate($('#prplSuceDt').val());
+						console.log("prstDt : ", prstDt);
+						console.log("prplSuceDt : ", prplSuceDt);
 						$('#orshDt').val(orshDt);
 						$('#prstDt').val(prstDt);
 						$('#prplDlvryDt').val(prplDlvryDt);
-						newPlan.submit();
+						$('#prplSuceDt').val(prplSuceDt);
+						// newPlan.submit();
 					});
 				});
 			</script>

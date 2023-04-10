@@ -2,6 +2,7 @@ package com.yedam.mes.process.service;
 
 import java.util.List;
 
+import com.yedam.mes.process.vo.BomInfoVO;
 import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcOrderVO;
 import com.yedam.mes.process.vo.ProcPerfVO;
@@ -15,7 +16,8 @@ public interface ProcService {
 	// 생산계획 - 주문서 읽어오기
 	public List<OrderPlanVO> getOrder();
 	public int updateOrderStatus(OrderPlanVO opVO);
-	public List<OrderPlanVO> getOrderList(OrderPlanVO opVO);
+	public List<OrderPlanVO> getOrderDetail(OrderPlanVO opVO);
+	public List<OrderPlanVO> getCprCd(OrderPlanVO opVO);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
 	public String getPlanCode();
@@ -24,6 +26,7 @@ public interface ProcService {
 	public int addPlanDetail(ProcPlanVO planVO);
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
+	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO);
 	
 	// 사용가능자재 - 제품에 들어가는 자재
 	

@@ -13,6 +13,25 @@
 		SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
 		  FROM DUAL
 	</select>
+	
+	<!-- 제품코드 찾기 -->
+	<select id="selectCprCd" parameterType="OrderPlanVO" resultType="OrderPlanVO">
+   		SELECT s.orsh_no as orsh_no
+		     , COUNT(ordr_dtl_cd) as ordr_cd_cnt
+		     , s.ca_no as ca_no
+		     , ca_nm
+		     , TO_CHAR(dlvry_dt,'rrrr-MM-dd') as dlvry_dt
+		     , TO_CHAR(orsh_dt,'rrrr-MM-dd') as orsh_dt
+             , cpr_cd
+		  FROM order_sheet s, order_sheet_detail d, cm_account a
+		 WHERE s.orsh_no = d.orsh_no(+)
+		   AND s.ca_no = a.ca_no(+)
+		   AND orsh_pr = '접수완료'
+           AND d.orsh_no = #{orshNo}
+		 GROUP BY s.orsh_no, s.ca_no,ca_nm, orsh_dt, dlvry_dt,cpr_cd
+		 ORDER BY 1
+	</select>
+	
 	<!-- 주문서리스트 -->
 	<select id="selectOrder" resultType="OrderPlanVO">
 		SELECT s.orsh_no as orsh_no
@@ -28,6 +47,7 @@
 		 GROUP BY s.orsh_no, s.ca_no,ca_nm, orsh_dt, dlvry_dt
 		 ORDER BY orsh_no
 	</select>
+	
 	<!-- 주문건의 다건 -->
 	<select id="selectOrderDetail" parameterType="OrderPlanVO" resultType="OrderPlanVO">
 		SELECT o.orsh_no as orsh_no
@@ -53,14 +73,48 @@
            AND o.ca_no = #{caNo}
 		 ORDER BY 5
 	</select>
+	
+	<!-- BOM 자재 정보 -->
+	<select id="selectBomMtrl" parameterType="OrderPlanVO" resultType="BomInfoVO">
+	    SELECT ordr_dtl_cd
+	         , cbmt_cd
+	         , bm.cm_cd
+	         , cm_nm
+	         , mm.cmm_cd as cmm_cd
+	         , mm.cmm_nm as cmm_nm
+	         , cbmt_qtt
+	         , cpr_nm
+	         , od.cpr_cd as cpr_cd
+	         , bi.bom_cd as bom_cd
+	      FROM cm_bom_mtrl bm
+	         , cm_bom_mng bi
+	         , order_sheet_detail od
+	         , order_sheet os
+	         , cm_mtrl_mng mm
+	         , cm_process_code pc
+	         , cm_product_mng pm
+	     WHERE bm.bom_cd = bi.bom_cd(+)
+	       AND od.cpr_cd = bi.cpr_cd
+	       AND od.orsh_no = os.orsh_no(+)
+	       AND bm.cmm_cd = mm.cmm_cd(+)
+	       AND bm.cm_cd = pc.cm_cd(+)
+	       AND od.cpr_cd = pm.cpr_cd(+)
+	       AND od.orsh_no = #{orshNo}
+	       AND od.cpr_cd = #{cprCd}
+	     ORDER BY 3, 1
+	</select>
+	
+	<!-- 주문서 상세 현재상태 업데이트 -->
 	<update id="updateOrderStatus" parameterType="OrderPlanVO">
 		UPDATE order_sheet_detail
 		   SET orsh_pr = '계획완료',
 			   stt_cng_dt = SYSDATE
 		 WHERE ordr_dtl_cd = #{ordrDtlCd}
 	</update>
+	
+	<!-- 계획 등록 -->
 	<insert id="insertPlan" parameterType="ProcPlanVO">
-		INSERT INTO proc_plan (prpl_cd,orsh_no,prpl_Suce_dt,prpl_status)
+		INSERT INTO proc_plan (prpl_cd,orsh_no,prpl_suce_dt,prpl_status)
 		VALUES
 		 	 ( #{prplCd}
 		 	 , #{orshNo}
@@ -69,23 +123,26 @@
 		 	 )
 
 	</insert>
+	
+	<!-- 계획 상세 등록 -->
 	<insert id="insertPlanDetail" parameterType="ProcPlanVO">
 
-		INSERT INTO
-		proc_plan_detail
+		INSERT INTO proc_plan_detail
 		VALUES
-		( #{prpldCd}
-		, #{prpldWorkTskPri}
-		, #{cprCd}
-		, #{prpldCnt}
-		, #{prstDt}
-		, #{prpldMng}
-		, '계획완료'
-		, #{prplCd}
-		)
+			 ( #{prpldCd}
+			 , #{prpldWorkTskPri}
+			 , #{cprCd}
+			 , #{prpldCnt}
+			 , #{prstDt}
+			 , #{prpldMng}
+			 , '계획완료'
+			 , #{prplCd}
+			 )
 	</insert>
-
-
+	
+	<!-- 생산계획 리스트 -->
+	<select id="seletPlanList" resultType="ProcPlanVO">
+	</select>
 
 
 

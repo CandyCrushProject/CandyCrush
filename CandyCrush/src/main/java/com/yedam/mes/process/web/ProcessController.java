@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.yedam.mes.process.service.ProcService;
+import com.yedam.mes.process.vo.BomInfoVO;
 import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 
@@ -21,31 +22,34 @@ public class ProcessController {
 	@Autowired
 	ProcService procService;
 	
-	// 생산관리 -> 생산계획관리
+	// 생산관리 -> 생산계획관리 -> 페이지
 	@GetMapping("ProcManagement")
 	public String ProcessPlanManagement() {
 		return "process/processManagement";
 	}
 	
-	
+	// 생산관리 -> 생산계획관리 -> 주문서버튼 클릭시 주문서정보 받아옴
 	@GetMapping("getOrder")
 	@ResponseBody
-	public Map<String, Object> getOrderSheet() {
+	public Map<String, Object> getOrderSheet(OrderPlanVO opVO) {
 	    Map<String, Object> resultMap = new HashMap<>();
 	    resultMap.put("result", procService.getOrder());
+	    resultMap.put("order", procService.getCprCd(opVO));
 	    
 		return resultMap;
 	}
 	
-	@GetMapping("getOrderList")
+	// 생산관리 -> 생산계획관리 -> 주문서 정보 받아오기
+	@GetMapping("getOrderDetail")
 	@ResponseBody
-	public Map<String, Object> getOrderSheetList(OrderPlanVO opVO) {
+	public Map<String, Object> getOrderSheetDetail(OrderPlanVO opVO) {
 	    Map<String, Object> resultMap = new HashMap<>();
-	    resultMap.put("result", procService.getOrderList(opVO));
+	    resultMap.put("result", procService.getOrderDetail(opVO));
 	    
 		return resultMap;
 	}
 	
+	// 생산관리 -> 생산계획 -> 생산계획코드, 생산계획상세코드
 	@GetMapping("getProcPlanCode")
 	@ResponseBody
 	public Map<String, Object> getProcPlanCode() {
@@ -55,6 +59,8 @@ public class ProcessController {
 	    
 		return resultMap;
 	}
+	
+	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
 	public String insertProcPlan(ProcPlanVO ppVO, OrderPlanVO opVO, RedirectAttributes rrtt) {
 		int update = procService.updateOrderStatus(opVO);
@@ -70,11 +76,22 @@ public class ProcessController {
 		return "redirect:ProcManagement";
 	}
 	
-	// 생산관리 -> 생산지시관리
+	// 생산관리 -> 생산계획 -> BOM 자재 정보
+	@GetMapping("getBomInfo")
+	@ResponseBody
+	public Map<String, Object> getBomInfo(OrderPlanVO opVO) {
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("bomInfo", procService.getBomMtrl(opVO));
+	    
+		return resultMap;
+	}
+	// 생산관리 -> 생산지시관리 -> 페이지
 	@GetMapping("ProcOrder")
 	public String ProcOrderManagement() {
 		return "process/processOrder";
 	}
+	
+	
 	
 	// 생산관리 -> 생산공정관리
 	@GetMapping("ProdProcManagement")
