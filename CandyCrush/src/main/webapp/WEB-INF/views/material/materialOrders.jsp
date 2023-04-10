@@ -449,11 +449,10 @@
 			
 			return years + "-" + month + "-" + day;
 		}
-		
-
 		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
 		material.on("dblclick", (e) => {
 			const rowData = material.getRow(e.rowKey);
+			console.log(materialOrder.getRow(e.rowKey));
 			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
 			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
 			if (materialOrder.getRow(e.rowKey) === null) {

@@ -10,15 +10,15 @@ import lombok.Data;
 public class MaterialOrderVO {
 	private String moCd;
 	private String moTitle;
-	//@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String moReoDt;	//발주신청일
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date moReoDt;	//발주신청일
 	private int moCnt;
-	//@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String moReqDt;	//납기요청일
-	//@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String moCpltDt;
-	//@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String moUdtDt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date moReqDt;	//납기요청일
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date moCpltDt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date moUdtDt;
 	private String moMng;
 	private String caNo;		//업체코드
 	private String caNm;		//업체명

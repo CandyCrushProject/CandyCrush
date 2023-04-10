@@ -50,8 +50,8 @@
 	
 	<!-- 업체명 & 발주신청일 시작일자 ~ 종료일자  -->
 	<select id="mtrlOrderDateSearch" resultType="MaterialOrderVO">
-		SELECT DISTINCT mod.ca_no, ca_nm, mo.mo_cd, TO_CHAR(mo_reo_dt, 'YYYY-MM-DD') "mo_reo_dt",
-				mo_title, TO_CHAR(mo_cplt_dt,'YYYY-MM-DD') "mo_cplt_dt"
+		SELECT DISTINCT mod.ca_no, ca_nm, mo.mo_cd, mo_reo_dt,
+				mo_title, mo_cplt_dt
 		FROM mtrl_order mo JOIN mtrl_order_detail mod
 		    ON mo.mo_cd = mod.mo_cd
 		        JOIN cm_account ca
@@ -117,7 +117,7 @@
 	<!-- 발주관리 헤더 INSERT -->
 	<insert id="orderHeaderInsert" parameterType="MaterialOrderVO">
 		INSERT INTO MTRL_ORDER(mo_cd, mo_title, mo_reo_dt)
-		VALUES(#{moCd},#{moTitle},TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'))
+		VALUES(#{moCd}, #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'))
 	</insert>
 	
 	<!-- 발주관리디테일 INSERT -->
@@ -131,7 +131,7 @@
 	<update id="orderDetailUpdate" parameterType="MaterialOrderVO">
 		UPDATE MTRL_ORDER_DETAIL
 		   SET mo_cnt = #{moCnt},
-		       mo_req_dt = TO_DATE('#{moReqDt}', 'yyyy-MM-dd')
+		       mo_req_dt = #{moReqDt}
 		WHERE  mo_cd = #{moCd}
 		  AND  cmm_cd = #{cmmCd}
 	</update>
