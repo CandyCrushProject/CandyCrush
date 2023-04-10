@@ -4,7 +4,8 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.yedam.mes.sales.mapper.OrdrShtMapper">
-	<!-- 전체조회 -->
+	
+	<!-- 주문서 전체조회 -->
 	<select id="ordrShtAllList" resultType="OrdrShtVO">
 		SELECT orsh.orsh_no
 		     , cmacc.ca_no
@@ -16,7 +17,7 @@
 		 ORDER BY 1
 	</select>
 	
-	<!-- 검색조회 -->
+	<!-- 주문서 검색조회 -->
 	<select id="ordrShtSrchList" resultType="OrdrShtVO">
         SELECT orsh.orsh_no
 		     , cmacc.ca_no
@@ -26,14 +27,40 @@
 		  FROM order_sheet orsh JOIN cm_account cmacc
 		                          ON orsh.ca_no = cmacc.ca_no
          <where>
-             <if test="ca_nm != null and !ca_nm.equals('')">
-                 ca_nm LIKE '%' #{caNm}  '%' AND
-             </if>
-             <if test="orshStrDt != null and !orshStrDt.equals('') and orshEndDt!= null and !orshEndDt.equals('')">
-                 orsh_dt between #{orshStrDt} and #{orshEndDt}
-             </if>
+            <if test="caNm != null and !caNm.equals('')">
+            	ca_nm LIKE '%' || #{caNm} || '%' 
+            </if>
+            <if test="orshStrDt != null and !orshStrDt.equals('') and orshEndDt!= null and !orshEndDt.equals('')">
+                AND orsh_dt between #{orshStrDt} and #{orshEndDt}
+            </if>
          </where>
           ORDER BY 1
     </select>
+		
+	<!-- 모달창 업체 전체조회 -->
+	<select id="accoutnAllList" resultType="OrdrAccntVO">
+		SELECT ca_no
+			 , ca_nm
+			 , ca_ceo_nm
+			 , ca_mng
+			 , ca_mng_ph
+		FROM CM_ACCOUNT
+		WHERE CA_TYP = '매출처'
+		ORDER BY ca_no
+	</select>
 	
+	<!-- 모달창 업체 검색조회 -->
+	<select id="accoutnSrchList" resultType="OrdrAccntVO">
+		SELECT ca_no
+			 , ca_nm
+			 , ca_ceo_nm
+			 , ca_mng
+			 , ca_mng_ph
+		  FROM CM_ACCOUNT
+		 WHERE CA_TYP = '매출처'
+			<if test="caNm != null and !caNm.equals('')">
+				AND ca_nm LIKE '%' || #{caNm} || '%'
+			</if>
+		ORDER BY ca_no
+	</select>
 </mapper>

@@ -275,7 +275,7 @@
 				data : {caNm : caNm, start : start, end : end},
 				success : function(data){
 					//console.log(data);
-					materialOrderList.resetData(data);
+					.resetData(data);
 				} 
 			});
 		};

@@ -2,11 +2,13 @@ package com.yedam.mes.sales.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.mes.sales.mapper.OrdrShtMapper;
 import com.yedam.mes.sales.service.OrdrShtService;
+import com.yedam.mes.sales.service.vo.OrdrAccntVO;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
 
 @Service
@@ -15,21 +17,36 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	@Autowired
 	OrdrShtMapper mapper;
 
-	// 전체조회
+	// 주문서 전체조회
 	@Override
 	public List<OrdrShtVO> ordrShtAllList() {
 		
 		return mapper.ordrShtAllList();
 	}
 
-	// 검색조회
+	// 주문서 검색조회
 	@Override
 	public List<OrdrShtVO> ordrShtSrchList(String caNm, String orshStrDt, String orshEndDt) {
-		// TODO Auto-generated method stub
+		
 		return mapper.ordrShtSrchList(caNm, orshStrDt, orshEndDt);
 	}
 	
-	// 검색조회
+	// 모달창 거래처 전체조회
+	@Override
+	public List<OrdrAccntVO> accoutnAllList() {
+		// TODO Auto-generated method stub
+		return mapper.accoutnAllList();
+	}
+
+	// 모달창 거래처 검색조회
+	@Override
+	public List<OrdrAccntVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo) {
+		
+		return mapper.accoutnSrchList(caNm, caNo);
+	}
+	
+	
+	
 	
 	
 	// 주문서 등록
