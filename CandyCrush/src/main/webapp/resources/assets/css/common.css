@@ -1,11 +1,12 @@
 
 input {
-  	width: 300px;		/*!important*/
-  	border: 1px solid rgba(128, 128, 128, 0.61);
+	width: 300px;		/*!important*/
+	border: 1px solid rgba(128, 128, 128, 0.61);
 }
 
 label{
 	width: 100px;
+	color: black;
 }
 
 input[type="checkbox"]:not(:checked), 
@@ -18,4 +19,18 @@ input[type="checkbox"]:checked {
 
 input[type="date"] {
 	border: 1px solid rgba(128, 128, 128, 0.61);
+}
+
+/* 자재입고관리 페이지 CSS */
+.mtrlInputMngFloatBtn{
+	float: right;
+	position: relative;
+	bottom: 20px;
+}
+#mtrlInputMngDelBtn{
+	float: right;
+}
+.mtrlInputDivCst{
+	margin-left: 10px;
+	margin-right: 10px;
 }

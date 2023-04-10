@@ -37,9 +37,9 @@
 				<span class="w3-button w3-display-topright" onclick="document.getElementById('modal').style.display='none'">&times;</span>
 				<h3>업체검색</h3>
 				<div>
-					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;">
+					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;" autocomplete="off">
 					<br/>
-					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;">
+					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;" autocomplete="off">
 					<button class="srchBtn" id="modalBtn">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</button>
@@ -68,9 +68,10 @@
 						<div class="card-content">
 							<div id="eunae">
 							<label for="mtrlName">원자재명</label>
-							<input type="text" id="mtrlName" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+							<input type="text" id="mtrlName" autocomplete="off"
+										style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
 							<label for="companyName">업체명</label>
-							<input type="text" id="companyName"
+							<input type="text" id="companyName" autocomplete="off"
 										style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
 							<button id="search" class="cndSrchBtn" onclick="search()">검색</button>
 							</div>
@@ -381,7 +382,10 @@
 				{
 					header: '발주수량',
 					name: 'moCnt',
-					editor: 'text'
+					editor: 'text',
+					validation: {
+						dataType: 'number'
+					}
 				},
 				{
 					header: '안전재고',
@@ -452,7 +456,6 @@
 		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
 		material.on("dblclick", (e) => {
 			const rowData = material.getRow(e.rowKey);
-			console.log(materialOrder.getRow(e.rowKey));
 			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
 			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
 			if (materialOrder.getRow(e.rowKey) === null) {
@@ -460,6 +463,7 @@
 				rowData.moTitle = '원자재 외';				  //발주명
 				rowData.moReoDt = getToday();				//발주신청일
 				rowData.moReqDt = getToday();				//납기요청일
+				rowData.moCnt = 0;							//발주수량
 				var orderSafStc = rowData.cmmInven;			//안전재고
 				materialOrder.appendRow(rowData);			//자재목록 Grid에서 해당되는 행을 더블클릭하면 자재발주 Grid에 append!
 				materialOrder.sort("cmmCd", true);			//정렬 안해주면 그리드 고장남
@@ -472,11 +476,34 @@
 			}
 		});
 
+		//발주수량 0으로 발주등록할 때 예외처리하는 방법
+		let beforeMoCnt = 0;
+		materialOrder.on("editingStart", (e) => {
+			beforeMoCnt = materialOrder.getRow(e.rowKey).moCnt;
+		});
+
+		materialOrder.on('editingFinish', (e) => {
+			//console.log(e);
+			let modalRowDate = materialOrder.getRow(e.rowKey);
+			//console.log(modalRowDate.moCnt);
+			let moCntData = Number(modalRowDate.moCnt);
+			if(isNaN(moCntData)){
+				setTimeout(() => {
+					Swal.fire({
+						icon : 'error',
+						title : '경고',
+						text: '숫자만 입력 가능합니다',
+					});
+					materialOrder.setValue(e.rowKey, 'moCnt', beforeMoCnt);
+					return;
+				}, 10);
+			}
+		});
+
 		//발주등록버튼 클릭 이벤트
 		$('#orderInsert').on('click',(ev)=>{
 			const rows = materialOrder.getCheckedRows();
 			if (rows.length !== 0) {
-				//console.log("있음");
 				$.ajax({
 					url : "mtrlOrder",
 					method :"POST",
@@ -500,6 +527,17 @@
 					text: "선택된 자재가 없거나 데이터가 없습니다.",
 				});
 			}
+		});
+
+		//ESC 누르면 모달창 없어지게 하는 방법
+		//keydown --> 사용자가 키를 누르거나 키를 놓을 때 발생
+		$(window).on("keydown", (e) => {
+			let caModal = $("#modal");
+
+			//e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
+			if (e.keyCode === 27 && caModal.css("display") === "block") {
+				caModal.hide();
+			};
 		});
 		
 		//발주수량 입력할 때 안전재고보다 소량으로 기재할 시 
