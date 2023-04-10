@@ -29,9 +29,9 @@
 				<span class="w3-button w3-display-topright" onclick="document.getElementById('modal').style.display='none'">&times;</span>
 				<h3>업체검색</h3>
 				<div>
-					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;">
+					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;" autocomplete="off">
 					<br/>
-					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;">
+					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;" autocomplete="off">
 					<button class="srchBtn" id="modalBtn">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</button>
@@ -79,7 +79,7 @@
 						<div class="card-content">
 							<div id="inputReset">
 								<label>업체명</label>
-								<input type="text" id="companyName" style="width: 315px; border: 1px solid rgba(128, 128, 128, 0.61);">
+								<input type="text" id="companyName" style="width: 315px; border: 1px solid rgba(128, 128, 128, 0.61);" autocomplete="off" >
 								<br/>
 								<label>발주신청일</label>
 								<input type="date" id="startDate"
@@ -124,6 +124,8 @@
 		$('#companyName').on('click',(e)=>{
 			document.getElementById('modal').style.display='block';
 			//Modal Grid 빠르게 띄우는 방법
+			//모달 안에 있는 그리드를 한번 리프레쉬하고
+			//아작스를 통해 통신을 한다음데이터를 뿌려준다?
 			setTimeout(()=> caModal.refreshLayout() , 0);
 		}); 
 		
@@ -153,6 +155,10 @@
 								</c:forEach>
 							];
 
+		// console.log("test");
+		// console.warn("test");
+		// console.error("test");
+		// throw new Error("test");
 //----------------------------------------Grid 부분 / 
 		//업체명 modal Grid
 		const caModal = new Grid({
@@ -240,6 +246,7 @@
 			modalAccountSearch();
 		});
 
+		//input value 변화를 읽는 이벤트
 		document.getElementById("modalCaNm").addEventListener("input", () => {
 			modalAccountSearch();
 		});
@@ -275,7 +282,7 @@
 				data : {caNm : caNm, start : start, end : end},
 				success : function(data){
 					//console.log(data);
-					.resetData(data);
+					materialOrderList.resetData(data);
 				} 
 			});
 		};
@@ -335,14 +342,15 @@
 			const rowDate = materialOrderList.getRow(e.rowKey);
 
 			//Modal 안에 발주코드 readonly
-			let rowDateMoCd = rowDate.moCd;		// 발주코드
+			let rowDateMoCd = rowDate.moCd;		//발주코드
 			$("#modalMocd").val(rowDateMoCd);
 
 			//모달창
 			document.getElementById('orderDetailModal').style.display='block';
 			//Modal Grid 빠르게 띄우는 방법
 			setTimeout(()=> moModal.refreshLayout() , 0);
-
+			// $("#orderDetailModal").css("width", "99%");
+			// $("#orderDetailModal").css("width", "100%");
 			$.ajax({
 				url : "mtrlOrderDetailList",
 				method :"POST",
@@ -415,6 +423,7 @@
 						type: 'datePicker',
 						options: {
 							format: 'yyyy-MM-dd',
+							//시작일자와 종료일자를 설정해줌
 							selectableRanges : [[getToday, getOneMonthLater]],
 							language: 'ko',
 						}
@@ -439,6 +448,7 @@
 			fileName: 'mtrlExport',
 		};
 		
+		//엑셀버튼을 누르면 해당되는 발주상세목록을 엑셀로 만들어준다
 		$("#excelBtn").on('click', function(){
 			Swal.fire({
 				title: '엑셀파일로 받아보시겠습니까?',
@@ -463,6 +473,7 @@
 			});
 		});
 
+		//등록버튼이벤트
 		$('#dateUpdateBtn').on('click',(e)=>{
 			let rowDate2 = moModal.getData(e.rowKey);
 
@@ -483,7 +494,7 @@
 				//console.log(moCnt);
 				/*console.log(realMoReqDt);
 				console.log(cmmCd);*/
-
+				
 				$.ajax({
 					url : "mtrlOrderDetailUpdate",
 					method : "POST",
@@ -511,40 +522,75 @@
 				});
 			};
 		});
-		//발주수량 값 바뀌면 예상재고량 자동계산되도록
-		//editingFinish --> 셀 수정이 완료된 후{
+
+		let beforeMoCnt = 0;
+
+		//editingFinish --> 셀 수정이 완료되기 전
+		//셀 수정이 완료되기 전의 발주수량 값을 들고온다.
+		moModal.on("editingStart", (e) => {
+			beforeMoCnt = moModal.getRow(e.rowKey).moCnt;
+		});
+
+		//발주수량 값 바뀌면 예상재고량 자동계산되도록 하는 방법
 		moModal.on('editingFinish', (e) => {
-			let moModalRowDate =moModal.getRow(e.rowKey);
+			//editingFinish --> 셀 수정이 완료된 후
+			/*셀 수정이 완료될 때,
+				변화하는 발주수량 값과 현재수량을 더해서 예상재고량 값을 변화시킨다.
+				단, 변화되는 값이 문자일 경우 경고창을 띄우고 
+				NaN을 띄우는 것이 아닌 셀 수정되기 전의 발주수량을 데리고 와서 셋팅해준다.
+				**매우 중요**
+					editingFinish evnet를 쓸 경우, sweet alert이 정상실행이 되지 않아서 setTimeout으로 감싸주었다.
+				발주수량 값을 Number로 입력했을 경우, 
+				현재재고와 발주수량을 더해서 예상재고량 값을 변경시킨다.
+			*/
+			let moModalRowDate = moModal.getRow(e.rowKey);
 
 			let moCntDate = 0;
 			let cmmEstInvencDate = 0;
 
-			moCntDate = Number(moModalRowDate.moCnt);						//발주수량
-			cmmEstInvencDate = Number(moModalRowDate.cmmInven);	//현재수량*/
-			if(isNaN(moCntDate) ==true){
+			moCntDate = Number(moModalRowDate.moCnt);				//발주수량
+			cmmEstInvencDate = Number(moModalRowDate.cmmInven);		//현재수량*
+			if(isNaN(moCntDate)){
 				setTimeout(() => {
-					//망할 스위트얼럿 실행이 제대로 안됨
 					Swal.fire({
 						icon: 'error',
 						title: '경고',
 						text: '숫자만 입력 가능합니다',
 					});
-					//alert("숫자만 입력해주세요");
-					moModal.setValue(e.rowKey, 'cmmEstInven', "0");
+					/*이 작업을 안하면 발주수량이 NaN으로 표시된다.*/
+					moModal.setValue(e.rowKey, 'moCnt', beforeMoCnt);
+					//그대로 빠꾸
 					return;
 				}, 10);
+			} else {
+				// **예상재고량** = 현재재고 + 발주수량
+				cmmEstInvencDate += moCntDate;
+				moModal.setValue(e.rowKey, 'cmmEstInven', cmmEstInvencDate);
 			};
+
+			//데이터 가공의 흔적
 			/*console.log(moCntDate);
 			console.log(moCntDate == Number('NaN'));
 			console.log(moCntDate === NaN);
 			console.log(Object.is(moCntDate),NaN);
 			console.log(isNaN(moCntDate));*/
+			
+		});
 
+		//ESC 누르면 모달창 없어지게 하는 방법
+		//keydown --> 사용자가 키를 누르거나 키를 놓을 때 발생
+		$(window).on("keydown", (e) => {
+			let caModal = $("#modal");
+			let orderDetailModal = $("#orderDetailModal");
 
-			//**예상재고량** = 현재재고 + 발주수량
-			cmmEstInvencDate += moCntDate;
-			//cell value cchange => grid.setValue();
-			moModal.setValue(e.rowKey, 'cmmEstInven', cmmEstInvencDate);
+			//e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
+			if (e.keyCode === 27 && caModal.css("display") === "block") {
+				caModal.hide();
+			};
+
+			if (e.keyCode === 27 && orderDetailModal.css("display") === "block") {
+				orderDetailModal.hide();
+			};
 		});
 
 //---------------------------------------------------------------------------------------------------------------------
