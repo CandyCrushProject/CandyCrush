@@ -71,7 +71,7 @@
 						<div class="card-content">
 							<div id="eunae2">
 								<button id="orderDelete" class="cndDelBtn">삭제</button>
-								<button id="orderInsert" class="cndInsBtn">등록</button>
+								<button id="orderInsert" class="cndInsBtn">저</button>
 							</div>
 							<div style="clear:both"></div>
 							<div class="table-responsive">
