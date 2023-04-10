@@ -1,5 +1,6 @@
 package com.yedam.mes.material.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -69,7 +70,7 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	//발주 디테일 데이터 UPDATE
 	@Override
-	public int orderDetailUpdate(@Param("moCnt") int moCnt, @Param("moReqDt") String moReqDt, @Param("moCd") String moCd, @Param("cmmCd") String cmmCd) {
+	public int orderDetailUpdate(@Param("moCnt") int moCnt, @Param("moReqDt") Date moReqDt, @Param("moCd") String moCd, @Param("cmmCd") String cmmCd) {
 		return mapper.orderDetailUpdate(moCnt, moReqDt, moCd, cmmCd);
 	}
 }
