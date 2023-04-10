@@ -15,6 +15,7 @@ public class ProcPlanVO {
 	private String prpldCd; // 생산계획상세코드
 	private String prpldWorkTskPri; // 작업우선순위
 	private String cprCd; // 제품코드
+	private String cprNm; // 제품명
 	private int prpldCnt; // 생산계획수량
 	private String prstDt; // 생산작업일자
 	private String prpldMng; // 담당자

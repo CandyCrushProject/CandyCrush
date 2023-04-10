@@ -36,8 +36,14 @@
 					cursor: pointer;
 					background-color: antiquewhite;
 				}
+
+				#orderDetail tr:hover {
+					cursor: pointer;
+					background-color: antiquewhite;
+				}
 			</style>
 			<main>
+				<!-- 주문서 조회 모달 -->
 				<div class="modal fade" id="order" tabindex="-1">
 					<div class="modal-dialog modal-lg modal-dialog-scrollable">
 						<div class="modal-content">
@@ -144,13 +150,15 @@
 												</li>
 											</ul>
 										</div>
-										<div class="floatEnd"></div>
+										<div class="clearBoth">
+											<br />
+										</div>
 										<!-- 주문서 현재상태 -->
-										<input type="hidden" id="orshPr" name="orshPr" readonly>
-										<input type="hidden" name="prpldStatus" value="미지시" readonly>
-										<input type="hidden" name="prplStatus" value="계획완료" readonly>
-										<div class="prodProc">
-											<form id="planForm" name="newPlan" action="insertProcPlan" method="POST" onsubmit="return false">
+										<form id="planForm" name="newPlan" action="insertProcPlan" method="POST" onsubmit="return false">
+											<input type="hidden" id="orshPr" name="orshPr" readonly>
+											<input type="hidden" name="prpldStatus" value="미지시" readonly>
+											<input type="hidden" name="prplStatus" value="계획완료" readonly>
+											<div class="prodProc">
 												<div class="row matop">
 													<div class="col-md-3">
 														주문번호
@@ -175,7 +183,6 @@
 													<div class="col-md-2">
 														납기일자
 														<input type="date" id="dlvryDt" name="dlvryDt" value="" readonly>
-														<input type="hidden" id="prplSuceDt" name="prplSuceDt" value="" readonly>
 														<input type="hidden" id="sttCngDt" name="sttCngDt" value="" readonly>
 													</div>
 												</div>
@@ -186,7 +193,7 @@
 															<th>생산계획수량</th>
 															<th>담당자</th>
 															<th>생산작업일자</th>
-															<th>생산완료목표일</th>
+															<th>생산완료예정일</th>
 															<th>작업우선순위</th>
 														</tr>
 													</thead>
@@ -219,48 +226,45 @@
 															</td>
 													</tbody>
 												</table>
-											</form>
-										</div>
-										<div class="clearBoth">
-											<br />
-										</div>
+										</form>
+									</div>
+									<div class="clearBoth">
+										<br />
 									</div>
 								</div>
 							</div>
 						</div>
-
-						<div class="row">
-							<div class="col-md-12">
-								<div class="card">
-									<div class="card-action">
-										<h3>자재BOM정보</h3>
-									</div>
-									<div class="card-content">
-										<!-- BOM -->
-										<div class="prodProc">
-											<table class="candyTab tabb">
-												<thead>
-													<tr>
-														<th>No</th>
-														<th>제품명</th>
-														<th>자재명</th>
-														<th>공정명</th>
-														<th>자재소모수량/포대</th>
-													</tr>
-												</thead>
-												<tbody id="bomMtrlSheet">
-												</tbody>
-											</table>
-										</div>
-										<div class="clearBoth">
-											<br />
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
 					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-action">
+									<h3>자재BOM정보</h3>
+								</div>
+								<div class="card-content">
+									<!-- BOM -->
+									<div class="prodProc">
+										<table class="candyTab tabb">
+											<thead>
+												<tr>
+													<th>No</th>
+													<th>제품명</th>
+													<th>자재명</th>
+													<th>공정명</th>
+													<th>자재소모수량/포대</th>
+												</tr>
+											</thead>
+											<tbody id="bomMtrlSheet">
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
 				</div>
 			</main>
 			<script>
@@ -388,8 +392,9 @@
 
 							// 데이터 반복문 처리
 							$.each(data.result, function (index, item) {
-								var row = $('<tr>');
-								// td 생성		
+								var row = $("<tr>").addClass("planBtn").on('dblclick', function () {
+									getBomDate(item.orshNo, item.cprCd);
+								});
 								row.append($("<td>").attr("hidden", true).text(item.orshNo));
 								row.append($("<td>").attr("hidden", true).text(item.caNo));
 								row.append($("<td>").attr("hidden", true).text(item.orshDt));
@@ -402,16 +407,6 @@
 								row.append($("<td>").text(item.caNm));
 								row.append($("<td>").text(item.dlvryDt));
 								row.append($("<td>").text(item.orshPr));
-								var td = $("<td>");
-								var button = $("<button>", {
-									type: "button",
-									class: "planBtn cndInsBtn hi",
-									text: "등록"
-								}).on('click', function () {
-									getBomDate(item.orshNo, item.cprCd);
-								});
-								td.append(button);
-								row.append(td);
 
 								tbody.append(row);
 							})
@@ -435,9 +430,9 @@
 
 
 				/* 주문서정보 -> 생산계획작성 */
-				$(document).on("click", ".planBtn", function () {
+				$(document).on("dblclick", ".planBtn", function () {
 					var orderArray = [];
-					var row = $(this).closest("tr");
+					var row = $(this);
 					row.find("td").each(function () {
 						orderArray.push($(this).text());
 					});
@@ -515,13 +510,11 @@
 						var prplDlvryDt = formatDate($('#prplDlvryDt').val());
 						var prstDt = formatDate($('#prstDt').val());
 						var prplSuceDt = formatDate($('#prplSuceDt').val());
-						console.log("prstDt : ", prstDt);
-						console.log("prplSuceDt : ", prplSuceDt);
 						$('#orshDt').val(orshDt);
 						$('#prstDt').val(prstDt);
 						$('#prplDlvryDt').val(prplDlvryDt);
 						$('#prplSuceDt').val(prplSuceDt);
-						// newPlan.submit();
+						newPlan.submit();
 					});
 				});
 			</script>

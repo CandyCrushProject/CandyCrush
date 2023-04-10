@@ -2,6 +2,7 @@ package com.yedam.mes.process.web;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.yedam.mes.process.service.ProcService;
-import com.yedam.mes.process.vo.BomInfoVO;
 import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 
@@ -89,6 +89,13 @@ public class ProcessController {
 	@GetMapping("ProcOrder")
 	public String ProcOrderManagement() {
 		return "process/processOrder";
+	}
+	
+	@PostMapping("ProcPlanOrder")
+	@ResponseBody
+	public List<ProcPlanVO> getProcPlanOrder(ProcPlanVO ppVO){
+		List<ProcPlanVO> pppVO = procService.getPlan(ppVO);
+		return pppVO;
 	}
 	
 	

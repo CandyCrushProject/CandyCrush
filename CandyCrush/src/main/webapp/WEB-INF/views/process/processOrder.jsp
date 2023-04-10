@@ -8,7 +8,34 @@
 			<!-- 폰트 어썸 -->
 			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 			<link rel="stylesheet" href="assets/css/processOrder.css">
+			<script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.js"></script>
+			<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.3.0/tui-pagination.js"></script>
+			<script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+
+			<style>
+				.procOder button {
+
+					padding: 5px 20px;
+				}
+			</style>
 			<main>
+				<!-- 계획 조회 모달 -->
+				<div class="modal fade" id="plan" tabindex="-1">
+					<div class="modal-dialog modal-lg modal-dialog-scrollable">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">계획 조회</h5>
+							</div>
+							<div class="modal-body">
+								<h4 style="padding: 20px;">생산계획 정보</h4>
+								<div id="procPlanList"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="cndRstBtn" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				<!-- /. NAV SIDE  -->
 				<div id="page-wrapper">
 					<div class="header">
@@ -30,10 +57,11 @@
 										<div class="procOder">
 											<ul>
 												<li class="procOderBtn-r">
-													<button class="cndInsBtn ">저장</button>
+													<button class="cndInsBtn ">등록</button>
 												</li>
 												<li class="procOderBtn-r">
-													<button class="cndSelBtn ">계획조회</button>
+													<button class="cndSelBtn" id="planBtn" type="button" data-toggle="modal"
+														data-target="#plan">계획조회</button>
 												</li>
 												<li class="procOderBtn-r">
 													<button class="cndRstBtn ">초기화</button>
@@ -42,23 +70,7 @@
 										</div>
 										<div class="floatEnd"></div>
 										<div class="procOderCraete">
-											<table class="candyTab">
-												<thead>
-													<tr>
-														<th>제품코드</th>
-														<th>제품명</th>
-														<th>계획코드</th>
-														<th>납기일자</th>
-														<th>필요수량</th>
-														<th>지시수량</th>
-														<th>담당자</th>
-														<th>작업지시일</th>
-													</tr>
-												</thead>
-												<tbody>
-													<div id="procPlanList"></div>
-												</tbody>
-											</table>
+
 										</div>
 										<div class="clearBoth">
 											<br />
@@ -149,3 +161,68 @@
 					</div>
 				</div>
 			</main>
+
+			<script>
+				$(document).ready(function () {
+
+					$('#planBtn').on('click', function () {
+						$.ajax({
+							url: 'ProcPlanOrder',
+							method: 'post',
+							data: {
+								prpldStatus: "계획완료"
+							},
+							success: function (data) {
+								setTimeout(() => grid.refreshLayout(), 100);
+								grid.resetData(data);
+							}, error: function (err) {
+								console.log("실패");
+							}
+						});
+					})
+				})
+				const grid = new tui.Grid({
+					el: document.getElementById('procPlanList'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					rowHeaders: ['rowNum'],
+					pageOptions: {
+						perPage: 5
+					},
+					columns: [
+						{
+							header: '주문서번호',
+							name: 'orshNo'
+						},
+						{
+							header: '제품명',
+							name: 'cprNm'
+						},
+						{
+							header: '생산계획수량',
+							name: 'prpldCnt'
+						},
+						{
+							header: '생산계획일자',
+							name: 'prplDt'
+						},
+						{
+							header: '완료여부',
+							name: 'prplStatus'
+						},
+						{
+							header: '담당자',
+							name: 'prpldMng'
+						},
+						{
+							header: '현재상태',
+							name: 'prpldStatus'
+						},
+					]
+				});
+
+
+
+
+			</script>
