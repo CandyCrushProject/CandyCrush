@@ -115,10 +115,19 @@ public class MaterialController {
 	}
 	
 	//------------------------------------------------------------------------
+	
+	//자재입고관리 페이지
+	@GetMapping("mtrlInputManagement")
+	public String mtrlInputManagement(Model model) {
+		model.addAttribute("accountList", service.accountCheck());
+		return "material/mtrlInputManagement";
+	}
+	
+	//------------------------------------------------------------------------
+	
 	//자재입고검사조회 페이지
 	@GetMapping("mtrlInspCheck")
 	public String mtrlInsp(Model model) {
-		//model.addAttribute("materialInsp", );
 		return "material/mtrlInspCheck";
 	}
 	
@@ -128,11 +137,7 @@ public class MaterialController {
 		return "material/mtrlInspManagement";
 	}
 	
-	//자재입고관리 페이지
-	@GetMapping("mtrlInputManagement")
-	public String mtrlInputManagement(Model model) {
-		return "material/mtrlInputManagement";
-	}
+	
 	
 	//자재출고관리 페이지
 	@GetMapping("mtrlOutputManagement")
