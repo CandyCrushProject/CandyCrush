@@ -275,7 +275,7 @@
 				data : {caNm : caNm, start : start, end : end},
 				success : function(data){
 					//console.log(data);
-					materialOrderList.resetData(data);
+					.resetData(data);
 				} 
 			});
 		};
@@ -301,11 +301,17 @@
 					header: '발주신청일',
 					name: 'moReoDt',
 					sortingType: 'asc',
-					sortable: true
+					sortable: true,
+					formatter: function (e) {
+						return dateChange(e.value);
+					}
 				},
 				{
 					header: '발주완료일',
-					name: 'moCpltDt'
+					name: 'moCpltDt',
+					formatter: function (e) {
+						return dateChange(e.value);
+					}
 				},
 				{
 					header: '업체코드',
@@ -379,11 +385,14 @@
 				{
 					header: '발주수량',
 					name: 'moCnt',
-					editor: 'text'
+					editor: 'text',
+					validation: {
+						dataType: 'number'
+					}
 				},
 				{
 					header: '현재재고',
-					name: 'cmmInven'
+					name: 'cmmInven',
 				},
 				{
 					header: '안전재고',
@@ -460,6 +469,7 @@
 			let moCd = $('#modalMocd').val();
 			let moCnt = "";
 			let moReqDt = "";
+			let realMoReqDt = "";
 			let cmmCd = "";
 
 			for(let i = 0 ; i < rowDate2.length ; i++){
@@ -467,22 +477,75 @@
 				moReqDt = rowDate2[i].moReqDt;
 				cmmCd = rowDate2[i].cmmCd;
 
-				/*console.log(moCnt);
-				console.log(moReqDt);
+				realMoReqDt = dateChange(moReqDt);
+
+				//넘어가는 데이터 확인
+				//console.log(moCnt);
+				/*console.log(realMoReqDt);
 				console.log(cmmCd);*/
 
 				$.ajax({
 					url : "mtrlOrderDetailUpdate",
 					method : "POST",
 					dataType : "JSON",
-					data : { moCd : moCd, moCnt : moCnt, moReqDt : moReqDt, cmmCd : cmmCd },
+					data : { moCd : moCd, moCnt : moCnt, moReqDt : realMoReqDt, cmmCd : cmmCd },
 					success : function(result){
-						console.log(result);
+						if(moCnt == 0){
+							Swal.fire({
+								icon: 'warning',
+								title: '경고',
+								text: "수량이 올바르게 입력되지 않았습니다",
+							});
+							return;
+						} else {
+							Swal.fire({
+								icon: 'success',
+								title: '수정완료',
+								text: "발주코드 : " + moCd + "가 수정되었습니다",
+							});
+						};
+					},
+					error : function(reject){
+						console.log(reject);
 					}
 				});
-			}
+			};
+		});
+		//발주수량 값 바뀌면 예상재고량 자동계산되도록
+		//editingFinish --> 셀 수정이 완료된 후{
+		moModal.on('editingFinish', (e) => {
+			let moModalRowDate =moModal.getRow(e.rowKey);
 
-		})
+			let moCntDate = 0;
+			let cmmEstInvencDate = 0;
+
+			moCntDate = Number(moModalRowDate.moCnt);						//발주수량
+			cmmEstInvencDate = Number(moModalRowDate.cmmInven);	//현재수량*/
+			if(isNaN(moCntDate) ==true){
+				setTimeout(() => {
+					//망할 스위트얼럿 실행이 제대로 안됨
+					Swal.fire({
+						icon: 'error',
+						title: '경고',
+						text: '숫자만 입력 가능합니다',
+					});
+					//alert("숫자만 입력해주세요");
+					moModal.setValue(e.rowKey, 'cmmEstInven', "0");
+					return;
+				}, 10);
+			};
+			/*console.log(moCntDate);
+			console.log(moCntDate == Number('NaN'));
+			console.log(moCntDate === NaN);
+			console.log(Object.is(moCntDate),NaN);
+			console.log(isNaN(moCntDate));*/
+
+
+			//**예상재고량** = 현재재고 + 발주수량
+			cmmEstInvencDate += moCntDate;
+			//cell value cchange => grid.setValue();
+			moModal.setValue(e.rowKey, 'cmmEstInven', cmmEstInvencDate);
+		});
 
 //---------------------------------------------------------------------------------------------------------------------
 		//날짜변환 함수

@@ -1,12 +1,13 @@
 package com.yedam.mes.material.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yedam.mes.material.service.MtrlAccountVO;
 import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialVO;
+import com.yedam.mes.material.service.MtrlAccountVO;
 
 public interface MaterialMapper {
 	//업체조회
@@ -34,7 +35,7 @@ public interface MaterialMapper {
 	
 	//발주 디테일 데이터 수정
 	public int orderDetailUpdate(@Param("moCnt") int moCnt,
-								 @Param("moReqDt") String moReqDt,
+								 @Param("moReqDt") Date moReqDt,
 								 @Param("moCd") String moCd,
 								 @Param("cmmCd") String cmmCd);
 	
