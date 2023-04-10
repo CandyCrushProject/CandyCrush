@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yedam.mes.process.mapper.ProcMapper;
 import com.yedam.mes.process.service.ProcService;
+import com.yedam.mes.process.vo.BomInfoVO;
 import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcOrderVO;
 import com.yedam.mes.process.vo.ProcPerfVO;
@@ -25,6 +26,11 @@ public class procServiceImpl implements ProcService {
 	}
 
 	@Override
+	public List<OrderPlanVO> getCprCd(OrderPlanVO opVO) {
+		return procMapper.selectCprCd(opVO);
+	}
+
+	@Override
 	public int updateOrderStatus(OrderPlanVO opVO) {
 		return procMapper.updateOrderStatus(opVO);
 	}
@@ -37,10 +43,14 @@ public class procServiceImpl implements ProcService {
 		return procMapper.getPlanDetailCode();
 	}
 	@Override
-	public List<OrderPlanVO> getOrderList(OrderPlanVO opVO) {
+	public List<OrderPlanVO> getOrderDetail(OrderPlanVO opVO) {
 		return procMapper.selectOrderDetail(opVO);
 	}
 
+	@Override
+	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO) {
+		return procMapper.selectBomMtrl(opVO);
+	}
 	@Override
 	public int addPlan(ProcPlanVO planVO) {
 		return procMapper.insertPlan(planVO);
@@ -79,6 +89,7 @@ public class procServiceImpl implements ProcService {
 	public List<ProcProgVO> getProgList(ProcProgVO progVO) {
 		return null;
 	}
+
 
 
 
