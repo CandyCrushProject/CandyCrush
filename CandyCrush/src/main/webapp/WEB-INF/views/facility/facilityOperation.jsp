@@ -21,23 +21,15 @@
 <!-- The Modal -->
 <c:forEach items="${opStatList }" var="stat">
 <div id="${stat.facCd}Modal" class="w3-modal" style="z-index: 100;">
-  <div class="w3-modal-content">
-    <div class="w3-container">
+  <div class="w3-modal-content w3-animate-left">
+    <div class="w3-container" style="height = 500px">
       <span onclick="document.getElementById('${stat.facCd}Modal').style.display='none'"  class="w3-button w3-display-topright">&times;</span>
 
 			<c:choose>
 			<c:when test="${stat.facRun eq 'Y'}">			<!-- 가동중인 설비 정지클릭시 정지양식 모달 호출 -->
 				<h3>가동정지</h3>
-	      		<form id="OperationStopForm" action="" method="post" >
+	      		<form id="OperationStopForm" action="insertFacilityAbortOpertation" method="post" >
 							<table>
-								<tr>
-									<td>
-										<label for="NxtDownCode">비가동번호 여기부터수정해라 애송이~~다운코드</label> 
-									</td>
-									<td>
-										<input type="text" value="fdm${NxtDownCode }" name="fdmCd" style="display: inline; width: 70%;" >
-									</td>
-								</tr>
 								<tr>
 									<td>
 										<label for="facCd">설비코드</label>
@@ -67,7 +59,7 @@
 										<label for="fdmStop">가동정지시간</label>
 									</td>
 									<td>
-										<input class="fdmTimeInput" type="datetime-local" name="fdmStop" style="display: inline; width: 70%;" required>
+										<input class="fdmTimeInput" type="datetime-local" name="fdmStop" style="display: inline; width: 70%;" step="1" required>
 									</td>
 								</tr>
 								<tr>
@@ -75,25 +67,33 @@
 										<label for="cfdCd">비가동코드</label>
 									</td>
 									<td>
-									<select name="cfdCd" id="cfdCdSelect" form="mtnInsertForm" style="display: inline; width: 70%;" required>
+									<select name="cfdCd" id="cfdCdSelect" style="display: inline; width: 70%;" required>
 											<option value="">--Please choose an option--</option>
 											<c:forEach items="${dwnList }" var="dwn">
 											<option value="${dwn.cfdCd }">${dwn.cfdCd } | ${dwn.cfdTitle }</option>
 										</c:forEach>
 									</select>
+									<input name="facRun" value="N" style="display:none" readOnly ></input>
 								</td>
 								</tr>
 							</table>
 							<button class="cndInsBtn" type="submit">등록</button>
-							<button class="cndDelBtn" onclick="document.getElementById('mtnInsertModal').style.display='none'">닫기</button>
+							<button class="cndDelBtn" onclick="document.getElementById('${stat.facCd}Modal').style.display='none'">닫기</button>
 						</form>
 			</c:when>
 
 			<c:otherwise>
 								<!-- 비가동중인 설비 재가동시 재가동양식 모달출력 -->
-				<h3>재가동</h3>
+			<h3>재가동</h3>
+			<form id="OperationRestartForm" action="insertFacilityRestartOpertation" method="post" >
 				<table>
 					<tr>
+						<td>
+							<label for="fdmCd">비가동이력코드</label>
+						</td>
+						<td>
+							 <input type="text" value="${stat.fdmCd }" name="fdmCd" style="display: inline; width: 70%;" readonly>
+						</td>
 						<td>
 							<label for="facCd">설비코드</label>
 						</td>
@@ -114,7 +114,7 @@
 							<label for="fdmMgr">담당자</label>
 						</td>
 						<td>
-							 <input type="text" name="fdmMgr" value="fdmMgr" style="display: inline; width: 70%;" readonly>
+							 <input type="text" name="fdmMgr" value="${stat.fdmMgr}" style="display: inline; width: 70%;" readonly>
 						</td>
 					</tr>
 					<tr>
@@ -122,7 +122,7 @@
 							<label for="fdmStop">가동정지시간</label>
 						</td>
 						<td>
-							 <input type="datetime-local" name="fdmStop" value="<fmt:formatDate value="${stat.rctStp}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="display: inline; width: 70%;" readonly>
+							 <input type="datetime-local" name="fdmStop" value="<fmt:formatDate value="${stat.rctStp}"   pattern="yyyy-MM-dd HH:mm:ss"/>" style="display: inline; width: 70%;" readonly>
 						</td>
 					</tr>
 					<tr>
@@ -130,7 +130,7 @@
 							<label for="fdmRun">재가동시간</label>
 						</td>
 						<td>
-							 <input class="fdmTimeInput" type="datetime-local" name="fdmRun" style="display: inline; width: 70%;" required>
+							 <input class="fdmTimeInput" type="datetime-local" name="fdmRun" style="display: inline; width: 70%;" step="1" required>
 						</td>
 					</tr>
 					<tr>
@@ -138,17 +138,19 @@
 							<label for="cfdCd">비가동코드</label>
 						</td>
 						<td>
-						<select name="cfdCd" id="cfdCdSelect" form="mtnInsertForm" value="${dwn.cfdCd } " style="display: inline; width: 70%;" readonly>
-								<option value="">--Please choose an option--</option>
+						<select name="cfdCd" id="cfdCdSelect" style="display: inline; width: 70%;">
 								<c:forEach items="${dwnList }" var="dwn">
-								<option value="${dwn.cfdCd }">${dwn.cfdCd } | ${dwn.cfdTitle }</option>
-							</c:forEach>
+								<c:if test ="${stat.cfdCd eq dwn.cfdCd }">
+									<option value="${dwn.cfdCd}" selected disabled="disabled">${dwn.cfdCd} | ${dwn.cfdTitle }</option>
+								</c:if>
+								</c:forEach>
 						</select>
 					</td>
 					</tr>
 				</table>
+				<input name="facRun" value="Y" style="display:none" readOnly ></input>
 				<button class="cndInsBtn" type="submit">등록</button>
-				<button class="cndDelBtn" onclick="document.getElementById('mtnInsertModal').style.display='none'">닫기</button>
+				<button class="cndDelBtn" onclick="document.getElementById('${stat.facCd}Modal').style.display='none'">닫기</button>
 			</form>
 			</c:otherwise>
 			</c:choose>
@@ -254,7 +256,7 @@
 			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
 		 		document.getElementsByClassName("RunY")[i].style.display = ""
 			}
-			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+			for(let i = 0; i < document.getElementsByClassName("RunN").length; i++){
 		 		document.getElementsByClassName("RunN")[i].style.display = ""
 			}
 		 }
@@ -262,7 +264,7 @@
 			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
 		 		document.getElementsByClassName("RunY")[i].style.display = ""
 			}
-			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+			for(let i = 0; i < document.getElementsByClassName("RunN").length; i++){
 		 		document.getElementsByClassName("RunN")[i].style.display = "None"
 			}
 		}
@@ -271,7 +273,7 @@
 			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
 		 		document.getElementsByClassName("RunY")[i].style.display = "None"
 			}
-			for(let i = 0; i < document.getElementsByClassName("RunY").length; i++){
+			for(let i = 0; i < document.getElementsByClassName("RunN").length; i++){
 		 		document.getElementsByClassName("RunN")[i].style.display = ""
 			}
 

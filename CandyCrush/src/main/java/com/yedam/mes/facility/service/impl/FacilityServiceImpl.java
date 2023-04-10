@@ -47,8 +47,16 @@ public class FacilityServiceImpl implements FacilityService {
 		return facilityMapper.facilityOperationStat();
 	}
 	@Override
-	public int getNextDownCode() {
+	public void insertFacilityAbortOpertation(FacilityOperationVO oprVO) {
 		// TODO Auto-generated method stub
-		return facilityMapper.getNextDownCode();
+		facilityMapper.insertFacilityAbortOpertation(oprVO);
+		facilityMapper.updateFacilityOpertationStat(oprVO);
+
+	}
+	@Override
+	public void insertFacilityRestartOpertation(FacilityOperationVO oprVO) {
+		facilityMapper.insertFacilityRestartOpertation(oprVO);
+		facilityMapper.updateFacilityOpertationStat(oprVO);
+		// TODO Auto-generated method stub
 	}
 }

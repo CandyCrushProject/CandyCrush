@@ -38,24 +38,28 @@
   
   <insert id="insertFacilityMaintenance" parameterType='FacilityMaintenanceVO'>
   	insert into FAC_INSP
-  	(FAC_MTN,
-  	FAC_CD,
-  	FAC_RTN,
-  	FAC_MTN_DT,
-  	FAC_RSLT,
-  	FAC_ACT,
-  	FAC_ACT_DTL,
-  	FAC_MGR)
+	 (
+		FAC_MTN,
+	  	FAC_CD,
+	  	FAC_RTN,
+	  	FAC_MTN_DT,
+	  	FAC_RSLT,
+	  	FAC_ACT,
+	  	FAC_ACT_DTL,
+	  	FAC_MGR)
   	VALUES
-  	(
-	  	#{facMtn},
+  	(	
+	  	'MTN'||(select (NVL(numcode,0))+1
+				from (select MAX(TO_NUMBER(substr(FAC_MTN,4))) as numcode
+			    from FAC_INSP)),
 	  	#{facCd},
 	  	#{facRtn},
 	  	#{facMtnDt},
 	  	#{facRslt},
 	  	#{facAct},
 	  	#{facActDtl},
-	  	#{facMgr})
+	  	#{facMgr}
+	  )
   </insert>
   <select id="selectFacilityOperation" resultType="FacilityOperationVO">
 	select FDM_CD,
@@ -114,9 +118,46 @@
   </select>
   
   
-  <select id="getNextDownCode" resultType="Integer">
-  	select max(numcode)+1
-	from (select substr(fdm_cd,4) as numcode
-    from FAC_DWN_MNG)
-  </select>
+  
+    <insert id="insertFacilityAbortOpertation" parameterType='FacilityOperationVO'>
+  	insert 
+	  	into FAC_DWN_MNG
+	  	(FDM_CD,
+	  	FDM_MGR,
+	  	FDM_STOP,
+	  	FDM_RUN,
+	  	FAC_CD,
+	  	CFD_CD
+	  	)
+	  	VALUES
+	  	(
+		  	  	'FDM'||(select max(NVL(numcode,0))+1
+				from (select MAX (TO_NUMBER(substr(fdm_cd,4))) as numcode
+			    from FAC_DWN_MNG)),
+		  	#{fdmMgr},
+		  	#{fdmStop},
+		  	NULL,
+		  	#{facCd},
+		  	#{cfdCd}
+		  )
+  </insert>
+  
+  <update id="updateFacilityOpertationStat" parameterType='FacilityOperationVO'>
+  	UPDATE
+	  	FAC_STAT 
+	SET
+		FAC_RUN = #{facRun}
+	WHERE
+		FAC_CD = #{facCd}
+  </update>
+  
+  <update id="insertFacilityRestartOpertation" parameterType='FacilityOperationVO'>
+  	UPDATE 
+		FAC_DWN_MNG
+	SET
+		FDM_RUN=#{fdmRun}
+	WHERE 
+		FDM_CD=#{fdmCd}
+  </update>
+  
 </mapper>
