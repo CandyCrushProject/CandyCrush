@@ -31,14 +31,6 @@
 				<table>
 					<tr>
 						<td>
-							<label for="facMtn">점검코드</label>
-						</td>
-						<td>
-							 <input type="text" name="facMtn" style="display: inline; width: 70%;" required required>
-						</td>
-					</tr>
-					<tr>
-						<td>
 							<label for="facMgr">담당자</label>
 						</td>
 						<td>

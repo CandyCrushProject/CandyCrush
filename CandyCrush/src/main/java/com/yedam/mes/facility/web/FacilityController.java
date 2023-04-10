@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.yedam.mes.facility.service.FacilityService;
 import com.yedam.mes.facility.service.vo.FacilityMaintenanceVO;
+import com.yedam.mes.facility.service.vo.FacilityOperationVO;
 
 @Controller
 public class FacilityController {
@@ -35,7 +36,20 @@ public class FacilityController {
 		model.addAttribute("opStatList",facilityService.facilityOperationStat());
 		model.addAttribute("opList",facilityService.selectFacilityOperation());
 		model.addAttribute("dwnList",facilityService.getFacilityDownCode());
-		model.addAttribute("NxtDownCode",facilityService.getNextDownCode());
 		return "facility/facilityOperation";
+	}
+	
+	@PostMapping("insertFacilityAbortOpertation")
+	public String insertFacilityAbortOpertation(FacilityOperationVO oprVO) {
+		facilityService.insertFacilityAbortOpertation(oprVO);
+		return "redirect:facilityOperation";
+		
+	}
+	
+	@PostMapping("insertFacilityRestartOpertation")
+	public String insertFacilityRestartOpertation(FacilityOperationVO oprVO) {
+		facilityService.insertFacilityRestartOpertation(oprVO);
+		return "redirect:facilityOperation";
+		
 	}
 }

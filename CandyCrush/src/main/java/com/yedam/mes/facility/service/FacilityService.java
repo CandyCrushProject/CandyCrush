@@ -15,5 +15,6 @@ public interface FacilityService {
 	public List<FacilityOperationVO> selectFacilityOperation();
 	public List<FacilityDownVO> getFacilityDownCode();
 	public List<FacilityOperationStatVO> facilityOperationStat();
-	public int getNextDownCode();
+	public void insertFacilityAbortOpertation(FacilityOperationVO oprVO);
+	public void insertFacilityRestartOpertation(FacilityOperationVO oprVO); // 시설 재가동 입력
 }
