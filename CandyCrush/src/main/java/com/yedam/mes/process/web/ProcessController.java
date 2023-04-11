@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -44,6 +45,17 @@ public class ProcessController {
 	@ResponseBody
 	public List<OrderPlanVO> getOrderSheetDetail(OrderPlanVO opVO) {
 		return procService.getOrderDetail(opVO);
+	}
+	
+	@PostMapping("getDownOrders")
+	@ResponseBody
+	public List<OrderPlanVO> getDownOrders(@RequestBody OrderPlanVO opVO) {
+		String[] orshNo = opVO.getOrshNo().split(",");
+		String[] caNm = opVO.getCaNm().split(",");
+		System.out.println(orshNo);
+		System.out.println(caNm);
+		
+		return procService.addPlanbefore(orshNo, caNm);
 	}
 	
 	// 생산관리 -> 생산계획 -> 생산계획코드, 생산계획상세코드

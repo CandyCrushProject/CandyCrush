@@ -78,7 +78,8 @@
 									<div class="card-content">
 										<div class="procPlanCraete">
 											<div>
-												<button type="button" class="cndInsBtn hi" style="float: right; display: inline;" id="">
+												<button type="button" class="cndInsBtn hi" style="float: right; display: inline;"
+													id="planAddBtn">
 													<i class="fa-solid fa-plus"></i> 추가
 												</button>
 											</div>
@@ -407,6 +408,39 @@
 						}
 					]
 				});
+				$('#planAddBtn').on('click', function () {
+					const rows = orderSheetGrid.getCheckedRows();
+					let orshNoSet = "";
+					let caNmSet = "";
+					for (let i = 0; i < rows.length; i++) {
+						orshNoSet += rows[i].orshNo + ","
+						caNmSet += rows[i].caNm + ","
+					}
+					let ordrSet = {
+						orshNo: orshNoSet,
+						caNm: caNmSet
+					};
+					if (rows.length !== 0) {
+						$.ajax({
+							url: "getDownOrders",
+							method: "POST",
+							data: JSON.stringify(ordrSet),
+							dataType: 'json',
+							contentType: "application/json; UTF-8;",
+							success: function (data) {
+
+								orderSheetGrid.removeCheckedRows();
+							}
+						});
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: '경고',
+							text: "선택된 주문서나 데이터가 없습니다.",
+						});
+					};
+				});
+
 				orderSheetGrid.on('dblclick', function (ev) {
 					var row = orderSheetGrid.getRow(ev.rowKey);
 					getOrderDetail(row.orshNo, row.caNm);
@@ -430,8 +464,44 @@
 						}
 					});
 				}
+
 				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
 				const orderDetailGrid = new tui.Grid({
+					el: document.getElementById('orderDetailList'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					rowHeaders: ['rowNum'],
+					columns: [
+						{
+							header: '주문상세코드',
+							name: 'ordrDtlCd',
+							align: 'center'
+						},
+						{
+							header: '제품명',
+							name: 'cprNm',
+							align: 'center'
+						},
+						{
+							header: '거래처',
+							name: 'caNm',
+							align: 'center'
+						},
+						{
+							header: '주문수량',
+							name: 'ordrDtlCnt',
+							align: 'center'
+						},
+						{
+							header: '현재상태',
+							name: 'orshPr',
+							align: 'center'
+						},
+					]
+				});
+
+				const addOrderPlanGrid = new tui.Grid({
 					el: document.getElementById('orderDetailList'),
 					scrollX: false,
 					scrollY: false,
