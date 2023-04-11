@@ -123,9 +123,9 @@
 	
 	<!-- 발주관리디테일 INSERT -->
 	<insert id="orderDetailInsert" parameterType="MaterialOrderVO">
-		INSERT INTO mtrl_order_detail(mo_cd, mo_cnt, mo_req_dt, ca_no, cmm_cd)
+		INSERT INTO mtrl_order_detail(mod_cd, mo_cd, mo_cnt, mo_req_dt, ca_no, cmm_cd)
 		VALUES
-			(#{moCd}, #{moCnt}, TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'), #{caNo}, #{cmmCd})
+			('mod' || TO_CHAR(sysdate, 'yyMMdd') || mod_seq.NEXTVAL, #{moCd}, #{moCnt}, TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'), #{caNo}, #{cmmCd})
 	</insert>
 	
 	<!-- 발주조회디테일 UPDATE-->
@@ -141,17 +141,19 @@
 	<!-- 발주입고관리 페이지 / 검사일자 : 시작일자 ~ 종료일자 & 업체명을 통한 데이터 조회 -->
 	<!-- 발주번호,자재코드,자재명,자재코드,검사일자,자재규격,자재단위,자재유형,합격수량(입고가능수량) -->
 	<select id="mtrlInputGetList" resultType="MaterialInputVO">
-		SELECT DISTINCT mo.mo_cd, mod.cmm_cd, cmm_nm, mod.cmm_cd, mi_dt
-		                cmm_spec, cmm_unit, cmm_typ, mi_pass_cnt
+		SELECT mo.mo_cd, mi.mi_cd, mod.cmm_cd, cmm_nm, mod.cmm_cd, mi_dt,
+		       cmm_spec, cmm_unit, cmm_typ, mi_pass_cnt
 		FROM mtrl_insp mi
-			JOIN mtrl_order mo
+			LEFT OUTER JOIN mtrl_order mo
 		      ON mi.mo_cd = mo.mo_cd
-		       JOIN mtrl_order_detail mod
+		       LEFT OUTER JOIN mtrl_order_detail mod
 		         ON mo.mo_cd = mod.mo_cd
-		           JOIN cm_mtrl_mng cmm
+		           LEFT OUTER JOIN cm_mtrl_mng cmm
 		             ON mod.cmm_cd = cmm.cmm_cd
-		               JOIN cm_account ca
+		               LEFT OUTER JOIN cm_account ca
 		                 ON mod.ca_no = ca.ca_no
+		                   LEFT OUTER JOIN mtrl_input min
+                             ON mi.mi_cd = min.mi_cd
 		WHERE mi_note = '완료'
 		<if test="caNm != null and !caNm.equals('')">
 		AND ca_nm LIKE '%' || #{caNm} || '%'
@@ -159,6 +161,7 @@
 		<if test="start != null and !start.equals('') and end!= null and !end.equals('')">
 		AND mi_dt BETWEEN #{start} AND #{end}
 		</if>
+		AND min.min_cd IS NULL 
 		ORDER BY mi_dt
 	</select>
 

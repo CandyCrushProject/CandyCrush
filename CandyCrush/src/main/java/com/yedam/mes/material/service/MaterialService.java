@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yedam.mes.material.mapper.MaterialInputVO;
-
 public interface MaterialService {
 	//업체조회
 	public List<MtrlAccountVO> accountCheck();
