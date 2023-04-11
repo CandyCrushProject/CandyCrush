@@ -90,6 +90,11 @@ public class procServiceImpl implements ProcService {
 		return null;
 	}
 
+	@Override
+	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO) {
+		return procMapper.searchPlanList(ppVO);
+	}
+
 
 
 

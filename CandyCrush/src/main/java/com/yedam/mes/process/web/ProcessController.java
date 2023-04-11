@@ -94,10 +94,14 @@ public class ProcessController {
 	@PostMapping("ProcPlanOrder")
 	@ResponseBody
 	public List<ProcPlanVO> getProcPlanOrder(ProcPlanVO ppVO){
-		List<ProcPlanVO> pppVO = procService.getPlan(ppVO);
-		return pppVO;
+		return procService.getPlan(ppVO);
 	}
 	
+	@PostMapping("cprSearch")
+	@ResponseBody
+	public List<ProcPlanVO> planCprSearch(ProcPlanVO ppVO){
+		return procService.searchPlanList(ppVO);
+	}
 	
 	
 	// 생산관리 -> 생산공정관리

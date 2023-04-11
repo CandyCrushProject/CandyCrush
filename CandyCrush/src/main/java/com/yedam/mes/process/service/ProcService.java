@@ -27,7 +27,8 @@ public interface ProcService {
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
 	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO);
-	
+
+	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO); 
 	
 	/* 생산계획 매퍼 끝 */
 	

@@ -4,9 +4,6 @@
 
 
 			<link rel="stylesheet" href="assets/css/processManagement.css">
-			<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-			<!-- 폰트 어썸 -->
-			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 			<link rel="stylesheet" href="assets/css/processOrder.css">
 			<script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.js"></script>
 			<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.3.0/tui-pagination.js"></script>
@@ -23,11 +20,16 @@
 				<div class="modal fade" id="plan" tabindex="-1">
 					<div class="modal-dialog modal-lg modal-dialog-scrollable">
 						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">계획 조회</h5>
+							<div class="modal-header" style="border:none;">
+								<h4>생산계획 조회</h4>
+								<div>
+									<input type="text" id="cprNm" placeholder="제품명" style="width: 20%; display: inline;"
+										autocomplete="off">
+								</div>
 							</div>
 							<div class="modal-body">
-								<h4 style="padding: 20px;">생산계획 정보</h4>
+
+								<input type="hidden" name="prpldStatus" id="prpldStatus" value="계획완료" readonly>
 								<div id="procPlanList"></div>
 							</div>
 							<div class="modal-footer">
@@ -52,38 +54,30 @@
 
 						<div class="row">
 							<div class="col-md-12">
-								<div class="card">
-									<div class="card-content">
-										<div class="procOder">
-											<ul>
-												<li class="procOderBtn-r">
-													<button class="cndInsBtn ">등록</button>
-												</li>
-												<li class="procOderBtn-r">
-													<button class="cndSelBtn" id="planBtn" type="button" data-toggle="modal"
-														data-target="#plan">계획조회</button>
-												</li>
-												<li class="procOderBtn-r">
-													<button class="cndRstBtn ">초기화</button>
-												</li>
-											</ul>
-										</div>
-										<div class="floatEnd"></div>
-										<div class="procOderCraete">
-
-										</div>
-										<div class="clearBoth">
-											<br />
-										</div>
-
-
-									</div>
-								</div>
-
+								<ul>
+									<li class="procOderBtn-r">
+										<button class="cndInsBtn ">
+											<i class="fa-solid fa-plus"></i>
+											등록
+										</button>
+									</li>
+									<li class="procOderBtn-r">
+										<button class="cndSelBtn" id="planBtn" type="button" data-toggle="modal" data-target="#plan">
+											<i class="fa-regular fa-folder-open"></i>
+											계획조회
+										</button>
+									</li>
+									<li class="procOderBtn-r">
+										<button class="cndRstBtn ">
+											<i class="fa-solid fa-rotate-right"></i>
+											초기화
+										</button>
+									</li>
+								</ul>
+								<div class="clearBoth"></div>
 							</div>
-
-							<!-- /. PAGE INNER  -->
 						</div>
+
 
 						<div class="row">
 							<div class="col-md-8">
@@ -156,13 +150,36 @@
 								</div>
 							</div>
 						</div>
-
-						<!-- /. PAGE WRAPPER  -->
+						<!-- /. PAGE INNER  -->
 					</div>
+					<!-- /. PAGE WRAPPER  -->
+				</div>
 				</div>
 			</main>
 
 			<script>
+				var cprNm = "";
+				var rowKey = "";
+				var columnName = "";
+				var row = "";
+				document.getElementById("cprNm").addEventListener("input", () => {
+					search();
+				});
+				function search() {
+					$.ajax({
+						url: "cprSearch",
+						method: "POST",
+						dataType: "JSON",
+						data: {
+							cprNm: $('#cprNm').val(),
+							prpldStatus: "계획완료"
+						},
+						success: function (data) {
+							procPlanGrid.resetData(data);
+						}
+					});
+				}
+
 				$(document).ready(function () {
 
 					$('#planBtn').on('click', function () {
@@ -170,59 +187,69 @@
 							url: 'ProcPlanOrder',
 							method: 'post',
 							data: {
-								prpldStatus: "계획완료"
+								prpldStatus: $('#prpldStatus').val()
 							},
 							success: function (data) {
-								setTimeout(() => grid.refreshLayout(), 100);
-								grid.resetData(data);
+								procPlanGrid.resetData(data);
+								setTimeout(() => procPlanGrid.refreshLayout(), 200);
 							}, error: function (err) {
 								console.log("실패");
 							}
 						});
 					})
 				})
-				const grid = new tui.Grid({
+				const procPlanGrid = new tui.Grid({
 					el: document.getElementById('procPlanList'),
 					scrollX: false,
 					scrollY: false,
 					minBodyHeight: 30,
+					selectionUnit: 'row',
 					rowHeaders: ['rowNum'],
-					pageOptions: {
-						perPage: 5
-					},
 					columns: [
 						{
 							header: '주문서번호',
-							name: 'orshNo'
+							name: 'orshNo',
+							align: 'center'
 						},
 						{
 							header: '제품명',
-							name: 'cprNm'
+							name: 'cprNm',
+							align: 'center'
 						},
 						{
 							header: '생산계획수량',
-							name: 'prpldCnt'
+							name: 'prpldCnt',
+							align: 'center'
 						},
 						{
 							header: '생산계획일자',
-							name: 'prplDt'
+							name: 'prplDt',
+							align: 'center'
 						},
 						{
 							header: '완료여부',
-							name: 'prplStatus'
+							name: 'prplStatus',
+							align: 'center'
 						},
 						{
 							header: '담당자',
-							name: 'prpldMng'
+							name: 'prpldMng',
+							align: 'center'
 						},
 						{
 							header: '현재상태',
-							name: 'prpldStatus'
+							name: 'prpldStatus',
+							align: 'center'
 						},
 					]
 				});
+				procPlanGrid.on('dblclick', function (ev) {
+					rowKey = ev.rowKey;
+					columnName = ev.columnName;
+					row = procPlanGrid.getRow(rowKey);
+					console.log(row);
 
-
-
+					$('#plan').modal('hide');
+				});
 
 			</script>

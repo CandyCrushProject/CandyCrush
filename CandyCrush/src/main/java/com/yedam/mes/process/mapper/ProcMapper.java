@@ -34,6 +34,7 @@ public interface ProcMapper {
 	// 생산계획조회 - 생산계힉정보를 넘겨받음
 	public List<ProcPlanVO> seletPlanList(ProcPlanVO ppVO); 
 	
+	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO); 
 	// 생산지시저장 - 조회된 계획으로 지시를 내릴 수 있다.
 	public int insertOrder(ProcOrderVO orderVO);
 	

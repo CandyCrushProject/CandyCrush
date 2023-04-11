@@ -5,8 +5,6 @@
 
 			<link rel="stylesheet" href="assets/css/processManagement.css">
 			<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-			<!-- 폰트 어썸 -->
-			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 			<style>
 				#orderSheetTab td {
 					vertical-align: middle;
