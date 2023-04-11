@@ -33,21 +33,17 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	
 	// 모달창 거래처 전체조회
 	@Override
-	public List<OrdrAccntVO> accoutnAllList() {
+	public List<OrdrShtVO> accoutnAllList() {
 		// TODO Auto-generated method stub
 		return mapper.accoutnAllList();
 	}
 
 	// 모달창 거래처 검색조회
 	@Override
-	public List<OrdrAccntVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo) {
+	public List<OrdrShtVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo) {
 		
 		return mapper.accoutnSrchList(caNm, caNo);
 	}
-	
-	
-	
-	
 	
 	// 주문서 등록
 	
