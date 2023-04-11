@@ -237,7 +237,11 @@
 				success : function(data){
 					//console.log(data);
 					caModal.resetData(data);
-				} 
+				},
+				error : function(reject){
+					console.log(reject);
+					console.log("modalAccountSearch 통신오류");
+				}
 			});
 		};
 
@@ -265,7 +269,11 @@
 				success : function(data){
 					//console.log(data);
 					materialOrderList.resetData(data);
-				} 
+				},
+				error : function(reject){
+					console.log(reject);
+					console.log("mtrlOrderGetData 통신오류");
+				}
 			});
 		};
 		mtrlOrderGetData();
@@ -283,7 +291,11 @@
 				success : function(data){
 					//console.log(data);
 					materialOrderList.resetData(data);
-				} 
+				},
+				error : function(reject){
+					console.log(reject);
+					console.log("search 통신오류");
+				}
 			});
 		};
 
@@ -518,6 +530,7 @@
 					},
 					error : function(reject){
 						console.log(reject);
+						console.log("mtrlOrderList Insert error!");
 					}
 				});
 			};

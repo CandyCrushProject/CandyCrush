@@ -38,7 +38,7 @@
     </select>
 		
 	<!-- 모달창 업체 전체조회 -->
-	<select id="accoutnAllList" resultType="OrdrAccntVO">
+	<select id="accoutnAllList" resultType="OrdrShtVO">
 		SELECT ca_no
 			 , ca_nm
 			 , ca_ceo_nm
@@ -50,7 +50,7 @@
 	</select>
 	
 	<!-- 모달창 업체 검색조회 -->
-	<select id="accoutnSrchList" resultType="OrdrAccntVO">
+	<select id="accoutnSrchList" resultType="OrdrShtVO">
 		SELECT ca_no
 			 , ca_nm
 			 , ca_ceo_nm

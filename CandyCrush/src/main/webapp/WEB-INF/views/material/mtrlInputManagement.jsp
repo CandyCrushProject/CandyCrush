@@ -4,6 +4,13 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<style>
+.tui-grid-cell.cell-red {
+	background-color : #FFF0F5;
+	color : red;
+	font-weight: bold;
+}
+</style>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -23,12 +30,9 @@
 					<span class="w3-button w3-display-topright" onclick="document.getElementById('modal').style.display='none'">&times;</span>
 					<h3>업체검색</h3>
 					<div>
-						<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;" autocomplete="off">
+						<input type="text" id="modalCaNm" placeholder="업체명" style="width: 100%;" autocomplete="off">
 						<br/>
-						<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;" autocomplete="off">
-						<button class="srchBtn" id="modalBtn">
-							<i class="fa-solid fa-magnifying-glass"></i>
-						</button>
+						<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 100%;" autocomplete="off">
 					</div>
 					<div id="caModal"></div>
 				</div>
@@ -43,36 +47,17 @@
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
 							<div>
-								<h5><b>▶ 입고등록</b></h5>
-
-								<div>
-									<div style="clear:both"></div>
-									<button type="button" class="cndInsBtn mtrlInputMngFloatBtn">저장</button>
-									<button type="button" class="cndDelBtn mtrlInputMngFloatBtn">삭제</button>
-									<button type="reset" id="restBtn" class="cndRstBtn mtrlInputMngFloatBtn">초기화</button>
-									<div id="inputReset">
-										<label for="mtrlInput">입고일자</label>
-										<input type="date" id="mtrlInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<label for="mtrInputType">입고유형</label>
-										<select id="mtrInputType" name="cmmType" style="display: inline; width: 200px;">
-											<option value="0">--선택해주세요--</option>
-											<option value="원자재">원자재</option>
-											<option value="부자재">부자재</option>
-										</select>
-									</div>
-								</div>
 	
 								<h5><b>▶ 검사자료 조회</b></h5>
 								<div>
 									<label for="caNmInput">업체명</label> 
-									<input type="text" id="caNmInput" style="width: 315px; border: 1px solid rgba(128, 128, 128, 0.61);" readonly>&nbsp;
+									<input type="text" id="caNmInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);" readonly>&nbsp;
 									<button class="srchBtn" id="companySearch"><i class="fa-solid fa-magnifying-glass"></i></button>
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									<label for="inspDate">검사자료</label>
-									<input type="date" id="inspDate"
+									<label for="start">검사자료</label>
+									<input type="date" id="start"
 											style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
-									<input type="date" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
+									<input type="date" id="end" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
 									<button type="button" id="inspSearchBtn" class="cndInsBtn">가져오기</button>
 								</div>
 							</div>
@@ -85,7 +70,23 @@
 				<div class="col-md-8">
 					<!-- Lot 부여 테이블 -->
 					<div class="card">
-						<button type="button" id="mtrlInputMngDelBtn" class="cndDelBtn" style="margin: 10px 20px 0px 0px !important;">삭제</button>
+						<div>
+							<div class="card-action">▶입고등록</div>
+							<div style="clear:both"></div>
+							<button type="button" class="cndInsBtn mtrlInputMngFloatBtn">저장</button>
+							<button type="button" class="cndDelBtn mtrlInputMngFloatBtn">삭제</button>
+							<div id="inputReset" style="padding-left: 5px;">
+								<label for="mtrlInput" style="margin-left: 10px; width: 80px;">입고일자</label>
+								<input type="date" id="mtrlInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<label for="mtrInputType" style="width: 80px;">입고유형</label>
+								<select id="mtrInputType" name="cmmType" style="display: inline; width: 200px;">
+									<option value="0">--선택해주세요--</option>
+									<option value="원자재">원자재</option>
+									<option value="부자재">부자재</option>
+								</select>
+							</div>
+						</div>
 						<div style="clear:both"></div>
 						<div class="card-content">
 							<div class="table-responsive">
@@ -97,7 +98,11 @@
 				<!-- 입고목록 테이블 -->
 				<div class="col-md-4">
 					<div class="card">
-						<div class="card-action">입고목록</div>
+						<div class="card-action">▶입고목록</div>
+						<div style="padding-left: 5px;">
+							<label for="mtrInputType" style="margin-left: 10px; width:80px;">담당자</label>
+							<input type="text" id="mtrlInputMng" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+						</div>
 						<div class="card-content">
 							<div class="table-responsive">
 								<div id="mtrlInputList"></div>
@@ -113,12 +118,8 @@
 	<script>
 		const Grid = tui.Grid;
 
-		//리셋버튼 누르면 input value 초기화해준다.
-		$('#restBtn').on('click', ()=>{
-			$('#inputReset').find('input').each(function(){
-				$(this).val('');
-			});
-		});
+		//input에 오늘날짜 부여하기
+		$('#mtrlInput').val(new Date().toISOString().substring(0, 10))
 
 		//업체명 input 클릭하면 업체명 모달창 뛰우기
 		$('#companySearch').on('click',(e)=>{
@@ -128,6 +129,36 @@
 			//아작스를 통해 통신을 한다음데이터를 뿌려준다?
 			setTimeout(()=> caModal.refreshLayout() , 0);
 		}); 
+
+		//모달/업체명검색
+		function modalAccountSearch(){
+			modalCaNm = document.getElementById('modalCaNm').value;
+			modalCaCd = document.getElementById('modalCaCd').value;
+
+			$.ajax({
+				url : "accountCheck",
+				method :"POST",
+				dataType : "JSON",
+				data : {caNm : modalCaNm, caNo : modalCaCd},
+				success : function(data){
+					//console.log(data);
+					caModal.resetData(data);
+				},
+				error : function(reject){
+					console.log(reject);
+					console.log("modalAccountSearch 통신오류");
+				}
+			});
+		};
+
+		//modal account search Btn event
+		$("#modalBtn").on('click',(e)=>{
+			modalAccountSearch();
+		})
+
+		document.getElementById("modalCaNm").addEventListener("input", () => {
+			modalAccountSearch();
+		});
 
 		//업체정보조회 :  Model Class -> c tag
 		let accountList =  [
@@ -191,53 +222,70 @@
 				$("#modal").hide();	
 			}
 		});
-
 		
-		const materialLotSave = new Grid({
+		//가져오기 버튼 이벤트(자재입고검사 DB 자료 GET, 진행도 '완료'된 목록)
+		$('#inspSearchBtn').on('click', (e)=>{
+			let caNmInput = $('#caNmInput').val();
+			let start = $('#start').val();
+			let end = $('#end').val();
+			//materialInspGetList.addCellClassName(e.rowData, 'minCnt', 'cell-red');
+			$.ajax({
+				url : "mtrlInputGetList",
+				method :"POST",
+				dataType : "JSON",
+				data : {caNm : caNmInput, start : start, end : end},
+				success : function(data){
+					materialInspGetList.resetData(data);
+				}
+			});
+		});
+		
+		const materialInspGetList = new Grid({
 			el: document.getElementById('materialLotSave'), // Container element
 			rowHeaders: ['checkbox'],
 			columns: [
 				{
 					header: '자재코드',
-					name: '',
+					name: 'cmmCd',
 					sortingType: 'asc',
 					sortable: true
 				},
 				{
 					header: '자재명',
-					name: '',
+					name: 'cmmNm',
 					sortingType: 'asc',
 					sortable: true
 				},
 				{
 					header: '규격',
-					name: ''
+					name: 'cmmSpec'
 				},
 				{
 					header: '단위',
-					name: ''
+					name: 'cmmUnit'
 				},
 				{
 					header: '유형',
-					name: ''
+					name: 'cmmTyp'
 				},
 				{
-					header: '발주번호',
-					name: '',
+					header: '발주코드',
+					name: 'moCd',
 					sortingType: 'asc',
 					sortable: true
 				},
 				{
-					header: '입고수량',
-					name: ''
+					header: '입고가능수량',
+					name: 'miPassCnt',
 				},
 				{
-					header: '유통기한',
-					name: '',
-					sortingType: 'asc',
-					sortable: true
+					header : '입고수량',
+					name : 'minCnt',
+					editor : 'text',
+					validation: {
+						dataType: 'number'
+					}
 				}
-				
 			],
 			bodyHeight: 520,
 			pageOptions: {
@@ -247,7 +295,30 @@
 			}
 		});
 
-		const mtrlInputList = new Grid({
+		//입력값 String 예외처리
+		let beforeMoCnt = "";
+		materialInspGetList.on("editingStart", (e) => {
+			beforeMoCnt = materialInspGetList.getRow(e.rowKey).minCnt;
+		});
+
+		materialInspGetList.on('editingFinish', (e)=>{
+			let rowDate = materialInspGetList.getRow(e.rowKey);
+			let minCntData = Number(rowDate.minCnt);
+
+			if(isNaN(minCntData)){
+				setTimeout(() => {
+					Swal.fire({
+						icon : 'error',
+						title : '경고',
+						text: '숫자만 입력 가능합니다',
+					});
+					materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+					return;
+				}, 10);
+			}
+		})
+
+		const mtrlMngInputList = new Grid({
 			el: document.getElementById('mtrlInputList'), // Container element
 			columns: [
 				{
@@ -264,6 +335,15 @@
 				}
 			],
 			bodyHeight: 510,
+		});
+
+		$(window).on("keydown", (e) => {
+			let caModal = $("#modal");
+
+			//e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
+			if (e.keyCode === 27 && caModal.css("display") === "block") {
+				caModal.hide();
+			};
 		});
 </script>
 </main>

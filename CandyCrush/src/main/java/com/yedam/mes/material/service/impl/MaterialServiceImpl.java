@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yedam.mes.material.mapper.MaterialInputVO;
 import com.yedam.mes.material.mapper.MaterialMapper;
 import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialService;
@@ -72,5 +73,12 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public int orderDetailUpdate(@Param("moCnt") int moCnt, @Param("moReqDt") Date moReqDt, @Param("moCd") String moCd, @Param("cmmCd") String cmmCd) {
 		return mapper.orderDetailUpdate(moCnt, moReqDt, moCd, cmmCd);
+	}
+	
+	//--발주입고관리
+	//검사일자 : 시작일자 ~ 종료일자 & 업체명을 통한 데이터 조회
+	@Override
+	public List<MaterialInputVO> mtrlInputGetList(String caNm, String start, String end) {
+		return mapper.mtrlInputGetList(caNm, start, end);
 	}
 }

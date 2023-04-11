@@ -18,9 +18,9 @@ public interface OrdrShtMapper {
 										   @Param("orshEndDt") String orshEndDt);
 	
 	// 모달창 업체 전체조회
-	public List<OrdrAccntVO> accoutnAllList();
+	public List<OrdrShtVO> accoutnAllList();
 	
 	// 모달창 업체 검색조회
-	public List<OrdrAccntVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo);
+	public List<OrdrShtVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo);
 
 }

@@ -85,6 +85,7 @@
 			        ON mot.min_cd = min.min_cd
 		WHERE cmm.cmm_cd = #{cmmCd}
 	</select>
+	
 	<!-- 자재발주 디테일 단건조회 -->
 	<!-- 발주코드, 업체코드, 업체명, 자재코드, 자재명, 발주수량, 안전재고, 납기요청일, 현재재고, 예상재고량 -->
 	<select id="mtrlOrderDetailList" resultType="MaterialOrderVO">
@@ -135,5 +136,30 @@
 		WHERE  mo_cd = #{moCd}
 		  AND  cmm_cd = #{cmmCd}
 	</update>
+	
+		
+	<!-- 발주입고관리 페이지 / 검사일자 : 시작일자 ~ 종료일자 & 업체명을 통한 데이터 조회 -->
+	<!-- 발주번호,자재코드,자재명,자재코드,검사일자,자재규격,자재단위,자재유형,합격수량(입고가능수량) -->
+	<select id="mtrlInputGetList" resultType="MaterialInputVO">
+		SELECT DISTINCT mo.mo_cd, mod.cmm_cd, cmm_nm, mod.cmm_cd, mi_dt
+		                cmm_spec, cmm_unit, cmm_typ, mi_pass_cnt
+		FROM mtrl_insp mi
+			JOIN mtrl_order mo
+		      ON mi.mo_cd = mo.mo_cd
+		       JOIN mtrl_order_detail mod
+		         ON mo.mo_cd = mod.mo_cd
+		           JOIN cm_mtrl_mng cmm
+		             ON mod.cmm_cd = cmm.cmm_cd
+		               JOIN cm_account ca
+		                 ON mod.ca_no = ca.ca_no
+		WHERE mi_note = '완료'
+		<if test="caNm != null and !caNm.equals('')">
+		AND ca_nm LIKE '%' || #{caNm} || '%'
+		</if>
+		<if test="start != null and !start.equals('') and end!= null and !end.equals('')">
+		AND mi_dt BETWEEN #{start} AND #{end}
+		</if>
+		ORDER BY mi_dt
+	</select>
 
 </mapper>

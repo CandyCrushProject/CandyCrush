@@ -19,7 +19,7 @@
 	#companyName{
 		cursor:pointer;
 	}
-	.srchBtn{
+	#modalBtn{
 		float: right;
 		height: 100px;
 		position: relative;
@@ -110,8 +110,6 @@
 	<script>
 		//Tost Ui Grid 선언
 		const Grid = tui.Grid;
-		//Toast Ui Grid theme
-		//Grid.applyTheme('clean');
 
 		//Modal Grid 빠르게 띄우는 방법
 		$('#companyName').click(function(){
@@ -169,7 +167,11 @@
 				data : {cmmNm : cmmNm, caNm : caNm},
 				success : function(data){
 					material.resetData(data);
-				} 
+				},
+				error : function(reject){
+					console.log(reject);
+					console.log("search 통신오류");
+				}
 			});
 		};
 		
@@ -186,7 +188,11 @@
 				success : function(data){
 					//console.log(data);
 					caModal.resetData(data);
-				} 
+				},
+				error : function(reject){
+					console.log(reject);
+					console.log("modalAccountSearch 통신오류");
+				}
 			});
 		}
 
@@ -430,7 +436,7 @@
 					? "0" + (newData.getMonth() + 1)
 					: newData.getMonth() + 1) +
 					"-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
-		return result;
+			return result;
     }
 //--------------------------------------------------------End Grid Instant
 //---------------------------------------------------------발주목록 행에 값 넣는 장소
@@ -460,13 +466,13 @@
 			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
 			if (materialOrder.getRow(e.rowKey) === null) {
 				rowData.moCd = '${getmtrlOrderCode.moCd}';	 //발주코드
-				rowData.moTitle = '원자재 외';				  //발주명
-				rowData.moReoDt = getToday();				//발주신청일
-				rowData.moReqDt = getToday();				//납기요청일
-				rowData.moCnt = 0;							//발주수량
-				var orderSafStc = rowData.cmmInven;			//안전재고
+				rowData.moTitle = '원자재 외';				  			//발주명
+				rowData.moReoDt = getToday();								//발주신청일
+				rowData.moReqDt = getToday();								//납기요청일
+				rowData.moCnt = 0;													//발주수량
+				var orderSafStc = rowData.cmmInven;					//안전재고
 				materialOrder.appendRow(rowData);			//자재목록 Grid에서 해당되는 행을 더블클릭하면 자재발주 Grid에 append!
-				materialOrder.sort("cmmCd", true);			//정렬 안해주면 그리드 고장남
+				materialOrder.sort("cmmCd", true);		//정렬 안해주면 그리드 고장남
 			} else {
 				Swal.fire({
 					icon: 'warning',
@@ -483,9 +489,7 @@
 		});
 
 		materialOrder.on('editingFinish', (e) => {
-			//console.log(e);
 			let modalRowDate = materialOrder.getRow(e.rowKey);
-			//console.log(modalRowDate.moCnt);
 			let moCntData = Number(modalRowDate.moCnt);
 			if(isNaN(moCntData)){
 				setTimeout(() => {

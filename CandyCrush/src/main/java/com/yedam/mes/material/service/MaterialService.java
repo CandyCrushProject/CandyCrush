@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.yedam.mes.material.mapper.MaterialInputVO;
+
 public interface MaterialService {
 	//업체조회
 	public List<MtrlAccountVO> accountCheck();
@@ -36,4 +38,10 @@ public interface MaterialService {
 								 @Param("moReqDt") Date moReqDt,
 								 @Param("moCd") String moCd,
 								 @Param("cmmCd") String cmmCd);
+	
+	//--발주입고관리
+	//검사일자 : 시작일자 ~ 종료일자 & 업체명을 통한 데이터 조회
+	public List<MaterialInputVO> mtrlInputGetList(@Param("caNm") String caNm,
+												  @Param("start") String start,
+												  @Param("end") String end);
 }
