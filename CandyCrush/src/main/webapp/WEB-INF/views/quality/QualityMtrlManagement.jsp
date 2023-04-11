@@ -163,7 +163,52 @@
         </div>
       </div>
       <!--END row-->
-    </div>
+
+      <div class="row">
+        <!-- <div class="col-md-6">
+          <div class="card">
+            <div class="card-action">재재검사현황</div>
+            <div class="card-content">
+              <div class="table-responsive">
+                <div id="testStat"></div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="col-md-12">
+          <!-- Advanced Tables -->
+          <div class="card">
+            <div class="card-action">자재검사이력
+              <br>
+              <div>
+                <table class="candyTab">
+                  <tr>
+                    <th>자재명</th>
+                    <td id="sumNm"></td>
+                    <th>발주량</th>
+                    <td id="sumMoCnt"></td>
+                  </tr>
+                  <tr>
+                    <th>검사</th>
+                    <td id="sumMoTest"></td>
+                    <th>검사대기</th>
+                    <td id="sumMoWait"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            
+            <div class="card-content">
+              <div class="table-responsive">
+                <div id="testList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      </div>
     <!-- /. PAGE INNER  -->
   </div>
 
@@ -236,6 +281,7 @@
           header: '납기요청일',
           name: 'moReqDt',
           sortable: true
+          
         },
 
       ],
@@ -247,7 +293,146 @@
           }
     });
       console.log(orderData);
+    //데이터 옮기기용 전역 변수
+    let CMMNM = null;//발주제품명
+    let MOCNT = null;//발주수량 
+    let MOTESTED=null;//검사한수량
+
+
+    //--Ajax 검사리스트 호출
+    //odlist 클릭한 행의 mocd값 담기
+    
+    odList.on("dblclick", (e) => {
+			const rowData = odList.getRow(e.rowKey);
+      let selectedMoCd=rowData.moCd;
+      CMMNM=rowData.cmmNm;
+      MOCNT=rowData.moCnt;
+      getTestList(selectedMoCd);
+      console.log(selectedMoCd);
+		});
 
     
+    function getTestList(moCd){
+			$.ajax({
+				url : "MtTestSearch",
+				method :"POST",
+        async : false,
+				dataType : "JSON",
+				data : {moCd : moCd},
+				success : function(data){
+					console.log(data);
+          testList.clear();
+					testList.resetData(data);
+				},
+				error : function(reject){
+					console.log(reject);
+					console.log("통신오류");
+				},
+			})
+      setTimeout(function() { insertHeaderSum()}, 300);
+		}
+    function insertHeaderSum(){
+      sumNm.innerText = CMMNM;
+      sumMoCnt.innerText = MOCNT;
+      sumMoTest.innerText = MOTESTED;
+      sumMoWait.innerText = MOCNT-MOTESTED;
+    }
+
+    //--검사리스트--
+
+    const testList = new Grid({
+      el: document.getElementById('testList'), // Container element
+      data: null,
+      bodyHeight: 500,
+      pageOptions: {
+        useClient: true,
+        type: 'scroll',
+        perPage: 30
+          },
+      columns: [
+        {
+          header: '검사코드',
+          name: 'miCd',
+          sortingType: 'asc',
+          sortable: true
+        },
+        {
+          header: '검사일',
+          name: 'miDt',
+          sortable: true,
+          formatter: function (e) {
+				return dateChange(e.value);
+			},
+        },
+        {
+          header: '담당자',
+          name: 'miMng',
+          sortable: true
+        },
+        {
+          header: '검사수량',
+          name: 'miCnt',
+          sortable: true
+          
+        },
+        {
+          header: '불량수량',
+          name: 'miBadCnt',
+          sortable: true
+        },
+        {
+          header: '합격수량',
+          name: 'miPassCnt',
+          sortable: true
+        },
+        {
+          header: '자재발주코드',
+          name: 'moCd',
+          sortable: true
+        },
+        {
+          header: '검사진행도',
+          name: 'miNote',
+          sortable: true
+        },
+      ],
+      summary: {
+        position: 'bottom',
+        height: 100,  // by pixel
+        columnContent: {
+          miCnt: {
+            template(valueMap) {
+              MOTESTED=valueMap.sum;
+              return '검사합계'+valueMap.sum;
+            }
+          },
+          miBadCnt: {
+            template(valueMap) {
+              return '불량합계'+valueMap.sum;
+            }
+          },
+          miPassCnt:{
+            template(valueMap) {
+              return '합격합계'+valueMap.sum;
+            }
+          }
+        }
+      }
+    });
+    
+    
+    
+    
+    
+	//날짜변환 함수
+	function dateChange(data) {
+	let newData = new Date(data);
+	let result = newData.getFullYear() + "-" +
+				(newData.getMonth() < 10
+				? "0" + (newData.getMonth() + 1)
+				: newData.getMonth() + 1) +
+				"-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+		return result;
+}
   </script>
 </main>
