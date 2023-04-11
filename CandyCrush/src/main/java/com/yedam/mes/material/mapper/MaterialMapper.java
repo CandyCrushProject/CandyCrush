@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.yedam.mes.material.service.MaterialInputVO;
 import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialVO;
 import com.yedam.mes.material.service.MtrlAccountVO;

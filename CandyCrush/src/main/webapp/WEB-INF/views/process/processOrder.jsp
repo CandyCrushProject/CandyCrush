@@ -176,6 +176,8 @@
 						},
 						success: function (data) {
 							procPlanGrid.resetData(data);
+						}, error: function (err) {
+							console.log("실패");
 						}
 					});
 				}

@@ -1,4 +1,4 @@
-package com.yedam.mes.material.mapper;
+package com.yedam.mes.material.service;
 
 import java.util.Date;
 
@@ -26,6 +26,7 @@ public class MaterialInputVO {
 	private int miPassCnt;	//합격수량(입고가능수량)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date miDt;		//검사일자
+	private String miCd;	//검사코드
 	
 	//날짜검색
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")

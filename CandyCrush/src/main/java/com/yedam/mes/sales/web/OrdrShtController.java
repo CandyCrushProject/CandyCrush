@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.mes.sales.service.OrdrShtService;
-import com.yedam.mes.sales.service.vo.OrdrAccntVO;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
 
 @Controller

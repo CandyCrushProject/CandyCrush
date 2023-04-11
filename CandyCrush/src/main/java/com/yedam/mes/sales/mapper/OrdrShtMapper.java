@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yedam.mes.sales.service.vo.OrdrAccntVO;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
 
 public interface OrdrShtMapper {
@@ -22,5 +21,11 @@ public interface OrdrShtMapper {
 	
 	// 모달창 업체 검색조회
 	public List<OrdrShtVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo);
+
+	// 주문서코드 자동생성
+	public String getOrdrShtCode();
+
+	// 주문서디테일코드 자동생성
+	public String getOrdrShtDtlCode();
 
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.yedam.mes.sales.mapper.OrdrShtMapper;
 import com.yedam.mes.sales.service.OrdrShtService;
-import com.yedam.mes.sales.service.vo.OrdrAccntVO;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
 
 @Service
@@ -34,7 +33,7 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	// 모달창 거래처 전체조회
 	@Override
 	public List<OrdrShtVO> accoutnAllList() {
-		// TODO Auto-generated method stub
+		
 		return mapper.accoutnAllList();
 	}
 
@@ -43,6 +42,20 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	public List<OrdrShtVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo) {
 		
 		return mapper.accoutnSrchList(caNm, caNo);
+	}
+
+	// 주문서코드 자동생성
+	@Override
+	public String getOrdrShtCode() {
+		
+		return mapper.getOrdrShtCode();
+	}
+
+	// 주문서디테일코드 자동생성
+	@Override
+	public String getOrdrShtDtlCode() {
+		
+		return mapper.getOrdrShtDtlCode();
 	}
 	
 	// 주문서 등록

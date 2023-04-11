@@ -1,8 +1,7 @@
 const Grid = tui.Grid;
 //---------------------------------------------------------------------------------------------
-
-//업체명, 발주신청일 시작일자, 발주신청일 종료일자
-const accntGetData = (caNm = undefined, start = undefined, end = undefined) => {
+// 거래처 관리 페이지 거래처 조회
+const accntGetData = () => {
   $.ajax({
     url: "ordrMngntAccntList",
     method: "POST",
@@ -11,16 +10,12 @@ const accntGetData = (caNm = undefined, start = undefined, end = undefined) => {
       accntList.resetData(data);
     },
     error: function(reject) {
-      // console.log(reject)
-      Swal.fire({
-        title: 'Error',
-        icon: 'error'
-      });
+      console.log(reject)
     }
   });
 };
 
-//업체명 modal Grid
+// 업체명 조회 Grid
 const accntList = new Grid({
   el: document.getElementById('accntList'),
   columns: [
@@ -68,23 +63,22 @@ accntGetData();
 accntList.on('dblclick', (e) => {
   const rowDate = accntList.getRow(e.rowKey);
 
-  //Modal 안에 발주코드 readonly
+  // Modal 안에 발주코드 readonly
   let rowDateMoCd = rowDate.moCd;		//발주코드
-  $("#modalMocd").val(rowDateMoCd);
+  $("#ordrDtilMdl").val(rowDateMoCd);
 
   //모달창
-  document.getElementById('orderDetailModal').style.display = 'block';
-  //Modal Grid 빠르게 띄우는 방법
-  setTimeout(() => moModal.refreshLayout(), 0);
-  // $("#orderDetailModal").css("width", "99%");
-  // $("#orderDetailModal").css("width", "100%");
+  document.getElementById('ordrDtilMdl').style.display = 'block';
+  // Modal Grid 빠르게 띄우는 방법
+  setTimeout(() => ordrDtilMdl.refreshLayout(), 0);
+
   $.ajax({
     url: "mtrlOrderDetailList",
     method: "POST",
     dataType: "JSON",
     data: { moCd: rowDateMoCd },
     success: function (data) {
-      moModal.resetData(data);
+      ordrDtilMdl.resetData(data);
     }
   });
 });
