@@ -41,10 +41,35 @@ public class OrdrShtController {
 	// 모달창 거래처 검색조회
 	@PostMapping("ordrAccntSrch")
 	@ResponseBody
-	public List<OrdrAccntVO> accoutnSrchList(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo) {
+	public List<OrdrShtVO> accoutnSrchList(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo) {
 		
 		System.out.println("caNm" + caNm + ", caNo" + caNo);
 		return service.accoutnSrchList(caNm, caNo);
+	}
+	
+	// 주문서관리 거래처 조회
+	@GetMapping("ordrMngntPage")
+	public String ordrMngntPage(Model model) {
+		
+		return "sales/ordrShtMngmnt";
 		
 	}
+	
+	@PostMapping("ordrMngntAccntList")
+	@ResponseBody
+	public List<OrdrShtVO> ordrMngntAccntList() {
+		
+		return service.accoutnAllList();
+		
+	}
+	
+	// 주문서관리에서 거래처 검색조회
+	@PostMapping("ordrMngntAccntSrch")
+	@ResponseBody
+	public List<OrdrShtVO> ordrMngntAccntSrch(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo) {
+		
+		System.out.println("caNm" + caNm + ", caNo" + caNo);
+		return service.accoutnSrchList(caNm, caNo);
+	}
+	
 }

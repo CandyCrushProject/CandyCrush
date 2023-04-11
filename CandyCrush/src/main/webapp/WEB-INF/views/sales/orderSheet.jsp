@@ -12,32 +12,11 @@
 					onclick="document.getElementById('accntNmMdl').style.display='none'">&times;</span>
 				<h3>업체검색</h3>
 				<div>
-					<input type="text" id="accntMdlCaNm" placeholder="업체명" style="width: 50%;">
+					<input type="text" id="accntMdlCaNm" placeholder="업체명" style="width: 50%;" autocomplete="off">
 					<!-- <input type="text" id="accntMdlCaCd" placeholder="업체코드" style="width: 90%;"> -->
 				</div>
 				<!-- 업체명 붙음 -->
 				<div id="accntmdl"></div>
-			</div>
-		</div>
-	</div><!-- End Modal -->
-
-	<!-- 주문서 등록 Modal -->
-	<div id="prdNmMdl" class="w3-modal" style="z-index: 100;">
-		<div class="w3-modal-content">
-			<div class="w3-container">
-				<span class="w3-button w3-display-topright"
-					onclick="document.getElementById('prdNmMdl').style.display='none'">&times;</span>
-				<h3>업체검색</h3>
-				<div>
-					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;">
-					<br />
-					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;">
-					<button class="srchBtn">
-						<i class="fa-solid fa-magnifying-glass"></i>
-					</button>
-				</div>
-				<!-- 제품명 붙음 -->
-				<div id="prodMdl"></div>
 			</div>
 		</div>
 	</div><!-- End Modal -->
@@ -48,10 +27,9 @@
 			<h1 class="page-header">주문서조회</h1>
 			<ol class="breadcrumb">
 				<li><a href="#">candy</a></li>
-				<li><a href="#">주문서관리</a></li>
+				<li><a href="#">영업관리</a></li>
 				<li class="active">주문서조회</li>
 			</ol>
-
 		</div>
 
 		<div id="page-inner">
@@ -66,17 +44,23 @@
 							</div>
 							<div>
 								<label for="companyName">주문일자</label> <!-- 주문일자 label -->
-								<input type="date" id="selStrtDt" style="width: 35%;"> - <input type="date" id="selendDt" style="width: 35%;"> <!-- date input -->
+								<input type="date" id="selStrtDt" style="width: 25%;"> - <input type="date" id="selendDt" style="width: 25%;"> <!-- date input -->
 							</div>
 						</div>
 						<!-- 조회버튼 -->
-						<button id="ordrSchBtn" class="cndSelBtn" type="button">조회</button>
+						<button id="ordrSchBtn" class="cndSelBtn" type="button">
+							<i class="fa-solid fa-magnifying-glass"></i>조회
+						</button>
+						<button type="button" class="cndRstBtn hi" id="resetBtn">
+							<i class="fa-solid fa-rotate-right"></i> 초기화
+						</button>
 						<!-- end 조회버튼 -->
 					</div>
 				</div>
 			</div> <!--END row-->
 			<div class="row">
 				<div class="col-md-12">
+					
 					<!-- Advanced Tables -->
 					<div class="card">
 						<div class="card-action">주문서조회</div>
@@ -85,7 +69,11 @@
 							<div class="table-responsive">
 								<div id="orderList"></div>
 							</div> <!-- end 주문서 목록 조회박스 -->
+							<div>
+								<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
+							</div>
 						</div>
+						
 					</div>
 				</div>
 			</div> <!--END row-->
@@ -244,7 +232,31 @@
 		//
 		$('#accntMdlCaNm').on('input', function () {
 			mdlAccntSrch();
-		})
+		});
+
+		$("#excelBtn").on('click', function () {
+			Swal.fire({
+				title: '엑셀파일로 받아보시겠습니까?',
+				text: "원하지 않는다면 취소를 눌러주세요",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: '확인',
+				cancelButtonText: '취소',
+				reverseButtons: true, // 버튼 순서 거꾸로
+
+			}).then((result) => {
+				if (result.isConfirmed) {
+					moModal.export('xlsx', options);
+				} else {
+					Swal.fire({
+						title: '취소되었습니다',
+						icon: 'success'
+					});
+				}
+			});
+		});
 
 		// 모달창 tr 선택하면 조회페이지 input에 입력되는 click event
 		accntmdl.on("click", (e) => {
@@ -259,5 +271,18 @@
 				$("#accntNmMdl").hide();
 			}
 		});
+
+		//ESC 누르면 모달창 없어지게 하는 방법
+		//keydown --> 사용자가 키를 누르거나 키를 놓을 때 발생
+		$(window).on("keydown", (e) => {
+			let accntNmMdl = $("#accntNmMdl");
+
+			//e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
+			if (e.keyCode === 27 && accntNmMdl.css("display") === "block") {
+				accntNmMdl.hide();
+			};
+		});
 	});
+
+	
 </script>
