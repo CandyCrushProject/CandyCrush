@@ -4,11 +4,40 @@
 
 
 			<link rel="stylesheet" href="assets/css/processManagement.css">
-			<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-			<!-- 폰트 어썸 -->
-			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 			<link rel="stylesheet" href="assets/css/processOrder.css">
+			<script type="text/javascript" src="https://uicdn.toast.com/tui.code-snippet/v1.5.0/tui-code-snippet.js"></script>
+			<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.3.0/tui-pagination.js"></script>
+			<script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+
+			<style>
+				.procOder button {
+
+					padding: 5px 20px;
+				}
+			</style>
 			<main>
+				<!-- 계획 조회 모달 -->
+				<div class="modal fade" id="plan" tabindex="-1">
+					<div class="modal-dialog modal-lg modal-dialog-scrollable">
+						<div class="modal-content">
+							<div class="modal-header" style="border:none;">
+								<h4>생산계획 조회</h4>
+								<div>
+									<input type="text" id="cprNm" placeholder="제품명" style="width: 20%; display: inline;"
+										autocomplete="off">
+								</div>
+							</div>
+							<div class="modal-body">
+
+								<input type="hidden" name="prpldStatus" id="prpldStatus" value="계획완료" readonly>
+								<div id="procPlanList"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="cndRstBtn" data-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				<!-- /. NAV SIDE  -->
 				<div id="page-wrapper">
 					<div class="header">
@@ -25,53 +54,30 @@
 
 						<div class="row">
 							<div class="col-md-12">
-								<div class="card">
-									<div class="card-content">
-										<div class="procOder">
-											<ul>
-												<li class="procOderBtn-r">
-													<button class="cndInsBtn ">저장</button>
-												</li>
-												<li class="procOderBtn-r">
-													<button class="cndSelBtn ">계획조회</button>
-												</li>
-												<li class="procOderBtn-r">
-													<button class="cndRstBtn ">초기화</button>
-												</li>
-											</ul>
-										</div>
-										<div class="floatEnd"></div>
-										<div class="procOderCraete">
-											<table class="candyTab">
-												<thead>
-													<tr>
-														<th>제품코드</th>
-														<th>제품명</th>
-														<th>계획코드</th>
-														<th>납기일자</th>
-														<th>필요수량</th>
-														<th>지시수량</th>
-														<th>담당자</th>
-														<th>작업지시일</th>
-													</tr>
-												</thead>
-												<tbody>
-													<div id="procPlanList"></div>
-												</tbody>
-											</table>
-										</div>
-										<div class="clearBoth">
-											<br />
-										</div>
-
-
-									</div>
-								</div>
-
+								<ul>
+									<li class="procOderBtn-r">
+										<button class="cndInsBtn ">
+											<i class="fa-solid fa-plus"></i>
+											등록
+										</button>
+									</li>
+									<li class="procOderBtn-r">
+										<button class="cndSelBtn" id="planBtn" type="button" data-toggle="modal" data-target="#plan">
+											<i class="fa-regular fa-folder-open"></i>
+											계획조회
+										</button>
+									</li>
+									<li class="procOderBtn-r">
+										<button class="cndRstBtn ">
+											<i class="fa-solid fa-rotate-right"></i>
+											초기화
+										</button>
+									</li>
+								</ul>
+								<div class="clearBoth"></div>
 							</div>
-
-							<!-- /. PAGE INNER  -->
 						</div>
+
 
 						<div class="row">
 							<div class="col-md-8">
@@ -144,8 +150,106 @@
 								</div>
 							</div>
 						</div>
-
-						<!-- /. PAGE WRAPPER  -->
+						<!-- /. PAGE INNER  -->
 					</div>
+					<!-- /. PAGE WRAPPER  -->
+				</div>
 				</div>
 			</main>
+
+			<script>
+				var cprNm = "";
+				var rowKey = "";
+				var columnName = "";
+				var row = "";
+				document.getElementById("cprNm").addEventListener("input", () => {
+					search();
+				});
+				function search() {
+					$.ajax({
+						url: "cprSearch",
+						method: "POST",
+						dataType: "JSON",
+						data: {
+							cprNm: $('#cprNm').val(),
+							prpldStatus: "계획완료"
+						},
+						success: function (data) {
+							procPlanGrid.resetData(data);
+						}
+					});
+				}
+
+				$(document).ready(function () {
+
+					$('#planBtn').on('click', function () {
+						$.ajax({
+							url: 'ProcPlanOrder',
+							method: 'post',
+							data: {
+								prpldStatus: $('#prpldStatus').val()
+							},
+							success: function (data) {
+								procPlanGrid.resetData(data);
+								setTimeout(() => procPlanGrid.refreshLayout(), 200);
+							}, error: function (err) {
+								console.log("실패");
+							}
+						});
+					})
+				})
+				const procPlanGrid = new tui.Grid({
+					el: document.getElementById('procPlanList'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					selectionUnit: 'row',
+					rowHeaders: ['rowNum'],
+					columns: [
+						{
+							header: '주문서번호',
+							name: 'orshNo',
+							align: 'center'
+						},
+						{
+							header: '제품명',
+							name: 'cprNm',
+							align: 'center'
+						},
+						{
+							header: '생산계획수량',
+							name: 'prpldCnt',
+							align: 'center'
+						},
+						{
+							header: '생산계획일자',
+							name: 'prplDt',
+							align: 'center'
+						},
+						{
+							header: '완료여부',
+							name: 'prplStatus',
+							align: 'center'
+						},
+						{
+							header: '담당자',
+							name: 'prpldMng',
+							align: 'center'
+						},
+						{
+							header: '현재상태',
+							name: 'prpldStatus',
+							align: 'center'
+						},
+					]
+				});
+				procPlanGrid.on('dblclick', function (ev) {
+					rowKey = ev.rowKey;
+					columnName = ev.columnName;
+					row = procPlanGrid.getRow(rowKey);
+					console.log(row);
+
+					$('#plan').modal('hide');
+				});
+
+			</script>

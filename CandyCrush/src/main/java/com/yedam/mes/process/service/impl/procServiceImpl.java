@@ -61,8 +61,8 @@ public class procServiceImpl implements ProcService {
 		return procMapper.insertPlanDetail(planVO);
 	}
 	@Override
-	public ProcPlanVO getPlan(ProcPlanVO planVO) {
-		return null;
+	public List<ProcPlanVO> getPlan(ProcPlanVO ppVO) {
+		return procMapper.seletPlanList(ppVO);
 	}
 
 	@Override
@@ -88,6 +88,11 @@ public class procServiceImpl implements ProcService {
 	@Override
 	public List<ProcProgVO> getProgList(ProcProgVO progVO) {
 		return null;
+	}
+
+	@Override
+	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO) {
+		return procMapper.searchPlanList(ppVO);
 	}
 
 

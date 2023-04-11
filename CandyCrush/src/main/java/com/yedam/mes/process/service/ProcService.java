@@ -27,17 +27,15 @@ public interface ProcService {
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
 	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO);
-	
-	// 사용가능자재 - 제품에 들어가는 자재
-	
-	// 자재확인 - 공정마다 들어가는 자재확인하는거
+
+	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO); 
 	
 	/* 생산계획 매퍼 끝 */
 	
 	/* 생산지시 매퍼 시작 */
 	
 	// 생산계획조회 - 생산계힉정보를 넘겨받음
-	public ProcPlanVO getPlan(ProcPlanVO planVO); 
+	public List<ProcPlanVO> getPlan(ProcPlanVO ppVO); 
 	
 	// 생산지시저장 - 조회된 계획으로 지시를 내릴 수 있다.
 	public int addOrder(ProcOrderVO orderVO);
