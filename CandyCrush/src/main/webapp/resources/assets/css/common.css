@@ -34,3 +34,7 @@ input[type="date"] {
 	margin-left: 10px;
 	margin-right: 10px;
 }
+
+/* 모달 CSS */
+.modal { padding-right: 0px !important; }
+.modal-open { padding-right: 0px !important; }
