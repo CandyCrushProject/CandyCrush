@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yedam.mes.material.mapper.MaterialInputVO;
 import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;
@@ -121,6 +122,13 @@ public class MaterialController {
 	public String mtrlInputManagement(Model model) {
 		model.addAttribute("accountList", service.accountCheck());
 		return "material/mtrlInputManagement";
+	}
+	
+	//자재입고관리/자재입고검사 정보가져오기
+	@PostMapping("mtrlInputGetList")
+	@ResponseBody
+	public List<MaterialInputVO> mtrlInputGetList(@RequestParam(required = false) String caNm, @RequestParam(required = false) String start, @RequestParam(required = false) String end){
+		return service.mtrlInputGetList(caNm, start, end);
 	}
 	
 	//------------------------------------------------------------------------
