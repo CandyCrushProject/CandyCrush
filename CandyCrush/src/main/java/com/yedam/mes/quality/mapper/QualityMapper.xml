@@ -19,4 +19,20 @@
     	left join CM_MTRL_MNG C
     on D.CMM_CD = C.CMM_CD
   </select>
+  
+  
+    <select id="selectMtQualityTestList" resultType="QualityMtTestVO">
+	SELECT 
+
+	   MI_CD,
+	   MI_DT,
+	   MI_MNG,
+	   MI_CNT,
+	   MI_BAD_CNT,
+	   MI_PASS_CNT,
+	   MI_NOTE,
+	   MO_CD
+	FROM MTRL_INSP
+	WHERE MO_CD=#{moCd}
+  </select>
   </mapper>
