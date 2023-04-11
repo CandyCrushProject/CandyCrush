@@ -24,11 +24,11 @@
 </style>
 <main>
 	<!-- 자재발주조회 더블클릭하면 나오는 모달 -->
-	<div id="orderDetailModal" class="w3-modal" style="z-index: 101;">
+	<div id="ordrDtilMdl" class="w3-modal" style="z-index: 101;">
 		<div class="w3-modal-content">
 			<div class="w3-container">
 				<span class="w3-button w3-display-topright"
-					onclick="document.getElementById('orderDetailModal').style.display='none'">&times;</span>
+					onclick="document.getElementById('ordrDtilMdl').style.display='none'">&times;</span>
 				<h3>상세발주목록</h3>
 				<div style="clear:both"></div>
 				<div id="rigth">
@@ -63,9 +63,6 @@
 								<label for="accountName">거래처명</label>
 								<input type="text" id="accountName" autocomplete="off"
 									style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
-								<button class="srchBtn">
-									<i class="fa-solid fa-magnifying-glass"></i>
-								</button>
 							</div>
 							<div class="card-action">거래처목록</div>
 							<div class="table-responsive">
@@ -84,9 +81,6 @@
 						<div class="card-action">자재발주</div>
 						<div class="card-content">
 							<div id="contextBox">
-								<button id="orderInsert" class="cndInsBtn">
-									<i class="fa-solid fa-plus"></i>등록
-								</button>
 								<button class="cndUdtBtn" type="button">
 									<i class="fa-solid fa-wrench"></i>수정
 								</button>

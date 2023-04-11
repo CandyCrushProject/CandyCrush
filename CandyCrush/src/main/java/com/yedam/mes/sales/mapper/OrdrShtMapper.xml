@@ -63,4 +63,16 @@
 			</if>
 		ORDER BY ca_no
 	</select>
+	
+	<!-- 주문서코드 자동생성 -->
+	<select id="getOrdrShtCode" resultType="String">
+        SELECT 'ordr' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ordr_sht_seq.nextval,'099')) as orsh_No
+          FROM DUAL
+    </select>
+    
+    <!-- 주문서디테일코드 자동생성 -->
+    <select id="getOrdrShtDtlCode" resultType="String">
+        SELECT 'ordrdtl' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ordr_sht__dtl_seq.nextval,'099')) as ordr_dtl_cd
+          FROM DUAL
+    </select>
 </mapper>

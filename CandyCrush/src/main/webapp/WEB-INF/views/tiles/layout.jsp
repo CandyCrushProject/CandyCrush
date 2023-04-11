@@ -9,8 +9,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>CandyCrushMES</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+	
 	<!-- jQuery Js -->
 	<script src="assets/js/jquery-1.10.2.js"></script>
 	<!-- jQuery -->
@@ -88,24 +87,7 @@
 	<!-- Google Fonts-->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 	<link rel="stylesheet" href="assets/js/Lightweight-Chart/cssCharts.css">
-	<!-- <style>
-		/*input checkbox css*/
-		input[type="checkbox"]:not(:checked), 
-		input[type="checkbox"]:checked {
-			position: relative !important;
-			left: 0 !important;
-			opacity: 1 !important;
-			width: 100% !important;
-		}
-		
-		input[type="date"] {
-			width: 150px !important;
-		}
-	</style> -->
-	<style>
-			.modal { padding-right: 0px !important; }
-			.modal-open { padding-right: 0px !important; }
-	</style>
+	
 </head>
 
 <body>
