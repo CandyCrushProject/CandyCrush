@@ -260,7 +260,7 @@
 									</a>
 								</li>
 								<li>
-									<a href="${pageContext.request.contextPath}/ordrShtMngmnt" class="waves-effect waves-dark">
+									<a href="${pageContext.request.contextPath}/ordrMngntPage" class="waves-effect waves-dark">
 										주문서관리
 									</a>
 								</li>
