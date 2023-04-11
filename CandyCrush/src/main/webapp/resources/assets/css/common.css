@@ -26,6 +26,7 @@ input[type="date"] {
 	float: right;
 	position: relative;
 	bottom: 20px;
+	right: 17px;
 }
 #mtrlInputMngDelBtn{
 	float: right;

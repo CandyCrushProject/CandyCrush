@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.yedam.mes.material.mapper.MaterialInputVO;
+import com.yedam.mes.material.service.MaterialInputVO;
 import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;

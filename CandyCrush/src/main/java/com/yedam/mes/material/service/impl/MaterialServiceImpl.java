@@ -7,8 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yedam.mes.material.mapper.MaterialInputVO;
 import com.yedam.mes.material.mapper.MaterialMapper;
+import com.yedam.mes.material.service.MaterialInputVO;
 import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.material.service.MaterialService;
 import com.yedam.mes.material.service.MaterialVO;

@@ -2,15 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-<style>
-.tui-grid-cell.cell-red {
-	background-color : #FFF0F5;
-	color : red;
-	font-weight: bold;
-}
-</style>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -73,18 +64,11 @@
 						<div>
 							<div class="card-action">▶입고등록</div>
 							<div style="clear:both"></div>
-							<button type="button" class="cndInsBtn mtrlInputMngFloatBtn">저장</button>
+							<button type="button" class="cndInsBtn mtrlInputMngFloatBtn" id="mtrlInputSaveBtn">저장</button>
 							<button type="button" class="cndDelBtn mtrlInputMngFloatBtn">삭제</button>
 							<div id="inputReset" style="padding-left: 5px;">
 								<label for="mtrlInput" style="margin-left: 10px; width: 80px;">입고일자</label>
 								<input type="date" id="mtrlInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<label for="mtrInputType" style="width: 80px;">입고유형</label>
-								<select id="mtrInputType" name="cmmType" style="display: inline; width: 200px;">
-									<option value="0">--선택해주세요--</option>
-									<option value="원자재">원자재</option>
-									<option value="부자재">부자재</option>
-								</select>
 							</div>
 						</div>
 						<div style="clear:both"></div>
@@ -99,7 +83,7 @@
 				<div class="col-md-4">
 					<div class="card">
 						<div class="card-action">▶입고목록</div>
-						<div style="padding-left: 5px;">
+						<div style="padding-left: 5px; margin-bottom: 20px">
 							<label for="mtrInputType" style="margin-left: 10px; width:80px;">담당자</label>
 							<input type="text" id="mtrlInputMng" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
 						</div>
@@ -228,7 +212,6 @@
 			let caNmInput = $('#caNmInput').val();
 			let start = $('#start').val();
 			let end = $('#end').val();
-			//materialInspGetList.addCellClassName(e.rowData, 'minCnt', 'cell-red');
 			$.ajax({
 				url : "mtrlInputGetList",
 				method :"POST",
@@ -244,6 +227,12 @@
 			el: document.getElementById('materialLotSave'), // Container element
 			rowHeaders: ['checkbox'],
 			columns: [
+				{
+					header: '검사코드',
+					name: 'miCd',
+					sortingType: 'asc',
+					sortable: true,
+				},
 				{
 					header: '자재코드',
 					name: 'cmmCd',
@@ -270,9 +259,7 @@
 				},
 				{
 					header: '발주코드',
-					name: 'moCd',
-					sortingType: 'asc',
-					sortable: true
+					name: 'moCd'
 				},
 				{
 					header: '입고가능수량',
@@ -295,7 +282,7 @@
 			}
 		});
 
-		//입력값 String 예외처리
+		//입력값에 대한 예외처리 부분
 		let beforeMoCnt = "";
 		materialInspGetList.on("editingStart", (e) => {
 			beforeMoCnt = materialInspGetList.getRow(e.rowKey).minCnt;
@@ -303,8 +290,10 @@
 
 		materialInspGetList.on('editingFinish', (e)=>{
 			let rowDate = materialInspGetList.getRow(e.rowKey);
-			let minCntData = Number(rowDate.minCnt);
+			let minCntData = Number(rowDate.minCnt);					//입고수량
+			let miPassCntData = Number(rowDate.miPassCnt);	  //입고가능수량
 
+			//입고가능한 수량 값을 String을 입력했을 경우
 			if(isNaN(minCntData)){
 				setTimeout(() => {
 					Swal.fire({
@@ -315,6 +304,34 @@
 					materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
 					return;
 				}, 10);
+			}
+
+			//입고가능한 수량보다 입고할 수량이 더 많은 경우
+			if(minCntData > miPassCntData){
+				setTimeout(() => {
+					Swal.fire({
+						icon : 'error',
+						title : '다시 입력해주세요',
+						text: '입고가능한 수량보다 많습니다',
+					});
+					materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+					return;
+				}, 10);
+			};
+		});
+
+		//체크한 행만 입고코드를 입힌다
+		$('#mtrlInputSaveBtn').on('click',(e)=>{
+			let checkRows = materialInspGetList.getCheckedRows();
+			if(checkRows.length !== 0){
+				console.log("length 있음");
+
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: '경고',
+					text: "선택된 자재가 없거나 데이터가 없습니다.",
+				});
 			}
 		})
 
@@ -334,7 +351,7 @@
 					name: ''
 				}
 			],
-			bodyHeight: 510,
+			bodyHeight: 520,
 		});
 
 		$(window).on("keydown", (e) => {
