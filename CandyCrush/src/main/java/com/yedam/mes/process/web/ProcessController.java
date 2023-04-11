@@ -40,13 +40,10 @@ public class ProcessController {
 	}
 	
 	// 생산관리 -> 생산계획관리 -> 주문서 정보 받아오기
-	@GetMapping("getOrderDetail")
+	@PostMapping("getOrderDetail")
 	@ResponseBody
-	public Map<String, Object> getOrderSheetDetail(OrderPlanVO opVO) {
-	    Map<String, Object> resultMap = new HashMap<>();
-	    resultMap.put("result", procService.getOrderDetail(opVO));
-	    
-		return resultMap;
+	public List<OrderPlanVO> getOrderSheetDetail(OrderPlanVO opVO) {
+		return procService.getOrderDetail(opVO);
 	}
 	
 	// 생산관리 -> 생산계획 -> 생산계획코드, 생산계획상세코드
