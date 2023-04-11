@@ -418,18 +418,18 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
-										생산계획관리
+									<a href="${pageContext.request.contextPath}/QualityMat" class="waves-effect waves-dark">
+										자재품질관리
 									</a>
 								</li>
 								<li>
 									<a href="${pageContext.request.contextPath}/ProcOrder" class="waves-effect waves-dark">
-										생산지시관리
+										제품품질관리
 									</a>
 								</li>
 								<li>
 									<a href="${pageContext.request.contextPath}/ProdProcManagement" class="waves-effect waves-dark">
-										생산공정관리
+										???빈칸
 									</a>
 								</li>
 							</ul>
