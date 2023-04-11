@@ -45,7 +45,7 @@
 		   AND s.ca_no = a.ca_no(+)
 		   AND orsh_pr = '접수완료'
 		 GROUP BY s.orsh_no, s.ca_no,ca_nm, orsh_dt, dlvry_dt
-		 ORDER BY orsh_no
+		 ORDER BY dlvry_dt
 	</select>
 	
 	<!-- 주문건의 다건 -->
@@ -70,7 +70,7 @@
 		   AND o.ca_no = a.ca_no(+)
 	       AND d.orsh_pr = '접수완료'
            AND d.orsh_no = #{orshNo}
-           AND o.ca_no = #{caNo}
+           AND ca_nm = #{caNm}
 		 ORDER BY 5
 	</select>
 	

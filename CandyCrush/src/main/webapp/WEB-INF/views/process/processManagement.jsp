@@ -4,7 +4,6 @@
 
 
 			<link rel="stylesheet" href="assets/css/processManagement.css">
-			<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 			<style>
 				#orderSheetTab td {
 					vertical-align: middle;
@@ -46,26 +45,13 @@
 					<div class="modal-dialog modal-lg modal-dialog-scrollable">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title">주문서 조회</h5>
+								<h3 class="modal-title">주문서 상세 조회</h3>
+								<br>
+								<h5>주문번호</h5>
+								<input type="text" id="orshNoCd" style="width: 200px;" readonly>
 							</div>
 							<div class="modal-body">
-								<div class="procPlanCraete">
-									<h5>주문서 정보</h5>
-									<table class="candyTab">
-										<thead>
-											<tr>
-												<th scope="col">No</th>
-												<th scope="col">주문코드</th>
-												<th scope="col">주문건수</th>
-												<th scope="col">거래처</th>
-												<th scope="col">주문일자</th>
-												<th scope="col">납품일자</th>
-											</tr>
-										</thead>
-										<tbody id=orderSheetTab>
-										</tbody>
-									</table>
-								</div>
+								<div id="orderDetailList"></div>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="cndRstBtn" data-dismiss="modal">Close</button>
@@ -90,34 +76,15 @@
 							<div class="col-md-12">
 								<div class="card">
 									<div class="card-content">
-										<div class="procPlan">
-											<ul>
-												<li class="procPlanBtn-r">
-													<button id="oderBtn" type="button" class="cndSrchBtn hi" data-toggle="modal"
-														data-target="#order">
-														<i class="fa-solid fa-clipboard"></i> 주문서
-													</button>
-												</li>
-											</ul>
-										</div>
-										<div class="floatEnd"></div>
 										<div class="procPlanCraete">
-											<h4 style="padding-bottom: 20px;">주문서 정보</h4>
-											<table class="candyTab">
-												<thead>
-													<tr>
-														<th scope="col">No</th>
-														<th scope="col">주문상세코드</th>
-														<th scope="col">주문수량</th>
-														<th scope="col">제품명</th>
-														<th scope="col">거래처명</th>
-														<th scope="col">납기일자</th>
-														<th scope="col">현재상태</th>
-													</tr>
-												</thead>
-												<tbody id="orderDetail">
-												</tbody>
-											</table>
+											<div>
+												<button type="button" class="cndInsBtn hi" style="float: right; display: inline;" id="">
+													<i class="fa-solid fa-plus"></i> 추가
+												</button>
+											</div>
+											<h4 style="padding-bottom: 20px;">미계획 주문서 리스트</h4>
+											<!-- 처음 주문서들 정보 뿌려줄 것들 -->
+											<div id="orderSheetTab"></div>
 										</div>
 										<div class="clearBoth">
 											<br />
@@ -156,74 +123,13 @@
 											<input type="hidden" id="orshPr" name="orshPr" readonly>
 											<input type="hidden" name="prpldStatus" value="미지시" readonly>
 											<input type="hidden" name="prplStatus" value="계획완료" readonly>
-											<div class="prodProc">
-												<div class="row matop">
-													<div class="col-md-3">
-														주문번호
-														<input type="text" id="orshNo" name="orshNo" value="" readonly>
-														<input type="hidden" id="caNm" name="caNm" value="" readonly>
-														<input type="hidden" id="caNo" name="caNo" value="" readonly>
-														<input type="hidden" id="ordrDtlCd" name="ordrDtlCd" value="" readonly>
-													</div>
-													<div class="col-md-3">
-														제품명
-														<input type="text" name="cprNm" id="cprNm" value="" readonly>
-														<input type="hidden" id="cprCd" name="cprCd" readonly>
-													</div>
-													<div class="col-md-2">
-														주문수량
-														<input type="number" id="ordrDtlCnt" name="ordrDtlCnt" value="" readonly>
-													</div>
-													<div class="col-md-2">
-														주문일자
-														<input type="date" id="orshDt" name="orshDt" value="" readonly>
-													</div>
-													<div class="col-md-2">
-														납기일자
-														<input type="date" id="dlvryDt" name="dlvryDt" value="" readonly>
-														<input type="hidden" id="sttCngDt" name="sttCngDt" value="" readonly>
-													</div>
-												</div>
-												<table class="candyTab tabb">
-													<thead>
-														<tr>
-															<th>계획코드</th>
-															<th>생산계획수량</th>
-															<th>담당자</th>
-															<th>생산작업일자</th>
-															<th>생산완료예정일</th>
-															<th>작업우선순위</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td>
-																<input type="text" name="prplCd" id="prplCd" readonly>
-																<input type="hidden" name="prpldCd" id="prpldCd" readonly>
-															</td>
-															<td>
-																<input type="number" name="prpldCnt" id="prpldCnt">
-															</td>
-															<td>
-																<input type="text" name="prpldMng" id="prpldMng">
-															</td>
-															<td>
-																<input type="date" name="prstDt" id="prstDt">
-															</td>
-															<td>
-																<input type="date" name="prplSuceDt" id="prplSuceDt">
-															</td>
-															<td>
-																<select name="prpldWorkTskPri" style="height: 54px;">
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3">3</option>
-																	<option value="4">4</option>
-																	<option value="5">5</option>
-																</select>
-															</td>
-													</tbody>
-												</table>
+											<input type="hidden" id="caNm" name="caNm" value="" readonly>
+											<input type="hidden" id="caNo" name="caNo" value="" readonly>
+											<input type="hidden" id="ordrDtlCd" name="ordrDtlCd" value="" readonly>
+											<input type="hidden" id="cprCd" name="cprCd" readonly>
+											<input type="hidden" id="sttCngDt" name="sttCngDt" value="" readonly>
+											<input type="hidden" name="prpldCd" id="prpldCd" readonly>
+											<div id="insertPlanGrid"></div>
 										</form>
 									</div>
 									<div class="clearBoth">
@@ -314,6 +220,7 @@
 				}
 				$(document).ready(function () {
 
+
 					$('#resetBtn').on('click', function () {
 						$("#orshNo").val('');
 						$("#cprNm").val('');
@@ -326,53 +233,22 @@
 						$("#prstDt").val('');
 						$("#prplSuceDt").val('');
 					});
-					$('#oderBtn').on('click', function () {
-						$("#orshNo").val('');
-						$("#cprNm").val('');
-						$("#ordrDtlCnt").val('');
-						$("#orshDt").val('');
-						$("#dlvryDt").val('');
-						$("#prplCd").val('');
-						$("#prpldCnt").val('');
-						$("#prpldMng").val('');
-						$("#prstDt").val('');
-						$("#prplSuceDt").val('');
-
-						$.ajax({
-							url: 'getOrder',
-							type: 'GET',
-							dataType: 'json',
-							success: function (data) {
-								// 성공적으로 응답 받았을 때 처리할 로직
-								var tbody = $("#orderSheetTab"); // tbody 선택
-								tbody.empty(); // tbody 비우기
-
-								// 데이터 반복문 처리
-								$.each(data.result, function (index, item) {
-									var row = $("<tr>").on('dblclick', function () {
-										getOrderDate(item.orshNo, item.caNo);
-									});
-									row.append($("<td>").attr("hidden", true).text(item.caNo));
-									row.append($("<th scope='row'>").text(index + 1));
-									row.append($("<td>").text(item.orshNo));
-									row.append($("<td>").text(item.ordrCdCnt));
-									row.append($("<td>").text(item.caNm));
-									row.append($("<td>").text(item.orshDt));
-									row.append($("<td>").text(item.dlvryDt));
-
-									tbody.append(row);
-								})
-								// 모달 창 열기
-								$('#order').modal('show');
-							},
-							error: function (xhr, status, error) {
-								// 요청이 실패했을 때 처리할 로직
-								console.error('요청 실패:', error);
-							}
-						});
-					});
 				});
-
+				getOrder();
+				function getOrder() {
+					$.ajax({
+						url: 'getOrder',
+						type: 'GET',
+						dataType: 'json', // orderSheetTab 
+						success: function (data) {
+							orderSheetGrid.resetData(data.result);
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				}
 				function getOrderDate(orshNo, caNo) {
 					let addData = {
 						orshNo: orshNo,
@@ -429,31 +305,11 @@
 
 				/* 주문서정보 -> 생산계획작성 */
 				$(document).on("dblclick", ".planBtn", function () {
-					var orderArray = [];
-					var row = $(this);
-					row.find("td").each(function () {
-						orderArray.push($(this).text());
-					});
-
-
 					$.ajax({
 						url: 'getProcPlanCode',
 						type: 'GET',
 						dataType: 'json',
 						success: function (data) {
-							$("#orshNo").val(orderArray[0]);
-							$("#caNo").val(orderArray[1]);
-							$("#orshDt").val(orderArray[2]);
-							$("#cprCd").val(orderArray[3]);
-							$("#sttCngDt").val(orderArray[4]);
-							$("#ordrDtlCd").val(orderArray[5]);
-							$("#ordrDtlCnt").val(orderArray[6]);
-							$("#cprNm").val(orderArray[7]);
-							$("#caNm").val(orderArray[8]);
-							$("#dlvryDt").val(orderArray[9]);
-							$("#orshPr").val(orderArray[10]);
-							$("#prplCd").val(data.prplCd);
-							$("#prpldCd").val(data.prpldCd);
 
 						},
 						error: function (xhr, status, error) {
@@ -515,4 +371,99 @@
 						newPlan.submit();
 					});
 				});
+
+				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
+				const orderSheetGrid = new tui.Grid({
+					el: document.getElementById('orderSheetTab'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					rowHeaders: ['checkbox'],
+					columns: [
+						{
+							header: '주문코드',
+							name: 'orshNo',
+							align: 'center'
+						},
+						{
+							header: '주문건수',
+							name: 'ordrCdCnt',
+							align: 'center'
+						},
+						{
+							header: '거래처',
+							name: 'caNm',
+							align: 'center'
+						},
+						{
+							header: '주문일자',
+							name: 'orshDt',
+							align: 'center'
+						},
+						{
+							header: '납품일자',
+							name: 'dlvryDt',
+							align: 'center'
+						}
+					]
+				});
+				orderSheetGrid.on('dblclick', function (ev) {
+					var row = orderSheetGrid.getRow(ev.rowKey);
+					getOrderDetail(row.orshNo, row.caNm);
+					$('#order').modal('show');
+				});
+
+				function getOrderDetail(orshNo, caNm) {
+					$.ajax({
+						url: 'getOrderDetail',
+						method: 'post',
+						data: {
+							orshNo: orshNo,
+							caNm: caNm
+						},
+						success: function (data) {
+							orderDetailGrid.resetData(data);
+							$('#orshNoCd').val(data[0].orshNo);
+							setTimeout(() => orderDetailGrid.refreshLayout(), 200);
+						}, error: function (rej) {
+							console.log(rej);
+						}
+					});
+				}
+				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
+				const orderDetailGrid = new tui.Grid({
+					el: document.getElementById('orderDetailList'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					rowHeaders: ['rowNum'],
+					columns: [
+						{
+							header: '주문상세코드',
+							name: 'ordrDtlCd',
+							align: 'center'
+						},
+						{
+							header: '제품명',
+							name: 'cprNm',
+							align: 'center'
+						},
+						{
+							header: '거래처',
+							name: 'caNm',
+							align: 'center'
+						},
+						{
+							header: '주문수량',
+							name: 'ordrDtlCnt',
+							align: 'center'
+						},
+						{
+							header: '현재상태',
+							name: 'orshPr',
+							align: 'center'
+						},
+					]
+				});
+
 			</script>
