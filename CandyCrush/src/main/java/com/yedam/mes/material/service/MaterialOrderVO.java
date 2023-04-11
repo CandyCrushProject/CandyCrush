@@ -8,13 +8,14 @@ import lombok.Data;
 
 @Data
 public class MaterialOrderVO {
-	private String moCd;
+	private String modCd;		//발주상세코드
+	private String moCd;		//발주코드
 	private String moTitle;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date moReoDt;	//발주신청일
+	private Date moReoDt;		//발주신청일
 	private int moCnt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date moReqDt;	//납기요청일
+	private Date moReqDt;		//납기요청일
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date moCpltDt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

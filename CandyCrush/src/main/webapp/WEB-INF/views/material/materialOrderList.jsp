@@ -73,7 +73,6 @@
 		<div id="page-inner">
 			<div class="row">
 				<div class="col-md-12">
-					<!-- Advanced Tables -->
 					<div class="card">
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
@@ -96,7 +95,6 @@
 			</div> <!--END row-->
 			<div class="row">
 				<div class="col-md-12">
-					<!-- Advanced Tables -->
 					<div class="card">
 						<div class="card-action">자재발주조회</div>
 						<div class="card-content">
@@ -195,20 +193,6 @@
 			}
 		});
 		caModal.resetData(accountList);	// 그리드에 값 입력
-
-		//모달창 tr 선택하면 돌아가는 click event
-		caModal.on("click", (e) => {
-			let caNm = caModal.getData()[e.rowKey].caNm;
-			if (e.targetType !== "columnHeader") {
-				Swal.fire({
-					icon: 'success',
-					title: '업체명 선택완료',
-					text: '업체명 : ' + caNm,
-				});
-				$("#companyName").val(caNm);
-				$("#modal").hide();	
-			}
-		});
 
 		//모달창 tr 선택하면 돌아가는 click event
 		caModal.on("click", (e) => {

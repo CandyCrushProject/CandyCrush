@@ -34,6 +34,13 @@ public interface MaterialMapper {
 	//발주관리 디테일
 	public int orderDetailInsert(MaterialOrderVO vo);
 	
+	//--발주삭제
+	//발주번호 기반으로 헤더와 디테일의 데이터를 동시에 지운다
+	public int orderDelete(@Param("delMocd") String delMocd);
+	
+	//발주상세코드를 기반으로 디테일 데이터를 지운다
+	public int orderDetailDelete(@Param("delModCd") String delModCd);
+	
 	//발주 디테일 데이터 수정
 	public int orderDetailUpdate(@Param("moCnt") int moCnt,
 								 @Param("moReqDt") Date moReqDt,
