@@ -52,6 +52,8 @@ public interface MaterialMapper {
 	public List<MaterialInputVO> mtrlInputGetList(@Param("caNm") String caNm,
 												  @Param("start") String start,
 												  @Param("end") String end);
+	//입고목록 -> 7일 이내
+	public List<MaterialInputVO> mtrlInputList7Days();
 	
 	
 }

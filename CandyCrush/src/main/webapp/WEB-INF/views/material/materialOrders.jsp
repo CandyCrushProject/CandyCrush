@@ -9,45 +9,9 @@
 		margin-left: 10px;
 		color : black;
 	}
-	#inputReset{
-		margin-left: 10px;
-	}
-	.mtrlOrderRightBtn{
-		float: right;
-		position: relative;
-		right: 20px;
-		bottom: 4px;
-	}
-	#companyName{
-		cursor:pointer;
-	}
-	#companyNameOrderList{
-		cursor:pointer;
-	}
-	#modalMocd{
-		background-color: rgb(233, 233, 233);
-		border: 0 !important;
-		border-radius: 15px;
-		width: 200px !important;
-		height: 32px;
-		padding-left : 20px;
-	}
-	#modalBtn{
-		float: right;
-		height: 100px;
-		position: relative;
-		bottom: 40px;
-	}
 	input[type="text"]{
 		width: 90%;
 	}
-
-	#rigth{
-		float: right;
-		position: relative;
-		bottom: 25px;
-	}
-
 </style>
 <main>
 	<!-- 업체검색모달 -->
@@ -60,7 +24,7 @@
 					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;" autocomplete="off">
 					<br/>
 					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;" autocomplete="off">
-					<button class="srchBtn" id="modalBtn">
+					<button class="srchBtn" id="mtrlOrdermodalBtn">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</button>
 				</div>
@@ -314,7 +278,7 @@
 		}
 
 		//modal account search Btn event
-		$("#modalBtn").on('click',(e)=>{
+		$("#mtrlOrdermodalBtn").on('click',(e)=>{
 			modalAccountSearch();
 		})
 
