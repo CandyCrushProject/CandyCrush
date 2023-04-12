@@ -89,7 +89,7 @@
 	<!-- 자재발주 디테일 단건조회 -->
 	<!-- 발주코드, 업체코드, 업체명, 자재코드, 자재명, 발주수량, 안전재고, 납기요청일, 현재재고, 예상재고량 -->
 	<select id="mtrlOrderDetailList" resultType="MaterialOrderVO">
-		SELECT mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, mo_cnt, cmm_saf_stc, mo_req_dt,
+		SELECT mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, mo_cnt, cmm_saf_stc, mo_req_dt, mod_cd,
 		        TO_NUMBER(min_cnt) - TO_NUMBER(mot_cnt) AS "cmm_inven",
 		        TO_NUMBER(min_cnt) - TO_NUMBER(mot_cnt) + TO_NUMBER(mo_cnt) "cmm_est_inven"
 		FROM mtrl_order mo
@@ -127,6 +127,18 @@
 		VALUES
 			('mod' || TO_CHAR(sysdate, 'yyMMdd') || mod_seq.NEXTVAL, #{moCd}, #{moCnt}, TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'), #{caNo}, #{cmmCd})
 	</insert>
+	
+	<!-- 발주코드를 기반으로 헤더와 디테일의 데이터를 지운다 -->
+	<delete id="orderDelete" parameterType="String">
+		DELETE FROM mtrl_order
+		WHERE mo_cd = LOWER(#{delMocd})
+	</delete>
+	
+	<!-- 발주상세코드를 기반으로 디테일 데이터를 지운다 -->
+	<delete id="orderDetailDelete" parameterType="String">
+		DELETE FROM mtrl_order_detail
+		WHERE mod_cd = LOWER(#{delModCd})
+	</delete>
 	
 	<!-- 발주조회디테일 UPDATE-->
 	<update id="orderDetailUpdate" parameterType="MaterialOrderVO">
