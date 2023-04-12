@@ -127,4 +127,10 @@ public class MaterialServiceImpl implements MaterialService {
 		return mapper.mtrlInputGetList(caNm, start, end);
 	}
 
+	//입고목록 -> 7일 이내
+	@Override
+	public List<MaterialInputVO> mtrlInputList7Days() {
+		return mapper.mtrlInputList7Days();
+	}
+
 }

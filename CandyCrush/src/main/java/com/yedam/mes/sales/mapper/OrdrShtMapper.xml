@@ -82,4 +82,20 @@
 		  FROM CM_PRODUCT_MNG
 		 ORDER BY cpr_nm
 	</select>
+	
+	<!-- 모달창 주문서 헤더 등록 -->
+	<insert id="insertOrdrShtHdr" parameterType="OrdrShtVO">
+		INSERT INTO order_sheet(orsh_no, ca_no, orsh_dt, dlvry_dt)
+			             VALUES('ordr' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
+			                  , #{cNo}, TO_DATE(#{orshDt}, 'yyyy-MM-dd'), TO_DATE(#{dlvryDt}, 'yyyy-MM-dd'))
+	</insert>
+	
+	<!-- 모달창 주문서 디테일 등록 -->
+	<insert id="insertOrdrShtDtl" parameterType="OrdrShtVO">
+		INSERT INTO order_sheet_detail(ordr_dtl_cd, ordr_dtl_cnt, cpr_cd, orsh_pr, orsh_no, stt_cng_dt)
+		                        VALUES('orderdtl' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
+                              		  , #{ordr_dtl_cnt}, (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cpr_nm})
+                              		  , '접수완료', #{orshNo}, SYSDATE);
+	</insert>
+	
 </mapper>

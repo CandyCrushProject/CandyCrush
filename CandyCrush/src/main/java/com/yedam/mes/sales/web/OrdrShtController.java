@@ -72,18 +72,17 @@ public class OrdrShtController {
 	}
 	
 	// 더블클릭했을때 모달창에 미리 보여줄 주문서 번호
-	@GetMapping("getOrdrShtCode")
-	@ResponseBody
-	public List<OrdrShtVO> getOrdrShtCode() {
-		
-		return service.getOrdrShtCode();
-	}
+//	@GetMapping("getOrdrShtCode")
+//	@ResponseBody
+//	public List<OrdrShtVO> getOrdrShtCode() {
+//		
+//		return service.getOrdrShtCode();
+//	}
 	
 	// 제품을 추가할 때 모달창에 미리 보여줄 주문서디테일 번호
 	@GetMapping("getOrdrShtDtlCode")
 	@ResponseBody
 	public OrdrShtVO getOrdrShtDtlCode() {
-		// System.out.println("rkskskfkjsdfkljsdfslkjakl" + service.getOrdrShtDtlCode());
 		OrdrShtVO vo = new OrdrShtVO();
 		vo.setOrdrDtlCd(service.getOrdrShtDtlCode());
 		return vo;

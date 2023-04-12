@@ -23,12 +23,17 @@ public interface OrdrShtMapper {
 	public List<OrdrShtVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo);
 
 	// 주문서코드 자동생성
-	public List<OrdrShtVO> getOrdrShtCode();
+	public String getOrdrShtCode();
 
 	// 주문서디테일코드 자동생성
 	public String getOrdrShtDtlCode();
 
 	// 주문서 등록 모달창 상품 리스트
 	public List<OrdrShtVO> getProdList();
+	
+	// 모달창 주문서헤더 등록
+	public int insertOrdrShtHdr(OrdrShtVO vo);
+	// 모달창 주문서디테일 등록
+	public int insertOrdrShtDtl(OrdrShtVO vo);
 
 }

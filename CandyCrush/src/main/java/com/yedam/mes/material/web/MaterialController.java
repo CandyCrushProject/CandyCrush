@@ -147,10 +147,11 @@ public class MaterialController {
 	
 	//------------------------------------------------------------------------
 	
-	//자재입고관리 페이지
+	//자재입고관리 페이지, 자재입고목록(7일이내)
 	@GetMapping("mtrlInputManagement")
 	public String mtrlInputManagement(Model model) {
 		model.addAttribute("accountList", service.accountCheck());
+		model.addAttribute("inpuerList7Days", service.mtrlInputList7Days());
 		return "material/mtrlInputManagement";
 	};
 	
@@ -160,6 +161,7 @@ public class MaterialController {
 	public List<MaterialInputVO> mtrlInputGetList(@RequestParam(required = false) String caNm, @RequestParam(required = false) String start, @RequestParam(required = false) String end){
 		return service.mtrlInputGetList(caNm, start, end);
 	};
+	
 	
 	//------------------------------------------------------------------------
 	

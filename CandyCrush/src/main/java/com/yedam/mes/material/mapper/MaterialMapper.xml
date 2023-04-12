@@ -105,7 +105,7 @@
 	
 	<!-- 자재발주코드 자동생성 -->
 	<select id="getMtrlOrderCode" resultType="MaterialOrderVO">
-		SELECT 'mo' || to_char(NVL(MAX(SUBSTR(mo_cd, 3, 4)), 0) + 1) || to_char(sysdate, 'yymmdd') "mo_cd"
+		SELECT 'mo' || to_char(sysdate, 'yymmdd') || to_char(NVL(MAX(SUBSTR(mo_cd, 3, 4)), 0) + 1) "mo_cd"
 		FROM mtrl_order
 	</select>
 	
@@ -119,7 +119,7 @@
 	<insert id="orderDetailInsert" parameterType="MaterialOrderVO">
 		INSERT INTO mtrl_order_detail(mod_cd, mo_cd, mo_cnt, mo_req_dt, ca_no, cmm_cd)
 		VALUES
-			('mod' || TO_CHAR(sysdate, 'yyMMdd') || mod_seq.NEXTVAL, #{moCd}, #{moCnt}, TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'), #{caNo}, #{cmmCd})
+			('mod' || mod_seq.NEXTVAL || TO_CHAR(sysdate, 'yyMMdd'), #{moCd}, #{moCnt}, TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'), #{caNo}, #{cmmCd})
 	</insert>
 	
 	<!-- 발주코드를 기반으로 헤더와 디테일의 데이터를 지운다 -->
@@ -169,6 +169,15 @@
 		AND mi_dt BETWEEN #{start} AND #{end}
 		</if>
 		ORDER BY mi_cd
+	</select>
+	
+	<!-- 자재입고관리 / 입고목록 -> 7일 이내 -->
+	<select id="mtrlInputList7Days" resultType="MaterialInputVO">
+		SELECT COUNT(min_cd) AS "MIN_CD_COUNT", min_cd, min_dt
+		FROM mtrl_input
+		WHERE min_dt >= TO_CHAR(SYSDATE-7,'yyyy-MM-dd')
+		GROUP BY min_cd, min_dt
+		ORDER BY min_cd
 	</select>
 
 </mapper>
