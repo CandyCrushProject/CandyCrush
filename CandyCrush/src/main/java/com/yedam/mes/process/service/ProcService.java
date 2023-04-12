@@ -20,13 +20,11 @@ public interface ProcService {
 	public int updateOrderStatus(OrderPlanVO opVO);
 	public List<OrderPlanVO> getOrderDetail(OrderPlanVO opVO);
 	
-	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo,@Param("caNm")String[] caNm);
+	public List<OrderPlanVO> addPlanbefore(String[] cprCd);
 	
-	public List<OrderPlanVO> getCprCd(OrderPlanVO opVO);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
 	public String getPlanCode();
-	public String getPlanDetailCode();
 	public int addPlan(ProcPlanVO planVO);
 	public int addPlanDetail(ProcPlanVO planVO);
 	

@@ -1,6 +1,7 @@
 package com.yedam.mes.process.web;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,6 @@ public class ProcessController {
 	public Map<String, Object> getOrderSheet(OrderPlanVO opVO) {
 	    Map<String, Object> resultMap = new HashMap<>();
 	    resultMap.put("result", procService.getOrder());
-	    resultMap.put("order", procService.getCprCd(opVO));
 	    
 		return resultMap;
 	}
@@ -47,27 +47,25 @@ public class ProcessController {
 		return procService.getOrderDetail(opVO);
 	}
 	
+	// 생산관리 -> 생산계획관리 -> 미계획주문서 리스트 체크후 추가버튼시 넘어오는 정보 처리
+	//					  -> 생산계획코드, 생산계획상세코드
+	// db에서 데이터 꺼내오는 역활
 	@PostMapping("getDownOrders")
 	@ResponseBody
-	public List<OrderPlanVO> getDownOrders(@RequestBody OrderPlanVO opVO) {
-		String[] orshNo = opVO.getOrshNo().split(",");
-		String[] caNm = opVO.getCaNm().split(",");
-		System.out.println(orshNo);
-		System.out.println(caNm);
+	public Map<String, Object> getDownOrders(@RequestBody Map<String, Object> list) {
 		
-		return procService.addPlanbefore(orshNo, caNm);
-	}
-	
-	// 생산관리 -> 생산계획 -> 생산계획코드, 생산계획상세코드
-	@GetMapping("getProcPlanCode")
-	@ResponseBody
-	public Map<String, Object> getProcPlanCode() {
-	    Map<String, Object> resultMap = new HashMap<>();
+		String cprCdList = (String) list.get("cprCd");
+		
+		String[] cprCdSet = cprCdList.split(",");
+		
+		String[] cprCdArr = Arrays.stream(cprCdSet).distinct().toArray(String[]::new);
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("orderNPlan", procService.addPlanbefore(cprCdArr));
 	    resultMap.put("prplCd", procService.getPlanCode());
-	    resultMap.put("prpldCd", procService.getPlanDetailCode());
-	    
 		return resultMap;
 	}
+	
 	
 	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
