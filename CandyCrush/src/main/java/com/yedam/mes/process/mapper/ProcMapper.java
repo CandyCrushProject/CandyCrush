@@ -14,13 +14,20 @@ import com.yedam.mes.process.vo.ProcProgVO;
 public interface ProcMapper {
 	/* 생산계획 매퍼 시작 */
 	
-	// 생산계획 - 주문서 읽어오기
+	// 생산계획 - 제품코드 불러오기
+	public List<OrderPlanVO> selectCprCdList();
+	
+	// 생산계획 - 첫 화면 미계획 주문서목록 읽어오기
 	public List<OrderPlanVO> selectOrder();
+	
+	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
 	public int updateOrderStatus(OrderPlanVO opVO);
+	
+	// 미계획 주문서에 대한 상세 정보 목록
 	public List<OrderPlanVO> selectOrderDetail(OrderPlanVO opVO);
 	
+	// 미계획 주문서 체크 후 추가 버튼 누르면 계획 등록 폼으로 이동
 	public List<OrderPlanVO> addPlanbefore(String[] cprCd);
-	
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
 	public String getPlanCode();

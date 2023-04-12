@@ -83,7 +83,7 @@
 											</div>
 											<h4 style="padding-bottom: 20px;">미계획 주문서 리스트</h4>
 											<!-- 처음 주문서들 정보 뿌려줄 것들 -->
-											<div id="orderSheetTab"></div>
+											<div id="orderSheetGrid"></div>
 										</div>
 										<div class="clearBoth">
 											<br />
@@ -159,6 +159,7 @@
 				</div>
 			</main>
 			<script>
+
 				function printAlert(message) {
 					if (message == null || message == "") return;
 					Swal.fire({
@@ -168,25 +169,8 @@
 					});
 				}
 				printAlert(`${message}`);
-				function getBomDate(orshNo, cprCd) {
-					$.ajax({
-						url: 'getBomInfo',
-						type: 'GET',
-						data: {
-							orshNo: orshNo,
-							cprCd: cprCd
-						},
-						dataType: 'json',
-						success: function (data) {
-						},
-						error: function (xhr, status, error) {
-							// 요청이 실패했을 때 처리할 로직
-							console.error('요청 실패:', error);
-						}
-					});
-				}
-				$(document).ready(function () {
 
+				$(document).ready(function () {
 
 					$('#resetBtn').on('click', function () {
 						$("#orshNo").val('');
@@ -202,39 +186,8 @@
 					});
 				});
 
-				// 처음 뿌려주는 미계획주문서 리스트
-				getOrder();
-				let cprCdObj = [];
-				let orderSheetObj = [];
-				function getOrder() {
-					$.ajax({
-						url: 'getOrder',
-						type: 'GET',
-						dataType: 'json', // orderSheetTab 
-						success: function (data) {
-							for (let i = 0; i < data.result.length; i++) {
-								cprCdObj.push({ cprCd: data.result[i].cprCd });
-							}
-							for (let i = 0; i < data.result.length; i++) {
-								orderSheetObj.push({
-									orshNo: data.result[i].orshNo,
-									ordrCdCnt: data.result[i].ordrCdCnt,
-									caNo: data.result[i].caNo,
-									dlvryDt: data.result[i].dlvryDt,
-									orshDt: data.result[i].orshDt
-								});
-							}
-							console.log(cprCdObj);
 
-							console.log(orderSheetObj);
 
-						},
-						error: function (xhr, status, error) {
-							// 요청이 실패했을 때 처리할 로직
-							console.error('요청 실패:', error);
-						}
-					});
-				}
 
 				// 날짜 포맷 변경 함수
 				function formatDate(time) {
@@ -247,22 +200,8 @@
 				}
 
 
-				/* 주문서정보 -> 생산계획작성 */
-				$(document).on("dblclick", ".planBtn", function () {
-					$.ajax({
-						url: 'getProcPlanCode',
-						type: 'GET',
-						dataType: 'json',
-						success: function (data) {
-
-						},
-						error: function (xhr, status, error) {
-							// 요청이 실패했을 때 처리할 로직
-							console.error('요청 실패:', error);
-						}
-					});
-				});
 				$(document).ready(function () {
+
 					$('#addPlanBtn').on('click', function () {
 						if ($('#orshNo').val() == "") {
 							Swal.fire({
@@ -304,37 +243,97 @@
 							});
 							return false;
 						}
-						var orshDt = formatDate($('#orshDt').val());
-						var prplDlvryDt = formatDate($('#prplDlvryDt').val());
-						var prstDt = formatDate($('#prstDt').val());
-						var prplSuceDt = formatDate($('#prplSuceDt').val());
-						$('#orshDt').val(orshDt);
-						$('#prstDt').val(prstDt);
-						$('#prplDlvryDt').val(prplDlvryDt);
-						$('#prplSuceDt').val(prplSuceDt);
 						newPlan.submit();
 					});
 				});
 
+				$(function () {
+					getOrder();
+				})
+				// 처음 뿌려주는 미계획주문서 리스트
+				function getOrder() {
+					$.ajax({
+						url: 'getOrder',
+						type: 'GET',
+						dataType: 'json',
+						success: function (data) {
+							orderSheetGrid.resetData(data);
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				}
+				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
+				const orderSheetGrid = new tui.Grid({
+					el: document.getElementById('orderSheetGrid'),
+					minBodyHeight: 30,
+					rowHeaders: ['checkbox'],
+					columns: [
+						{
+							header: '주문번호',
+							name: 'orshNo',
+							align: 'center'
+						},
+						{
+							header: '주문건수',
+							name: 'ordrCdCnt',
+							align: 'center'
+						},
+						{
+							header: '거래처',
+							name: 'caNm',
+							align: 'center'
+						},
+						{
+							header: '주문일자',
+							name: 'orshDt',
+							align: 'center'
+						},
+						{
+							header: '납품일자',
+							name: 'dlvryDt',
+							align: 'center'
+						}
+					]
+				});
 
+
+				// function getProductList() {
+				// 	$.ajax({
+				// 		url: "getProductList",
+				// 		method: "GET",
+				// 		dataType: 'json',
+				// 		success: function (data) {
+				// 			var cprCdSet = "";
+				// 			for (let i = 0; i < data.length; i++) {
+				// 				cprCdSet += data[i].cprCd + ",";
+				// 			}
+				// 			console.log("cprCdSet : ", cprCdSet);
+
+				// 			return cprCdSet;
+				// 		},
+				// 		error: function (xhr, status, error) {
+				// 			// 요청이 실패했을 때 처리할 로직
+				// 			console.error('요청 실패:', error);
+				// 		}
+				// 	});
+				// }
 				$(document).ready(function () {
-
 					// 미계획 주문서 리스트 체크된 데이터를 가져와 db에서 정보 가져옴
 					$('#planAddBtn').on('click', function () {
 						const rows = orderSheetGrid.getCheckedRows();
-						let cprCdSet = "";
-						for (let i = 0; i < rows.length; i++) {
-							cprCdSet += rows[i].cprCd + ","
-						}
-						let List = {
-							cprCd: cprCdSet
-						}
+
+						let list =
+							{ cprCd: "stick001,stick002,stick003,stick004,stick005" };
+
 						if (rows.length > 0) {
 							$.ajax({
 								url: "getDownOrders",
 								method: "POST",
 								contentType: 'application/json',
-								data: JSON.stringify(List),
+								data: JSON.stringify(list),
 								dataType: 'json',
 								success: function (data) {
 									let op = data.orderNPlan;
@@ -348,7 +347,7 @@
 
 									orderSheetGrid.removeCheckedRows();
 								}, error: function (err) {
-									console.log(err);
+									console.log("안된다고 띠발");
 								}
 							});
 						} else {
@@ -361,6 +360,7 @@
 					});
 
 				});
+
 				// 행 클릭시 모달이 뜨며 정보가 들어있는 그리드 함수 실행
 				orderSheetGrid.on('dblclick', function (ev) {
 
@@ -387,46 +387,10 @@
 						}
 					});
 				}
-				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
-				const orderSheetGrid = new tui.Grid({
-					el: document.getElementById('orderSheetTab'),
-					scrollX: false,
-					scrollY: false,
-					minBodyHeight: 30,
-					rowHeaders: ['checkbox'],
-					columns: [
-						{
-							header: '주문코드',
-							name: 'orshNo',
-							align: 'center'
-						},
-						{
-							header: '주문건수',
-							name: 'ordrCdCnt',
-							align: 'center'
-						},
-						{
-							header: '거래처',
-							name: 'caNm',
-							align: 'center'
-						},
-						{
-							header: '주문일자',
-							name: 'orshDt',
-							align: 'center'
-						},
-						{
-							header: '납품일자',
-							name: 'dlvryDt',
-							align: 'center'
-						}
-					]
-				});
+
 				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
 				const orderDetailGrid = new tui.Grid({
 					el: document.getElementById('orderDetailList'),
-					scrollX: false,
-					scrollY: false,
 					minBodyHeight: 30,
 					rowHeaders: ['rowNum'],
 					columns: [
@@ -475,13 +439,6 @@
 							header: '주문수량',
 							name: 'sumDtlCnt',
 							align: 'center',
-						},
-						{
-							header: '납품일자',
-							name: 'dlvryDt',
-							sortingType: 'asc',
-							sortable: true,
-							align: 'center'
 						},
 						{
 							header: '작업우선순위',

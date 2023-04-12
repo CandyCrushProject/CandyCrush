@@ -4,9 +4,12 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.mes.process.mapper.ProcMapper">
 	
-	
-	
-	
+	<!-- 제품 코드리스트 -->
+	<select id="selectCprCdList" resultType="OrderPlanVO">
+		SELECT cpr_cd
+		  FROM cm_product_mng
+		 ORDER BY cpr_cd
+	</select>
 	<!-- 주문서리스트 -->
 	<select id="selectOrder" resultType="OrderPlanVO">
 		SELECT s.orsh_no as orsh_no
@@ -19,7 +22,7 @@
 		 WHERE s.orsh_no = d.orsh_no(+)
 		   AND s.ca_no = a.ca_no(+)
 		   AND orsh_pr = '접수완료'
-		 GROUP BY s.orsh_no, s.ca_no,ca_nm, orsh_dt, dlvry_dt, cpr_cd
+		 GROUP BY s.orsh_no, s.ca_no,ca_nm, orsh_dt, dlvry_dt
 		 ORDER BY dlvry_dt
 	</select>
 	
