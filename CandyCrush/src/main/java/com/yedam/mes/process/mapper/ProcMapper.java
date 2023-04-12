@@ -2,6 +2,8 @@ package com.yedam.mes.process.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.yedam.mes.process.vo.BomInfoVO;
 import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcOrderVO;
@@ -16,6 +18,9 @@ public interface ProcMapper {
 	public List<OrderPlanVO> selectOrder();
 	public int updateOrderStatus(OrderPlanVO opVO);
 	public List<OrderPlanVO> selectOrderDetail(OrderPlanVO opVO);
+	
+	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo,@Param("caNm")String[] caNm);
+	
 	public List<OrderPlanVO> selectCprCd(OrderPlanVO opVO);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거

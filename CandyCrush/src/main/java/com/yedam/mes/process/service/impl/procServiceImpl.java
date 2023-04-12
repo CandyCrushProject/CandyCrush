@@ -2,6 +2,7 @@ package com.yedam.mes.process.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,10 @@ public class procServiceImpl implements ProcService {
 		return procMapper.selectOrder();
 	}
 
+	@Override
+	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo,@Param("caNm")String[] caNm) {
+		return procMapper.addPlanbefore(orshNo,caNm);
+	}
 	@Override
 	public List<OrderPlanVO> getCprCd(OrderPlanVO opVO) {
 		return procMapper.selectCprCd(opVO);
@@ -94,6 +99,7 @@ public class procServiceImpl implements ProcService {
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO) {
 		return procMapper.searchPlanList(ppVO);
 	}
+
 
 
 
