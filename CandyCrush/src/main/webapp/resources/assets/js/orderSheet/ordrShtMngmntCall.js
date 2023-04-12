@@ -22,9 +22,13 @@ $(document).ready(function () {
     };
   });
 
-  $('#getOrdrBtn').on('click', () => {
+  $('#getRowBtn').on('click', () => {
     ordrProdList.appendRow();
+  });
+  $('#delRowBtn').on('click', () => {
+    ordrProdListxw.removeCheckedRows();
   })
+
 });
 
 let accountName = ""; // 
@@ -61,4 +65,18 @@ function formatDate() {
   return formattedDate;
 }
 
-
+// function getOrdrShtInfo() {
+//   $.ajax({
+//     url: 'insertPrcs',
+//     data: JSON.stringify(grid.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']})),
+//     contentType : 'application/json',
+//     type: 'POST',
+//     async: false,
+//     success: function(data) {
+//       search();
+//     },
+//     error: function(reject) {
+//         console.log(reject);
+//     }
+//   });
+// }

@@ -14,10 +14,6 @@
           onclick="document.getElementById('ordrDtilMdl').style.display='none'">&times;</span>
         <h3 class="mdlTitle">주문서</h3>
         <form action="">
-          <div class="accntInfo">
-            <label for="orshNo">주문서번호</label>
-            <input id="orshNo" name="orshNo" type="text" readonly>
-          </div>
           <div class="accntInfoMngBox">
 						<div class="accntInfo">
 							<label for="caNo">거래처코드</label>
@@ -46,31 +42,16 @@
           </div>
 					<div>
 						<h4 style="display: block;">제품선택</h4>
-						<button id="getOrdrBtn" class="plusBtn" type="button">
+						<button id="getRowBtn" class="plusBtn" type="button">
 							<i class="fa-solid fa-plus"></i>
 						</button>
-						<button class="minusBtn">
+						<button id="delRowBtn" class="minusBtn" type="button">
 							<i class="fa-solid fa-minus"></i>
 						</button>
 					</div>
 					<div class="table-responsive">
 						<div id="ordrProdList"></div>
 					</div>
-          
-          <!-- <table>
-            <colgroup>
-              <col style="width: 33.33%" />
-              <col style="width: 33.33%" />
-              <col style="width: 33.33%" />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>주문상세코드</th>
-                <th>제품명</th>
-                <th>수량</th>
-              </tr>
-            </thead>
-          </table> -->
         </form>
         <div id="ordrModal"></div>
 				<button class="cndInsBtn" type="button">등록</button>
