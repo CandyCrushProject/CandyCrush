@@ -36,7 +36,7 @@ public interface MaterialService {
 	public int orderDelete(@Param("delMocd") String delMocd);
 	
 	//발주상세코드를 기반으로 디테일 데이터를 지운다
-	public int orderDetailDelete(@Param("delModCd") String delModCd);
+	public int orderDetailDelete(MaterialOrderVO vo);
 	
 	//발주 디테일 데이터 수정
 	public int orderDetailUpdate(@Param("moCnt") int moCnt,

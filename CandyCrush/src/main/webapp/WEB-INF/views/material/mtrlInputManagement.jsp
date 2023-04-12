@@ -318,14 +318,26 @@
 					return;
 				}, 10);
 			};
+
+			//입고수량을 0 또는 빈값을 입력했을 경우
+			if(minCntData === 0 || minCntData === null){
+				setTimeout(() => {
+					Swal.fire({
+							icon: 'error',
+							title: '경고',
+							text: "입고수량이 기재되지 않았습니다",
+						});
+						materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+						return;
+				}, 10);
+			};
 		});
 
 		//체크한 행만 입고코드를 입힌다
 		$('#mtrlInputSaveBtn').on('click',(e)=>{
 			let checkRows = materialInspGetList.getCheckedRows();
 			if(checkRows.length !== 0){
-				console.log("length 있음");
-
+				
 			} else {
 				Swal.fire({
 					icon: 'error',

@@ -96,8 +96,8 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	//발주상세코드를 기반으로 디테일 데이터를 지운다
 	@Override
-	public int orderDetailDelete(String delModCd) {
-		String[] array = delModCd.split(",");
+	public int orderDetailDelete(MaterialOrderVO vo) {
+		/*String[] array = moCd.split(",");
 		
 		int result = 0;
 		
@@ -109,7 +109,9 @@ public class MaterialServiceImpl implements MaterialService {
 			return result;			
 		} else {
 			return -1;
-		}
+		}*/
+		
+		return mapper.orderDetailDelete(vo);
 	};
 	
 	//발주 디테일 데이터 UPDATE
