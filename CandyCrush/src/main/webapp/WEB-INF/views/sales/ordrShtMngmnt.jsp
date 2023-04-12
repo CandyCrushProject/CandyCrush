@@ -45,9 +45,12 @@
             <input id="dlvryDt" name="dlvryDt" type="date">
           </div>
 					<div>
-						<h4>제품선택</h4>
-						<button id="getOrdrBtn" type="button">
+						<h4 style="display: block;">제품선택</h4>
+						<button id="getOrdrBtn" class="plusBtn" type="button">
 							<i class="fa-solid fa-plus"></i>
+						</button>
+						<button class="minusBtn">
+							<i class="fa-solid fa-minus"></i>
 						</button>
 					</div>
 					<div class="table-responsive">
@@ -70,6 +73,7 @@
           </table> -->
         </form>
         <div id="ordrModal"></div>
+				<button class="cndInsBtn" type="button">등록</button>
       </div>
     </div>
   </div><!-- End 주문서 등록 -->
