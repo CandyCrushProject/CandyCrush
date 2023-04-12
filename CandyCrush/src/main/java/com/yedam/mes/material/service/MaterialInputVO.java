@@ -22,11 +22,17 @@ public class MaterialInputVO {
 	private String caNo;	//업체코드
 	private String caNm;	//업체명
 	
-	//자재입고관리
+	//자재검수관리
 	private int miPassCnt;	//합격수량(입고가능수량)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date miDt;		//검사일자
 	private String miCd;	//검사코드
+	
+	//자재입고관리
+	private String minCd; 	//자재입고코드
+	private int minCdCount; //자재입고코드(개수)
+	//@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String minDt;	//자재입고일
 	
 	//날짜검색
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")
