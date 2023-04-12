@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,6 +53,7 @@ public class OrdrShtController {
 		
 	}
 	
+	// 주문서관리페이지 거래처 리스트 조회
 	@PostMapping("ordrMngntAccntList")
 	@ResponseBody
 	public List<OrdrShtVO> ordrMngntAccntList() {
@@ -62,13 +62,39 @@ public class OrdrShtController {
 		
 	}
 	
-	// 주문서관리에서 거래처 검색조회
+	// 주문서관리페이지 거래처 검색조회
 	@PostMapping("ordrMngntAccntSrch")
 	@ResponseBody
 	public List<OrdrShtVO> ordrMngntAccntSrch(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo) {
 		
 		System.out.println("caNm" + caNm + ", caNo" + caNo);
 		return service.accoutnSrchList(caNm, caNo);
+	}
+	
+	// 더블클릭했을때 모달창에 미리 보여줄 주문서 번호
+	@GetMapping("getOrdrShtCode")
+	@ResponseBody
+	public List<OrdrShtVO> getOrdrShtCode() {
+		
+		return service.getOrdrShtCode();
+	}
+	
+	// 제품을 추가할 때 모달창에 미리 보여줄 주문서디테일 번호
+	@GetMapping("getOrdrShtDtlCode")
+	@ResponseBody
+	public OrdrShtVO getOrdrShtDtlCode() {
+		// System.out.println("rkskskfkjsdfkljsdfslkjakl" + service.getOrdrShtDtlCode());
+		OrdrShtVO vo = new OrdrShtVO();
+		vo.setOrdrDtlCd(service.getOrdrShtDtlCode());
+		return vo;
+	}
+	
+	// 조회검색 페이지
+	@GetMapping("getProdList")
+	@ResponseBody
+	public List<OrdrShtVO> getProdList() {
+		System.out.println("상품리스트 : " + service.getProdList());
+		return service.getProdList();
 	}
 	
 }
