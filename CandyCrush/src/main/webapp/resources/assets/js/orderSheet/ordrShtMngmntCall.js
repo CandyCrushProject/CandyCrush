@@ -9,19 +9,22 @@ $(document).ready(function () {
 
   $('#srchAccntBtn').on('click', function() {
     document.getElementById('accntNmMdl').style.display = 'block';
-    //setTimeout(() => ordrDtilMdl.refreshLayout(), 0);
+    setTimeout(() => ordrDtilMdl.refreshLayout(), 0);
   })
 
-  //ESC 누르면 모달창 없어지게 하는 방법
-  //keydown --> 사용자가 키를 누르거나 키를 놓을 때 발생
-  // $(window).on("keydown", (e) => {
-  //   let ordrDtilMdl = $("#ordrDtilMdl");
+  // ESC 누르면 모달창 없어짐
+  $(window).on("keydown", (e) => {
+    let ordrDtilMdl = $("#ordrDtilMdl");
 
-  //   //e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
-  //   if (e.keyCode === 27 && ordrDtilMdl.css("display") === "block") {
-  //     ordrDtilMdl.hide();
-  //   };
-  // });
+    //e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
+    if (e.keyCode === 27 && ordrDtilMdl.css("display") === "block") {
+      ordrDtilMdl.hide();
+    };
+  });
+
+  $('#getOrdrBtn').on('click', () => {
+    ordrProdList.appendRow();
+  })
 });
 
 let accountName = ""; // 
@@ -40,7 +43,22 @@ function accntSrch() {
       accntList.resetData(data);
     },
     error: function (rej) {
-      // console.log(rej)
+      Swal.fire({
+        title: 'Error',
+        icon: 'error'
+      });
     }
   });
 }
+
+// 현재날짜
+function formatDate() {
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = ("0" + (date.getMonth() + 1)).slice(-2);
+  let day = ("0" + date.getDate()).slice(-2);
+  let formattedDate = year + "-" + month + "-" + day;
+  return formattedDate;
+}
+
+
