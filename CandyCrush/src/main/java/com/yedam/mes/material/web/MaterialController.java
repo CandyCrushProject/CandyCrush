@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -88,8 +87,24 @@ public class MaterialController {
 	//발주상세코드를 기반으로 디테일 데이터를 지운다
 	@PostMapping("delOrderDetail")
 	@ResponseBody
-	public int delOrderDetail(@RequestParam String delModCd) {
-		return service.orderDetailDelete(delModCd);
+	public int delOrderDetail(MaterialOrderVO vo) {
+		String moCd = vo.getMoCd();					//발주번호
+		String[] modCd = vo.getModCd().split(",");	//발주상세번호
+		
+		//결과를 담고 리털할 값
+		int result = 0;
+		
+		//VO인스턴스 선언
+		MaterialOrderVO mtrl = new MaterialOrderVO(); 
+		
+		for(int i = 0 ; i < modCd.length ; i++) {
+			mtrl.setMoCd(moCd);
+			mtrl.setModCd(modCd[i]);
+			
+			result = service.orderDetailDelete(mtrl);
+		}
+		
+		return result;
 	}
 	
 	//------------------------------------------------------------------------
