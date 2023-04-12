@@ -30,15 +30,20 @@ public class ProcessController {
 		return "process/processManagement";
 	}
 	
+	// 생산관리 -> 생산계획관리 -> 제품코드, 제품명 가져옴 ^^
+	@GetMapping("getProductList")
+	@ResponseBody
+	public List<OrderPlanVO> getProductList() {
+		return procService.getCprCdList();
+	}
+	
 	// 생산관리 -> 생산계획관리 -> 주문서버튼 클릭시 주문서정보 받아옴
 	@GetMapping("getOrder")
 	@ResponseBody
-	public Map<String, Object> getOrderSheet(OrderPlanVO opVO) {
-	    Map<String, Object> resultMap = new HashMap<>();
-	    resultMap.put("result", procService.getOrder());
-	    
-		return resultMap;
+	public List<OrderPlanVO> getOrderSheet() {
+		return procService.getOrder();
 	}
+	
 	
 	// 생산관리 -> 생산계획관리 -> 주문서 정보 받아오기
 	@PostMapping("getOrderDetail")
@@ -55,13 +60,16 @@ public class ProcessController {
 	public Map<String, Object> getDownOrders(@RequestBody Map<String, Object> list) {
 		
 		String cprCdList = (String) list.get("cprCd");
+		System.out.println(cprCdList);
 		
-		String[] cprCdSet = cprCdList.split(",");
-		
-		String[] cprCdArr = Arrays.stream(cprCdSet).distinct().toArray(String[]::new);
+		String[] cprCd = cprCdList.split(",");
+		for (int i=0;i<cprCd.length;i++) {
+		System.out.println(cprCd[i]);
+		}
 		
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("orderNPlan", procService.addPlanbefore(cprCdArr));
+		System.out.println("이거 맞냐 띠발? " + procService.addPlanbefore(cprCd));
+		resultMap.put("orderNPlan", procService.addPlanbefore(cprCd));
 	    resultMap.put("prplCd", procService.getPlanCode());
 		return resultMap;
 	}
