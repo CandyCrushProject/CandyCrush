@@ -23,7 +23,7 @@ public interface OrdrShtService {
 	
 	// 주문서관리 페이지
 	// 주문서코드 자동생성
-	public List<OrdrShtVO> getOrdrShtCode();
+	// public List<OrdrShtVO> getOrdrShtCode();
 	
 	// 주문서디테일코드 자동생성
 	public String getOrdrShtDtlCode();
@@ -31,4 +31,6 @@ public interface OrdrShtService {
 	// 주문서 등록 모달창 상품 리스트
 	public List<OrdrShtVO> getProdList();
 	
+	// 모달창 주문서 등록
+	public int insertOrdrSht(OrdrShtVO vo, List<OrdrShtVO> list);
 }

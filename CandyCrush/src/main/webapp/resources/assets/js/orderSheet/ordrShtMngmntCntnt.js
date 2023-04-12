@@ -18,6 +18,7 @@ const accntGetData = () => {
 // 업체명 조회 Grid
 const accntList = new Grid({
   el: document.getElementById('accntList'),
+  
   columns: [
     {
       header: '거래처코드',
@@ -82,7 +83,6 @@ accntList.on('dblclick', (e) => {
     url: "getOrdrShtCode",
     method: "GET",
     success: function (data) {
-      $("#orshNo").val(data[0]);
       $("#orshDt").val(formatDate());
       prodListItems();
     },
@@ -119,6 +119,7 @@ function prodListItems() {
 // 주문서 모달창 주문서detail Grid
 const ordrProdList = new Grid({
   el: document.getElementById('ordrProdList'),
+  rowHeaders: ['checkbox'],
   columns: [
     // {
     //   header: '주문상세코드',
@@ -137,7 +138,7 @@ const ordrProdList = new Grid({
         }
       },
       sortingType: 'asc',
-      sortable: true
+      sortable: true,
     },
     {
       header: '수량',
@@ -147,7 +148,7 @@ const ordrProdList = new Grid({
         dataType : 'number'
       },
       sortingType: 'asc',
-      sortable: true
+      sortable: true,
     },
   ],
   bodyHeight: 300,
