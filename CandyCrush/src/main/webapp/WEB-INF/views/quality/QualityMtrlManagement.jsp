@@ -23,62 +23,53 @@
 </style>
 
 <main>
-  <!-- 업체명 검색 모달 -->
-  <div id="modal" class="w3-modal" style="z-index: 100">
-    <div class="w3-modal-content">
-      <div class="w3-container">
-        <span
-          class="w3-button w3-display-topright"
-          onclick="document.getElementById('modal').style.display='none'"
-          >&times;</span
-        >
-        <h3>업체검색</h3>
-        <div>
-          <input
-            type="text"
-            id="modalCaNm"
-            placeholder="업체명"
-            style="width: 90%"
-            autocomplete="off"
-          />
-          <br />
-          <input
-            type="text"
-            id="modalCaCd"
-            placeholder="업체코드"
-            style="width: 90%"
-            autocomplete="off"
-          />
-          <button class="srchBtn" id="modalBtn">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-        </div>
-        <div id="caModal"></div>
-      </div>
-    </div>
-  </div>
-  <!-- End 업체명 검색 모달 -->
 
-  <!-- 자재발주조회 더블클릭하면 나오는 모달 -->
-  <div id="orderDetailModal" class="w3-modal" style="z-index: 101">
+  <!-- 등록 모달 -->
+  <div id="inspInsertModal" class="w3-modal" style="z-index: 101">
     <div class="w3-modal-content">
       <div class="w3-container">
         <span
           class="w3-button w3-display-topright"
-          onclick="document.getElementById('orderDetailModal').style.display='none'"
+          onclick="document.getElementById('inspInsertModal').style.display='none'"
           >&times;</span
         >
-        <h3>상세발주목록</h3>
-        <div style="clear: both"></div>
-        <div id="rigth">
-          <button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
-          <button type="button" id="dateUpdateBtn" class="cndUdtBtn">
-            수정
-          </button>
-        </div>
-        <label for="modalMocd">발주코드</label>
-        <input type="text" id="modalMocd" style="width: 90%" readonly />
-        <div id="moModal"></div>
+        <h2 id="modalCmm">검사등록</h2>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-action">검사항목</div>
+                <div class="card-content">
+                  <table class="candyTab">
+                    <tr>
+                      <th>담당자</th>
+                      <th>정상자재</th>
+                      <th>불량자재</th>
+                      <th>검사량</th>
+                    </tr>
+                    <tr>
+                      <td><input type="text" readonly name="inspMgr" id="inspMgr" value="" placeholder="담당자 이름"></td>
+                      <td><input type="number" placeholder="정상자재수 입력" name="passMat" id="passMat" value="0"></td>
+                      <td><input type="number" placeholder="불량자재" name="badMat" id="badMat" readonly></td>
+                      <td><input type="text" name="inspMat" id="inspMat" value=""  readonly></td>
+                    </tr>
+                  </table>
+                  <div class="table-responsive">
+                    <div id="BadInputList"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-action">불량항목</div>
+                <div class="card-content">
+                  <div class="table-responsive">
+                    <div id="BadCodeList"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   </div>
@@ -96,59 +87,6 @@
     </div>
 
     <div id="page-inner">
-      <div class="row">
-        <div class="col-md-12">
-          <!-- Advanced Tables -->
-          <div class="card">
-            <!--<div class="card-action">자재발주조회</div>-->
-            <div class="card-content">
-              <div id="inputReset">
-                <label>업체명</label>
-                <input
-                  type="text"
-                  id="companyName"
-                  style="
-                    width: 315px;
-                    border: 1px solid rgba(128, 128, 128, 0.61);
-                  "
-                  autocomplete="off"
-                />
-                <br />
-                <label>발주신청일</label>
-                <input
-                  type="date"
-                  id="startDate"
-                  style="
-                    width: 140px;
-                    border: 1px solid rgba(128, 128, 128, 0.61);
-                  "
-                />&nbsp;ㅡ&nbsp;
-                <input
-                  type="date"
-                  id="endDate"
-                  style="
-                    width: 140px;
-                    border: 1px solid rgba(128, 128, 128, 0.61);
-                  "
-                />&nbsp;&nbsp;&nbsp;
-                <button
-                  type="button"
-                  class="cndSrchBtn"
-                  id="mtrlOrderSeachBtn"
-                  onclick="search()"
-                >
-                  검색
-                </button>
-                <button type="button" class="cndRstBtn" id="restBtn">
-                  초기화
-                </button>
-              </div>
-              <div style="clear: both"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--END row-->
       <div class="row">
         <div class="col-md-12">
           <!-- Advanced Tables -->
@@ -181,6 +119,7 @@
           <div class="card">
             <div class="card-action">자재검사이력
               <br>
+              <button onclick="openInsertModal()" style="display: inline;" class="cndInsBtn">점검내역입력</button>
               <div>
                 <table class="candyTab">
                   <tr>
@@ -214,20 +153,30 @@
 
   <script>
 
-    //-발주목록
+
+    function openInsertModal(){
+      document.getElementById('inspInsertModal').style.display='block';
+      BadCodeList.refreshLayout();
+      BadInputList.refreshLayout();
+
+    }
+    //-발주목록 검사현황================================================================
       const Grid = tui.Grid;
       let orderData = [
         <c:forEach items="${OrderList}" var="item">
           {
             moCd:'${item.moCd}',
+            modCd:'${item.modCd}',
+            moTitle:'${item.moTitle}',
+            moReoDt:"<fmt:formatDate value="${item.moReoDt}" pattern="yyyy-MM-dd"/>",
+            moReqDt:"<fmt:formatDate value="${item.moReqDt}" pattern="yyyy-MM-dd"/>",
             cmmCd:'${item.cmmCd}',
             cmmNm:'${item.cmmNm}',
             moCnt:'${item.moCnt}',
-            cmmTyp:'${item.cmmTyp}',
-            cmmSpec:'${item.cmmSpec}',
-            cmmUnit:'${item.cmmUnit}',
             caNo:'${item.caNo}',
-            moReqDt:"<fmt:formatDate value="${item.moReqDt}" pattern="yyyy-MM-dd"/>",
+            caNm:'${item.caNm}',
+            inspProc:'${item.inspProc}',
+            inspDone: (('${item.moCnt}' - '${item.inspProc}')<=0)?'완료':'진행중' ,
           },
         </c:forEach>
       ];
@@ -236,16 +185,35 @@
       el: document.getElementById('OrderListGrid'), // Container element
       data: orderData,
       columns: [
+      {
+          header: '발주상세코드',
+          name: 'modCd',
+          sortingType: 'asc',
+          sortable: true,
+          hidden: true
+        },
         {
-          header: '발주코드',
-          name: 'moCd',
+          header: '발주명',
+          name: 'moTitle',
           sortingType: 'asc',
           sortable: true
         },
         {
-          header: '자재코드',
-          name: 'cmmCd',
+          header: '발주처',
+          name: 'caNm',
+          sortingType: 'asc',
           sortable: true
+        },
+        {
+          header: '발주요청일',
+          name: 'moReoDt',
+          sortable: true
+        },
+        {
+          header: '납기요청일',
+          name: 'moReqDt',
+          sortable: true
+          
         },
         {
           header: '자재명',
@@ -258,32 +226,15 @@
           sortable: true
         },
         {
-          header: '자재유형',
-          name: 'cmmTyp',
+          header: '검사완료량',
+          name:'inspProc',
           sortable: true
         },
         {
-          header: '자재규격',
-          name: 'cmmSpec',
+          header: '검사진행도',
+          name:'inspDone',
           sortable: true
-        },
-        {
-          header: '자재단위',
-          name: 'cmmUnit',
-          sortable: true
-        },
-        {
-          header: '거래처코드',
-          name: 'caNo',
-          sortable: true
-        },
-        {
-          header: '납기요청일',
-          name: 'moReqDt',
-          sortable: true
-          
-        },
-
+        }
       ],
       bodyHeight: 500,
       pageOptions: {
@@ -292,33 +243,153 @@
         perPage: 30
           }
     });
-      console.log(orderData);
+    console.log(orderData);
+    //==========================불량코드그리드====================================
+    let BadCodeData = [
+        <c:forEach items="${BadList}" var="item">
+          {
+            cmbCd:'${item.cmbCd}',
+            cmbNm:'${item.cmbNm}',
+            cmbCtt:'${item.cmbCtt}', 
+          },
+        </c:forEach>
+      ];
+      console.log(BadCodeData);
+      const BadCodeList = new Grid({
+      el: document.getElementById('BadCodeList'), // Container element
+      data: BadCodeData,
+      columns: [
+        {
+          header: '불량코드',
+          name: 'cmbCd',
+          sortingType: 'asc',
+          sortable: true,
+        },
+        {
+          header: '불량명',
+          name: 'cmbNm',
+          sortingType: 'asc',
+          sortable: true
+        },
+        {
+          header: '불량상세',
+          name: 'cmbCtt',
+          sortingType: 'asc',
+          sortable: true
+        },
+      ],
+      bodyHeight: 500,
+      pageOptions: {
+        useClient: true,
+        type: 'scroll',
+        perPage: 30
+          }
+    });
+    BadCodeList.on("dblclick", (e) => {
+			const rowData = BadCodeList.getRow(e.rowKey);
+			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
+			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
+			if (BadInputList.getRow(e.rowKey) === null) {
+				rowData.miCnt = 0;							//불량수량
+				BadInputList.appendRow(rowData);
+        BadInputList.sort("cmbCd", true); 
+			} else {
+				Swal.fire({
+					icon: 'warning',
+					title: '경고',
+					text: "(" + rowData.cmbCd + ")" + rowData.cmbNm + "은(는) 이미 있습니다.",
+				});
+			}
+		});
+    
+
+
+    //불량 insert용 그리드================================================================
+    const BadInputList =new Grid({
+      el: document.getElementById('BadInputList'), // Container element
+      data: null,
+      bodyHeight: 500,
+      editingEvent: 'click',
+      pageOptions: {
+        useClient: true,
+        type: 'scroll',
+        perPage: 30
+          },
+      columns: [
+        {
+          header: '불량코드',
+          name: 'cmbCd',
+          sortingType: 'asc',
+          sortable: true,
+        },
+        {
+          header: '불량명',
+          name: 'cmbNm',
+          sortingType: 'asc',
+          sortable: true
+        },
+        {
+          header: '수량',
+          name: 'miCnt',
+          sortable: true,
+          editor:'text'
+        },
+      ],
+      summary: {
+        position: 'bottom',
+        height: 20,  // by pixel
+        columnContent: {
+          miCnt: {
+            template(valueMap) {
+              return '불량합계'+valueMap.sum;
+            }
+          },
+        }
+      }
+    });
+    BadInputList.on("dblclick", (e)=>{
+      BadInputList.removeRow(e.rowKey);
+    })
+    //인풋리스트 변형완료했을때 보여주는값 바꿔주기위한 트리거
+    passMat.addEventListener('input', BadInputValueEvent);
+    BadInputList.on("editingFinish",(e)=>{
+      BadInputValueEvent();
+    });
+
+    //value값 바뀔때마다 호출할 event
+    function BadInputValueEvent(){
+      inspMat.value = parseInt(BadInputList.getSummaryValues('miCnt').sum)+parseInt(passMat.value);
+      badMat.value = parseInt(BadInputList.getSummaryValues('miCnt').sum);
+    }
+    //================================================================
+
+
+
     //데이터 옮기기용 전역 변수
-    let CMMNM = null;//발주제품명
-    let MOCNT = null;//발주수량 
-    let MOTESTED=null;//검사한수량
+    let PubCmmNm = null; //자재명
+    let PubMiCnt = null; //검사한양
+    let pubMoCnt = null; //주문양
+
+    //odlist 클릭한 행의 modcd값 담기
+    odList.on("dblclick", (e) => {
+			const rowData = odList.getRow(e.rowKey);
+      let selectedModCd=rowData.modCd;
+      PubCmmNm = rowData.cmmNm;
+      pubMoCnt = rowData.moCnt;
+      //클릭한 항목의 검사이력 가져오기
+      getTestList(selectedModCd);
+      console.log(selectedModCd);
+		});
 
 
     //--Ajax 검사리스트 호출
-    //odlist 클릭한 행의 mocd값 담기
-    
-    odList.on("dblclick", (e) => {
-			const rowData = odList.getRow(e.rowKey);
-      let selectedMoCd=rowData.moCd;
-      CMMNM=rowData.cmmNm;
-      MOCNT=rowData.moCnt;
-      getTestList(selectedMoCd);
-      console.log(selectedMoCd);
-		});
-
-    
-    function getTestList(moCd){
+    function getTestList(modCd){
 			$.ajax({
 				url : "MtTestSearch",
 				method :"POST",
         async : false,
 				dataType : "JSON",
-				data : {moCd : moCd},
+				data : {modCd : modCd},
 				success : function(data){
 					console.log(data);
           testList.clear();
@@ -329,17 +400,22 @@
 					console.log("통신오류");
 				},
 			})
-      setTimeout(function() { insertHeaderSum()}, 300);
+      setTimeout(function(){setSumHeader()}, 300);
 		}
-    function insertHeaderSum(){
-      sumNm.innerText = CMMNM;
-      sumMoCnt.innerText = MOCNT;
-      sumMoTest.innerText = MOTESTED;
-      sumMoWait.innerText = MOCNT-MOTESTED;
+    //검사summary 헤더 갱신
+    function setSumHeader(){
+    sumNm.innerText = PubCmmNm;
+    sumMoCnt.innerText = pubMoCnt;
+    sumMoTest.innerText = PubMiCnt;
+    sumMoWait.innerText = pubMoCnt-PubMiCnt;
+    modalCmm.innerText=PubCmmNm+'검사등록';
     }
 
+    
+    
+    
     //--검사리스트--
-
+    
     const testList = new Grid({
       el: document.getElementById('testList'), // Container element
       data: null,
@@ -385,16 +461,6 @@
           name: 'miPassCnt',
           sortable: true
         },
-        {
-          header: '자재발주코드',
-          name: 'moCd',
-          sortable: true
-        },
-        {
-          header: '검사진행도',
-          name: 'miNote',
-          sortable: true
-        },
       ],
       summary: {
         position: 'bottom',
@@ -402,7 +468,7 @@
         columnContent: {
           miCnt: {
             template(valueMap) {
-              MOTESTED=valueMap.sum;
+              PubMiCnt=valueMap.sum;
               return '검사합계'+valueMap.sum;
             }
           },
@@ -418,6 +484,7 @@
           }
         }
       }
+      
     });
     
     

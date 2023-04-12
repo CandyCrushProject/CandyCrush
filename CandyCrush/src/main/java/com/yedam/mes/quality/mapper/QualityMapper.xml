@@ -2,37 +2,88 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
   <mapper namespace = "com.yedam.mes.quality.mapper.QualityMapper">
-  
-  
-  <select id="getQualityOrderList" resultType="QualityOrderVO">
-	select MO_CD,
-	    MO_CNT,
-	    MO_REQ_DT,
-	    D.CA_NO,
-	    D.CMM_CD,
-	    CMM_NM,
-	    CMM_TYP,
-	    CMM_SPEC,
-	    CMM_UNIT
-    from MTRL_ORDER_DETAIL D 
-    	left join CM_MTRL_MNG C
-    on D.CMM_CD = C.CMM_CD
-  </select>
-  
-  
     <select id="selectMtQualityTestList" resultType="QualityMtTestVO">
-	SELECT 
-
-	   MI_CD,
-	   MI_DT,
-	   MI_MNG,
-	   MI_CNT,
-	   MI_BAD_CNT,
-	   MI_PASS_CNT,
-	   MI_NOTE,
-	   MO_CD
+	select MI_CD,
+        MOD_CD,
+        MI_DT,
+        MI_MNG,
+        MI_CNT,
+        MI_BAD_CNT,
+        MI_PASS_CNT
 	FROM MTRL_INSP
-	WHERE MO_CD=#{moCd}
+	WHERE MOD_CD=#{modCd}
   </select>
+  
+	<select id="selectMtOrderInspStat" resultType="MtOrderInspStatVO">
+	select
+	    D.MO_CD,
+	    D.MOD_CD,
+	    MO_TITLE,
+	    MO_REO_DT,
+	    MO_REQ_DT,
+	    D.CMM_CD,
+	    C.CMM_NM,
+	    MO_CNT,
+	    D.CA_NO,
+	    A.CA_NM,
+	    NVL(INSP_PROC,0) INSP_PROC
+	FROM
+	    MTRL_ORDER_DETAIL D
+	    LEFT JOIN MTRL_ORDER M
+	    	ON D.MO_CD=M.MO_CD
+	    LEFT JOIN CM_MTRL_MNG C
+	    	ON D.CMM_CD= C.CMM_CD
+	    LEFT JOIN (select MOD_CD,SUM(MI_CNT) INSP_PROC
+	                FROM MTRL_INSP
+	                GROUP BY MOD_CD) I
+	    	ON D.MOD_CD = I.MOD_CD
+	    LEFT JOIN CM_ACCOUNT A
+	    	ON D.CA_NO = A.CA_NO
+	    ORDER BY MOD_CD
+  </select>
+  <select id="selectMtBadCode" resultType="MtBadCodeVO">
+	 SELECT
+	    CMB_CD,
+	    CMB_NM,
+	    CMB_CTT
+	FROM cm_mtrl_bad_code
+  </select>
+  <insert id="InsertMtInsp" parameterType='MtInspInsertVO'>
+  	INSERT INTO MTRL_INSP
+	    (
+	    MI_CD,
+	    MOD_CD,
+	    MI_DT,
+	    MI_MNG,
+	    MI_CNT,
+	    MI_BAD_CNT,
+	    MI_PASS_CNT
+	VALUES(
+	    #{miCd},
+	    #{modCd},
+	    #{miDt},
+	    #{miCnt},
+	    #{miBadCnt},
+	    #{miPassCnt}
+    	)
+  </insert>
+  
+  <insert id="InsertMtBadInsp" parameterType='MtInspBadInsertVO'>
+  	INSERT INTO MTRL_BAD_HSTR
+		(MBH_CD,
+		MBH_CNT,
+		MBH_NOTE,
+		MI_CD,
+		CMB_CD
+		)
+	VALUES(
+		#{mbhCd},
+		#{mbhCnt},
+		#{mbhNote},
+		#{miCd},
+		#{cmbCd}
+		)
+  </insert>
   </mapper>
