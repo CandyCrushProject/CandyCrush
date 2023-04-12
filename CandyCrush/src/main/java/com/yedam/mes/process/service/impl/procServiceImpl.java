@@ -27,25 +27,13 @@ public class procServiceImpl implements ProcService {
 	}
 
 	@Override
-	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo,@Param("caNm")String[] caNm) {
-		return procMapper.addPlanbefore(orshNo,caNm);
-	}
-	@Override
-	public List<OrderPlanVO> getCprCd(OrderPlanVO opVO) {
-		return procMapper.selectCprCd(opVO);
+	public List<OrderPlanVO> addPlanbefore(String[] cprCd) {
+		return procMapper.addPlanbefore(cprCd);
 	}
 
 	@Override
 	public int updateOrderStatus(OrderPlanVO opVO) {
 		return procMapper.updateOrderStatus(opVO);
-	}
-	@Override
-	public String getPlanCode() {
-		return procMapper.getPlanCode();
-	}
-	@Override
-	public String getPlanDetailCode() {
-		return procMapper.getPlanDetailCode();
 	}
 	@Override
 	public List<OrderPlanVO> getOrderDetail(OrderPlanVO opVO) {
@@ -98,6 +86,11 @@ public class procServiceImpl implements ProcService {
 	@Override
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO) {
 		return procMapper.searchPlanList(ppVO);
+	}
+
+	@Override
+	public String getPlanCode() {
+		return procMapper.getPlanCode();
 	}
 
 
