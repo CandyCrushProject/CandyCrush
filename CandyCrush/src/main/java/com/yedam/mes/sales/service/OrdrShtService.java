@@ -23,10 +23,12 @@ public interface OrdrShtService {
 	
 	// 주문서관리 페이지
 	// 주문서코드 자동생성
-	public String getOrdrShtCode();
+	public List<OrdrShtVO> getOrdrShtCode();
 	
 	// 주문서디테일코드 자동생성
 	public String getOrdrShtDtlCode();
 	
-	// 주문서 등록
+	// 주문서 등록 모달창 상품 리스트
+	public List<OrdrShtVO> getProdList();
+	
 }

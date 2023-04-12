@@ -602,7 +602,7 @@
 			}
 		});
 
-		//삭제
+		//발주삭제 버튼
 		let delMocd = "";
 		let checkLen = 0;
 
@@ -619,8 +619,13 @@
 			for(let i = 0 ; i < checkLen ; i++){
 				delMocd += rows[i].moCd + ',';
 			};
-
+			
+			//체크된 행이 없다면 선택된 발주코드가 없다고 알림창을 띄운다
 			if(rows.length !== 0){
+				if(rows.length === rows.length){
+					console.log(rows.length);
+				}
+				
 				$.ajax({
 					url : "delOrder",
 					method :"POST",
@@ -889,43 +894,64 @@
 				moModal.setValue(e.rowKey, 'cmmEstInven', cmmEstInvencDate);
 			};
 		});
-
-
-		//삭제
-		let delModCd = "";
-		let checkLenDetail = 0;
-
-		moModal.on('check', (ev) => {
-			checkLenDetail = moModal.getCheckedRows().length;
-		});
-			
-		moModal.on('checkAll', (ev) => {
-			checkLenDetail = moModal.getCheckedRows().length;
-		});
-
+		
 		$('#dataDelBtn').on('click', (e)=>{
-			let rows = moModal.getCheckedRows();
-			for(let i = 0 ; i < checkLenDetail ; i++){
-				delModCd += rows[i].modCd + ',';
+			//삭제
+			let oneMoCd = $('#modalMocd').val();										//발주번호
+			let delModCd = "";
+			let rowKey = moModal.getCheckedRowKeys();								//여러개 누르면 [0, 1, 2 ...]으로 값이 들어옴
+			//console.log(rowKey);																	//키 값이 배열형태로 들어온다는 의미
+			let totalCnt = moModal.getRowCount();										//해당하는 Grid의 전체 행 값을 가져온다
+			let checkCount = moModal.getCheckedRows().length;				//해당 Grid에서 체크된 행의 개수
+
+			for(let i = 0 ; i < rowKey.length ; i++){
+				delModCd += moModal.getRow(rowKey[i]).modCd + ",";		//삭제할 발주상세코드 -> mo001, mo002, mo003, ...
 			};
 
-			if(rows.length !== 0){
-				$.ajax({
-					url : "delOrderDetail",
-					method :"POST",
-					data : {delModCd : delModCd},
-					success : function(data){
-						console.log(data);
-						Swal.fire({
-							icon: 'success',
-							title: "삭제완료"
-						});
-						moModal.removeCheckedRows();
-					},
-					error : function(err){
-						console.log(err);
-					}
-				});
+			//선택된 행이 없다면 경고창 띄우기
+			if(rowKey.length !== 0){
+				//Grid의 모든 행을 지우면 모달창이 없어지면서 발주목록까지 초기화해주기
+				if(totalCnt == checkCount){
+					$.ajax({
+						url : "delOrderDetail",
+						method :"POST",
+						data : {moCd : oneMoCd , modCd : delModCd},
+						success : function(data){
+							//console.log(data);
+							
+							Swal.fire({
+								icon: 'success',
+								title: "삭제완료"
+							});
+							//발주상세 행 지워주고
+							moModal.removeCheckedRows();
+							//모달창 없애고
+							$("#orderDetailModal").hide();	
+							//발주목록 초기화
+							mtrlOrderGetData();
+						},
+						error : function(err){
+							console.log(err);
+						}
+					});
+				} else {
+					$.ajax({
+						url : "delOrderDetail",
+						method :"POST",
+						data : {moCd : oneMoCd , modCd : delModCd},
+						success : function(data){
+							//console.log(data);
+							Swal.fire({
+								icon: 'success',
+								title: "삭제완료"
+							});
+							moModal.removeCheckedRows();
+						},
+						error : function(err){
+							console.log(err);
+						}
+					});
+				}
 			} else {
 				Swal.fire({
 					icon: 'error',
@@ -934,7 +960,6 @@
 				});
 				return;
 			}
-
 		});
 
 //---------------------------------------------------------발주목록 행에 값 넣는 장소

@@ -19,13 +19,11 @@ public interface ProcMapper {
 	public int updateOrderStatus(OrderPlanVO opVO);
 	public List<OrderPlanVO> selectOrderDetail(OrderPlanVO opVO);
 	
-	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo,@Param("caNm")String[] caNm);
+	public List<OrderPlanVO> addPlanbefore(String[] cprCd);
 	
-	public List<OrderPlanVO> selectCprCd(OrderPlanVO opVO);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
 	public String getPlanCode();
-	public String getPlanDetailCode();
 	public int insertPlan(ProcPlanVO planVO);
 	public int insertPlanDetail(ProcPlanVO planVO);
 	// 제품공정확인 - 제품마다 사용되는 공정정보

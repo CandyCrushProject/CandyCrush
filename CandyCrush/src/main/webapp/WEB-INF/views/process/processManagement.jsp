@@ -5,21 +5,6 @@
 
 			<link rel="stylesheet" href="assets/css/processManagement.css">
 			<style>
-				#orderSheetTab td {
-					vertical-align: middle;
-				}
-
-				.hi {
-					height: 35px;
-					padding: 0;
-					padding-left: 10px;
-					padding-right: 10px;
-				}
-
-				.padbot {
-					margin-bottom: 20px;
-				}
-
 				.matop {
 					margin-top: 20px;
 				}
@@ -27,6 +12,19 @@
 				input[type="date"] {
 					border: none;
 					border-bottom: 1px solid #9e9e9e;
+				}
+
+				.btnSet {
+					float: right;
+					margin-right: 20px;
+				}
+
+				.btnSet button {
+					margin: 0px 5px;
+				}
+
+				#orderSheetTab td {
+					vertical-align: middle;
 				}
 
 				#orderSheetTab tr:hover {
@@ -101,35 +99,23 @@
 									<div class="card-action">
 										<h3>생산계획등록</h3>
 									</div>
+									<div class="btnSet">
+										<button type="button" class="cndRstBtn hi" id="resetBtn">
+											<i class="fa-solid fa-rotate-right"></i> 초기화
+										</button>
+										<button type="button" class="cndInsBtn hi" id="addPlanBtn">
+											<i class="fa-solid fa-plus"></i> 등록
+										</button>
+									</div>
+									<div class="clearBoth"></div>
 									<div class="card-content">
-										<div class="procPlan">
-											<ul class="padbot">
-												<li class="procPlanBtn-r">
-													<button type="button" class="cndInsBtn hi" id="addPlanBtn">
-														<i class="fa-solid fa-plus"></i> 등록
-													</button>
-												</li>
-												<li class="procPlanBtn-r">
-													<button type="button" class="cndRstBtn hi" id="resetBtn">
-														<i class="fa-solid fa-rotate-right"></i> 초기화
-													</button>
-												</li>
-											</ul>
-										</div>
-										<div class="clearBoth">
-											<br />
-										</div>
 										<!-- 주문서 현재상태 -->
 										<form id="planForm" name="newPlan" action="insertProcPlan" method="POST" onsubmit="return false">
-											<input type="hidden" id="orshPr" name="orshPr" readonly>
+
 											<input type="hidden" name="prpldStatus" value="미지시" readonly>
 											<input type="hidden" name="prplStatus" value="계획완료" readonly>
-											<input type="hidden" id="caNm" name="caNm" value="" readonly>
-											<input type="hidden" id="caNo" name="caNo" value="" readonly>
-											<input type="hidden" id="ordrDtlCd" name="ordrDtlCd" value="" readonly>
-											<input type="hidden" id="cprCd" name="cprCd" readonly>
-											<input type="hidden" id="sttCngDt" name="sttCngDt" value="" readonly>
-											<input type="hidden" name="prpldCd" id="prpldCd" readonly>
+											<h4>생산계획코드</h4>
+											<input type="text" name="prplCd" id="prplCd" readonly>
 											<div id="insertPlanGrid"></div>
 										</form>
 									</div>
@@ -192,26 +178,6 @@
 						},
 						dataType: 'json',
 						success: function (data) {
-							// 성공적으로 응답 받았을 때 처리할 로직
-							var tbody = $("#bomMtrlSheet"); // tbody 선택
-							tbody.empty(); // tbody 비우기
-
-							// 데이터 반복문 처리
-							$.each(data.bomInfo, function (index, item) {
-								var row = $('<tr>');
-								// td 생성		
-								row.append($("<td>").attr("hidden", true).text(item.cbmtCd));
-								row.append($("<td>").attr("hidden", true).text(item.cmmCd));
-								row.append($("<td>").attr("hidden", true).text(item.cmCd));
-								row.append($("<td>").attr("hidden", true).text(item.cprCd));
-								row.append($("<th scope='row'>").text(index + 1));
-								row.append($("<td>").text(item.cprNm));
-								row.append($("<td>").text(item.cmmNm));
-								row.append($("<td>").text(item.cmNm));
-								row.append($("<td>").text(item.cbmtQtt));
-
-								tbody.append(row);
-							})
 						},
 						error: function (xhr, status, error) {
 							// 요청이 실패했을 때 처리할 로직
@@ -235,57 +201,33 @@
 						$("#prplSuceDt").val('');
 					});
 				});
+
+				// 처음 뿌려주는 미계획주문서 리스트
 				getOrder();
+				let cprCdObj = [];
+				let orderSheetObj = [];
 				function getOrder() {
 					$.ajax({
 						url: 'getOrder',
 						type: 'GET',
 						dataType: 'json', // orderSheetTab 
 						success: function (data) {
-							orderSheetGrid.resetData(data.result);
-						},
-						error: function (xhr, status, error) {
-							// 요청이 실패했을 때 처리할 로직
-							console.error('요청 실패:', error);
-						}
-					});
-				}
-				function getOrderDate(orshNo, caNo) {
-					let addData = {
-						orshNo: orshNo,
-						caNo: caNo
-					};
-					$.ajax({
-						url: 'getOrderDetail',
-						type: 'GET',
-						data: addData,
-						dataType: 'json',
-						success: function (data) {
-							// 성공적으로 응답 받았을 때 처리할 로직
-							var tbody = $("#orderDetail"); // tbody 선택
-							tbody.empty(); // tbody 비우기
-
-							// 데이터 반복문 처리
-							$.each(data.result, function (index, item) {
-								var row = $("<tr>").addClass("planBtn").on('dblclick', function () {
-									getBomDate(item.orshNo, item.cprCd);
+							for (let i = 0; i < data.result.length; i++) {
+								cprCdObj.push({ cprCd: data.result[i].cprCd });
+							}
+							for (let i = 0; i < data.result.length; i++) {
+								orderSheetObj.push({
+									orshNo: data.result[i].orshNo,
+									ordrCdCnt: data.result[i].ordrCdCnt,
+									caNo: data.result[i].caNo,
+									dlvryDt: data.result[i].dlvryDt,
+									orshDt: data.result[i].orshDt
 								});
-								row.append($("<td>").attr("hidden", true).text(item.orshNo));
-								row.append($("<td>").attr("hidden", true).text(item.caNo));
-								row.append($("<td>").attr("hidden", true).text(item.orshDt));
-								row.append($("<td>").attr("hidden", true).text(item.cprCd));
-								row.append($("<td>").attr("hidden", true).text(item.sttCngDt));
-								row.append($("<th scope='row'>").text(index + 1));
-								row.append($("<td>").text(item.ordrDtlCd));
-								row.append($("<td>").text(item.ordrDtlCnt));
-								row.append($("<td>").text(item.cprNm));
-								row.append($("<td>").text(item.caNm));
-								row.append($("<td>").text(item.dlvryDt));
-								row.append($("<td>").text(item.orshPr));
+							}
+							console.log(cprCdObj);
 
-								tbody.append(row);
-							})
-							$('#order').modal('hide');
+							console.log(orderSheetObj);
+
 						},
 						error: function (xhr, status, error) {
 							// 요청이 실패했을 때 처리할 로직
@@ -293,6 +235,7 @@
 						}
 					});
 				}
+
 				// 날짜 포맷 변경 함수
 				function formatDate(time) {
 					var date = new Date(time);
@@ -373,6 +316,77 @@
 					});
 				});
 
+
+				$(document).ready(function () {
+
+					// 미계획 주문서 리스트 체크된 데이터를 가져와 db에서 정보 가져옴
+					$('#planAddBtn').on('click', function () {
+						const rows = orderSheetGrid.getCheckedRows();
+						let cprCdSet = "";
+						for (let i = 0; i < rows.length; i++) {
+							cprCdSet += rows[i].cprCd + ","
+						}
+						let List = {
+							cprCd: cprCdSet
+						}
+						if (rows.length > 0) {
+							$.ajax({
+								url: "getDownOrders",
+								method: "POST",
+								contentType: 'application/json',
+								data: JSON.stringify(List),
+								dataType: 'json',
+								success: function (data) {
+									let op = data.orderNPlan;
+									let pc = data.prplCd;
+									console.log(op);
+									console.log(pc);
+									$('#prplCd').val(pc);
+
+									addOrderPlanGrid.resetData(op);
+
+
+									orderSheetGrid.removeCheckedRows();
+								}, error: function (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: '경고',
+								text: "선택된 주문서나 데이터가 없습니다.",
+							});
+						};
+					});
+
+				});
+				// 행 클릭시 모달이 뜨며 정보가 들어있는 그리드 함수 실행
+				orderSheetGrid.on('dblclick', function (ev) {
+
+					var row = orderSheetGrid.getRow(ev.rowKey);
+					getOrderDetail(row.orshNo, row.caNm);
+					$('#order').modal('show');
+				});
+
+				// 주문 상세 모달창
+				function getOrderDetail(orshNo, caNm) {
+					$.ajax({
+						url: 'getOrderDetail',
+						method: 'post',
+						data: {
+							orshNo: orshNo,
+							caNm: caNm
+						},
+						success: function (data) {
+							orderDetailGrid.resetData(data);
+							$('#orshNoCd').val(data[0].orshNo);
+							setTimeout(() => orderDetailGrid.refreshLayout(), 200);
+						}, error: function (rej) {
+							console.log(rej);
+						}
+					});
+				}
 				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
 				const orderSheetGrid = new tui.Grid({
 					el: document.getElementById('orderSheetTab'),
@@ -408,63 +422,6 @@
 						}
 					]
 				});
-				$('#planAddBtn').on('click', function () {
-					const rows = orderSheetGrid.getCheckedRows();
-					let orshNoSet = "";
-					let caNmSet = "";
-					for (let i = 0; i < rows.length; i++) {
-						orshNoSet += rows[i].orshNo + ","
-						caNmSet += rows[i].caNm + ","
-					}
-					let ordrSet = {
-						orshNo: orshNoSet,
-						caNm: caNmSet
-					};
-					if (rows.length !== 0) {
-						$.ajax({
-							url: "getDownOrders",
-							method: "POST",
-							data: JSON.stringify(ordrSet),
-							dataType: 'json',
-							contentType: "application/json; UTF-8;",
-							success: function (data) {
-
-								orderSheetGrid.removeCheckedRows();
-							}
-						});
-					} else {
-						Swal.fire({
-							icon: 'error',
-							title: '경고',
-							text: "선택된 주문서나 데이터가 없습니다.",
-						});
-					};
-				});
-
-				orderSheetGrid.on('dblclick', function (ev) {
-					var row = orderSheetGrid.getRow(ev.rowKey);
-					getOrderDetail(row.orshNo, row.caNm);
-					$('#order').modal('show');
-				});
-
-				function getOrderDetail(orshNo, caNm) {
-					$.ajax({
-						url: 'getOrderDetail',
-						method: 'post',
-						data: {
-							orshNo: orshNo,
-							caNm: caNm
-						},
-						success: function (data) {
-							orderDetailGrid.resetData(data);
-							$('#orshNoCd').val(data[0].orshNo);
-							setTimeout(() => orderDetailGrid.refreshLayout(), 200);
-						}, error: function (rej) {
-							console.log(rej);
-						}
-					});
-				}
-
 				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
 				const orderDetailGrid = new tui.Grid({
 					el: document.getElementById('orderDetailList'),
@@ -501,36 +458,47 @@
 					]
 				});
 
+				// 체크된 주문리스트를 계획등록폼으로 이동시킴
 				const addOrderPlanGrid = new tui.Grid({
-					el: document.getElementById('orderDetailList'),
+					el: document.getElementById('insertPlanGrid'),
 					scrollX: false,
 					scrollY: false,
 					minBodyHeight: 30,
 					rowHeaders: ['rowNum'],
 					columns: [
 						{
-							header: '주문상세코드',
-							name: 'ordrDtlCd',
-							align: 'center'
-						},
-						{
 							header: '제품명',
 							name: 'cprNm',
 							align: 'center'
 						},
 						{
-							header: '거래처',
-							name: 'caNm',
-							align: 'center'
-						},
-						{
 							header: '주문수량',
-							name: 'ordrDtlCnt',
+							name: 'sumDtlCnt',
+							align: 'center',
+						},
+						{
+							header: '납품일자',
+							name: 'dlvryDt',
+							sortingType: 'asc',
+							sortable: true,
 							align: 'center'
 						},
 						{
-							header: '현재상태',
-							name: 'orshPr',
+							header: '작업우선순위',
+							name: 'prpldWorkTskPri',
+							editor: {
+								type: 'select',
+								options: {
+									listItems: [
+										{ text: '작업순위선택', value: '작업순위선택' },
+										{ text: '1', value: '1' },
+										{ text: '2', value: '2' },
+										{ text: '3', value: '3' },
+										{ text: '4', value: '4' },
+										{ text: '5', value: '5' }
+									]
+								}
+							},
 							align: 'center'
 						},
 					]

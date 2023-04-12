@@ -46,7 +46,7 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 
 	// 주문서코드 자동생성
 	@Override
-	public String getOrdrShtCode() {
+	public List<OrdrShtVO> getOrdrShtCode() {
 		
 		return mapper.getOrdrShtCode();
 	}
@@ -56,6 +56,13 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	public String getOrdrShtDtlCode() {
 		
 		return mapper.getOrdrShtDtlCode();
+	}
+
+	// 주문서 등록 모달창 상품 리스트
+	@Override
+	public List<OrdrShtVO> getProdList() {
+		
+		return mapper.getProdList();
 	}
 	
 	// 주문서 등록

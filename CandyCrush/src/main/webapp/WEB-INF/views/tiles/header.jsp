@@ -152,7 +152,7 @@
 				<div class="sidebar-collapse">
 					<ul class="nav" id="main-menu">
 
-						<li><a href="${pageContext.request.contextPath}/dashboard" class="waves-effect waves-dark"><i
+						<!-- <li><a href="${pageContext.request.contextPath}/dashboard" class="waves-effect waves-dark"><i
 									class="fa fa-dashboard"></i>
 								Dashboard</a></li>
 						<li><a href="${pageContext.request.contextPath}/ulElements" class="waves-effect waves-dark"><i
@@ -193,7 +193,7 @@
 						<li><a href="${pageContext.request.contextPath}/empty" class="waves-effect waves-dark"> <i
 									class="fa fa-fw fa-file"></i>
 								Empty Page
-							</a></li>
+							</a></li> -->
 						<li>
 							<a href="#" class="waves-effect waves-dark">
 								<i class="fa fa-sitemap"></i>
@@ -366,11 +366,11 @@
 										<li><a href="#">Third Level Link</a></li>
 									</ul> -->
 								</li>
-								<li>
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/mtrlInspManagement" class="waves-effect waves-dark">
 										자재입고검사관리(품질로빼기)
 									</a>
-								</li>
+								</li> -->
 								<li>
 									<a href="${pageContext.request.contextPath}/mtrlInputManagement" class="waves-effect waves-dark">
 										자재입고관리

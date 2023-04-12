@@ -40,5 +40,8 @@ public class OrdrShtVO {
 	private String caMng; // 담당자
 	private String caMngPh; // 담당자번호
 	private String caTyp; // 거래처유형
+	
+	// 완제품
+	private String cprNm; // 완제품명
 
 }
