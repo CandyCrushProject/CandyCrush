@@ -4,11 +4,16 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.yedam.mes.quality.service.vo.MtBadCodeVO;
+import com.yedam.mes.quality.service.vo.MtInspBadInsertVO;
+import com.yedam.mes.quality.service.vo.MtInspInsertVO;
+import com.yedam.mes.quality.service.vo.MtOrderInspStatVO;
 import com.yedam.mes.quality.service.vo.QualityMtTestVO;
-import com.yedam.mes.quality.service.vo.QualityOrderVO;
 
 public interface QualityMapper {
-	public List<QualityOrderVO> getQualityOrderList();
-	
-	public List<QualityMtTestVO> selectMtQualityTestList(@Param("moCd") String moCd);
+	public List<MtOrderInspStatVO> selectMtOrderInspStat();
+	public List<QualityMtTestVO> selectMtQualityTestList(@Param("modCd") String modCd);
+	public List<MtBadCodeVO> selectMtBadCode();
+	public String InsertMtInsp(@Param("MtInspInsert") MtInspInsertVO vo);
+	public String InsertMtBadInsp(@Param("MtInspBadInsert")List<MtInspBadInsertVO>badvo); 
 }
