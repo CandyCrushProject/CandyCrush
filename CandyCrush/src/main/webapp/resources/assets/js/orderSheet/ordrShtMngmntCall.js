@@ -20,7 +20,7 @@ $(document).ready(function () {
       Swal.fire({
         icon: 'error',
         title: '경고',
-        text: "납기날짜를 선택 하세요.",
+        text: "납기일을 선택 하세요.",
       });
     }
     ordrShtInsert();
@@ -59,6 +59,7 @@ function accntSrch() {
     success: function (data) {
       // console.log(data);
       accntList.resetData(data);
+      
     },
     error: function (rej) {
       Swal.fire({
@@ -89,15 +90,14 @@ function formatDate() {
   return formattedDate;
 }
 
+// 납기일짜선택할 때 현재날짜 이전여부 체크
 let dlvryDt = $('#dlvryDt').val();
 function dlvryDtCheck() {
-  //console.log("dlvryDt : ", dlvryDt);
-  //console.log("formattedDate : ", formattedDate);
   if (dlvryDt < formattedDate) {
     Swal.fire({
       icon: 'error',
       title: '경고',
-      text: "이전날짜는 선택할 수 없습니다.",
+      text: "납기일을 확인 하세요.",
     });
   }
 }

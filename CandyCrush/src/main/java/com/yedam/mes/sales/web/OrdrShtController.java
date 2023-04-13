@@ -22,22 +22,6 @@ public class OrdrShtController {
 	@Autowired
 	OrdrShtService service;
 	
-	//주문조회 페이지
-//	@GetMapping("ordrShtList")
-//	public String ordrShtAllList(Model model) {
-//		model.addAttribute("ordrShtList", service.ordrShtAllList()); // 주문서 목록
-//		model.addAttribute("accuntList", service.accoutnAllList()); // 거래처 목록
-//		return "sales/orderSheet";
-//	}
-	
-	// 조회검색 페이지
-//	@PostMapping("ordrShtSrch")
-//	@ResponseBody
-//	public List<OrdrShtVO> ordrShtSrchList(@RequestParam(required = false) String caNm, @RequestParam(required = false) String orshStrDt, @RequestParam(required = false) String orshEndDt) {
-//		//System.out.println("caNm:" + caNm + ", orshStrDt : " + orshStrDt + ", orshEndDt : " + orshEndDt);
-//		return service.ordrShtSrchList(caNm, orshStrDt, orshEndDt);
-//	}
-	
 	// 모달창 거래처 검색조회
 	@PostMapping("ordrAccntSrch")
 	@ResponseBody

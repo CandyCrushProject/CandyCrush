@@ -117,22 +117,6 @@
 					</div>
 				</div>
 			</div> <!--END row-->
-			<!--자재발주 테이블-->
-			<!-- <div class="row">
-				<div class="col-md-12">
-					<div class="card">
-						<div class="card-action">주문서 조회</div>
-						<div class="card-content">
-							iv>
-							<div style="clear:both"></div>
-							<div class="table-responsive">
-								<div id="materialOrder"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>  -->
-			<!--END row-->
 		</div>
 		<!-- /. PAGE INNER  -->
 	</div>
