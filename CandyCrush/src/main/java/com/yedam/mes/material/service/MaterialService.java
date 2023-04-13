@@ -52,4 +52,7 @@ public interface MaterialService {
 	
 	//입고목록 -> 7일 이내
 	public List<MaterialInputVO> mtrlInputList7Days();
+	
+	//입고목록 -> 입고상세
+	public List<MaterialInputVO> mtrlInputDetailList(@Param("minCd") String minCd);
 }

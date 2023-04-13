@@ -291,13 +291,6 @@
 					}
 				},
 				{
-					header: '발주완료일',
-					name: 'moCpltDt',
-					formatter: function (e) {
-						return dateChange(e.value);
-					}
-				},
-				{
 					header: '업체코드',
 					name: 'caNo'
 				},

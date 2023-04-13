@@ -18,6 +18,9 @@ public class MaterialInputVO {
 	//발주관리
 	private String moCd;	//발주코드
 	
+	//자재발주상세
+	private String modCd;	//발주상세코드
+	
 	//거래처관리
 	private String caNo;	//업체코드
 	private String caNm;	//업체명
@@ -33,6 +36,10 @@ public class MaterialInputVO {
 	private int minCdCount; //자재입고코드(개수)
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private String minDt;	//자재입고일
+	private int minCnt;		//입고수량
+	
+	//LOT관리
+	private String cmlNm;	//LOT코드
 	
 	//날짜검색
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")

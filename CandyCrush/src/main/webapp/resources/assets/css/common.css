@@ -22,7 +22,7 @@ input[type="date"] {
 }
 
 /* 자재발주관리 / 0412 / 정은애 */
-#modalMocd{
+#modalMocd, #modalMoStt{
 	background-color: rgb(233, 233, 233);
 	border: 0 !important;
 	border-radius: 15px;

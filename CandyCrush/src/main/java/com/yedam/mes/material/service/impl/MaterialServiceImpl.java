@@ -133,4 +133,10 @@ public class MaterialServiceImpl implements MaterialService {
 		return mapper.mtrlInputList7Days();
 	}
 
+	//입고목록 -> 입고상세
+	@Override
+	public List<MaterialInputVO> mtrlInputDetailList(@Param("minCd") String minCd) {
+		return mapper.mtrlInputDetailList(minCd);
+	}
+
 }

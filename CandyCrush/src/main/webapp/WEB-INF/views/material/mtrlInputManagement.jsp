@@ -188,7 +188,7 @@
 											minCd : '${inSht.minCd}',
 											minDt : '${inSht.minDt}',
 											minCdCount : '${inSht.minCdCount}'
-										}
+										},
 									</c:forEach>
 								];
 
@@ -335,12 +335,6 @@
 					sortable: true,
 				},
 				{
-					header: 'LOT코드',
-					name: 'cmlNm',
-					sortingType: 'asc',
-					sortable: true
-				},
-				{
 					header: '자재코드',
 					name: 'cmmCd',
 					sortingType: 'asc',
@@ -412,7 +406,7 @@
 					title: "주의",
 					text: "입고수량 변경 기능은 준비중입니다."
 				})
-			}
+			};
 			// console.log(e.rowKey);
 			// materialInspGetList.focusChange = -1;
 			
@@ -476,7 +470,7 @@
 				});
 			}
 		})
-
+		
 		//입고목록 Grid
 		const mtrlMngInputList = new Grid({
 			el: document.getElementById('mtrlInputList'), // Container element
@@ -487,7 +481,12 @@
 				},
 				{
 					header: '입고일자',
-					name: 'minDt'
+					name: 'minDt',
+					formatter: function (e) {
+						let newData = new Date(e.value);
+						let result = newData.getFullYear() + "-" + (newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1) + "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+							return result;
+					}
 				},
 				{
 					header: '건수',
@@ -503,9 +502,22 @@
 			let getRowData = mtrlMngInputList.getRow(e.rowKey);
 			let rowDataMinCd = getRowData.minCd;
 			$('#modalMinCd').val(rowDataMinCd);
+			console.log(rowDataMinCd);
 			document.getElementById('inputDetailModal').style.display='block';
 
 			setTimeout(()=> materialInspDetail.refreshLayout() , 0);
+
+			
+			//입고 상세 목록 ajax
+			$.ajax({
+				url : "mtrlInputDeateilList",
+				method : "POST",
+				dataType : "JSON",
+				data : {minCd : rowDataMinCd},
+				success : function(data){
+					materialInspDetail.resetData(data);
+				}
+			})
 		});
 
 		//Modal을 Esc 누르면 없어지게 만드는 곳
@@ -521,6 +533,12 @@
 			//inputDetailModal
 			if (e.keyCode === 27 && inputDetailModal.css("display") === "block") {
 				inputDetailModal.hide();
+			};
+
+//------------------------------------------------------------------------------------
+		//날짜변환 함수
+		function dateChange(data) {
+			
 			};
 		});
 </script>
