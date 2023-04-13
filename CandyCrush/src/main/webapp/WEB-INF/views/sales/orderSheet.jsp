@@ -154,68 +154,7 @@
 			});
 		}
 //---------------------------------------------------------------------------------------------
-	// 주문조회 목록 Grid
-	const Grid = tui.Grid;
-	let orderData = [
-		<c:forEach items="${ordrShtList}" var="ordrSht">
-		{
-			orshNo: '${ordrSht.orshNo}', // 주문서번호	
-			caNo: '${ordrSht.caNo}', // 거래처코드
-			caNm: '${ordrSht.caNm}', // 거래처명
-			orshDt: "<fmt:formatDate value='${ordrSht.orshDt}' pattern='yyyy-MM-dd'/>",
-			dlvryDt: "<fmt:formatDate value='${ordrSht.dlvryDt}' pattern='yyyy-MM-dd'/>",
-    },
-		</c:forEach>
-	];
-
-	// 주문서 목록
-	const orderList = new Grid({
-		el: document.getElementById('orderList'), // Container element
-		data: orderData,
-		rowHeaders: ['checkbox'],
-		columns: [
-			{
-				header: '주문서번호',
-				name: 'orshNo',
-				sortingType: 'asc',
-				sortable: true
-			},
-			{
-				header: '거래처코드',
-				name: 'caNo',
-				sortingType: 'asc',
-				sortable: true
-			},
-			{
-				header: '거래처명',
-				name: 'caNm',
-				sortingType: 'asc',
-				sortable: true
-			},
-			{
-				header: '주문일자',
-				name: 'orshDt',
-				formatter: function (data) {
-					return dateChange(data.value);
-				},
-				sortingType: 'asc',
-				sortable: true,
-			},
-			{
-				header: '납기일자',
-				name: 'dlvryDt',
-				formatter: function (data) {
-					return dateChange(data.value);
-				},
-			}
-		],
-		bodyHeight: 500,
-		pageOptions: {
-			useClient: true,
-			type: 'scroll',
-			perPage: 30
-		}
-	});
+	
 
 	$(document).ready(function () {
 		// 거래처 모달

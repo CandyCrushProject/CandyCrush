@@ -54,7 +54,7 @@
 					</div>
         </form>
         <div id="ordrModal"></div>
-				<button class="cndInsBtn" type="button">등록</button>
+				<button id="ordrShtInsert" class="cndInsBtn" type="button">등록</button>
       </div>
     </div>
   </div><!-- End 주문서 등록 -->
@@ -90,12 +90,12 @@
 					<!--End 자재목록 테이블 -->
 				</div>
 			</div> <!--END row-->
-			<!--자재발주 테이블-->
+
 			<div class="row">
 				<div class="col-md-12">
 					<!-- Advanced Tables -->
 					<div class="card">
-						<div class="card-action">자재발주</div>
+						<div class="card-action">주문서조회</div>
 						<div class="card-content">
 							<div id="contextBox">
 								<button class="cndUdtBtn" type="button">
@@ -105,6 +105,25 @@
 									<i class="fa-solid fa-minus"></i>삭제
 								</button>
 							</div>
+							<!-- 주문서 목록 조회박스 -->
+							<div class="table-responsive">
+								<div id="orderList"></div>
+							</div> <!-- end 주문서 목록 조회박스 -->
+							<div>
+								<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
+							</div>
+						</div>
+			
+					</div>
+				</div>
+			</div> <!--END row-->
+			<!--자재발주 테이블-->
+			<!-- <div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-action">주문서 조회</div>
+						<div class="card-content">
+							iv>
 							<div style="clear:both"></div>
 							<div class="table-responsive">
 								<div id="materialOrder"></div>
@@ -112,10 +131,10 @@
 						</div>
 					</div>
 				</div>
-			</div> <!--END row-->
+			</div>  -->
+			<!--END row-->
 		</div>
 		<!-- /. PAGE INNER  -->
 	</div>
-
 	<script src="assets/js/orderSheet/ordrShtMngmntCntnt.js"></script>
 </main>
