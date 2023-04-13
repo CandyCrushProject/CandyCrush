@@ -76,12 +76,13 @@ function accntSrch() {
       // console.log(data);
       orderList.resetData(data);
     },
-    error: function (rej) {
-      Swal.fire({
-        title: 'Error',
-        icon: 'error'
-      });
-    }
+    // error: function (rej) {
+    //   Swal.fire({
+    //     title: 'Error',
+    //     icon: 'error',
+    //     text: rej
+    //   });
+    // }
   });
 }
 

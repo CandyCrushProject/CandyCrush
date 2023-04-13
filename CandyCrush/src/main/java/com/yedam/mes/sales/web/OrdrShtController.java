@@ -66,9 +66,9 @@ public class OrdrShtController {
 	// 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌
 	@PostMapping("ordrShtMngnSrch")
 	@ResponseBody
-	public List<OrdrShtVO> ordrShtMngnSrch(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo) {
+	public List<OrdrShtVO> ordrShtMngnSrch(@RequestParam(required = false) String caNm) {
 		
-		System.out.println("caNm" + caNm + ", caNo" + caNo);
+		System.out.println("caNm" + caNm);
 		return service.ordrShtMngnSrch(caNm);
 	}
 	

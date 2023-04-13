@@ -73,11 +73,11 @@
 		     , cmacc.ca_nm
 		     , TO_DATE(orsh.orsh_dt, 'rrrr-MM-dd') as orsh_dt
 		     , TO_DATE(orsh.dlvry_dt, 'rrrr-MM-dd') as dlvry_dt
-		  FROM order_sheet orsh LEFT OUTER JOIN cm_account cmacc
-		                                     ON orsh.ca_no = cmacc.ca_no
+		  FROM order_sheet orsh JOIN cm_account cmacc
+		                          ON orsh.ca_no = cmacc.ca_no
 		 WHERE cmacc.CA_TYP = "매출처"
 			<if test="caNm != null and !caNm.equals('')">
-				AND ca_nm LIKE '%' || #{caNm} || '%'
+				AND cmacc.ca_nm LIKE '%' || #{caNm} || '%'
 			</if>
 		 ORDER BY 1
 	</select>
