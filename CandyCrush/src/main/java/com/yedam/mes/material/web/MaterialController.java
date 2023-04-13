@@ -162,6 +162,12 @@ public class MaterialController {
 		return service.mtrlInputGetList(caNm, start, end);
 	};
 	
+	//자재입고관리/입고코드를 기반으로 단건조회
+	@PostMapping("mtrlInputDeateilList")
+	@ResponseBody
+	public List<MaterialInputVO> mtrlInputDeateilList(@Param("minCd") String minCd){
+		return service.mtrlInputDetailList(minCd);
+	}
 	
 	//------------------------------------------------------------------------
 	
