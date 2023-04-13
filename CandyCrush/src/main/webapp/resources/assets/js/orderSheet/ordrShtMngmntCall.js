@@ -1,16 +1,30 @@
 $(document).ready(function () {
+  // 거래처 검색
   $('#accountName').on('input', function () {
     accntSrch();
   });
 
-  $('#accntMdlCaNm').on('input', function () {
-    accntSrch();
+  // 주문서관리 페이지 거래처 검색
+  // $('#accntMdlCaNm').on('input', function () {
+  //   accntSrch();
+  // });
+
+  // 납기날짜 체크하기
+  $("#dlvryDt").change(function () {
+    dlvryDtCheck();
   });
 
-  $('#srchAccntBtn').on('click', function() {
-    document.getElementById('accntNmMdl').style.display = 'block';
-    setTimeout(() => ordrDtilMdl.refreshLayout(), 0);
-  })
+  // 주문서 등록
+  $('#ordrShtInsert').on('click', () => {
+    if (dlvryDt == "" || dlvryDt == null || dlvryDt == undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: '경고',
+        text: "납기일을 선택 하세요.",
+      });
+    }
+    ordrShtInsert();
+  });
 
   // ESC 누르면 모달창 없어짐
   $(window).on("keydown", (e) => {
@@ -22,21 +36,21 @@ $(document).ready(function () {
     };
   });
 
+  // 주문서관리페이지 주문서 모달창에서 제품주문 쪽 +버튼 눌렀을때 행 추가
   $('#getRowBtn').on('click', () => {
     ordrProdList.appendRow();
   });
-  $('#delRowBtn').on('click', () => {
-    ordrProdListxw.removeCheckedRows();
-  })
 
+  // 주문서관리페이지 주문서 모달창에서 제품주문 쪽 -버튼 눌렀을때 체크된 행 삭제
+  $('#delRowBtn').on('click', () => {
+    ordrProdList.removeCheckedRows();
+  })
 });
 
-let accountName = ""; // 
-
+let accountName = "";
 //주문서관리 업체명검색
 function accntSrch() {
   accountName = document.getElementById('accountName').value;
-
   $.ajax({
     url: "ordrAccntSrch",
     method: "POST",
@@ -45,6 +59,7 @@ function accntSrch() {
     success: function (data) {
       // console.log(data);
       accntList.resetData(data);
+      
     },
     error: function (rej) {
       Swal.fire({
@@ -55,28 +70,34 @@ function accntSrch() {
   });
 }
 
+// ajax로 불러온 날짜데이터(시간으로 불러와짐) 변환
+function dateChange(date) {
+  let date1 = new Date(date);
+  let date2 = date1.getFullYear() + '-'
+    + ((date1.getMonth() < 10) ? '0' + (date1.getMonth() + 1) : (date1.getMonth() + 1)) + '-'
+    + ((date1.getDate() < 10) ? '0' + date1.getDate() : date1.getDate());
+  return date2;
+}
+
 // 현재날짜
+let formattedDate = "";
 function formatDate() {
   let date = new Date();
   let year = date.getFullYear();
   let month = ("0" + (date.getMonth() + 1)).slice(-2);
   let day = ("0" + date.getDate()).slice(-2);
-  let formattedDate = year + "-" + month + "-" + day;
+  formattedDate = year + "-" + month + "-" + day;
   return formattedDate;
 }
 
-// function getOrdrShtInfo() {
-//   $.ajax({
-//     url: 'insertPrcs',
-//     data: JSON.stringify(grid.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']})),
-//     contentType : 'application/json',
-//     type: 'POST',
-//     async: false,
-//     success: function(data) {
-//       search();
-//     },
-//     error: function(reject) {
-//         console.log(reject);
-//     }
-//   });
-// }
+// 납기일짜선택할 때 현재날짜 이전여부 체크
+let dlvryDt = $('#dlvryDt').val();
+function dlvryDtCheck() {
+  if (dlvryDt < formattedDate) {
+    Swal.fire({
+      icon: 'error',
+      title: '경고',
+      text: "납기일을 확인 하세요.",
+    });
+  }
+}

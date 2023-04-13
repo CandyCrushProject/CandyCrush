@@ -59,12 +59,77 @@ const accntList = new Grid({
   }
 });
 accntGetData();
+
+//---------------------------------------------------------------------------------------------
+// 주문서 목록
+const ordrShtList = () => {
+  $.ajax({
+    url: "ordrMngntOrdrShtList",
+    method: "POST",
+    success: function (data) {
+      // console.log(data);
+      orderList.resetData(data);
+    },
+    error: function (reject) {
+      console.log(reject)
+    }
+  });
+};
+
+const orderList = new Grid({
+  el: document.getElementById('orderList'), // Container element
+  rowHeaders: ['checkbox'],
+  columns: [
+    {
+      header: '주문서번호',
+      name: 'orshNo',
+      sortingType: 'asc',
+      sortable: true
+    },
+    {
+      header: '거래처코드',
+      name: 'caNo',
+      sortingType: 'asc',
+      sortable: true
+    },
+    {
+      header: '거래처명',
+      name: 'caNm',
+      sortingType: 'asc',
+      sortable: true
+    },
+    {
+      header: '주문일자',
+      name: 'orshDt',
+      formatter: function (data) {
+        return dateChange(data.value);
+      },
+      sortingType: 'asc',
+      sortable: true,
+    },
+    {
+      header: '납기일자',
+      name: 'dlvryDt',
+      formatter: function (data) {
+        return dateChange(data.value);
+      },
+    }
+  ],
+  bodyHeight: 500,
+  pageOptions: {
+    useClient: true,
+    type: 'scroll',
+    perPage: 30
+  }
+});
+ordrShtList();
+
 //---------------------------------------------------------------------------------------------
 //발주목록 행 더블클릭 이벤트
 accntList.on('dblclick', (e) => {
   if (e.targetType != 'cell') return; // cell이 아닌타입을 클릭했을 때 종료
   const rowData = accntList.getRow(e.rowKey);
-  console.log(e, rowData);
+  // console.log(e, rowData);
 
   // Modal input내용들
   let rowDataCaNo = rowData.caNo; // 거래처 코드
@@ -77,18 +142,52 @@ accntList.on('dblclick', (e) => {
   $("#caMngPh").val(rowDataCaMngPh);
 
   document.getElementById('ordrDtilMdl').style.display = 'block';
-
-  // 모달창 띄웠을때 미리 입력되는 주문서 번호
-  $.ajax({
-    url: "getOrdrShtCode",
-    method: "GET",
-    success: function (data) {
-      $("#orshDt").val(formatDate());
-      prodListItems();
-    },
-    error: function(reject) {
-      console.log(reject)
+  $("#orshDt").val(formatDate());
+  prodListItems();
+  //---------------------------------------------------------------------------------------------
+  // 주문서 모달창에 입력한 숫자값을 저장함
+  let beforeOrdrDtlCnt = 0;
+  ordrProdList.on("editingStart", (e) => {
+    beforeOrdrDtlCnt = ordrProdList.getRow(e.rowKey).ordrDtlCnt;
+  });
+  //---------------------------------------------------------------------------------------------
+  // 주문서 모달창에 숫자아닌 문자를 입력했을때 경고창 띄움
+  ordrProdList.on('editingFinish', (e) => {
+    if (e.columnName != 'ordrDtlCnt' ) return;
+    let mdlRowData = ordrProdList.getRow(e.rowKey);
+    let ordrDtlCntData = Number(mdlRowData.ordrDtlCnt);
+    if (isNaN(ordrDtlCntData)) {
+      setTimeout(() => {
+        Swal.fire({
+          icon: 'error',
+          title: '경고',
+          text: '숫자만 입력 가능합니다',
+        });
+        ordrProdList.setValue(e.rowKey, 'ordrDtlCnt', beforeOrdrDtlCnt);
+        return;
+      }, 9);
+    } 
+    if (ordrDtlCntData == 0) {
+      setTimeout(() => {
+        Swal.fire({
+          icon: 'error',
+          title: '경고',
+          text: '수량을 확인하세요',
+        });
+        ordrProdList.setValue(e.rowKey, 'ordrDtlCnt', beforeOrdrDtlCnt);
+        return;
+      }, 10);
     }
+  });
+  //---------------------------------------------------------------------------------------------
+  // 주문서 모달창에 제품선택을 안했을때 경고창 띄움
+  ordrProdList.on('editingFinish', (e) => {
+    if (e.columnName != 'cprNm') return;
+    // console.log("e", e);
+    // console.log("e.columnName", e.columnName);
+    let mdlRowData = ordrProdList.getRow(e.rowKey);
+    // console.log("mdlRowData", mdlRowData);
+    // console.log("ordrDtlCprNmData", ordrDtlCprNmData);
   });
 });
 //---------------------------------------------------------------------------------------------
@@ -100,14 +199,11 @@ function prodListItems() {
     url: "getProdList",
     method: "GET",
     dataType: "JSON",
-    //data: { ordrDtlCnt: ordrDtlCnt },
     success: function (data) {
-      //console.log('data:', data[0].cprNm);
-      //console.log(data.length);
+      // console.log(data);
       for (let i = 0; i < data.length; i++) {
         listItems[i] = { text: data[i].cprNm, value: data[i].cprNm };
       }
-      //ordrProdList.resetData(data);
       setTimeout(() => ordrProdList.refreshLayout(), 0);
     },
     error: function (reject) {
@@ -121,13 +217,6 @@ const ordrProdList = new Grid({
   el: document.getElementById('ordrProdList'),
   rowHeaders: ['checkbox'],
   columns: [
-    // {
-    //   header: '주문상세코드',
-    //   name: 'ordrDtlCd',
-    //   sortingType: 'asc',
-    //   sortable: true,
-    //   hidden: true
-    // },
     {
       header: '제품명',
       name: 'cprNm',
@@ -135,7 +224,7 @@ const ordrProdList = new Grid({
         type: 'select',
         options: {
           listItems
-        }
+        },
       },
       sortingType: 'asc',
       sortable: true,
@@ -159,5 +248,73 @@ const ordrProdList = new Grid({
   }
 });
 
+//---------------------------------------------------------------------------------------------
+//주문서등록 
+function ordrShtInsert() {
+  const rows = ordrProdList.getCheckedRows();
+  let caNo = $('#caNo').val(); // 거래처 코드
+  let orshDt = $('#orshDt').val(); // 주문일자
+  let dlvryDt = $('#dlvryDt').val(); // 납기일자
+  console.log(caNo, " : caNo");
+  console.log(orshDt, " : orshDt");
+  console.log(dlvryDt, " : dlvryDt");
+  console.log("rows", rows);
+  
+  if (rows.length !== 0) {
+    console.log("ordrProdList.getModifiedRows", ordrProdList.getModifiedRows());
+    // $.ajax({
+    //   url: 'ordrShtForm',
+    //   data: JSON.stringify(ordrProdList.getModifiedRows({ ignoredColumns: ['_attributes', 'rowKey'] })),
+    //   contentType: 'application/json',
+    //   type: 'POST',
+    //   async: false,
+    //   success: function (data) {
+        
+    //     Swal.fire({
+    //       icon: 'success',
+    //       title: '등록이 완료되었습니다.'
+    //     });
+    //   },
+    //   error: function (reject) {
+    //     console.log(reject);
+    //   }
+    // });
 
+    // $.ajax({
+    //   url: "ordrShtForm",
+    //   method: "POST",
+    //   data: JSON.stringify(rows),
+    //   contentType: "application/json",
+    //   success: function (data) {
+    //     //console.log("data", data);
+    //     const rowsCprNm = []; 		 // 제품명 들고옴
+    //     const rowsordrDtlCnt = []; // 수량 들고옴
+
+    //     for (let i = 0; i < data.length; i++) {
+    //       rowsCprNm = rows[i].cprNm;
+    //       rowsordrDtlCnt = rows[i].ordrDtlCnt
+    //     }
+
+    //     for (let i = 0; i < data.length; i++) {
+    //       rowsCprNm = rows[i].cprNm;
+    //       rowsordrDtlCnt = rows[i].ordrDtlCnt
+    //       for(let i = 0; i < data.letgth; i++) {
+    //         listItems[i] = { cprNm: data[i].cprNm, ordrDtlCnt: data[i].ordrDtlCnt };
+    //       }
+    //     }
+
+    //     Swal.fire({
+    //       icon: 'success',
+    //       title: "주문서등록완료",
+    //     });
+    //   }
+    // });
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: '경고',
+      text: "선택된 제품이 없거나 데이터가 없습니다.",
+    });
+  };
+}
 

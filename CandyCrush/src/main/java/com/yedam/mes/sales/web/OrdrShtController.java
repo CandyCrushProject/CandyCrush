@@ -8,9 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.sales.service.OrdrShtService;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
 
@@ -19,22 +21,6 @@ public class OrdrShtController {
 
 	@Autowired
 	OrdrShtService service;
-	
-	//주문조회 페이지
-	@GetMapping("ordrShtList")
-	public String ordrShtAllList(Model model) {
-		model.addAttribute("ordrShtList", service.ordrShtAllList()); // 주문서 목록
-		model.addAttribute("accuntList", service.accoutnAllList()); // 거래처 목록
-		return "sales/orderSheet";
-	}
-	
-	// 조회검색 페이지
-	@PostMapping("ordrShtSrch")
-	@ResponseBody
-	public List<OrdrShtVO> ordrShtSrchList(@RequestParam(required = false) String caNm, @RequestParam(required = false) String orshStrDt, @RequestParam(required = false) String orshEndDt) {
-		//System.out.println("caNm:" + caNm + ", orshStrDt : " + orshStrDt + ", orshEndDt : " + orshEndDt);
-		return service.ordrShtSrchList(caNm, orshStrDt, orshEndDt);
-	}
 	
 	// 모달창 거래처 검색조회
 	@PostMapping("ordrAccntSrch")
@@ -45,12 +31,19 @@ public class OrdrShtController {
 		return service.accoutnSrchList(caNm, caNo);
 	}
 	
-	// 주문서관리 거래처 조회
+	// 주문서관리 페이지 띄워주는거
 	@GetMapping("ordrMngntPage")
 	public String ordrMngntPage(Model model) {
 		
 		return "sales/ordrShtMngmnt";
+	}
+	
+	// 주문서관리 페이지 주문서 리스트 조회
+	@PostMapping("ordrMngntOrdrShtList")
+	@ResponseBody
+	public List<OrdrShtVO> ordrShtAllList() {
 		
+		return service.ordrShtAllList();
 	}
 	
 	// 주문서관리페이지 거래처 리스트 조회
@@ -59,7 +52,6 @@ public class OrdrShtController {
 	public List<OrdrShtVO> ordrMngntAccntList() {
 		
 		return service.accoutnAllList();
-		
 	}
 	
 	// 주문서관리페이지 거래처 검색조회
@@ -95,5 +87,26 @@ public class OrdrShtController {
 		System.out.println("상품리스트 : " + service.getProdList());
 		return service.getProdList();
 	}
+	
+	//자재발주관리/자재발주 헤더와 디테일에 데이터 등록
+	@PostMapping("ordrShtForm")
+	@ResponseBody
+	public Boolean ordrShtInsertProcess(@RequestBody List<OrdrShtVO> vo){
+		
+		//vo 인스턴스 선언
+		OrdrShtVO newVo = new OrdrShtVO();
+		newVo.setCprCd(vo.get(0).getCprCd());	// CprCd 값을 가져와서 db에 전달
+		newVo.setCprNm(vo.get(0).getCprNm());	// CprNm 값을 가져와서 db에 전달
+		newVo.setOrdrDtlCnt(vo.get(0).getOrdrDtlCnt());	// OrdrDtlCnt 값을 가져와서 db에 전달
+		System.out.println(newVo.getCprCd() + ", " + newVo.getCprNm() + ", " + newVo.getOrdrDtlCnt());
+		
+		Boolean response = true;
+		int result = service.insertOrdrSht(newVo, vo); 	//발주관리헤더, 발주관리디테일
+		if(result < 1) {
+			response = false;
+		};
+		
+		return response;
+	};
 	
 }

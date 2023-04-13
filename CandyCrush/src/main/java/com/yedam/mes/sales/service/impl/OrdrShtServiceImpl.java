@@ -70,7 +70,7 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	@Override
 	public int insertOrdrSht(OrdrShtVO vo, List<OrdrShtVO> list) {
 		int cnt = 0;
-		// 셀렉트를 할껀데 할거야 하는데 주문번호를 생성하는 함수를 돌려서 그 값을 vo에 셋팅을 한다고 하고 
+		
 		String ordrShtCode = mapper.getOrdrShtCode();
 		vo.setOrshNo(ordrShtCode);
 		
@@ -83,9 +83,6 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return cnt;
 	}
-	
-	// 주문서 등록
-	
 	
 	// 주문서 수정
 
