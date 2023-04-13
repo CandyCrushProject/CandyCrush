@@ -19,6 +19,9 @@ public interface ProcMapper {
 	
 	// 생산계획 - 첫 화면 미계획 주문서목록 읽어오기
 	public List<OrderPlanVO> selectOrder();
+
+	// 생산계획 - 주문상세코드 가져오기
+	public List<OrderPlanVO> getOrdrDtlCd(@Param("orshNo")String[] orshNo);
 	
 	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
 	public int updateOrderStatus(OrderPlanVO opVO);
@@ -27,10 +30,9 @@ public interface ProcMapper {
 	public List<OrderPlanVO> selectOrderDetail(OrderPlanVO opVO);
 	
 	// 미계획 주문서 체크 후 추가 버튼 누르면 계획 등록 폼으로 이동
-	public List<OrderPlanVO> addPlanbefore(String[] cprCd);
+	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
-	public String getPlanCode();
 	public int insertPlan(ProcPlanVO planVO);
 	public int insertPlanDetail(ProcPlanVO planVO);
 	// 제품공정확인 - 제품마다 사용되는 공정정보
