@@ -1,6 +1,7 @@
 package com.yedam.mes.process.web;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,22 +84,24 @@ public class ProcessController {
 	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
 	public String insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
-		ProcPlanVO ordrDtlCdList = insertList.get(0);
-		String[] ordrDtlCdArr = ordrDtlCdList.getOrdrDtlCd().split(",");
-		for(int i=0;i<ordrDtlCdArr.length;i++) {
-			System.out.println(ordrDtlCdArr[i]);
+		ProcPlanVO ordrDtlCd = insertList.get(0);
+		String[] ordrDtlCdArr = ordrDtlCd.getOrdrDtlCd().split(",");
+		List<ProcPlanVO> planVO = new ArrayList<>();
+		for(int i=0;i<insertList.size();i++) {
+			if(i>0) {
+				planVO.add(insertList.get(i));
+			}
 		}
-		
-//		int update = procService.updateOrderStatus(ppVO);	
-//		int insert = procService.addPlan(ppVO);
-//		int insert2 = procService.addPlanDetail(ppVO);
-//		String message = null;
-//		if(insert != -1 && insert2 != -1 && update != -1) {
-//			message = "실패";
-//		} else {
-//			message = "성공";
-////		} 
-//		rrtt.addFlashAttribute("message",message);
+		int update = procService.updateOrderStatus(ordrDtlCdArr);	
+		int insert = procService.addPlan(planVO);
+		int insert2 = procService.addPlanDetail(planVO);
+		String message = null;
+		if(insert != -1 && insert2 != -1 && update != -1) {
+			message = "실패";
+		} else {
+			message = "성공";
+		} 
+		rrtt.addFlashAttribute("message",message);
 		return "redirect:ProcManagement";
 	}
 	
