@@ -320,11 +320,6 @@
 							align: 'center'
 						},
 						{
-							header: '주문번호',
-							name: 'orshNo',
-							align: 'center'
-						},
-						{
 							header: '주문건수',
 							name: 'ordrCdCnt',
 							align: 'center'
