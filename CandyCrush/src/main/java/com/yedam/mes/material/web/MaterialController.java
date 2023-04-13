@@ -28,9 +28,8 @@ public class MaterialController {
 	//자재발주관리 페이지
 	@GetMapping("mtrlOrder")
 	public String mtrlOrder(Model model) {
-		//model.addAttribute("moList", service.mtrlAllList());
 		model.addAttribute("accountList", service.accountCheck());
-		model.addAttribute("getmtrlOrderCode", service.getMtrlOrderCode());
+		//model.addAttribute("getmtrlOrderCode", service.getMtrlOrderCode());
 		return "material/materialOrders";
 	};
 	
@@ -63,20 +62,21 @@ public class MaterialController {
 		
 		//vo 인스턴스 선언
 		MaterialOrderVO newVo = new MaterialOrderVO();
-		newVo.setMoCd(vo.get(0).getMoCd());			// moCd 값을 가져와서 db에 전달
-		newVo.setMoTitle(vo.get(0).getMoTitle());	// moTitle 값을 가져와서 db에 전달
-		newVo.setMoReoDt(vo.get(0).getMoReoDt());	// moReoDt 값을 가져와서 db에 전달
+//		newVo.setMoCd(vo.get(0).getMoCd());					// moCd 값을 가져와서 db에 전달
+		newVo.setMoTitle(vo.get(0).getMoTitle()				// moTitle 값을 가져와서 db에 전달
+						 + " 외 " + (vo.size() - 1)			//  ㄴ 예시) 딸기향료 외 3건
+						 + "건" );
+		newVo.setMoReoDt(vo.get(0).getMoReoDt());			// moReoDt 값을 가져와서 db에 전달
 		//System.out.println(newVo.getMoCd() + ", " + newVo.getMoTitle() + ", " + newVo.getMoReoDt());
-		
 		Boolean response = true;
-		int result = service.orderInsert(newVo, vo); 	//발주관리헤더, 발주관리디테일
+		int result = service.orderInsert(newVo, vo); 		//발주관리헤더, 발주관리디테일
 		if(result < 1) {
 			response = false;
 		};
 		
 		return response;
 	};
-	
+
 	//발주번호 기반으로 헤더와 디테일의 데이터를 동시에 지운다
 	@PostMapping("delOrder")
 	@ResponseBody

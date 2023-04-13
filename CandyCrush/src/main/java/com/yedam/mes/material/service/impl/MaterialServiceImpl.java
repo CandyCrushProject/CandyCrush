@@ -57,10 +57,10 @@ public class MaterialServiceImpl implements MaterialService {
 	};
 	
 	//자재발주코드 자동생성
-	@Override
+	/*@Override
 	public MaterialOrderVO getMtrlOrderCode() {
 		return mapper.getMtrlOrderCode();
-	};
+	};*/
 		
 	//자재발주헤더 + 자재발주디테일 INSERT
 	@Override
