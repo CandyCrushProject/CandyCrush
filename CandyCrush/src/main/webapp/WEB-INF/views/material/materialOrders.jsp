@@ -12,7 +12,7 @@
 	input[type="text"]{
 		width: 90%;
 	}
-</style>
+	</style>
 <main>
 	<!-- 업체검색모달 -->
 	<div id="modal" class="w3-modal" style="z-index: 100;">
@@ -116,11 +116,11 @@
 					<div class="card">
 						<div class="card-action">자재발주조회</div>
 							<div class="inputReset">
-								<label>발주신청일</label>
+								&nbsp;&nbsp;&nbsp;<label>발주신청일</label>&nbsp;&nbsp;&nbsp;
 								<input type="date" id="startDate"
-									style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
+									style="width: 150px;">&nbsp;<span style="font-weight: bold; font-size: larger;">~</span>&nbsp;
 								<input type="date" id="endDate"
-									style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
+									style="width: 150px;">&nbsp;&nbsp;&nbsp;
 								<label>업체명</label>
 								<input type="text" id="companyNameOrderList" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);" autocomplete="off" >
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -449,24 +449,12 @@
 			el: document.getElementById('materialOrder'),
 			rowHeaders: ["checkbox"],
 			columns: [
-				{
+				/*{
 					header: '발주코드',
 					name: 'moCd',
 					sortingType: 'asc',
 					sortable: true
-				},
-				{
-					header: '발주명',
-					name: 'moTitle',
-					sortingType: 'asc',
-					sortable: true
-				},
-				{
-					header: '발주신청일',
-					name: 'moReoDt',
-					sortingType: 'asc',
-					sortable: true,
-				},
+				},*/
 				{
 					header: '업체코드',
 					name: 'caNo',
@@ -477,21 +465,31 @@
 					header: '업체명',
 					name: 'caNm',
 					editor: {
-            type: 'select',
-            options: {
-              listItems: [
-                { text: '업체1', value: '1' },
-                { text: '업체2', value: '2' },
-                { text: '업체3', value: '3' }
-              ]
-            }
-          }
+					type: 'select',
+						options: {
+							listItems: [
+							{ text: '업체1', value: '1' },
+							{ text: '업체2', value: '2' },
+							{ text: '업체3', value: '3' }
+							]
+						}
+					}
 				},
 				{
 					header: '자재코드',
 					name: 'cmmCd',
 					sortingType: 'asc',
 					sortable: true
+				},
+				{
+					header: '자재명',
+					name: 'moTitle',
+				},
+				{
+					header: '발주신청일',
+					name: 'moReoDt',
+					sortingType: 'asc',
+					sortable: true,
 				},
 				{
 					header: '발주수량',
@@ -602,49 +600,46 @@
 			for(let i = 0 ; i < checkLen ; i++){
 				delMocd += rows[i].moCd + ',';
 				delMoStt[i] = {value : rows[i].moStt};
-			};
 
-			if(delMoStt[i].value === '진행중' || delMoStt[i].value === '진행완료'){
-				setTimeout(() => {
-					Swal.fire({
-						icon: 'error',
-						title: '경고',
-						text: "해당 발주는 삭제가 불가합니다",
-					});
-					return;
-				}, 10);
-			};
-			
-			//체크된 행이 없다면 선택된 발주코드가 없다고 알림창을 띄운다
-			if(rows.length !== 0){
-				$.ajax({
-					url : "delOrder",
-					method :"POST",
-					data : {delMocd : delMocd},
-					success : function(data){
+				if(delMoStt[i].value === '진행중' || delMoStt[i].value === '진행완료'){
+					setTimeout(() => {
 						Swal.fire({
-							icon: 'success',
-							title: "삭제완료"
+							icon: 'error',
+							title: '경고',
+							text: "해당 발주는 삭제가 불가합니다",
 						});
-						//삭제 후 알림창을 띄운 후 그리드를 새로 그려준다
-						orderListSearch();
-					},
-					error : function(err){
-						console.log(err);
+						return;
+					}, 10);
+				} else {
+					//체크된 행이 없다면 선택된 발주코드가 없다고 알림창을 띄운다
+					if(rows.length !== 0){
+						$.ajax({
+							url : "delOrder",
+							method :"POST",
+							data : {delMocd : delMocd},
+							success : function(data){
+								Swal.fire({
+									icon: 'success',
+									title: "삭제완료"
+								});
+								//삭제 후 알림창을 띄운 후 그리드를 새로 그려준다
+								orderListSearch();
+							},
+							error : function(err){
+								console.log(err);
+							}
+						});
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: '경고',
+							text: "선택된 발주코드가 없습니다",
+						});
 					}
-				});
-			} else {
-				Swal.fire({
-					icon: 'error',
-					title: '경고',
-					text: "선택된 발주코드가 없습니다",
-				});
-			}
+				};
+			};
 		});
 		
-
-		
-
 		//발주목록 행 더블클릭 이벤트
 		materialOrderList.on('dblclick', (e)=>{
 			//모달창
@@ -1003,12 +998,12 @@
 		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
 		material.on("dblclick", (e) => {
 			const rowData = material.getRow(e.rowKey);
-
+			
 			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
 			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
 			if (materialOrder.getRow(e.rowKey) === null) {
-				rowData.moCd = '${getmtrlOrderCode.moCd}';	 //발주코드
-				rowData.moTitle = '원자재 외';				  //발주명
+				//rowData.moCd = '${getmtrlOrderCode.moCd}';	 //발주코드
+				rowData.moTitle = rowData.cmmNm;				  //발주명
 				rowData.moReoDt = getStartToday;			//발주신청일
 				rowData.moReqDt = getStartToday;			//납기요청일
 				rowData.moCnt = 0;							//발주수량
@@ -1053,6 +1048,7 @@
 		//발주등록버튼 클릭 이벤트
 		$('#orderInsert').on('click',(ev)=>{
 			const rows = materialOrder.getCheckedRows();
+			
 			if (rows.length !== 0) {
 				$.ajax({
 					url : "mtrlOrder",
@@ -1061,11 +1057,11 @@
 					//dataType : "JSON",
 					contentType : "application/json",
 					success : function(data){
-						const rowsMoCd = rows[0].moCd; 			//발주번호 들고옴
+						//const rowsMoCd = rows[0].moCd; 			//발주번호 들고옴
 						Swal.fire({
 							icon: 'success',
 							title: "발주완료",
-							text:  "발주번호 : " + rowsMoCd
+							text:  "요청하신 발주가 정상적으로 등록되었습니다"
 						});
 						materialOrder.removeCheckedRows();		//자재발주 Grid 체크한 모든 행을 remove!
 						//자재발주조회 그리드를 새로 그려준다
@@ -1107,7 +1103,6 @@
 					"-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
 			return result;
 		};
-		
 		//발주수량 입력할 때 안전재고보다 소량으로 기재할 시 
 		//안전재고 숫자가 빨간색으로 보이게 (정상작동안됨/추후에 하는걸로!!)
 		/*materialOrder.on("click", (e) => {

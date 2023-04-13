@@ -104,15 +104,15 @@
 	</select>
 	
 	<!-- 자재발주코드 자동생성 -->
-	<select id="getMtrlOrderCode" resultType="MaterialOrderVO">
+	<!-- <select id="getMtrlOrderCode" resultType="MaterialOrderVO">
 		SELECT 'mo' || to_char(sysdate, 'yymmdd') || to_char(NVL(MAX(SUBSTR(mo_cd, 3, 4)), 0) + 1) "mo_cd"
 		FROM mtrl_order
-	</select>
+	</select> -->
 	
 	<!-- 발주관리 헤더 INSERT -->
 	<insert id="orderHeaderInsert" parameterType="MaterialOrderVO">
 		INSERT INTO MTRL_ORDER(mo_cd, mo_title, mo_reo_dt, mo_stt)
-		VALUES(#{moCd}, #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'), '발주완료')
+		VALUES('mo' || TO_CHAR(sysdate, 'yyMMdd') ||MO_SEQ.NEXTVAL , #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'), '발주완료')
 	</insert>
 	
 	<!-- 발주관리디테일 INSERT -->

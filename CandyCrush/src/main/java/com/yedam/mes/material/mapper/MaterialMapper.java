@@ -23,10 +23,12 @@ public interface MaterialMapper {
 													 @Param("end") String end);
 	//자재목록에서 자재코드 클릭하면 자재발주로 리스트를 뿌린다
 	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd);
+	
 	//자재발주목록에서 발주코드 클릭하면 발주상세목록을 모달로 띄운다 / 20230409
 	public List<MaterialOrderVO> mtrlOrderDetailList(@Param("moCd") String moCd);
+	
 	//자재발주코드 자동생성
-	public MaterialOrderVO getMtrlOrderCode();
+	//public MaterialOrderVO getMtrlOrderCode();
 	
 	//--발주등록
 	//발주관리 헤더
