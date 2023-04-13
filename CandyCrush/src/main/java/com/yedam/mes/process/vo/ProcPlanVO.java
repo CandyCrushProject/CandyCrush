@@ -11,7 +11,7 @@ public class ProcPlanVO {
 	private String prplSuceDt; // 납기일자
 	private String prplStatus; // 완료여부
 
-	//생산계획디테일
+	// 생산계획디테일
 	private String prpldCd; // 생산계획상세코드
 	private String prpldWorkTskPri; // 작업우선순위
 	private String cprCd; // 제품코드
@@ -20,4 +20,7 @@ public class ProcPlanVO {
 	private String prstDt; // 생산작업일자
 	private String prpldMng; // 담당자
 	private String prpldStatus; // 현재상황
+	
+	// 주문서
+	private String ordrDtlCd; // 주문서상세코드
 }

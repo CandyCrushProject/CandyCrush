@@ -1,7 +1,6 @@
 package com.yedam.mes.process.web;
 
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +51,17 @@ public class ProcessController {
 		return procService.getOrderDetail(opVO);
 	}
 	
+	// 주문상세코드 가져오기
+	@PostMapping("getOrdrDtlCd")
+	@ResponseBody
+	public List<OrderPlanVO> getOrdrDtlCd(@RequestBody Map<String, Object> onn){
+		String orshNoList = (String) onn.get("orshNo");
+
+		String[] orshNo = orshNoList.split(",");
+
+		return procService.getOrdrDtlCd(orshNo);
+	}
+	
 	// 생산관리 -> 생산계획관리 -> 미계획주문서 리스트 체크후 추가버튼시 넘어오는 정보 처리
 	//					  -> 생산계획코드, 생산계획상세코드
 	// db에서 데이터 꺼내오는 역활
@@ -59,35 +69,36 @@ public class ProcessController {
 	@ResponseBody
 	public Map<String, Object> getDownOrders(@RequestBody Map<String, Object> list) {
 		
-		String cprCdList = (String) list.get("cprCd");
-		System.out.println(cprCdList);
+		String orshNoList = (String) list.get("orshNo");
 		
-		String[] cprCd = cprCdList.split(",");
-		for (int i=0;i<cprCd.length;i++) {
-		System.out.println(cprCd[i]);
-		}
+		String[] orshNo = orshNoList.split(",");
 		
 		Map<String, Object> resultMap = new HashMap<>();
-		System.out.println("이거 맞냐 띠발? " + procService.addPlanbefore(cprCd));
-		resultMap.put("orderNPlan", procService.addPlanbefore(cprCd));
-	    resultMap.put("prplCd", procService.getPlanCode());
+		resultMap.put("orderNPlan", procService.addPlanbefore(orshNo));
+		resultMap.put("orshNoArr", orshNo);
 		return resultMap;
 	}
 	
 	
 	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
-	public String insertProcPlan(ProcPlanVO ppVO, OrderPlanVO opVO, RedirectAttributes rrtt) {
-		int update = procService.updateOrderStatus(opVO);
-		int insert = procService.addPlan(ppVO);
-		int insert2 = procService.addPlanDetail(ppVO);
-		String message = null;
-		if(insert != -1 && insert2 != -1 && update != -1) {
-			message = "실패";
-		} else {
-			message = "성공";
-		} 
-		rrtt.addFlashAttribute("message",message);
+	public String insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
+		ProcPlanVO ordrDtlCdList = insertList.get(0);
+		String[] ordrDtlCdArr = ordrDtlCdList.getOrdrDtlCd().split(",");
+		for(int i=0;i<ordrDtlCdArr.length;i++) {
+			System.out.println(ordrDtlCdArr[i]);
+		}
+		
+//		int update = procService.updateOrderStatus(ppVO);	
+//		int insert = procService.addPlan(ppVO);
+//		int insert2 = procService.addPlanDetail(ppVO);
+//		String message = null;
+//		if(insert != -1 && insert2 != -1 && update != -1) {
+//			message = "실패";
+//		} else {
+//			message = "성공";
+////		} 
+//		rrtt.addFlashAttribute("message",message);
 		return "redirect:ProcManagement";
 	}
 	
