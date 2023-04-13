@@ -40,19 +40,20 @@
             <label for="dlvryDt">납기일자</label>
             <input id="dlvryDt" name="dlvryDt" type="date">
           </div>
-					<div>
-						<h4 style="display: block;">제품선택</h4>
-						<button id="getRowBtn" class="plusBtn" type="button">
-							<i class="fa-solid fa-plus"></i>
-						</button>
-						<button id="delRowBtn" class="minusBtn" type="button">
-							<i class="fa-solid fa-minus"></i>
-						</button>
-					</div>
-					<div class="table-responsive">
-						<div id="ordrProdList"></div>
-					</div>
-        </form>
+				</form>
+				<div>
+					<h4 style="display: block;">제품선택</h4>
+					<button id="getRowBtn" class="plusBtn" type="button">
+						<i class="fa-solid fa-plus"></i>
+					</button>
+					<button id="delRowBtn" class="minusBtn" type="button">
+						<i class="fa-solid fa-minus"></i>
+					</button>
+				</div>
+				<div class="table-responsive">
+					<div id="ordrProdList"></div>
+				</div>
+        
         <div id="ordrModal"></div>
 				<button id="ordrShtInsert" class="cndInsBtn" type="button">등록</button>
       </div>

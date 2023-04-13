@@ -44,6 +44,13 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return mapper.accoutnSrchList(caNm, caNo);
 	}
+	
+	// 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌
+	@Override
+	public List<OrdrShtVO> ordrShtMngnSrch(String caNm) {
+		
+		return mapper.ordrShtMngnSrch(caNm);
+	}
 
 	// 주문서코드 자동생성
 //	@Override
@@ -83,6 +90,8 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return cnt;
 	}
+
+
 	
 	// 주문서 수정
 

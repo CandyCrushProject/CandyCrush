@@ -534,12 +534,15 @@
 			if (e.keyCode === 27 && inputDetailModal.css("display") === "block") {
 				inputDetailModal.hide();
 			};
-
-//------------------------------------------------------------------------------------
-		//날짜변환 함수
-		function dateChange(data) {
-			
-			};
 		});
+//------------------------------------------------------------------------------------
+		//input Date 당일날짜 이후 날짜 선택하지 못하도록 설정해준다
+		var now_utc = Date.now();
+		var timeOff = new Date().getTimezoneOffset() * 60000;
+		var today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+		//document.getElementById("mtrlInput").setAttribute("min", today);
+		$('#mtrlInput').attr("min", today);
+
+
 </script>
 </main>

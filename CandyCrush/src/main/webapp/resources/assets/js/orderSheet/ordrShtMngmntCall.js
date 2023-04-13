@@ -10,13 +10,13 @@ $(document).ready(function () {
   // });
 
   // 납기날짜 체크하기
-  $("#dlvryDt").change(function () {
+  $("#dlvryDt").on('change', function () {
     dlvryDtCheck();
   });
 
   // 주문서 등록
   $('#ordrShtInsert').on('click', () => {
-    if (dlvryDt == "" || dlvryDt == null || dlvryDt == undefined) {
+    if ( dlvryDt == null || dlvryDt == undefined) {
       Swal.fire({
         icon: 'error',
         title: '경고',
@@ -59,7 +59,6 @@ function accntSrch() {
     success: function (data) {
       // console.log(data);
       accntList.resetData(data);
-      
     },
     error: function (rej) {
       Swal.fire({
@@ -67,6 +66,23 @@ function accntSrch() {
         icon: 'error'
       });
     }
+  });
+  $.ajax({
+    url: "ordrShtMngnSrch",
+    method: "POST",
+    dataType: "JSON",
+    data: { caNm: accountName },
+    success: function (data) {
+      // console.log(data);
+      orderList.resetData(data);
+    },
+    // error: function (rej) {
+    //   Swal.fire({
+    //     title: 'Error',
+    //     icon: 'error',
+    //     text: rej
+    //   });
+    // }
   });
 }
 
@@ -87,6 +103,7 @@ function formatDate() {
   let month = ("0" + (date.getMonth() + 1)).slice(-2);
   let day = ("0" + date.getDate()).slice(-2);
   formattedDate = year + "-" + month + "-" + day;
+  console.log(formattedDate, " : formattedDate");
   return formattedDate;
 }
 
@@ -99,5 +116,7 @@ function dlvryDtCheck() {
       title: '경고',
       text: "납기일을 확인 하세요.",
     });
+    console.log(dlvryDt, "dlvryDtdlvryDt");
+    console.log(formattedDate, "formattedDateformattedDate");
   }
 }
