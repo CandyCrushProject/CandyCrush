@@ -21,6 +21,9 @@ public interface OrdrShtService {
 	// 모달창 업체 검색조회
 	public List<OrdrShtVO> accoutnSrchList(@Param("caNm") String caNm, @Param("caNo") String caNo);
 	
+	// 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌
+	public List<OrdrShtVO> ordrShtMngnSrch(@Param("caNm") String caNm);
+	
 	// 주문서관리 페이지
 	// 주문서코드 자동생성
 	// public List<OrdrShtVO> getOrdrShtCode();

@@ -22,7 +22,7 @@ public class OrdrShtController {
 	@Autowired
 	OrdrShtService service;
 	
-	// 모달창 거래처 검색조회
+	// 거래처 검색조회
 	@PostMapping("ordrAccntSrch")
 	@ResponseBody
 	public List<OrdrShtVO> accoutnSrchList(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo) {
@@ -38,7 +38,7 @@ public class OrdrShtController {
 		return "sales/ordrShtMngmnt";
 	}
 	
-	// 주문서관리 페이지 주문서 리스트 조회
+	// 주문서관리페이지 주문서 리스트 조회
 	@PostMapping("ordrMngntOrdrShtList")
 	@ResponseBody
 	public List<OrdrShtVO> ordrShtAllList() {
@@ -63,6 +63,15 @@ public class OrdrShtController {
 		return service.accoutnSrchList(caNm, caNo);
 	}
 	
+	// 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌
+	@PostMapping("ordrShtMngnSrch")
+	@ResponseBody
+	public List<OrdrShtVO> ordrShtMngnSrch(@RequestParam(required = false) String caNm, @RequestParam(required = false)  String caNo) {
+		
+		System.out.println("caNm" + caNm + ", caNo" + caNo);
+		return service.ordrShtMngnSrch(caNm);
+	}
+	
 	// 더블클릭했을때 모달창에 미리 보여줄 주문서 번호
 //	@GetMapping("getOrdrShtCode")
 //	@ResponseBody
@@ -84,17 +93,41 @@ public class OrdrShtController {
 	@GetMapping("getProdList")
 	@ResponseBody
 	public List<OrdrShtVO> getProdList() {
-		System.out.println("상품리스트 : " + service.getProdList());
+		//System.out.println("상품리스트 : " + service.getProdList());
 		return service.getProdList();
 	}
 	
-	//자재발주관리/자재발주 헤더와 디테일에 데이터 등록
+	//주문서관리 헤더와 디테일에 데이터 등록
+//	@PostMapping("ordrShtForm")
+//	@ResponseBody
+//	public Boolean ordrShtInsertProcess(@RequestBody List<OrdrShtVO> vo){
+//		
+//		//vo 인스턴스 선언
+//		OrdrShtVO newVo = new OrdrShtVO();
+//		newVo.setCprCd(vo.get(0).getCprCd());	// CprCd 값을 가져와서 db에 전달
+//		newVo.setCprNm(vo.get(0).getCprNm());	// CprNm 값을 가져와서 db에 전달
+//		newVo.setOrdrDtlCnt(vo.get(0).getOrdrDtlCnt());	// OrdrDtlCnt 값을 가져와서 db에 전달
+//		System.out.println(newVo.getCprCd() + ", " + newVo.getCprNm() + ", " + newVo.getOrdrDtlCnt());
+//		
+//		Boolean response = true;
+//		int result = service.insertOrdrSht(newVo, vo); 	//발주관리헤더, 발주관리디테일
+//		if(result < 1) {
+//			response = false;
+//		};
+//		
+//		return response;
+//	};
+	
 	@PostMapping("ordrShtForm")
 	@ResponseBody
 	public Boolean ordrShtInsertProcess(@RequestBody List<OrdrShtVO> vo){
 		
 		//vo 인스턴스 선언
 		OrdrShtVO newVo = new OrdrShtVO();
+		
+		newVo.setCaNo(vo.get(0).getCaNo());
+		newVo.setOrshDt(vo.get(0).getOrshDt());
+		newVo.setDlvryDt(vo.get(0).getDlvryDt());
 		newVo.setCprCd(vo.get(0).getCprCd());	// CprCd 값을 가져와서 db에 전달
 		newVo.setCprNm(vo.get(0).getCprNm());	// CprNm 값을 가져와서 db에 전달
 		newVo.setOrdrDtlCnt(vo.get(0).getOrdrDtlCnt());	// OrdrDtlCnt 값을 가져와서 db에 전달
@@ -108,5 +141,4 @@ public class OrdrShtController {
 		
 		return response;
 	};
-	
 }

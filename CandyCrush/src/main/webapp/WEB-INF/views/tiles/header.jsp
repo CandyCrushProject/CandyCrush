@@ -255,11 +255,6 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<li>
-									<a href="${pageContext.request.contextPath}/ordrShtList" class="waves-effect waves-dark">
-										주문서조회
-									</a>
-								</li>
-								<li>
 									<a href="${pageContext.request.contextPath}/ordrMngntPage" class="waves-effect waves-dark">
 										주문서관리
 									</a>
