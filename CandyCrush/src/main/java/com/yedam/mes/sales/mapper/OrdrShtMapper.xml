@@ -31,9 +31,9 @@
             <if test="caNm != null and !caNm.equals('')">
             	ca_nm LIKE '%' || #{caNm} || '%' 
             </if>
-<!--             <if test="orshStrDt != null and !orshStrDt.equals('') and orshEndDt!= null and !orshEndDt.equals('')"> -->
-<!--                 AND orsh_dt between #{orshStrDt} and #{orshEndDt} -->
-<!--             </if> -->
+<!--        <if test="orshStrDt != null and !orshStrDt.equals('') and orshEndDt!= null and !orshEndDt.equals('')"> -->
+<!--            AND orsh_dt between #{orshStrDt} and #{orshEndDt} -->
+<!--        </if> -->
          </where>
           ORDER BY 1
     </select>
@@ -67,7 +67,6 @@
 	
 	<!-- 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌 -->
 	<select id="ordrShtMngnSrch" resultType="OrdrShtVO">
-	
 		SELECT orsh.orsh_no
 		     , cmacc.ca_no
 		     , cmacc.ca_nm
@@ -75,7 +74,7 @@
 		     , TO_DATE(orsh.dlvry_dt, 'rrrr-MM-dd') as dlvry_dt
 		  FROM order_sheet orsh JOIN cm_account cmacc
 		                          ON orsh.ca_no = cmacc.ca_no
-		 WHERE cmacc.CA_TYP = "매출처"
+		 WHERE cmacc.CA_TYP = '매출처'
 			<if test="caNm != null and !caNm.equals('')">
 				AND cmacc.ca_nm LIKE '%' || #{caNm} || '%'
 			</if>
