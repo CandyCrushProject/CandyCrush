@@ -57,10 +57,10 @@ public class MaterialServiceImpl implements MaterialService {
 	};
 	
 	//자재발주코드 자동생성
-	@Override
+	/*@Override
 	public MaterialOrderVO getMtrlOrderCode() {
 		return mapper.getMtrlOrderCode();
-	};
+	};*/
 		
 	//자재발주헤더 + 자재발주디테일 INSERT
 	@Override
@@ -125,6 +125,18 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public List<MaterialInputVO> mtrlInputGetList(String caNm, String start, String end) {
 		return mapper.mtrlInputGetList(caNm, start, end);
+	}
+
+	//입고목록 -> 7일 이내
+	@Override
+	public List<MaterialInputVO> mtrlInputList7Days() {
+		return mapper.mtrlInputList7Days();
+	}
+
+	//입고목록 -> 입고상세
+	@Override
+	public List<MaterialInputVO> mtrlInputDetailList(@Param("minCd") String minCd) {
+		return mapper.mtrlInputDetailList(minCd);
 	}
 
 }

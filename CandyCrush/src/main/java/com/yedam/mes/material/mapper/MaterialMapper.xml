@@ -28,8 +28,8 @@
 	<!-- 업체명 또는 자재명을 통한 자재검색 -->
 	<select id="mtrlSearch" resultType="MaterialVO">
 		SELECT cmm.cmm_cd, cmm_nm, cmm_typ, cmm_spec,
-		        cmm_unit, cmm_saf_stc, mot_cnt, cml_in_cnt, ca_nm, cmm.ca_no,
-		        TO_NUMBER(cml_in_cnt) - TO_NUMBER(mot_cnt) AS "cmm_inven"
+		        cmm_unit, cmm_saf_stc, NVL(mot_cnt, 0) mot_cnt, NVL(cml_in_cnt, 0) cml_in_cnt, ca_nm, cmm.ca_no,
+		        NVL(TO_NUMBER(cml_in_cnt) - TO_NUMBER(mot_cnt), 0) AS "cmm_inven"
 		FROM cm_account ca JOIN cm_mtrl_mng cmm
 		ON ca.ca_no = cmm.ca_no
 		 JOIN cm_mtrl_lot clot
@@ -48,7 +48,7 @@
 	
 	<!-- 업체명 & 발주신청일 시작일자 ~ 종료일자  -->
 	<select id="mtrlOrderDateSearch" resultType="MaterialOrderVO">
-		SELECT DISTINCT mod.ca_no, ca_nm, mo.mo_cd, mo_reo_dt,
+		SELECT DISTINCT mod.ca_no, ca_nm, mo.mo_cd, mo_reo_dt, mo_stt,
 				mo_title, mo_cplt_dt
 		FROM mtrl_order mo JOIN mtrl_order_detail mod
 		    ON mo.mo_cd = mod.mo_cd
@@ -61,7 +61,7 @@
 		<if test="caNm != null and !caNm.equals('')">
 		AND ca_nm LIKE '%' || #{caNm} || '%'
 		</if>
-		ORDER BY 1 asc
+		ORDER BY 1 DESC
 	</select>
 	
 	<!-- 자재발주 단건조회 -->
@@ -104,22 +104,22 @@
 	</select>
 	
 	<!-- 자재발주코드 자동생성 -->
-	<select id="getMtrlOrderCode" resultType="MaterialOrderVO">
-		SELECT 'mo' || to_char(NVL(MAX(SUBSTR(mo_cd, 3, 4)), 0) + 1) || to_char(sysdate, 'yymmdd') "mo_cd"
+	<!-- <select id="getMtrlOrderCode" resultType="MaterialOrderVO">
+		SELECT 'mo' || to_char(sysdate, 'yymmdd') || to_char(NVL(MAX(SUBSTR(mo_cd, 3, 4)), 0) + 1) "mo_cd"
 		FROM mtrl_order
-	</select>
+	</select> -->
 	
 	<!-- 발주관리 헤더 INSERT -->
 	<insert id="orderHeaderInsert" parameterType="MaterialOrderVO">
-		INSERT INTO MTRL_ORDER(mo_cd, mo_title, mo_reo_dt)
-		VALUES(#{moCd}, #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'))
+		INSERT INTO MTRL_ORDER(mo_cd, mo_title, mo_reo_dt, mo_stt)
+		VALUES('mo' || TO_CHAR(sysdate, 'yyMMdd') ||MO_SEQ.NEXTVAL , #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'), '발주완료')
 	</insert>
 	
 	<!-- 발주관리디테일 INSERT -->
 	<insert id="orderDetailInsert" parameterType="MaterialOrderVO">
 		INSERT INTO mtrl_order_detail(mod_cd, mo_cd, mo_cnt, mo_req_dt, ca_no, cmm_cd)
 		VALUES
-			('mod' || TO_CHAR(sysdate, 'yyMMdd') || mod_seq.NEXTVAL, #{moCd}, #{moCnt}, TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'), #{caNo}, #{cmmCd})
+			('mod' || mod_seq.NEXTVAL || TO_CHAR(sysdate, 'yyMMdd'), #{moCd}, #{moCnt}, TO_CHAR(#{moReqDt}, 'yyyy-MM-dd'), #{caNo}, #{cmmCd})
 	</insert>
 	
 	<!-- 발주코드를 기반으로 헤더와 디테일의 데이터를 지운다 -->
@@ -161,6 +161,8 @@
 		                 ON mod.cmm_cd = cmm.cmm_cd
 		                   JOIN cm_account ca
 		                     ON mod.ca_no = ca.ca_no
+		                        LEFT OUTER JOIN mtrl_input min
+		                            ON mi.mi_cd = min.mi_cd
 		WHERE 1=1
 		<if test="caNm != null and !caNm.equals('')">
 		AND ca_nm LIKE '%' || #{caNm} || '%'
@@ -168,7 +170,36 @@
 		<if test="start != null and !start.equals('') and end!= null and !end.equals('')">
 		AND mi_dt BETWEEN #{start} AND #{end}
 		</if>
+		AND min.min_cd IS NULL
 		ORDER BY mi_cd
+	</select>
+	
+	<!-- 자재입고관리 / 입고목록 -> 7일 이내 -->
+	<select id="mtrlInputList7Days" resultType="MaterialInputVO">
+		SELECT COUNT(min_cd) AS "MIN_CD_COUNT", min_cd, min_dt
+		FROM mtrl_input
+		WHERE min_dt >= TO_CHAR(SYSDATE-7,'yyyy-MM-dd')
+		GROUP BY min_cd, min_dt
+		ORDER BY min_cd
+	</select>
+	
+	<!-- 자재입고관리 / 입고상세 -->
+	<!-- 입고가 완료된 검수코드, LOT코드, 자재코드 가져오기
+		 입고)검수코드, 검수)발주상세코드, 발주상세)자재코드, 입고)입고코드, 입고)입고수량, LOT)LOT코드 -->
+	<select id="mtrlInputDetailList" resultType="MaterialInputVO">
+		SELECT min.mi_cd, mi.mod_cd, mod.cmm_cd, min.min_cd, min_cnt, cmm_typ,
+        		cmm_spec, cmm_unit, cmm_nm, mod.mo_cd
+		FROM mtrl_input min
+		    JOIN MTRL_INSP mi
+		        ON min.mi_cd = mi.mi_cd
+		            JOIN mtrl_order_detail mod
+		                ON mi.mod_cd = mod.mod_cd
+		                    JOIN cm_mtrl_mng cmm
+		                        ON mod.cmm_cd = cmm.cmm_cd
+		                            JOIN mtrl_order mo
+		                                ON mod.mo_cd = mo.mo_cd
+		WHERE min.min_cd = #{minCd}
+		ORDER BY min.mi_cd
 	</select>
 
 </mapper>

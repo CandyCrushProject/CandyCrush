@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.sales.mapper.OrdrShtMapper;
 import com.yedam.mes.sales.service.OrdrShtService;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
@@ -43,13 +44,20 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return mapper.accoutnSrchList(caNm, caNo);
 	}
+	
+	// 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌
+	@Override
+	public List<OrdrShtVO> ordrShtMngnSrch(String caNm) {
+		
+		return mapper.ordrShtMngnSrch(caNm);
+	}
 
 	// 주문서코드 자동생성
-	@Override
-	public List<OrdrShtVO> getOrdrShtCode() {
-		
-		return mapper.getOrdrShtCode();
-	}
+//	@Override
+//	public List<OrdrShtVO> getOrdrShtCode() {
+//		
+//		return mapper.getOrdrShtCode();
+//	}
 
 	// 주문서디테일코드 자동생성
 	@Override
@@ -65,14 +73,30 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		return mapper.getProdList();
 	}
 	
-	// 주문서 등록
-	
+	// 모달창 주문서헤더 + 주문서디테일 등록
+	@Override
+	public int insertOrdrSht(OrdrShtVO vo, List<OrdrShtVO> list) {
+		int cnt = 0;
+		
+		String ordrShtCode = mapper.getOrdrShtCode();
+		vo.setOrshNo(ordrShtCode);
+		
+		cnt = mapper.insertOrdrShtHdr(vo);
+		
+		for(OrdrShtVO ordrShtVO: list) {
+			ordrShtVO.setOrshNo(ordrShtCode);
+			cnt += mapper.insertOrdrShtDtl(ordrShtVO);
+		}
+		
+		return cnt;
+	}
+
+
 	
 	// 주문서 수정
 
 	
 	// 주문서 삭제
-	
-	
+
 
 }

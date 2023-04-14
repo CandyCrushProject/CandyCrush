@@ -29,6 +29,7 @@ public class MaterialOrderVO {
 	private int cmmEstInven;	//입고재고-출고재고+발주재고 
 	private String cmmSafStc;	//안전재고
 	private int cmlInCnt;		//LOT 입고량
+	private String moStt;		//진행상황
 	
 	//날짜검색
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")

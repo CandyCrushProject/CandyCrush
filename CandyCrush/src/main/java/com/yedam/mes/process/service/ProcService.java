@@ -14,19 +14,29 @@ import com.yedam.mes.process.vo.ProcProgVO;
 public interface ProcService {
 
 	/* 생산계획 매퍼 시작 */
+
+	// 생산계획 - 제품코드 불러오기
+	public List<OrderPlanVO> getCprCdList();
 	
 	// 생산계획 - 주문서 읽어오기
 	public List<OrderPlanVO> getOrder();
-	public int updateOrderStatus(OrderPlanVO opVO);
+	
+	// 생산계획 - 주문상세코드 가져오기
+	public List<OrderPlanVO> getOrdrDtlCd(@Param("orshNo")String[] orshNo);
+	
+	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
+	public int updateOrderStatus(@Param("orshNo")String[] orshNo);
+	
+	// 미계획 주문서에 대한 상세 정보 목록
 	public List<OrderPlanVO> getOrderDetail(OrderPlanVO opVO);
 	
-	public List<OrderPlanVO> addPlanbefore(String[] cprCd);
+	// 미계획 주문서 체크 후 추가 버튼 누르면 계획 등록 폼으로 이동
+	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo);
 	
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
-	public String getPlanCode();
-	public int addPlan(ProcPlanVO planVO);
-	public int addPlanDetail(ProcPlanVO planVO);
+	public int addPlan(@Param("planVO")List<ProcPlanVO> planVO);
+	public int addPlanDetail(@Param("planVO")List<ProcPlanVO> planVO);
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
 	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO);

@@ -14,6 +14,7 @@
 		     , TO_DATE(orsh.dlvry_dt, 'rrrr-MM-dd') as dlvry_dt
 		  FROM order_sheet orsh JOIN cm_account cmacc
 		                          ON orsh.ca_no = cmacc.ca_no
+		 WHERE CA_TYP = '매출처'
 		 ORDER BY 1
 	</select>
 	
@@ -30,9 +31,9 @@
             <if test="caNm != null and !caNm.equals('')">
             	ca_nm LIKE '%' || #{caNm} || '%' 
             </if>
-            <if test="orshStrDt != null and !orshStrDt.equals('') and orshEndDt!= null and !orshEndDt.equals('')">
-                AND orsh_dt between #{orshStrDt} and #{orshEndDt}
-            </if>
+<!--             <if test="orshStrDt != null and !orshStrDt.equals('') and orshEndDt!= null and !orshEndDt.equals('')"> -->
+<!--                 AND orsh_dt between #{orshStrDt} and #{orshEndDt} -->
+<!--             </if> -->
          </where>
           ORDER BY 1
     </select>
@@ -49,7 +50,7 @@
 		ORDER BY ca_no
 	</select>
 	
-	<!-- 모달창 업체 검색조회 -->
+	<!-- 주문서관리 페이지 거래처명 검색하면 해당하는 거래처 목록 뿌려줌 -->
 	<select id="accoutnSrchList" resultType="OrdrShtVO">
 		SELECT ca_no
 			 , ca_nm
@@ -62,6 +63,23 @@
 				AND ca_nm LIKE '%' || #{caNm} || '%'
 			</if>
 		ORDER BY ca_no
+	</select>
+	
+	<!-- 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌 -->
+	<select id="ordrShtMngnSrch" resultType="OrdrShtVO">
+	
+		SELECT orsh.orsh_no
+		     , cmacc.ca_no
+		     , cmacc.ca_nm
+		     , TO_DATE(orsh.orsh_dt, 'rrrr-MM-dd') as orsh_dt
+		     , TO_DATE(orsh.dlvry_dt, 'rrrr-MM-dd') as dlvry_dt
+		  FROM order_sheet orsh JOIN cm_account cmacc
+		                          ON orsh.ca_no = cmacc.ca_no
+		 WHERE cmacc.CA_TYP = "매출처"
+			<if test="caNm != null and !caNm.equals('')">
+				AND cmacc.ca_nm LIKE '%' || #{caNm} || '%'
+			</if>
+		 ORDER BY 1
 	</select>
 	
 	<!-- 주문서코드 자동생성 -->
@@ -78,8 +96,25 @@
     
 	<!-- 주문서 등록 모달창 상품 리스트 -->
 	<select id="getProdList" resultType="OrdrShtVO">
-		SELECT cpr_nm 
+		SELECT cpr_nm
+			 , cpr_cd
 		  FROM CM_PRODUCT_MNG
 		 ORDER BY cpr_nm
 	</select>
+	
+	<!-- 모달창 주문서 헤더 등록 -->
+	<insert id="insertOrdrShtHdr" parameterType="OrdrShtVO">
+		INSERT INTO order_sheet(orsh_no, ca_no, orsh_dt, dlvry_dt)
+			             VALUES('ordr' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
+			                  , #{caNo}, TO_DATE(#{orshDt}, 'yyyy-MM-dd'), TO_DATE(#{dlvryDt}, 'yyyy-MM-dd'))
+	</insert>
+	
+	<!-- 모달창 주문서 디테일 등록 -->
+	<insert id="insertOrdrShtDtl" parameterType="OrdrShtVO">
+		INSERT INTO order_sheet_detail(ordr_dtl_cd, ordr_dtl_cnt, cpr_cd, orsh_pr, orsh_no, stt_cng_dt)
+		                        VALUES('orderdtl' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
+                              		  , #{ordrDtlCnt}, (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cprNm})
+                              		  , '접수완료', #{orshNo}, SYSDATE)
+	</insert>
+	
 </mapper>

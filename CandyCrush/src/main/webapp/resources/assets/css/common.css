@@ -21,6 +21,46 @@ input[type="date"] {
 	border: 1px solid rgba(128, 128, 128, 0.61);
 }
 
+/* 자재발주관리 / 0412 / 정은애 */
+#modalMocd, #modalMoStt{
+	background-color: rgb(233, 233, 233);
+	border: 0 !important;
+	border-radius: 15px;
+	width: 200px !important;
+	height: 32px;
+	padding-left : 20px;
+}
+#mtrlOrdermodalBtn{
+	float: right;
+	height: 100px;
+	position: relative;
+	bottom: 40px;
+}
+#rigth{
+	float: right;
+	position: relative;
+	bottom: 25px;
+}
+
+.mtrlOrderRightBtn{
+		float: right;
+		position: relative;
+		right: 20px;
+		bottom: 4px;
+}
+
+#inputReset{
+		margin-left: 10px;
+}
+
+#companyName{
+		cursor:pointer;
+}
+
+#companyNameOrderList{
+	cursor:pointer;
+}
+
 /* 자재입고관리 페이지 CSS */
 .mtrlInputMngFloatBtn{
 	float: right;

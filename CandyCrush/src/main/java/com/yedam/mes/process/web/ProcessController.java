@@ -1,7 +1,7 @@
 package com.yedam.mes.process.web;
 
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,21 +30,37 @@ public class ProcessController {
 		return "process/processManagement";
 	}
 	
+	// 생산관리 -> 생산계획관리 -> 제품코드, 제품명 가져옴 ^^
+	@GetMapping("getProductList")
+	@ResponseBody
+	public List<OrderPlanVO> getProductList() {
+		return procService.getCprCdList();
+	}
+	
 	// 생산관리 -> 생산계획관리 -> 주문서버튼 클릭시 주문서정보 받아옴
 	@GetMapping("getOrder")
 	@ResponseBody
-	public Map<String, Object> getOrderSheet(OrderPlanVO opVO) {
-	    Map<String, Object> resultMap = new HashMap<>();
-	    resultMap.put("result", procService.getOrder());
-	    
-		return resultMap;
+	public List<OrderPlanVO> getOrderSheet() {
+		return procService.getOrder();
 	}
+	
 	
 	// 생산관리 -> 생산계획관리 -> 주문서 정보 받아오기
 	@PostMapping("getOrderDetail")
 	@ResponseBody
 	public List<OrderPlanVO> getOrderSheetDetail(OrderPlanVO opVO) {
 		return procService.getOrderDetail(opVO);
+	}
+	
+	// 주문상세코드 가져오기
+	@PostMapping("getOrdrDtlCd")
+	@ResponseBody
+	public List<OrderPlanVO> getOrdrDtlCd(@RequestBody Map<String, Object> onn){
+		String orshNoList = (String) onn.get("orshNo");
+
+		String[] orshNo = orshNoList.split(",");
+
+		return procService.getOrdrDtlCd(orshNo);
 	}
 	
 	// 생산관리 -> 생산계획관리 -> 미계획주문서 리스트 체크후 추가버튼시 넘어오는 정보 처리
@@ -54,25 +70,31 @@ public class ProcessController {
 	@ResponseBody
 	public Map<String, Object> getDownOrders(@RequestBody Map<String, Object> list) {
 		
-		String cprCdList = (String) list.get("cprCd");
+		String orshNoList = (String) list.get("orshNo");
 		
-		String[] cprCdSet = cprCdList.split(",");
-		
-		String[] cprCdArr = Arrays.stream(cprCdSet).distinct().toArray(String[]::new);
+		String[] orshNo = orshNoList.split(",");
 		
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("orderNPlan", procService.addPlanbefore(cprCdArr));
-	    resultMap.put("prplCd", procService.getPlanCode());
+		resultMap.put("orderNPlan", procService.addPlanbefore(orshNo));
+		resultMap.put("orshNoArr", orshNo);
 		return resultMap;
 	}
 	
 	
 	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
-	public String insertProcPlan(ProcPlanVO ppVO, OrderPlanVO opVO, RedirectAttributes rrtt) {
-		int update = procService.updateOrderStatus(opVO);
-		int insert = procService.addPlan(ppVO);
-		int insert2 = procService.addPlanDetail(ppVO);
+	public String insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
+		ProcPlanVO ordrDtlCd = insertList.get(0);
+		String[] ordrDtlCdArr = ordrDtlCd.getOrdrDtlCd().split(",");
+		List<ProcPlanVO> planVO = new ArrayList<>();
+		for(int i=0;i<insertList.size();i++) {
+			if(i>0) {
+				planVO.add(insertList.get(i));
+			}
+		}
+		int update = procService.updateOrderStatus(ordrDtlCdArr);	
+		int insert = procService.addPlan(planVO);
+		int insert2 = procService.addPlanDetail(planVO);
 		String message = null;
 		if(insert != -1 && insert2 != -1 && update != -1) {
 			message = "실패";

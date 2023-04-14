@@ -2,25 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<style>
-	#companyName{
-		cursor:pointer;
-	}
-	#modalMocd{
-		background-color: rgb(233, 233, 233);
-		border: 0 !important;
-		border-radius: 15px;
-		width: 200px !important;
-		height: 32px;
-		padding-left : 20px;
-	}
-	#rigth{
-		float: right;
-		position: relative;
-		bottom: 25px;
-	}
-</style>
-
 <main>
 	<!-- 업체명 검색 모달 -->
 	<div id="modal" class="w3-modal" style="z-index: 100;">
@@ -305,13 +286,6 @@
 					name: 'moReoDt',
 					sortingType: 'asc',
 					sortable: true,
-					formatter: function (e) {
-						return dateChange(e.value);
-					}
-				},
-				{
-					header: '발주완료일',
-					name: 'moCpltDt',
 					formatter: function (e) {
 						return dateChange(e.value);
 					}

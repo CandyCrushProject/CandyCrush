@@ -5,8 +5,23 @@
 <mapper namespace="com.yedam.mes.process.mapper.ProcMapper">
 	
 	
+	<!-- 주문 상세 코드 '접수완료' -->
+	<select id="getOrdrDtlCd" resultType="OrderPlanVO">
+		SELECT ordr_dtl_cd
+		  FROM order_sheet_detail
+		 WHERE orsh_pr = '접수완료'
+		 AND orsh_no IN 
+			<foreach collection='orshNo' index='index' item='orshNo' open='(' close=')' separator=','>
+			#{orshNo}
+			</foreach>
+	</select>
 	
-	
+	<!-- 제품 코드리스트 -->
+	<select id="selectCprCdList" resultType="OrderPlanVO">
+		SELECT cpr_cd
+		  FROM cm_product_mng
+		 ORDER BY cpr_cd
+	</select>
 	<!-- 주문서리스트 -->
 	<select id="selectOrder" resultType="OrderPlanVO">
 		SELECT s.orsh_no as orsh_no
@@ -19,7 +34,7 @@
 		 WHERE s.orsh_no = d.orsh_no(+)
 		   AND s.ca_no = a.ca_no(+)
 		   AND orsh_pr = '접수완료'
-		 GROUP BY s.orsh_no, s.ca_no,ca_nm, orsh_dt, dlvry_dt, cpr_cd
+		 GROUP BY s.orsh_no, s.ca_no,ca_nm, orsh_dt, dlvry_dt
 		 ORDER BY dlvry_dt
 	</select>
 	
@@ -54,11 +69,14 @@
 			 , p.cpr_nm as cpr_nm
 		  FROM order_sheet_detail d
 			 , cm_product_mng p
+             , order_sheet o
 		 WHERE d.cpr_cd = p.cpr_cd(+)
+           AND o.orsh_no = d.orsh_no
 	       AND d.orsh_pr = '접수완료'
-	       AND d.cpr_cd IN 
-				<foreach collection='cprCd' index='index' item='cprCd' open='(' close=')' separator=','>
-				#{cprCd}
+	       AND d.cpr_cd IN ('stick001','stick002','stick003','stick004','stick005')
+	       AND o.orsh_no IN 
+				<foreach collection='orshNo' index='index' item='orshNo' open='(' close=')' separator=','>
+				#{orshNo}
 				</foreach>
 	     GROUP BY p.cpr_nm
 	            , d.cpr_cd
@@ -97,32 +115,32 @@
 	</select>
 	
 	<!-- 주문서 상세 현재상태 업데이트 -->
-	<update id="updateOrderStatus" parameterType="OrderPlanVO">
+	<update id="updateOrderStatus" parameterType="ProcPlanVO">
 		UPDATE order_sheet_detail
 		   SET orsh_pr = '계획완료',
 			   stt_cng_dt = SYSDATE
-		 WHERE ordr_dtl_cd = #{ordrDtlCd}
+		 WHERE orsh_no IN
+			  <foreach collection='orshNo' index='index' item='orshNo' open='(' close=')' separator=','>
+			  #{orshNo}
+			  </foreach>
 	</update>
 	
-	<!-- 생산계획코드 생성 -->
-	<select id="getPlanCode" resultType="String">
-		SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
-		  FROM DUAL
-	</select>
 	
 	<!-- 계획 등록 -->
-	<insert id="insertPlan" parameterType="ProcPlanVO">
-		INSERT INTO proc_plan (prpl_cd,orsh_no,prpl_suce_dt,prpl_status)
+<!-- 	<insert id="insertPlan" parameterType="ProcPlanVO">
+		<selectKey keyProperty="prplCd" resultType="String" order="BEFORE">
+			SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
+			  FROM DUAL
+		</selectKey>
+		INSERT INTO proc_plan (prpl_cd, orsh_no, prpl_status)
 		VALUES
 		 	 ( #{prplCd}
 		 	 , #{orshNo}
-		 	 , #{prplSuceDt}
 		 	 , '미지시'
 		 	 )
-	</insert>
-	
-	<!-- 계획 상세 등록 -->
-	<insert id="insertPlanDetail" parameterType="ProcPlanVO">
+	</insert> -->
+		<!-- 계획 상세 등록 -->
+	<!-- <insert id="insertPlanDetail" parameterType="ProcPlanVO">
 		<selectKey keyProperty="prpldCd" resultType="String" order="BEFORE">
 			SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
 			  FROM DUAL
@@ -138,8 +156,39 @@
 			 , '계획완료'
 			 , #{prplCd}
 			 )
-	</insert>
-	
+	</insert> -->
+	<!-- 계획 등록 -->
+	<update id="insertPlan" parameterType="list">
+		INSERT INTO proc_plan (prpl_cd, orsh_no, prpl_status)
+		SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
+		     , T.*
+		  FROM (
+				<foreach collection="planVO" item="vo" index="index" separator="union all">
+					SELECT #{vo.orshNo} as orshNo
+					     , #{vo.prplStatus} as prplStatus
+					  FROM DUAL
+				</foreach>
+				)T
+	</update>
+
+	<!-- 계획 상세 등록 -->
+	<update id="insertPlanDetail" parameterType="list">
+		INSERT INTO proc_plan_detail
+		SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
+		     , T.*
+	      FROM (
+				<foreach collection="planVO" item="vo" separator=" ">
+					SELECT #{vo.prpldWorkTskPri} as prpldWorkTskPri
+						 , #{vo.cprCd} as cprCd
+						 , #{vo.prpldCnt} as prpldCnt
+						 , #{vo.prstDt} as prstDt
+						 , #{vo.prpldMng} as prpldMng
+						 , #{vo.prpldStatus} as prpldStatus
+						 , #{vo.prplCd} as prplCd
+					  FROM DUAL
+				</foreach>
+			    )T
+	</update>
 	<!-- 생산계획 리스트 -->
 	<select id="seletPlanList" parameterType="ProcPlanVO" resultType="ProcPlanVO">
 		SELECT orsh_no

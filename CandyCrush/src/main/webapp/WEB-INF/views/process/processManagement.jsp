@@ -83,7 +83,7 @@
 											</div>
 											<h4 style="padding-bottom: 20px;">미계획 주문서 리스트</h4>
 											<!-- 처음 주문서들 정보 뿌려줄 것들 -->
-											<div id="orderSheetTab"></div>
+											<div id="orderSheetGrid"></div>
 										</div>
 										<div class="clearBoth">
 											<br />
@@ -109,15 +109,13 @@
 									</div>
 									<div class="clearBoth"></div>
 									<div class="card-content">
-										<!-- 주문서 현재상태 -->
-										<form id="planForm" name="newPlan" action="insertProcPlan" method="POST" onsubmit="return false">
 
-											<input type="hidden" name="prpldStatus" value="미지시" readonly>
-											<input type="hidden" name="prplStatus" value="계획완료" readonly>
-											<h4>생산계획코드</h4>
-											<input type="text" name="prplCd" id="prplCd" readonly>
-											<div id="insertPlanGrid"></div>
-										</form>
+										<input type="hidden" name="prpldStatus" id="prpldStatus" value="미지시" readonly>
+										<input type="hidden" name="prplStatus" id="prplStatus" value="계획완료" readonly>
+										<h3>생산계획일자</h3>
+										<input type="text" name="prplDt" id="prplDt" readonly>
+										<div id="insertPlanGrid"></div>
+
 									</div>
 									<div class="clearBoth">
 										<br />
@@ -156,9 +154,9 @@
 					</div>
 
 				</div>
-				</div>
 			</main>
 			<script>
+
 				function printAlert(message) {
 					if (message == null || message == "") return;
 					Swal.fire({
@@ -168,25 +166,8 @@
 					});
 				}
 				printAlert(`${message}`);
-				function getBomDate(orshNo, cprCd) {
-					$.ajax({
-						url: 'getBomInfo',
-						type: 'GET',
-						data: {
-							orshNo: orshNo,
-							cprCd: cprCd
-						},
-						dataType: 'json',
-						success: function (data) {
-						},
-						error: function (xhr, status, error) {
-							// 요청이 실패했을 때 처리할 로직
-							console.error('요청 실패:', error);
-						}
-					});
-				}
-				$(document).ready(function () {
 
+				$(document).ready(function () {
 
 					$('#resetBtn').on('click', function () {
 						$("#orshNo").val('');
@@ -202,39 +183,8 @@
 					});
 				});
 
-				// 처음 뿌려주는 미계획주문서 리스트
-				getOrder();
-				let cprCdObj = [];
-				let orderSheetObj = [];
-				function getOrder() {
-					$.ajax({
-						url: 'getOrder',
-						type: 'GET',
-						dataType: 'json', // orderSheetTab 
-						success: function (data) {
-							for (let i = 0; i < data.result.length; i++) {
-								cprCdObj.push({ cprCd: data.result[i].cprCd });
-							}
-							for (let i = 0; i < data.result.length; i++) {
-								orderSheetObj.push({
-									orshNo: data.result[i].orshNo,
-									ordrCdCnt: data.result[i].ordrCdCnt,
-									caNo: data.result[i].caNo,
-									dlvryDt: data.result[i].dlvryDt,
-									orshDt: data.result[i].orshDt
-								});
-							}
-							console.log(cprCdObj);
 
-							console.log(orderSheetObj);
 
-						},
-						error: function (xhr, status, error) {
-							// 요청이 실패했을 때 처리할 로직
-							console.error('요청 실패:', error);
-						}
-					});
-				}
 
 				// 날짜 포맷 변경 함수
 				function formatDate(time) {
@@ -245,158 +195,127 @@
 					var formattedDate = year + "-" + month + "-" + day;
 					return formattedDate;
 				}
+				// 오늘날짜
+				function getToday() {
+					var date = new Date();
+					var year = date.getFullYear();
+					var month = ("0" + (date.getMonth() + 1)).slice(-2);
+					var day = ("0" + date.getDate()).slice(-2);
+					var formattedDate = year + "-" + month + "-" + day;
+					return formattedDate;
+				}
+				let getrow;
+				let sendrows = [];
+				let orshNoList = [];
+				$(document).ready(function () {
+					let prpldStatus = $('#prpldStatus').val();
+					let prplStatus = $('#prplStatus').val();
+					$('#prplDt').val(getToday());
+					let prplDt = $('#prplDt').val();
+					addOrderPlanGrid.on("editingFinish", (ev) => {
+						getrow = addOrderPlanGrid.getRow(ev.rowKey);
+						if (getrow.prpldCnt != null &&
+							getrow.prpldMng != null &&
+							getrow.prstDt != null &&
+							getrow.prpldWorkTskPri != null) {
+							sendrows.push({
+								prpldWorkTskPri: getrow.prpldWorkTskPri,
+								cprCd: getrow.cprCd,
+								prpldCnt: getrow.prpldCnt,
+								prstDt: getrow.prstDt,
+								prpldMng: getrow.prpldMng,
+								prpldStatus: prpldStatus,
+								prplStatus: prplStatus,
+								prplDt: prplDt
+							});
+							console.log("추가된 row", getrow);
+						}
+					});
 
+					$('#addPlanBtn').on('click', function () {
+						console.log("보내질rows : ", sendrows)
+						$.ajax({
+							url: 'insertProcPlan',
+							method: 'POST',
+							data: JSON.stringify(sendrows),
+							contentType: 'application/json',
+							dataType: 'json',
+							success: function (data) {
+								console.log(data)
+							}, error: function (rej) {
 
-				/* 주문서정보 -> 생산계획작성 */
-				$(document).on("dblclick", ".planBtn", function () {
+							}
+						});
+
+						// if ($('#orshNo').val() == "") {
+						// 	Swal.fire({
+						// 		icon: 'error',
+						// 		title: '주문서정보가 없습니다.',
+						// 		text: '주문서 조회를 먼저하여 정보를 입력해주세요',
+						// 	});
+						// 	return false;
+						// }
+						// if ($('#prpldCnt').val() == "") {
+						// 	Swal.fire({
+						// 		icon: 'error',
+						// 		title: '빈칸이 있습니다',
+						// 		text: '생산계획수량을 입력해주세요',
+						// 	});
+						// 	return false;
+						// }
+						// if ($('#prpldMng').val() == "") {
+						// 	Swal.fire({
+						// 		icon: 'error',
+						// 		title: '빈칸이 있습니다',
+						// 		text: '담당자를 입력해주세요',
+						// 	});
+						// 	return false;
+						// }
+						// if ($('#prstDt').val() == "") {
+						// 	Swal.fire({
+						// 		icon: 'error',
+						// 		title: '빈칸이 있습니다',
+						// 		text: '생산작업일자를 선택해주세요',
+						// 	});
+						// 	return false;
+						// }
+						// if ($('#prplSuceDt').val() == "") {
+						// 	Swal.fire({
+						// 		icon: 'error',
+						// 		title: '빈칸이 있습니다',
+						// 		text: '생산완료목표일을 선택해주세요',
+						// 	});
+						// 	return false;
+						// }
+
+					});
+				});
+				$(function () {
+					getOrder();
+				})
+				// 처음 뿌려주는 미계획주문서 리스트
+				function getOrder() {
 					$.ajax({
-						url: 'getProcPlanCode',
+						url: 'getOrder',
 						type: 'GET',
 						dataType: 'json',
 						success: function (data) {
-
+							orderSheetGrid.resetData(data);
 						},
 						error: function (xhr, status, error) {
 							// 요청이 실패했을 때 처리할 로직
 							console.error('요청 실패:', error);
 						}
 					});
-				});
-				$(document).ready(function () {
-					$('#addPlanBtn').on('click', function () {
-						if ($('#orshNo').val() == "") {
-							Swal.fire({
-								icon: 'error',
-								title: '주문서정보가 없습니다.',
-								text: '주문서 조회를 먼저하여 정보를 입력해주세요',
-							});
-							return false;
-						}
-						if ($('#prpldCnt').val() == "") {
-							Swal.fire({
-								icon: 'error',
-								title: '빈칸이 있습니다',
-								text: '생산계획수량을 입력해주세요',
-							});
-							return false;
-						}
-						if ($('#prpldMng').val() == "") {
-							Swal.fire({
-								icon: 'error',
-								title: '빈칸이 있습니다',
-								text: '담당자를 입력해주세요',
-							});
-							return false;
-						}
-						if ($('#prstDt').val() == "") {
-							Swal.fire({
-								icon: 'error',
-								title: '빈칸이 있습니다',
-								text: '생산작업일자를 선택해주세요',
-							});
-							return false;
-						}
-						if ($('#prplSuceDt').val() == "") {
-							Swal.fire({
-								icon: 'error',
-								title: '빈칸이 있습니다',
-								text: '생산완료목표일을 선택해주세요',
-							});
-							return false;
-						}
-						var orshDt = formatDate($('#orshDt').val());
-						var prplDlvryDt = formatDate($('#prplDlvryDt').val());
-						var prstDt = formatDate($('#prstDt').val());
-						var prplSuceDt = formatDate($('#prplSuceDt').val());
-						$('#orshDt').val(orshDt);
-						$('#prstDt').val(prstDt);
-						$('#prplDlvryDt').val(prplDlvryDt);
-						$('#prplSuceDt').val(prplSuceDt);
-						newPlan.submit();
-					});
-				});
-
-
-				$(document).ready(function () {
-
-					// 미계획 주문서 리스트 체크된 데이터를 가져와 db에서 정보 가져옴
-					$('#planAddBtn').on('click', function () {
-						const rows = orderSheetGrid.getCheckedRows();
-						let cprCdSet = "";
-						for (let i = 0; i < rows.length; i++) {
-							cprCdSet += rows[i].cprCd + ","
-						}
-						let List = {
-							cprCd: cprCdSet
-						}
-						if (rows.length > 0) {
-							$.ajax({
-								url: "getDownOrders",
-								method: "POST",
-								contentType: 'application/json',
-								data: JSON.stringify(List),
-								dataType: 'json',
-								success: function (data) {
-									let op = data.orderNPlan;
-									let pc = data.prplCd;
-									console.log(op);
-									console.log(pc);
-									$('#prplCd').val(pc);
-
-									addOrderPlanGrid.resetData(op);
-
-
-									orderSheetGrid.removeCheckedRows();
-								}, error: function (err) {
-									console.log(err);
-								}
-							});
-						} else {
-							Swal.fire({
-								icon: 'error',
-								title: '경고',
-								text: "선택된 주문서나 데이터가 없습니다.",
-							});
-						};
-					});
-
-				});
-				// 행 클릭시 모달이 뜨며 정보가 들어있는 그리드 함수 실행
-				orderSheetGrid.on('dblclick', function (ev) {
-
-					var row = orderSheetGrid.getRow(ev.rowKey);
-					getOrderDetail(row.orshNo, row.caNm);
-					$('#order').modal('show');
-				});
-
-				// 주문 상세 모달창
-				function getOrderDetail(orshNo, caNm) {
-					$.ajax({
-						url: 'getOrderDetail',
-						method: 'post',
-						data: {
-							orshNo: orshNo,
-							caNm: caNm
-						},
-						success: function (data) {
-							orderDetailGrid.resetData(data);
-							$('#orshNoCd').val(data[0].orshNo);
-							setTimeout(() => orderDetailGrid.refreshLayout(), 200);
-						}, error: function (rej) {
-							console.log(rej);
-						}
-					});
 				}
 				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
 				const orderSheetGrid = new tui.Grid({
-					el: document.getElementById('orderSheetTab'),
-					scrollX: false,
-					scrollY: false,
+					el: document.getElementById('orderSheetGrid'),
 					minBodyHeight: 30,
 					rowHeaders: ['checkbox'],
 					columns: [
 						{
-							header: '주문코드',
+							header: '주문번호',
 							name: 'orshNo',
 							align: 'center'
 						},
@@ -422,11 +341,129 @@
 						}
 					]
 				});
+
+
+				// function getProductList() {
+				// 	$.ajax({
+				// 		url: "getProductList",
+				// 		method: "GET",
+				// 		dataType: 'json',
+				// 		success: function (data) {
+				// 			var cprCdSet = "";
+				// 			for (let i = 0; i < data.length; i++) {
+				// 				cprCdSet += data[i].cprCd + ",";
+				// 			}
+				// 			console.log("cprCdSet : ", cprCdSet);
+
+				// 			return cprCdSet;
+				// 		},
+				// 		error: function (xhr, status, error) {
+				// 			// 요청이 실패했을 때 처리할 로직
+				// 			console.error('요청 실패:', error);
+				// 		}
+				// 	});
+				// }
+				let ordrDtlCdSet = "";
+				let orshNoSet = "";
+				$(document).ready(function () {
+					// 미계획 주문서 리스트 체크된 데이터를 가져와 db에서 정보 가져옴
+					$('#planAddBtn').on('click', function () {
+						const rows = orderSheetGrid.getCheckedRows();
+						for (let i = 0; i < rows.length; i++) {
+							orshNoSet += rows[i].orshNo + ",";
+						}
+						var list = {
+							orshNo: orshNoSet
+						};
+
+						if (rows.length > 0) {
+							$.ajax({
+								url: "getDownOrders",
+								method: "POST",
+								contentType: 'application/json',
+								data: JSON.stringify(list),
+								dataType: 'json',
+								success: function (data) {
+									let orshNom = "";
+									let op = data.orderNPlan;
+									addOrderPlanGrid.resetData(op);
+									orderSheetGrid.removeCheckedRows();
+									for (let i = 0; i < data.orshNoArr.length; i++) {
+										orshNom += data.orshNoArr[i] + ",";
+									}
+									var onn = {
+										orshNo: orshNom
+									};
+									console.log(onn)
+									$.ajax({
+										url: 'getOrdrDtlCd',
+										method: "POST",
+										contentType: 'application/json',
+										data: JSON.stringify(onn),
+										dataType: 'json',
+										success: function (data) {
+											for (let i = 0; i < data.length; i++) {
+												ordrDtlCdSet += data[i].ordrDtlCd + ",";
+											}
+											sendrows.push({ ordrDtlCd: ordrDtlCdSet })
+										}, error: function (err) {
+											Swal.fire({
+												icon: 'error',
+												title: '경고',
+												text: "상세코드 못가져옴",
+											});
+										}
+
+									});
+								}, error: function (err) {
+									Swal.fire({
+										icon: 'error',
+										title: '경고',
+										text: "목록을 불러올 수 없습니다.",
+									});
+								}
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: '경고',
+								text: "선택된 주문서나 데이터가 없습니다.",
+							});
+						};
+					});
+
+				});
+				var row;
+				// 행 클릭시 모달이 뜨며 정보가 들어있는 그리드 함수 실행
+				orderSheetGrid.on('dblclick', function (ev) {
+
+					row = orderSheetGrid.getRow(ev.rowKey);
+					getOrderDetail(row.orshNo, row.caNm);
+					$('#order').modal('show');
+				});
+
+				// 주문 상세 모달창
+				function getOrderDetail(orshNo, caNm) {
+					$.ajax({
+						url: 'getOrderDetail',
+						method: 'post',
+						data: {
+							orshNo: orshNo,
+							caNm: caNm
+						},
+						success: function (data) {
+							orderDetailGrid.resetData(data);
+							$('#orshNoCd').val(data[0].orshNo);
+							setTimeout(() => orderDetailGrid.refreshLayout(), 200);
+						}, error: function (rej) {
+							console.log(rej);
+						}
+					});
+				}
+
 				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
 				const orderDetailGrid = new tui.Grid({
 					el: document.getElementById('orderDetailList'),
-					scrollX: false,
-					scrollY: false,
 					minBodyHeight: 30,
 					rowHeaders: ['rowNum'],
 					columns: [
@@ -467,6 +504,11 @@
 					rowHeaders: ['rowNum'],
 					columns: [
 						{
+							header: '제품코드',
+							name: 'cprCd',
+							hidden: true
+						},
+						{
 							header: '제품명',
 							name: 'cprNm',
 							align: 'center'
@@ -477,11 +519,36 @@
 							align: 'center',
 						},
 						{
-							header: '납품일자',
-							name: 'dlvryDt',
-							sortingType: 'asc',
-							sortable: true,
-							align: 'center'
+							header: '생산계획수량',
+							editor: 'text',
+							name: 'prpldCnt',
+							align: 'center',
+						},
+						{
+							header: '생산작업일자',
+							name: 'prstDt',
+							formatter: function (data) {
+								let dateVal = '';
+								if (data.value != null) {
+									dateVal = formatDate(data.value);
+								} else {
+									dateVal = getToday();
+								}
+								return dateVal;
+							},
+							editor: {
+								type: 'datePicker',
+								options: {
+									format: 'yyyy-MM-dd',
+									date: getToday()
+								}
+							}
+						},
+						{
+							header: '담당자',
+							name: 'prpldMng',
+							editor: 'text',
+							align: 'center',
 						},
 						{
 							header: '작업우선순위',
@@ -495,7 +562,7 @@
 										{ text: '2', value: '2' },
 										{ text: '3', value: '3' },
 										{ text: '4', value: '4' },
-										{ text: '5', value: '5' }
+										{ text: '5', value: '5' },
 									]
 								}
 							},
@@ -503,5 +570,6 @@
 						},
 					]
 				});
+
 
 			</script>

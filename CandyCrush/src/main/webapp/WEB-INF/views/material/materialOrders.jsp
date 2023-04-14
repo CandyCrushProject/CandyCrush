@@ -9,46 +9,10 @@
 		margin-left: 10px;
 		color : black;
 	}
-	#inputReset{
-		margin-left: 10px;
-	}
-	.mtrlOrderRightBtn{
-		float: right;
-		position: relative;
-		right: 20px;
-		bottom: 4px;
-	}
-	#companyName{
-		cursor:pointer;
-	}
-	#companyNameOrderList{
-		cursor:pointer;
-	}
-	#modalMocd{
-		background-color: rgb(233, 233, 233);
-		border: 0 !important;
-		border-radius: 15px;
-		width: 200px !important;
-		height: 32px;
-		padding-left : 20px;
-	}
-	#modalBtn{
-		float: right;
-		height: 100px;
-		position: relative;
-		bottom: 40px;
-	}
 	input[type="text"]{
 		width: 90%;
 	}
-
-	#rigth{
-		float: right;
-		position: relative;
-		bottom: 25px;
-	}
-
-</style>
+	</style>
 <main>
 	<!-- 업체검색모달 -->
 	<div id="modal" class="w3-modal" style="z-index: 100;">
@@ -60,7 +24,7 @@
 					<input type="text" id="modalCaNm" placeholder="업체명" style="width: 90%;" autocomplete="off">
 					<br/>
 					<input type="text" id="modalCaCd" placeholder="업체코드" style="width: 90%;" autocomplete="off">
-					<button class="srchBtn" id="modalBtn">
+					<button class="srchBtn" id="mtrlOrdermodalBtn">
 						<i class="fa-solid fa-magnifying-glass"></i>
 					</button>
 				</div>
@@ -83,6 +47,8 @@
 				</div>
 				<label for="modalMocd">발주코드</label>
 				<input type="text" id="modalMocd" style="width: 90%;" readonly>
+				<label for="modalMoStt">진행상황</label>
+				<input type="text" id="modalMoStt" style="width: 90%;" readonly>
 				<div id="moModal"></div>
 			</div>
 		</div>
@@ -109,9 +75,9 @@
 							<label for="mtrlName">원자재명</label>
 							<input type="text" id="mtrlName" autocomplete="off"
 										style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
-							<label for="companyName">업체명</label>
+							<!--<label for="companyName">업체명</label>
 							<input type="text" id="companyName" autocomplete="off"
-										style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+										style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">-->
 							<button id="search" class="cndSrchBtn" onclick="search()">검색</button>
 							<button type="button" class="cndRstBtn restBtn">초기화</button>
 							</div>
@@ -150,14 +116,14 @@
 					<div class="card">
 						<div class="card-action">자재발주조회</div>
 							<div class="inputReset">
+								&nbsp;&nbsp;&nbsp;<label>발주신청일</label>&nbsp;&nbsp;&nbsp;
+								<input type="date" id="startDate"
+									style="width: 150px;">&nbsp;<span style="font-weight: bold; font-size: larger;">~</span>&nbsp;
+								<input type="date" id="endDate"
+									style="width: 150px;">&nbsp;&nbsp;&nbsp;
 								<label>업체명</label>
 								<input type="text" id="companyNameOrderList" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);" autocomplete="off" >
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<label>발주신청일</label>
-								<input type="date" id="startDate"
-									style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
-								<input type="date" id="endDate"
-									style="width: 140px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
 								<button type="button" class="cndSrchBtn" id="mtrlOrderSeachBtn" onclick="orderListSearch()">검색</button>
 								<button type="button" class="cndRstBtn restBtn">초기화</button>
 								<div class="mtrlOrderRightBtn">
@@ -276,7 +242,7 @@
 		//자재검색
 		function search(){
 			cmmNm = document.getElementById('mtrlName').value; //원자재명
-			caNm = document.getElementById('companyName').value //업체명
+			caNm = ""//document.getElementById('companyName').value //업체명
 			
 			$.ajax({
 				url : "mtrlSearch",
@@ -314,7 +280,7 @@
 		}
 
 		//modal account search Btn event
-		$("#modalBtn").on('click',(e)=>{
+		$("#mtrlOrdermodalBtn").on('click',(e)=>{
 			modalAccountSearch();
 		})
 
@@ -419,14 +385,14 @@
 					sortingType: 'asc',
 					sortable: true
 				},
-				{
+				/*{
 					header: '업체코드',
 					name: 'caNo'
 				},
 				{
 					header: '업체명',
 					name: 'caNm'
-				},
+				},*/
 				{
 					header: '자재유형',
 					name: 'cmmTyp'
@@ -441,7 +407,7 @@
 				},
 				{
 					header: '입고재고',
-					name: 'minCnt'
+					name: 'cmlInCnt'
 				},
 				{
 					header: '출고재고',
@@ -483,24 +449,12 @@
 			el: document.getElementById('materialOrder'),
 			rowHeaders: ["checkbox"],
 			columns: [
-				{
+				/*{
 					header: '발주코드',
 					name: 'moCd',
 					sortingType: 'asc',
-					sortable: true,
-				},
-				{
-					header: '발주명',
-					name: 'moTitle',
-					sortingType: 'asc',
 					sortable: true
-				},
-				{
-					header: '발주신청일',
-					name: 'moReoDt',
-					sortingType: 'asc',
-					sortable: true,
-				},
+				},*/
 				{
 					header: '업체코드',
 					name: 'caNo',
@@ -509,13 +463,33 @@
 				},
 				{
 					header: '업체명',
-					name: 'caNm'
+					name: 'caNm',
+					editor: {
+					type: 'select',
+						options: {
+							listItems: [
+							{ text: '업체1', value: '1' },
+							{ text: '업체2', value: '2' },
+							{ text: '업체3', value: '3' }
+							]
+						}
+					}
 				},
 				{
 					header: '자재코드',
 					name: 'cmmCd',
 					sortingType: 'asc',
 					sortable: true
+				},
+				{
+					header: '자재명',
+					name: 'moTitle',
+				},
+				{
+					header: '발주신청일',
+					name: 'moReoDt',
+					sortingType: 'asc',
+					sortable: true,
 				},
 				{
 					header: '발주수량',
@@ -526,8 +500,8 @@
 					}
 				},
 				{
-					header: '안전재고',
-					name: 'cmmSafStc'
+					header: '현재재고',
+					name: 'cmmInven'
 				},
 				{
 					header: '납기요청일',
@@ -592,6 +566,12 @@
 				{
 					header: '업체명',
 					name: 'caNm'
+				},
+				{
+					header : '진행상황',
+					name : 'moStt',
+					sortingType: 'asc',
+					sortable: true
 				}
 			],
 			bodyHeight: 420,
@@ -604,6 +584,7 @@
 
 		//발주삭제 버튼
 		let delMocd = "";
+		let delMoStt = [];
 		let checkLen = 0;
 
 		materialOrderList.on('check', (ev) => {
@@ -618,42 +599,47 @@
 			let rows = materialOrderList.getCheckedRows();
 			for(let i = 0 ; i < checkLen ; i++){
 				delMocd += rows[i].moCd + ',';
-			};
-			
-			//체크된 행이 없다면 선택된 발주코드가 없다고 알림창을 띄운다
-			if(rows.length !== 0){
-				if(rows.length === rows.length){
-					console.log(rows.length);
-				}
-				
-				$.ajax({
-					url : "delOrder",
-					method :"POST",
-					data : {delMocd : delMocd},
-					success : function(data){
+				delMoStt[i] = {value : rows[i].moStt};
+
+				if(delMoStt[i].value === '진행중' || delMoStt[i].value === '진행완료'){
+					setTimeout(() => {
 						Swal.fire({
-							icon: 'success',
-							title: "삭제완료"
+							icon: 'error',
+							title: '경고',
+							text: "해당 발주는 삭제가 불가합니다",
 						});
-						//삭제 후 알림창을 띄운 후 그리드를 새로 그려준다
-						orderListSearch();
-					},
-					error : function(err){
-						console.log(err);
+						return;
+					}, 10);
+				} else {
+					//체크된 행이 없다면 선택된 발주코드가 없다고 알림창을 띄운다
+					if(rows.length !== 0){
+						$.ajax({
+							url : "delOrder",
+							method :"POST",
+							data : {delMocd : delMocd},
+							success : function(data){
+								Swal.fire({
+									icon: 'success',
+									title: "삭제완료"
+								});
+								//삭제 후 알림창을 띄운 후 그리드를 새로 그려준다
+								orderListSearch();
+							},
+							error : function(err){
+								console.log(err);
+							}
+						});
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: '경고',
+							text: "선택된 발주코드가 없습니다",
+						});
 					}
-				});
-			} else {
-				Swal.fire({
-					icon: 'error',
-					title: '경고',
-					text: "선택된 발주코드가 없습니다",
-				});
-				return;
-			}
-
-
+				};
+			};
 		});
-
+		
 		//발주목록 행 더블클릭 이벤트
 		materialOrderList.on('dblclick', (e)=>{
 			//모달창
@@ -665,7 +651,9 @@
 			const rowDate = materialOrderList.getRow(e.rowKey);
 			//Modal 안에 발주코드 readonly
 			let rowDateMoCd = rowDate.moCd;		//발주코드
+			let rowDateMoStt = rowDate.moStt;	//진행상황
 			$("#modalMocd").val(rowDateMoCd);
+			$("#modalMoStt").val(rowDateMoStt);
 
 			// $("#orderDetailModal").css("width", "99%");
 			// $("#orderDetailModal").css("width", "100%");
@@ -803,6 +791,7 @@
 			let rowDate2 = moModal.getData(e.rowKey);
 
 			let moCd = $('#modalMocd').val();
+			let moStt = $('#modalMoStt').val();
 			let moCnt = "";
 			let moReqDt = "";
 			let realMoReqDt = "";
@@ -819,7 +808,18 @@
 				//console.log(moCnt);
 				/*console.log(realMoReqDt);
 				console.log(cmmCd);*/
-				
+
+				if(moStt === '진행완료' || moStt === '진행중'){
+					setTimeout(() => {
+						Swal.fire({
+							icon: 'error',
+							title: '경고',
+							text: "해당 발주는 수정이 불가합니다",
+						});
+					return;
+					}, 10);
+				};
+
 				$.ajax({
 					url : "mtrlOrderDetailUpdate",
 					method : "POST",
@@ -859,6 +859,17 @@
 
 		//발주수량 값 바뀌면 예상재고량 자동계산되도록 하는 방법
 		moModal.on('editingFinish', (e) => {
+			let oneMoStt = $('#modalMoStt').val();
+			if(oneMoStt === '진행중' || oneMoStt ==='진행완료'){
+				setTimeout(() => {
+					Swal.fire({
+						icon: 'error',
+						title: '경고',
+						text: "해당 발주는 수정이 불가합니다",
+					});
+					return;
+				}, 10);
+			};
 			//editingFinish --> 셀 수정이 완료된 후
 			/*셀 수정이 완료될 때,
 				변화하는 발주수량 값과 현재수량을 더해서 예상재고량 값을 변화시킨다.
@@ -895,9 +906,11 @@
 			};
 		});
 		
+		//삭제버튼
 		$('#dataDelBtn').on('click', (e)=>{
 			//삭제
 			let oneMoCd = $('#modalMocd').val();										//발주번호
+			let oneMoStt = $('#modalMoStt').val();
 			let delModCd = "";
 			let rowKey = moModal.getCheckedRowKeys();								//여러개 누르면 [0, 1, 2 ...]으로 값이 들어옴
 			//console.log(rowKey);																	//키 값이 배열형태로 들어온다는 의미
@@ -908,57 +921,68 @@
 				delModCd += moModal.getRow(rowKey[i]).modCd + ",";		//삭제할 발주상세코드 -> mo001, mo002, mo003, ...
 			};
 
-			//선택된 행이 없다면 경고창 띄우기
-			if(rowKey.length !== 0){
-				//Grid의 모든 행을 지우면 모달창이 없어지면서 발주목록까지 초기화해주기
-				if(totalCnt == checkCount){
-					$.ajax({
-						url : "delOrderDetail",
-						method :"POST",
-						data : {moCd : oneMoCd , modCd : delModCd},
-						success : function(data){
-							//console.log(data);
-							
-							Swal.fire({
-								icon: 'success',
-								title: "삭제완료"
-							});
-							//발주상세 행 지워주고
-							moModal.removeCheckedRows();
-							//모달창 없애고
-							$("#orderDetailModal").hide();	
-							//발주목록 초기화
-							mtrlOrderGetData();
-						},
-						error : function(err){
-							console.log(err);
-						}
+			if(oneMoStt === '진행중' || oneMoStt ==='진행완료'){
+				//setTimeout(() => {
+					Swal.fire({
+						icon: 'error',
+						title: '경고',
+						text: "해당 발주는 수정이 불가합니다",
 					});
-				} else {
-					$.ajax({
-						url : "delOrderDetail",
-						method :"POST",
-						data : {moCd : oneMoCd , modCd : delModCd},
-						success : function(data){
-							//console.log(data);
-							Swal.fire({
-								icon: 'success',
-								title: "삭제완료"
-							});
-							moModal.removeCheckedRows();
-						},
-						error : function(err){
-							console.log(err);
-						}
-					});
-				}
+					return;
+				//}, 10);
 			} else {
-				Swal.fire({
-					icon: 'error',
-					title: '경고',
-					text: "선택된 발주코드가 없습니다",
-				});
-				return;
+				//선택된 행이 없다면 경고창 띄우기
+				if(rowKey.length !== 0){
+					//Grid의 모든 행을 지우면 모달창이 없어지면서 발주목록까지 초기화해주기
+					if(totalCnt == checkCount){
+						$.ajax({
+							url : "delOrderDetail",
+							method :"POST",
+							data : {moCd : oneMoCd , modCd : delModCd},
+							success : function(data){
+								//console.log(data);
+								
+								Swal.fire({
+									icon: 'success',
+									title: "삭제완료"
+								});
+								//발주상세 행 지워주고
+								moModal.removeCheckedRows();
+								//모달창 없애고
+								$("#orderDetailModal").hide();	
+								//발주목록 초기화
+								mtrlOrderGetData();
+							},
+							error : function(err){
+								console.log(err);
+							}
+						});
+					} else {
+						$.ajax({
+							url : "delOrderDetail",
+							method :"POST",
+							data : {moCd : oneMoCd , modCd : delModCd},
+							success : function(data){
+								//console.log(data);
+								Swal.fire({
+									icon: 'success',
+									title: "삭제완료"
+								});
+								moModal.removeCheckedRows();
+							},
+							error : function(err){
+								console.log(err);
+							}
+						});
+					}
+				} else {
+					Swal.fire({
+						icon: 'error',
+						title: '경고',
+						text: "선택된 발주코드가 없습니다",
+					});
+					return;
+				}
 			}
 		});
 
@@ -974,11 +998,12 @@
 		//자재목록 tr 클릭하면 자재발주목록 뜨는 dbclick event
 		material.on("dblclick", (e) => {
 			const rowData = material.getRow(e.rowKey);
+			
 			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
 			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
 			if (materialOrder.getRow(e.rowKey) === null) {
-				rowData.moCd = '${getmtrlOrderCode.moCd}';	 //발주코드
-				rowData.moTitle = '원자재 외';				  //발주명
+				//rowData.moCd = '${getmtrlOrderCode.moCd}';	 //발주코드
+				rowData.moTitle = rowData.cmmNm;				  //발주명
 				rowData.moReoDt = getStartToday;			//발주신청일
 				rowData.moReqDt = getStartToday;			//납기요청일
 				rowData.moCnt = 0;							//발주수량
@@ -993,6 +1018,10 @@
 				});
 			}
 		});
+
+		//console.log(material.getCellClassName(e.rowKey, caNm));
+		
+
 
 		//발주수량 0으로 발주등록할 때 예외처리하는 방법
 		let beforeMoCnt = 0;
@@ -1019,6 +1048,7 @@
 		//발주등록버튼 클릭 이벤트
 		$('#orderInsert').on('click',(ev)=>{
 			const rows = materialOrder.getCheckedRows();
+			
 			if (rows.length !== 0) {
 				$.ajax({
 					url : "mtrlOrder",
@@ -1027,11 +1057,11 @@
 					//dataType : "JSON",
 					contentType : "application/json",
 					success : function(data){
-						const rowsMoCd = rows[0].moCd; 			//발주번호 들고옴
+						//const rowsMoCd = rows[0].moCd; 			//발주번호 들고옴
 						Swal.fire({
 							icon: 'success',
 							title: "발주완료",
-							text:  "발주번호 : " + rowsMoCd
+							text:  "요청하신 발주가 정상적으로 등록되었습니다"
 						});
 						materialOrder.removeCheckedRows();		//자재발주 Grid 체크한 모든 행을 remove!
 						//자재발주조회 그리드를 새로 그려준다
@@ -1073,7 +1103,6 @@
 					"-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
 			return result;
 		};
-		
 		//발주수량 입력할 때 안전재고보다 소량으로 기재할 시 
 		//안전재고 숫자가 빨간색으로 보이게 (정상작동안됨/추후에 하는걸로!!)
 		/*materialOrder.on("click", (e) => {

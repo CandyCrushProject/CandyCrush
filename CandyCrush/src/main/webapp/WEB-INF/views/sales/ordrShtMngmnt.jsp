@@ -14,10 +14,6 @@
           onclick="document.getElementById('ordrDtilMdl').style.display='none'">&times;</span>
         <h3 class="mdlTitle">주문서</h3>
         <form action="">
-          <div class="accntInfo">
-            <label for="orshNo">주문서번호</label>
-            <input id="orshNo" name="orshNo" type="text" readonly>
-          </div>
           <div class="accntInfoMngBox">
 						<div class="accntInfo">
 							<label for="caNo">거래처코드</label>
@@ -44,36 +40,22 @@
             <label for="dlvryDt">납기일자</label>
             <input id="dlvryDt" name="dlvryDt" type="date">
           </div>
-					<div>
-						<h4 style="display: block;">제품선택</h4>
-						<button id="getOrdrBtn" class="plusBtn" type="button">
-							<i class="fa-solid fa-plus"></i>
-						</button>
-						<button class="minusBtn">
-							<i class="fa-solid fa-minus"></i>
-						</button>
-					</div>
-					<div class="table-responsive">
-						<div id="ordrProdList"></div>
-					</div>
-          
-          <!-- <table>
-            <colgroup>
-              <col style="width: 33.33%" />
-              <col style="width: 33.33%" />
-              <col style="width: 33.33%" />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>주문상세코드</th>
-                <th>제품명</th>
-                <th>수량</th>
-              </tr>
-            </thead>
-          </table> -->
-        </form>
+				</form>
+				<div>
+					<h4 style="display: block;">제품선택</h4>
+					<button id="getRowBtn" class="plusBtn" type="button">
+						<i class="fa-solid fa-plus"></i>
+					</button>
+					<button id="delRowBtn" class="minusBtn" type="button">
+						<i class="fa-solid fa-minus"></i>
+					</button>
+				</div>
+				<div class="table-responsive">
+					<div id="ordrProdList"></div>
+				</div>
+        
         <div id="ordrModal"></div>
-				<button class="cndInsBtn" type="button">등록</button>
+				<button id="ordrShtInsert" class="cndInsBtn" type="button">등록</button>
       </div>
     </div>
   </div><!-- End 주문서 등록 -->
@@ -109,12 +91,12 @@
 					<!--End 자재목록 테이블 -->
 				</div>
 			</div> <!--END row-->
-			<!--자재발주 테이블-->
+
 			<div class="row">
 				<div class="col-md-12">
 					<!-- Advanced Tables -->
 					<div class="card">
-						<div class="card-action">자재발주</div>
+						<div class="card-action">주문서조회</div>
 						<div class="card-content">
 							<div id="contextBox">
 								<button class="cndUdtBtn" type="button">
@@ -124,17 +106,20 @@
 									<i class="fa-solid fa-minus"></i>삭제
 								</button>
 							</div>
-							<div style="clear:both"></div>
+							<!-- 주문서 목록 조회박스 -->
 							<div class="table-responsive">
-								<div id="materialOrder"></div>
+								<div id="orderList"></div>
+							</div> <!-- end 주문서 목록 조회박스 -->
+							<div>
+								<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
 							</div>
 						</div>
+			
 					</div>
 				</div>
 			</div> <!--END row-->
 		</div>
 		<!-- /. PAGE INNER  -->
 	</div>
-
 	<script src="assets/js/orderSheet/ordrShtMngmntCntnt.js"></script>
 </main>

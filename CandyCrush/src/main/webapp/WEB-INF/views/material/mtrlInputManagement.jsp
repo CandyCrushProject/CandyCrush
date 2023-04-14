@@ -2,6 +2,14 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<style>
+	#inputGuide{
+		margin-left: 10px !important;
+		width:300px !important;
+		margin-bottom: 30px !important;
+		margin-top:10px !important;
+	}
+</style>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -29,6 +37,24 @@
 				</div>
 			</div>
 		</div><!-- End 업체명 검색 모달 -->
+
+		<!-- 입고목록 상세 모달 -->
+		<div id="inputDetailModal" class="w3-modal" style="z-index: 101;">
+		<div class="w3-modal-content">
+			<div class="w3-container">
+				<span class="w3-button w3-display-topright" onclick="document.getElementById('inputDetailModal').style.display='none'">&times;</span>
+				<h3>입고상세목록</h3>
+				<div style="clear:both"></div>
+				<div id="rigth">
+					<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
+					<button type="button" id="dateUpdateBtn" class="cndUdtBtn">수정</button>
+				</div>
+				<label for="modalMinCd">입고코드</label>
+				<input type="text" id="modalMinCd" style="width: 300px;" readonly>
+				<div id="inputModal"></div>
+			</div>
+		</div>
+	</div><!-- End 자재발주조회 더블클릭하면 나오는 모달 -->
 
 		<div id="page-inner">
 			<div class="row">
@@ -84,8 +110,7 @@
 					<div class="card">
 						<div class="card-action">▶입고목록</div>
 						<div style="padding-left: 5px; margin-bottom: 20px">
-							<label for="mtrInputType" style="margin-left: 10px; width:80px;">담당자</label>
-							<input type="text" id="mtrlInputMng" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+							<label for="inputGuide" id="inputGuide"> >> 기준 : 7일이내 기준</label>
 						</div>
 						<div class="card-content">
 							<div class="table-responsive">
@@ -156,7 +181,19 @@
 									},
 								</c:forEach>
 							];
+
+		let inpuerList7Days = [
+									<c:forEach items="${inpuerList7Days}" var="inSht">
+										{
+											minCd : '${inSht.minCd}',
+											minDt : '${inSht.minDt}',
+											minCdCount : '${inSht.minCdCount}'
+										},
+									</c:forEach>
+								];
+
 //--------------------------------------------------------------Grud
+		//업체명 검색 Grid
 		const caModal = new Grid({
 			el: document.getElementById('caModal'),
 			columns: [
@@ -223,6 +260,7 @@
 			});
 		});
 		
+		//입고등록 Grid
 		const materialInspGetList = new Grid({
 			el: document.getElementById('materialLotSave'), // Container element
 			rowHeaders: ['checkbox'],
@@ -268,6 +306,65 @@
 				{
 					header : '입고수량',
 					name : 'minCnt',
+					formatter: function(value) {
+						return '<div style="width:100%;height:100%;background-color:#fff">'+value.value+'</div>';
+					}
+					// editor : 'text',
+					// validation: {
+					// 	dataType: 'number'
+					// }
+				}
+			],
+			bodyHeight: 520,
+			pageOptions: {
+				useClient: true,
+				type: 'scroll',
+				perPage: 30
+			}
+		});
+
+		//입고목록상세
+		const materialInspDetail = new Grid({
+			el: document.getElementById('inputModal'), // Container element
+			rowHeaders: ['checkbox'],
+			columns: [
+				{
+					header: '검사코드',
+					name: 'miCd',
+					sortingType: 'asc',
+					sortable: true,
+				},
+				{
+					header: '자재코드',
+					name: 'cmmCd',
+					sortingType: 'asc',
+					sortable: true
+				},
+				{
+					header: '자재명',
+					name: 'cmmNm',
+					sortingType: 'asc',
+					sortable: true
+				},
+				{
+					header: '규격',
+					name: 'cmmSpec'
+				},
+				{
+					header: '단위',
+					name: 'cmmUnit'
+				},
+				{
+					header: '유형',
+					name: 'cmmTyp'
+				},
+				{
+					header: '발주코드',
+					name: 'moCd'
+				},
+				{
+					header : '입고수량',
+					name : 'minCnt',
 					editor : 'text',
 					validation: {
 						dataType: 'number'
@@ -282,56 +379,83 @@
 			}
 		});
 
+		//입고등록 ajax 함수
+		const mtrlInspList = (caNm = undefined, start = undefined, end = undefined) => {
+			$.ajax({
+				url : "mtrlInputGetList",
+				method :"POST",
+				dataType : "JSON",
+				success : function(data){
+					data.map((item) => {
+						item.minCnt = item.miPassCnt
+					});
+					materialInspGetList.resetData(data);
+				}
+			});
+		};
+		mtrlInspList();
+
 		//입력값에 대한 예외처리 부분
+		// editingStart
 		let beforeMoCnt = "";
-		materialInspGetList.on("editingStart", (e) => {
-			beforeMoCnt = materialInspGetList.getRow(e.rowKey).minCnt;
+		materialInspGetList.on("dblclick", (e) => {
+			// beforeMoCnt = materialInspGetList.getRow(e.rowKey).minCnt;
+			if(e.columnName === "minCnt") {
+				Swal.fire({
+					icon: "warning",
+					title: "주의",
+					text: "입고수량 변경 기능은 준비중입니다."
+				})
+			};
+			// console.log(e.rowKey);
+			// materialInspGetList.focusChange = -1;
+			
 		});
 
-		materialInspGetList.on('editingFinish', (e)=>{
-			let rowDate = materialInspGetList.getRow(e.rowKey);
-			let minCntData = Number(rowDate.minCnt);					//입고수량
-			let miPassCntData = Number(rowDate.miPassCnt);	  //입고가능수량
+		// materialInspGetList.on('editingFinish', (e)=>{
+		// 	let rowDate = materialInspGetList.getRow(e.rowKey);
+		// 	let minCntData = Number(rowDate.minCnt);					//입고수량
+		// 	let miPassCntData = Number(rowDate.miPassCnt);	  //입고가능수량
 
-			//입고가능한 수량 값을 String을 입력했을 경우
-			if(isNaN(minCntData)){
-				setTimeout(() => {
-					Swal.fire({
-						icon : 'error',
-						title : '경고',
-						text: '숫자만 입력 가능합니다',
-					});
-					materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
-					return;
-				}, 10);
-			}
+		// 	//입고가능한 수량 값을 String을 입력했을 경우
+		// 	if(isNaN(minCntData)){
+		// 		setTimeout(() => {
+		// 			Swal.fire({
+		// 				icon : 'error',
+		// 				title : '경고',
+		// 				text: '숫자만 입력 가능합니다',
+		// 			});
+		// 			materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+		// 			return;
+		// 		}, 10);
+		// 	}
 
-			//입고가능한 수량보다 입고할 수량이 더 많은 경우
-			if(minCntData > miPassCntData){
-				setTimeout(() => {
-					Swal.fire({
-						icon : 'error',
-						title : '다시 입력해주세요',
-						text: '입고가능한 수량보다 많습니다',
-					});
-					materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
-					return;
-				}, 10);
-			};
+		// 	//입고가능한 수량보다 입고할 수량이 더 많은 경우
+		// 	if(minCntData > miPassCntData){
+		// 		setTimeout(() => {
+		// 			Swal.fire({
+		// 				icon : 'error',
+		// 				title : '다시 입력해주세요',
+		// 				text: '입고가능한 수량보다 많습니다',
+		// 			});
+		// 			materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+		// 			return;
+		// 		}, 10);
+		// 	};
 
-			//입고수량을 0 또는 빈값을 입력했을 경우
-			if(minCntData === 0 || minCntData === null){
-				setTimeout(() => {
-					Swal.fire({
-							icon: 'error',
-							title: '경고',
-							text: "입고수량이 기재되지 않았습니다",
-						});
-						materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
-						return;
-				}, 10);
-			};
-		});
+		// 	//입고수량을 0 또는 빈값을 입력했을 경우
+		// 	if(minCntData === 0 || minCntData === null){
+		// 		setTimeout(() => {
+		// 			Swal.fire({
+		// 					icon: 'error',
+		// 					title: '경고',
+		// 					text: "입고수량이 기재되지 않았습니다",
+		// 				});
+		// 				materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+		// 				return;
+		// 		}, 10);
+		// 	};
+		// });
 
 		//체크한 행만 입고코드를 입힌다
 		$('#mtrlInputSaveBtn').on('click',(e)=>{
@@ -346,33 +470,79 @@
 				});
 			}
 		})
-
+		
+		//입고목록 Grid
 		const mtrlMngInputList = new Grid({
 			el: document.getElementById('mtrlInputList'), // Container element
 			columns: [
 				{
 					header: '입고코드',
-					name: '',
+					name: 'minCd',
 				},
 				{
 					header: '입고일자',
-					name: ''
+					name: 'minDt',
+					formatter: function (e) {
+						let newData = new Date(e.value);
+						let result = newData.getFullYear() + "-" + (newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1) + "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+							return result;
+					}
 				},
 				{
 					header: '건수',
-					name: ''
+					name: 'minCdCount'
 				}
 			],
 			bodyHeight: 520,
 		});
+		mtrlMngInputList.resetData(inpuerList7Days);
 
+		//입고목록 Grid 행을 클릭하면 상세 모달이 뜬다
+		mtrlMngInputList.on('dblclick', (e)=>{
+			let getRowData = mtrlMngInputList.getRow(e.rowKey);
+			let rowDataMinCd = getRowData.minCd;
+			$('#modalMinCd').val(rowDataMinCd);
+			console.log(rowDataMinCd);
+			document.getElementById('inputDetailModal').style.display='block';
+
+			setTimeout(()=> materialInspDetail.refreshLayout() , 0);
+
+			
+			//입고 상세 목록 ajax
+			$.ajax({
+				url : "mtrlInputDeateilList",
+				method : "POST",
+				dataType : "JSON",
+				data : {minCd : rowDataMinCd},
+				success : function(data){
+					materialInspDetail.resetData(data);
+				}
+			})
+		});
+
+		//Modal을 Esc 누르면 없어지게 만드는 곳
 		$(window).on("keydown", (e) => {
 			let caModal = $("#modal");
+			let inputDetailModal = $('#inputDetailModal');
 
 			//e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
 			if (e.keyCode === 27 && caModal.css("display") === "block") {
 				caModal.hide();
 			};
+
+			//inputDetailModal
+			if (e.keyCode === 27 && inputDetailModal.css("display") === "block") {
+				inputDetailModal.hide();
+			};
 		});
+//------------------------------------------------------------------------------------
+		//input Date 당일날짜 이후 날짜 선택하지 못하도록 설정해준다
+		var now_utc = Date.now();
+		var timeOff = new Date().getTimezoneOffset() * 60000;
+		var today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+		//document.getElementById("mtrlInput").setAttribute("min", today);
+		$('#mtrlInput').attr("min", today);
+
+
 </script>
 </main>
