@@ -109,8 +109,8 @@
 
 										<input type="hidden" name="prpldStatus" id="prpldStatus" value="미지시" readonly>
 										<input type="hidden" name="prplStatus" id="prplStatus" value="계획완료" readonly>
-										<h3>생산계획일자</h3>
-										<input type="text" name="prplDt" id="prplDt" readonly>
+										<h4>생산계획일자</h4>
+										<input type="date" name="prplDt" id="prplDt" readonly>
 										<div id="insertPlanGrid"></div>
 
 									</div>
@@ -120,24 +120,28 @@
 								</div>
 							</div>
 						</div>
-
-						<div class="row">
-							<div class="col-md-12">
-								<div class="card">
-									<div class="card-action">
-										<h3>공정정보</h3>
-									</div>
-									<div class="card-content">
-										<div id="bomMtrlSheetGrid"></div>
-									</div>
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 			</main>
 			<script>
-
+				$(function () {
+					getOrder();
+				})
+				// 처음 뿌려주는 미계획주문서 리스트
+				function getOrder() {
+					$.ajax({
+						url: 'getOrder',
+						type: 'GET',
+						dataType: 'json',
+						success: function (data) {
+							orderSheetGrid.resetData(data);
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				}
 
 
 
@@ -172,17 +176,12 @@
 					addOrderPlanGrid.on("editingFinish", (ev) => {
 						getrow = addOrderPlanGrid.getRow(ev.rowKey);
 						if (getrow.prpldCnt != null &&
-							getrow.prpldMng != null &&
-							getrow.prstDt != null &&
-							getrow.prpldWorkTskPri != null) {
+							getrow.prplMng != null) {
 							sendrows.push({
 								orshNo: getrow.orshNo,
 								ordrDtlCd: getrow.ordrDtlCd,
-								prpldWorkTskPri: getrow.prpldWorkTskPri,
 								cprCd: getrow.cprCd,
 								prpldCnt: getrow.prpldCnt,
-								prstDt: getrow.prstDt,
-								prpldMng: getrow.prpldMng,
 								prpldStatus: prpldStatus,
 								prplStatus: prplStatus,
 								prplDt: prplDt
@@ -216,24 +215,7 @@
 
 					});
 				});
-				$(function () {
-					getOrder();
-				})
-				// 처음 뿌려주는 미계획주문서 리스트
-				function getOrder() {
-					$.ajax({
-						url: 'getOrder',
-						type: 'GET',
-						dataType: 'json',
-						success: function (data) {
-							orderSheetGrid.resetData(data);
-						},
-						error: function (xhr, status, error) {
-							// 요청이 실패했을 때 처리할 로직
-							console.error('요청 실패:', error);
-						}
-					});
-				}
+
 				// 미계획 주문서에 대한 데이터 리스트 받아오는 그리드
 				const orderSheetGrid = new tui.Grid({
 					el: document.getElementById('orderSheetGrid'),
@@ -317,6 +299,8 @@
 				orderSheetGrid.on('dblclick', function (ev) {
 
 					row = orderSheetGrid.getRow(ev.rowKey);
+					console.log(row);
+
 					getOrderDetail(row.orshNo, row.caNm);
 					$('#order').modal('show');
 				});
@@ -388,16 +372,6 @@
 							hidden: true
 						},
 						{
-							header: '주문코드',
-							name: 'orshNo',
-							hidden: true
-						},
-						{
-							header: '주문상세코드',
-							name: 'ordrDtlCd',
-							align: 'center'
-						},
-						{
 							header: '제품명',
 							name: 'cprNm',
 							align: 'center'
@@ -413,154 +387,32 @@
 							name: 'prpldCnt',
 							align: 'center',
 						},
+						// {
+						// 	header: '생산작업일자',
+						// 	name: 'prstDt',
+						// 	formatter: function (data) {
+						// 		let dateVal = '';
+						// 		if (data.value != null) {
+						// 			dateVal = formatDate(data.value);
+						// 		} else {
+						// 			dateVal = getToday();
+						// 		}
+						// 		return dateVal;
+						// 	},
+						// 	editor: {
+						// 		type: 'datePicker',
+						// 		options: {
+						// 			format: 'yyyy-MM-dd',
+						// 			date: getToday()
+						// 		}
+						// 	}
+						// },
 						{
-							header: '생산작업일자',
-							name: 'prstDt',
-							formatter: function (data) {
-								let dateVal = '';
-								if (data.value != null) {
-									dateVal = formatDate(data.value);
-								} else {
-									dateVal = getToday();
-								}
-								return dateVal;
-							},
-							editor: {
-								type: 'datePicker',
-								options: {
-									format: 'yyyy-MM-dd',
-									date: getToday()
-								}
-							}
-						},
-						{
-							header: '담당자',
-							name: 'prpldMng',
+							header: '계획관리자',
+							name: 'prplMng',
 							editor: 'text',
 							align: 'center',
-						},
-						{
-							header: '작업우선순위',
-							name: 'prpldWorkTskPri',
-							editor: {
-								type: 'select',
-								options: {
-									listItems: [
-										{ text: '작업순위선택', value: '작업순위선택' },
-										{ text: '1', value: '1' },
-										{ text: '2', value: '2' },
-										{ text: '3', value: '3' },
-										{ text: '4', value: '4' },
-										{ text: '5', value: '5' },
-									]
-								}
-							},
-							align: 'center'
-						},
-					]
-				});
-
-				addOrderPlanGrid.on("click", (ev) => {
-					let bomrow = addOrderPlanGrid.getRow(ev.rowKey);
-					console.log(bomrow);
-					let bomCprCd = { cprCd: bomrow.cprCd };
-					$.ajax({
-						url: 'getBomInfo',
-						method: 'POST',
-						data: JSON.stringify(bomCprCd),
-						contentType: 'application/json',
-						dataType: 'json',
-						success: function (data) {
-							console.log(data);
-						}, error: function (rej) {
-							console.log("실패")
 						}
-					});
-				});
-
-				// 생산계획등록 그리드 행 선택시 해당 제품에 대한 공정 정보가 나온다
-				const bomMtrlSheetGrid = new tui.Grid({
-					el: document.getElementById('bomMtrlSheetGrid'),
-					scrollX: false,
-					scrollY: false,
-					minBodyHeight: 30,
-					rowHeaders: ['rowNum'],
-					columns: [
-						{
-							header: '제품코드',
-							name: 'cprCd',
-							hidden: true
-						},
-						{
-							header: '주문코드',
-							name: 'orshNo',
-							hidden: true
-						},
-						{
-							header: '주문상세코드',
-							name: 'ordrDtlCd',
-							align: 'center'
-						},
-						{
-							header: '제품명',
-							name: 'cprNm',
-							align: 'center'
-						},
-						{
-							header: '주문수량',
-							name: 'sumDtlCnt',
-							align: 'center',
-						},
-						{
-							header: '생산계획수량',
-							editor: 'text',
-							name: 'prpldCnt',
-							align: 'center',
-						},
-						{
-							header: '생산작업일자',
-							name: 'prstDt',
-							formatter: function (data) {
-								let dateVal = '';
-								if (data.value != null) {
-									dateVal = formatDate(data.value);
-								} else {
-									dateVal = getToday();
-								}
-								return dateVal;
-							},
-							editor: {
-								type: 'datePicker',
-								options: {
-									format: 'yyyy-MM-dd',
-									date: getToday()
-								}
-							}
-						},
-						{
-							header: '담당자',
-							name: 'prpldMng',
-							editor: 'text',
-							align: 'center',
-						},
-						{
-							header: '작업우선순위',
-							name: 'prpldWorkTskPri',
-							editor: {
-								type: 'select',
-								options: {
-									listItems: [
-										{ text: '작업순위선택', value: '작업순위선택' },
-										{ text: '1', value: '1' },
-										{ text: '2', value: '2' },
-										{ text: '3', value: '3' },
-										{ text: '4', value: '4' },
-										{ text: '5', value: '5' },
-									]
-								}
-							},
-							align: 'center'
-						},
 					]
 				});
 

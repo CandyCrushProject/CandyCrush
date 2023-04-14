@@ -112,31 +112,26 @@ public class ProcessController {
 		return message;
 	}
 	
-	// 생산관리 -> 생산계획 -> BOM 자재 정보
-	@PostMapping("getBomInfo")
-	@ResponseBody
-	public Map<String, Object> getBomInfo(@RequestBody OrderPlanVO opVO) {
-	    System.out.println(opVO);
-		Map<String, Object> resultMap = new HashMap<>();
-		return resultMap;
-	}
+	
 	// 생산관리 -> 생산지시관리 -> 페이지
 	@GetMapping("ProcOrder")
 	public String ProcOrderManagement() {
 		return "process/processOrder";
 	}
 	
-	@PostMapping("ProcPlanOrder")
-	@ResponseBody
-	public List<ProcPlanVO> getProcPlanOrder(ProcPlanVO ppVO){
-		return procService.getPlan(ppVO);
-	}
-	
+
 	@PostMapping("cprSearch")
 	@ResponseBody
 	public List<ProcPlanVO> planCprSearch(ProcPlanVO ppVO){
 		return procService.searchPlanList(ppVO);
 	}
+	
+	@GetMapping("ProcPlanOrder")
+	@ResponseBody
+	public List<ProcPlanVO> getProcPlanOrder(){
+		return procService.getPlan();
+	}
+	
 	
 	
 	// 생산관리 -> 생산공정관리
