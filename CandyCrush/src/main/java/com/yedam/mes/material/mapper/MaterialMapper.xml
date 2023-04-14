@@ -208,23 +208,55 @@
 	
 	<!-- 자재입고 등록 -->
 	<insert id="mtrlInputInsert" parameterType="MaterialInputVO">
-		<selectKey resultType="String" keyProperty="minCd" order="BEFORE">
+		<selectKey resultType="string" keyProperty="minCd" order="BEFORE">
 		SELECT 'min' || TO_CHAR(sysdate, 'yyMMdd') || min_seq.NEXTVAL
 		FROM dual
 		</selectKey>
-		INSERT INTO mtrl_input(min_cd, mi_cd, min_cnt, min_dt)
-		VALUES(#{minCd}, #{miCd}, #{minCnt}, ${minDt})
+		<foreach collection="list" item="vo" open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO 
+				mtrl_input(min_cd, mi_cd, min_cnt, min_dt)
+			VALUES
+				(
+					#{minCd},
+					#{vo.miCd},
+					#{vo.minCnt},
+					#{vo.minDt}
+				)
+		</foreach>
 	</insert>
 	
 	<!-- 자재입고시 LOT로 넣어버려 -->
 	<insert id="mtrlLotInsert" parameterType="MaterialInputVO">
-		INSERT
-			INTO cm_mtrl_lot(cml_nm, cml_in_cnt, cml_in_dt, mod_cd, cmm_cd, mi_cd)
-		VALUES
-			('cml' || TO_CHAR(sysdate, 'yyMMdd') || cml_seq.NEXTVAL, #{cmlInCnt}, #{cmlInDt}, #{modCd}, #{cmmCd}, #{miCd})
+	<selectKey resultType="string" keyProperty="minCd" order="BEFORE">
+		SELECT MAX(min_cd)
+		FROM mtrl_input
+	</selectKey>
+		INSERT INTO
+			CM_MTRL_LOT (
+				cml_nm, 
+				min_cd,
+				cml_in_cnt, 
+				cml_in_dt, 
+				cmm_cd, 
+				mi_cd
+			)
+		SELECT 
+			'cml' || TO_CHAR(sysdate, 'yyMMdd') || cml_seq.NEXTVAL,
+			'min' || TO_CHAR(sysdate, 'yyMMdd') || min_seq.CURRVAL, 
+			A.*
+		FROM (
+			<foreach collection="list" item="vo" separator="UNION ALL">
+			SELECT
+				#{vo.cmlInCnt} AS cml_in_cnt,
+				#{vo.cmlInDt} AS cml_in_dt,
+				#{vo.cmmCd} AS cmm_cd,
+				#{vo.miCd} AS mi_cd
+			FROM
+				DUAL
+			</foreach>
+		) A
+
 	</insert>
-	
-	<!-- 자재입고시 발주 진행상황 업데이트 -->
 	<!-- <update id=""></update> -->
 
 </mapper>
