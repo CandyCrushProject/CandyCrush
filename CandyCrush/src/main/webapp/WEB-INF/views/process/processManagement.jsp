@@ -219,6 +219,8 @@
 							getrow.prstDt != null &&
 							getrow.prpldWorkTskPri != null) {
 							sendrows.push({
+								orshNo: getrow.orshNo,
+								ordrDtlCd: getrow.ordrDtlCd,
 								prpldWorkTskPri: getrow.prpldWorkTskPri,
 								cprCd: getrow.cprCd,
 								prpldCnt: getrow.prpldCnt,
@@ -228,7 +230,6 @@
 								prplStatus: prplStatus,
 								prplDt: prplDt
 							});
-							console.log("추가된 row", getrow);
 						}
 					});
 
@@ -241,9 +242,9 @@
 							contentType: 'application/json',
 							dataType: 'json',
 							success: function (data) {
-								console.log(data)
+								console.log("성공")
 							}, error: function (rej) {
-
+								console.log(rej);
 							}
 						});
 
@@ -388,33 +389,32 @@
 									let op = data.orderNPlan;
 									addOrderPlanGrid.resetData(op);
 									orderSheetGrid.removeCheckedRows();
-									for (let i = 0; i < data.orshNoArr.length; i++) {
-										orshNom += data.orshNoArr[i] + ",";
-									}
-									var onn = {
-										orshNo: orshNom
-									};
-									console.log(onn)
-									$.ajax({
-										url: 'getOrdrDtlCd',
-										method: "POST",
-										contentType: 'application/json',
-										data: JSON.stringify(onn),
-										dataType: 'json',
-										success: function (data) {
-											for (let i = 0; i < data.length; i++) {
-												ordrDtlCdSet += data[i].ordrDtlCd + ",";
-											}
-											sendrows.push({ ordrDtlCd: ordrDtlCdSet })
-										}, error: function (err) {
-											Swal.fire({
-												icon: 'error',
-												title: '경고',
-												text: "상세코드 못가져옴",
-											});
-										}
+									// for (let i = 0; i < data.orshNoArr.length; i++) {
+									// 	orshNom += data.orshNoArr[i] + ",";
+									// }
+									// var onn = {
+									// 	orshNo: orshNom
+									// };
+									// $.ajax({
+									// 	url: 'getOrdrDtlCd',
+									// 	method: "POST",
+									// 	contentType: 'application/json',
+									// 	data: JSON.stringify(onn),
+									// 	dataType: 'json',
+									// 	success: function (data) {
+									// 		for (let i = 0; i < data.length; i++) {
+									// 			ordrDtlCdSet += data[i].ordrDtlCd + ",";
+									// 		}
+									// 		sendrows.push({ ordrDtlCd: ordrDtlCdSet })
+									// 	}, error: function (err) {
+									// 		Swal.fire({
+									// 			icon: 'error',
+									// 			title: '경고',
+									// 			text: "상세코드 못가져옴",
+									// 		});
+									// 	}
 
-									});
+									// });
 								}, error: function (err) {
 									Swal.fire({
 										icon: 'error',
@@ -507,6 +507,16 @@
 							header: '제품코드',
 							name: 'cprCd',
 							hidden: true
+						},
+						{
+							header: '주문코드',
+							name: 'orshNo',
+							hidden: true
+						},
+						{
+							header: '주문상세코드',
+							name: 'ordrDtlCd',
+							align: 'center'
 						},
 						{
 							header: '제품명',

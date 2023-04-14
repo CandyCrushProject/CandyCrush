@@ -84,19 +84,23 @@ public class ProcessController {
 	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
 	public String insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
+
 		ProcPlanVO ordrDtlCd = insertList.get(0);
 		String[] ordrDtlCdArr = ordrDtlCd.getOrdrDtlCd().split(",");
+
 		List<ProcPlanVO> planVO = new ArrayList<>();
 		for(int i=0;i<insertList.size();i++) {
 			if(i>0) {
 				planVO.add(insertList.get(i));
 			}
 		}
-		int update = procService.updateOrderStatus(ordrDtlCdArr);	
+		
+//		int update = procService.updateOrderStatus(ordrDtlCdArr);	
 		int insert = procService.addPlan(planVO);
 		int insert2 = procService.addPlanDetail(planVO);
 		String message = null;
-		if(insert != -1 && insert2 != -1 && update != -1) {
+//		if(insert != -1 && insert2 != -1 && update != -1) {
+		if(insert != -1 && insert2 != -1) {
 			message = "실패";
 		} else {
 			message = "성공";
