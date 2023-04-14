@@ -13,7 +13,7 @@
         <span class="w3-button w3-display-topright"
           onclick="document.getElementById('ordrDtilMdl').style.display='none'">&times;</span>
         <h3 class="mdlTitle">주문서</h3>
-        <form action="">
+        <form id="frmOrdrShtInsert" action="">
           <div class="accntInfoMngBox">
 						<div class="accntInfo">
 							<label for="caNo">거래처코드</label>
@@ -100,10 +100,10 @@
 						<div class="card-content">
 							<div id="contextBox">
 								<button class="cndUdtBtn" type="button">
-									<i class="fa-solid fa-wrench"></i>수정
+									수정
 								</button>
 								<button id="orderDelete" class="cndDelBtn">
-									<i class="fa-solid fa-minus"></i>삭제
+									삭제
 								</button>
 							</div>
 							<!-- 주문서 목록 조회박스 -->

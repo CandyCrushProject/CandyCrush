@@ -46,8 +46,12 @@ public class procServiceImpl implements ProcService {
 
 	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
 	@Override
-	public int updateOrderStatus(@Param("orshNo")String[] orshNo) {
-		return procMapper.updateOrderStatus(orshNo);
+	public int updateOrderStatus(List<ProcPlanVO> planVO) {
+		int r = 0;
+		for(ProcPlanVO pvo:planVO) {
+			r += procMapper.updateOrderStatus(pvo);
+		}
+		return r;
 	}
 	
 	// 미계획 주문서에 대한 상세 정보 목록
@@ -61,13 +65,21 @@ public class procServiceImpl implements ProcService {
 		return procMapper.selectBomMtrl(opVO);
 	}
 	@Override
-	public int addPlan(@Param("planVO")List<ProcPlanVO> planVO) {
-		return procMapper.insertPlan(planVO);
+	public int addPlan(List<ProcPlanVO> planVO) {
+		int r = 0;
+		for(ProcPlanVO pvo:planVO) {
+			r += procMapper.insertPlan(pvo);
+		}
+		return r;
 	}
 
 	@Override
-	public int addPlanDetail(@Param("planVO")List<ProcPlanVO> planVO) {
-		return procMapper.insertPlanDetail(planVO);
+	public int addPlanDetail(List<ProcPlanVO> planVO) {
+		int r = 0;
+		for(ProcPlanVO pvo:planVO) {
+			r += procMapper.insertPlanDetail(pvo);
+		}
+		return r;
 	}
 	@Override
 	public List<ProcPlanVO> getPlan(ProcPlanVO ppVO) {

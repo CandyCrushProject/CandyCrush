@@ -261,17 +261,7 @@
 								</li>
 								<li>
 									<a href="${pageContext.request.contextPath}/" class="waves-effect waves-dark">
-										제품입고조회
-									</a>
-								</li>
-								<li>
-									<a href="${pageContext.request.contextPath}/" class="waves-effect waves-dark">
 										제품입고관리
-									</a>
-								</li>
-								<li>
-									<a href="${pageContext.request.contextPath}/" class="waves-effect waves-dark">
-										제품출고조회
 									</a>
 								</li>
 								<li>

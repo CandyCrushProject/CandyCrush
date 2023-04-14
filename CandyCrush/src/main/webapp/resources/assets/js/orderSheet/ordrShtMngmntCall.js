@@ -10,19 +10,19 @@ $(document).ready(function () {
   // });
 
   // 납기날짜 체크하기
-  $("#dlvryDt").on('change', function () {
-    dlvryDtCheck();
-  });
+  // $("#dlvryDt").on('change', function () {
+  //   dlvryDtCheck();
+  // });
 
   // 주문서 등록
   $('#ordrShtInsert').on('click', () => {
-    if ( dlvryDt == null || dlvryDt == undefined) {
-      Swal.fire({
-        icon: 'error',
-        title: '경고',
-        text: "납기일을 선택 하세요.",
-      });
-    }
+    // if (dlvryDtChk == null || dlvryDtChk == undefined || dlvryDtChk == "") {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: '경고',
+    //     text: "납기일을 선택 하세요.",
+    //   });
+    // }
     ordrShtInsert();
   });
 
@@ -76,16 +76,17 @@ function accntSrch() {
       // console.log(data);
       orderList.resetData(data);
     },
-    // error: function (rej) {
-    //   Swal.fire({
-    //     title: 'Error',
-    //     icon: 'error',
-    //     text: rej
-    //   });
-    // }
+    error: function (rej) {
+      Swal.fire({
+        title: 'Error',
+        icon: 'error',
+        text: rej
+      });
+    }
   });
 }
 
+//---------------------------------------------------------------------------------------------
 // ajax로 불러온 날짜데이터(시간으로 불러와짐) 변환
 function dateChange(date) {
   let date1 = new Date(date);
@@ -95,6 +96,7 @@ function dateChange(date) {
   return date2;
 }
 
+//---------------------------------------------------------------------------------------------
 // 현재날짜
 let formattedDate = "";
 function formatDate() {
@@ -107,16 +109,31 @@ function formatDate() {
   return formattedDate;
 }
 
+//---------------------------------------------------------------------------------------------
 // 납기일짜선택할 때 현재날짜 이전여부 체크
-let dlvryDt = $('#dlvryDt').val();
-function dlvryDtCheck() {
-  if (dlvryDt < formattedDate) {
-    Swal.fire({
-      icon: 'error',
-      title: '경고',
-      text: "납기일을 확인 하세요.",
-    });
-    console.log(dlvryDt, "dlvryDtdlvryDt");
-    console.log(formattedDate, "formattedDateformattedDate");
-  }
+// let dlvryDtChk = $('#dlvryDt').val();
+// function dlvryDtCheck() {
+//   if (dlvryDtChk < formattedDate) {
+//     Swal.fire({
+//       icon: 'error',
+//       title: '경고',
+//       text: "납기일을 확인 하세요.",
+//     });
+//     console.log(dlvryDtChk, "dlvryDtChkdlvryDtChkdlvryDtChk");
+//     console.log(formattedDate, "formattedDateformattedDate");
+//   } else {
+//     return;
+//   }
+// }
+
+//------
+// serialize 배열형태로 반들어줌
+// serialize 기존형태 => { name : name, value : value }
+// serialize 바꾼형태 => { name : value }
+function serializeObject(serializeArrayData) {
+  let returnData = {};
+  $.each(serializeArrayData, function(idx,obj){
+    returnData[obj.name] = obj.value;
+  });
+  return returnData;
 }
