@@ -65,7 +65,6 @@
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
 							<div>
-	
 								<h5><b>▶ 검사자료 조회</b></h5>
 								<div>
 									<label for="caNmInput">업체명</label> 
@@ -378,16 +377,18 @@
 
 		//입고등록 Grid ajax 함수
 		const mtrlInspList = (caNm = undefined, start = undefined, end = undefined) => {
+			let minDt = $('#mtrlInput').val();
 			$.ajax({
 				url : "mtrlInputGetList",
 				method :"POST",
 				dataType : "JSON",
 				success : function(data){
 					data.map((item) => {
-						item.minCnt = item.miPassCnt
+						item.minCnt = item.miPassCnt;
+						item.cmlInCnt = item.minCnt;
 					});
+					console.log(data);
 					materialInspGetList.resetData(data);
-					//let minCnt = row.minCnt;		//현재재고
 					materialInspGetList.getData().forEach(row => {
 						materialInspGetList.addCellClassName(row.rowKey, 'minCnt', 'cell-green');
 					});
@@ -408,61 +409,31 @@
 					text: "입고수량 변경 기능은 준비중입니다."
 				})
 			};
-			// console.log(e.rowKey);
-			// materialInspGetList.focusChange = -1;
-			
 		});
-
-		// materialInspGetList.on('editingFinish', (e)=>{
-		// 	let rowDate = materialInspGetList.getRow(e.rowKey);
-		// 	let minCntData = Number(rowDate.minCnt);					//입고수량
-		// 	let miPassCntData = Number(rowDate.miPassCnt);	  //입고가능수량
-
-		// 	//입고가능한 수량 값을 String을 입력했을 경우
-		// 	if(isNaN(minCntData)){
-		// 		setTimeout(() => {
-		// 			Swal.fire({
-		// 				icon : 'error',
-		// 				title : '경고',
-		// 				text: '숫자만 입력 가능합니다',
-		// 			});
-		// 			materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
-		// 			return;
-		// 		}, 10);
-		// 	}
-
-		// 	//입고가능한 수량보다 입고할 수량이 더 많은 경우
-		// 	if(minCntData > miPassCntData){
-		// 		setTimeout(() => {
-		// 			Swal.fire({
-		// 				icon : 'error',
-		// 				title : '다시 입력해주세요',
-		// 				text: '입고가능한 수량보다 많습니다',
-		// 			});
-		// 			materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
-		// 			return;
-		// 		}, 10);
-		// 	};
-
-		// 	//입고수량을 0 또는 빈값을 입력했을 경우
-		// 	if(minCntData === 0 || minCntData === null){
-		// 		setTimeout(() => {
-		// 			Swal.fire({
-		// 					icon: 'error',
-		// 					title: '경고',
-		// 					text: "입고수량이 기재되지 않았습니다",
-		// 				});
-		// 				materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
-		// 				return;
-		// 		}, 10);
-		// 	};
-		// });
 
 		//체크한 행만 입고코드를 입힌다
 		$('#mtrlInputSaveBtn').on('click',(e)=>{
 			let checkRows = materialInspGetList.getCheckedRows();
+			
 			if(checkRows.length !== 0){
-				
+				checkRows.map((item) => {
+					item.minDt = $("#mtrlInput").val();		//입고관리/입고일자
+					item.cmlInDt = $("#mtrlInput").val();	//LOT관리/등록일자
+				});
+				console.log(checkRows);
+				$.ajax({
+					url : "mtrlInputInsert",
+					method :"POST",
+					dataType : "JSON",
+					contentType: "application/json",
+					data: JSON.stringify(checkRows),
+					success : function(data){
+						console.log(data);
+					},
+					error : function(reject){
+						console.log(reject);
+					}
+				});
 			} else {
 				Swal.fire({
 					icon: 'error',
@@ -485,7 +456,9 @@
 					name: 'minDt',
 					formatter: function (e) {
 						let newData = new Date(e.value);
-						let result = newData.getFullYear() + "-" + (newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1) + "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+						let result = newData.getFullYear() + "-" +
+									(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
+									+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
 							return result;
 					}
 				},
@@ -494,6 +467,7 @@
 					name: 'minCdCount'
 				}
 			],
+
 			bodyHeight: 520,
 		});
 		mtrlMngInputList.resetData(inpuerList7Days);

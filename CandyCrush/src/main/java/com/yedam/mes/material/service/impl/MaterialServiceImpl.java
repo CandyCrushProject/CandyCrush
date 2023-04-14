@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.mvel2.optimizers.impl.refl.nodes.ArrayLength;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -145,16 +146,12 @@ public class MaterialServiceImpl implements MaterialService {
 	@Transactional
 	@Override
 	public int mtrlInputALLInsert(List<MaterialInputVO> vo) {
-		int cnt = 0;
-		
-		MaterialInputVO vo2 = new MaterialInputVO();
-		
-		for(MaterialInputVO matlVO: vo) {
-			matlVO.setMinCd(vo2.getMinCd());
-			cnt += mapper.mtrlLotInsert(matlVO);
-			System.out.println(matlVO);
+		int implResponse = 0;
+		int inputInsertResult = mapper.mtrlInputInsert(vo);				//입고관리/입고코드
+		int lotInsertResult = mapper.mtrlLotInsert(vo);
+		if(inputInsertResult != 0 && lotInsertResult != 0) {
+			implResponse++;
 		}
-		
-		return cnt;
+		return implResponse;
 	}
 }

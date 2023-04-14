@@ -168,6 +168,21 @@ public class MaterialController {
 		return service.mtrlInputDetailList(minCd);
 	}
 	
+	//자재입고관리/등록
+	@PostMapping("mtrlInputInsert")
+	@ResponseBody
+	public Boolean mtrlInputInsert(@RequestBody List<MaterialInputVO> vo){
+		//MaterialInputVO newVO = new MaterialInputVO();
+		Boolean response = true;
+		int result = service.mtrlInputALLInsert(vo);
+		System.out.println("result = " + result);
+		if(result < 1) {
+			response = false;
+		};
+		
+		return response;
+	}
+	
 	//------------------------------------------------------------------------
 	
 	//자재입고검사조회 페이지
