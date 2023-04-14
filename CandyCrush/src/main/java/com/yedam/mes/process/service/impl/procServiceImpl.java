@@ -14,6 +14,7 @@ import com.yedam.mes.process.vo.ProcOrderVO;
 import com.yedam.mes.process.vo.ProcPerfVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 import com.yedam.mes.process.vo.ProcProgVO;
+import com.yedam.mes.process.vo.ProcResultAllVO;
 
 @Service
 public class procServiceImpl implements ProcService {
@@ -116,7 +117,9 @@ public class procServiceImpl implements ProcService {
 		return procMapper.searchPlanList(ppVO);
 	}
 
-
+	public List<ProcResultAllVO> getProcCommand(ProcResultAllVO comVO){
+		return procMapper.getProcCommand(comVO);
+	}
 
 
 

@@ -78,11 +78,11 @@
   <!-- /. NAV SIDE  -->
   <div id="page-wrapper">
     <div class="header">
-      <h1 class="page-header">자재발주조회</h1>
+      <h1 class="page-header">자재품질관리</h1>
       <ol class="breadcrumb">
         <li><a href="#">candy</a></li>
-        <li><a href="#">자재관리</a></li>
-        <li class="active">자재발주조회</li>
+        <li><a href="#">품질관리</a></li>
+        <li class="active">자재품질관리</li>
       </ol>
     </div>
 
@@ -91,7 +91,7 @@
         <div class="col-md-12">
           <!-- Advanced Tables -->
           <div class="card">
-            <div class="card-action">자재발주조회</div>
+            <div class="card-action">발주건 / 검사 진행도 조회</div>
             <div class="card-content">
               <div class="table-responsive">
                 <div id="OrderListGrid"></div>
@@ -119,7 +119,7 @@
           <div class="card">
             <div class="card-action">자재검사이력
               <br>
-              <button onclick="openInsertModal()" style="display: inline;" class="cndInsBtn">점검내역입력</button>
+              <button onclick="openInsertModal()" style="display: inline;" class="cndInsBtn">검사내역입력</button>
               <div>
                 <table class="candyTab">
                   <tr>
@@ -502,13 +502,6 @@
     //=========등록AJAX===============================🙄🙄🙄
     $('#badInsert').on('click',(ev)=>{
     const badData = BadInputList.getData();
-    // let ProcessedBadData = new Array;
-    // console.log(badData);
-    // for(let i = 0; i < badData.length; i++) {
-    //   ProcessedBadData[i].mbhCnt=badData[i].mbhCnt;
-    //   ProcessedBadData[i].mbhCd=badData[i].mbhCd;
-    //   ProcessedBadData[i].miCd='${NewMiCd}';
-    // };
     const data= JSON.stringify(
       { "MtInspInsert":
         {"miCd":'${NewMiCd}',

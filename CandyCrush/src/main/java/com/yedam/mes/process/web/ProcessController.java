@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.yedam.mes.process.service.ProcService;
 import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
+import com.yedam.mes.process.vo.ProcResultAllVO;
 
 @Controller
 public class ProcessController {
@@ -29,7 +30,7 @@ public class ProcessController {
 	public String ProcessPlanManagement() {
 		return "process/processManagement";
 	}
-	
+
 	// 생산관리 -> 생산계획관리 -> 제품코드, 제품명 가져옴 ^^
 	@GetMapping("getProductList")
 	@ResponseBody
@@ -51,7 +52,6 @@ public class ProcessController {
 	public List<OrderPlanVO> getOrderSheetDetail(OrderPlanVO opVO) {
 		return procService.getOrderDetail(opVO);
 	}
-	
 	// 주문상세코드 가져오기
 	@PostMapping("getOrdrDtlCd")
 	@ResponseBody
@@ -143,5 +143,16 @@ public class ProcessController {
 	@GetMapping("ProdProcManagement")
 	public String ProdProcManagement() {
 		return "process/prodProcManage";
+	}
+	
+	//생산실적관리 (영주 작업중~~)===살=려=줘=왜=나=만=엉=엉=엉=멘=탈=나=간=거=같=에=나=죽=어=내=가=무=슨=부=귀=영=화=를=누=리=려=고=이=런=걸=해=!=! (영주 자살중~~)
+	@GetMapping("ProcResult")
+	public String ProcResult() {
+		return "process/prodProcResult";
+	}
+	
+	@GetMapping("getProcCommand")
+	public List<ProcResultAllVO> getProcCommand(ProcResultAllVO comVO){
+		return procService.getProcCommand(comVO);
 	}
 }

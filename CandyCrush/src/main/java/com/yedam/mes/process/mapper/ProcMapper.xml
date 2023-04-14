@@ -190,6 +190,21 @@
 			   </if>
 		 ORDER BY 1
 	</select>
+		 
+		 <!-- 실적페이지 생산지시 데이터 조회용 -->
+	<select id="getProcCommand" resultType="ProcResultAllVO">
+		SELECT PRCM_CD,
+		    PRCM_CNT,
+		    C.CPR_CD,
+		    CPR_NM,
+		    PRCM_DT,
+		    PRCM_START_DT,
+		    PRCM_END_DT,
+		    PRCM_MNG
+		FROM PROC_COMMAND C
+		LEFT JOIN CM_PRODUCT_MNG M
+		ON C.CPR_CD = M.CPR_CD
+	</select>
 
 
 
