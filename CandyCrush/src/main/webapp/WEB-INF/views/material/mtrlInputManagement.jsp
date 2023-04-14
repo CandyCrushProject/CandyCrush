@@ -9,6 +9,7 @@
 		margin-bottom: 30px !important;
 		margin-top:10px !important;
 	}
+	.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
 </style>
 <main>
 	<!-- /. NAV SIDE  -->
@@ -307,12 +308,8 @@
 					header : '입고수량',
 					name : 'minCnt',
 					formatter: function(value) {
-						return '<div style="width:100%;height:100%;background-color:#fff">'+value.value+'</div>';
+						return '<div style="font-weight : bolder;">'+value.value+'</div>';
 					}
-					// editor : 'text',
-					// validation: {
-					// 	dataType: 'number'
-					// }
 				}
 			],
 			bodyHeight: 520,
@@ -379,7 +376,7 @@
 			}
 		});
 
-		//입고등록 ajax 함수
+		//입고등록 Grid ajax 함수
 		const mtrlInspList = (caNm = undefined, start = undefined, end = undefined) => {
 			$.ajax({
 				url : "mtrlInputGetList",
@@ -390,6 +387,10 @@
 						item.minCnt = item.miPassCnt
 					});
 					materialInspGetList.resetData(data);
+					//let minCnt = row.minCnt;		//현재재고
+					materialInspGetList.getData().forEach(row => {
+						materialInspGetList.addCellClassName(row.rowKey, 'minCnt', 'cell-green');
+					});
 				}
 			});
 		};

@@ -24,4 +24,5 @@ public class MaterialVO {
 	private int minCnt;		//입고재고
 	private int cmmInven;	//입고재고-출고재고
 	private int cmlInCnt;	//LOT 입고량
+	private int cmlNm;		//LOT번호
 }

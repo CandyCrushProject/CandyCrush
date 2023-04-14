@@ -342,6 +342,11 @@
 									class="fa arrow"></span></a>
 							<ul class="nav nav-second-level">
 								<li>
+									<a href="${pageContext.request.contextPath}/mtrlCnt" class="waves-effect waves-dark">
+										자재재고조회
+									</a>
+								</li>
+								<li>
 									<a href="${pageContext.request.contextPath}/mtrlOrder" class="waves-effect waves-dark">
 										자재발주관리
 									</a>
@@ -353,13 +358,8 @@
 								</li>
 								<li>
 									<a href="${pageContext.request.contextPath}/mtrlInspCheck" class="waves-effect waves-dark">
-										자재입고검사조회<!-- <span class="fa arrow"></span> -->
+										자재입고검사조회
 									</a>
-									<!-- <ul class="nav nav-third-level">
-										<li><a href="#">Third Level Link</a></li>
-										<li><a href="#">Third Level Link</a></li>
-										<li><a href="#">Third Level Link</a></li>
-									</ul> -->
 								</li>
 								<!-- <li>
 									<a href="${pageContext.request.contextPath}/mtrlInspManagement" class="waves-effect waves-dark">
