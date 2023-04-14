@@ -264,61 +264,24 @@ function ordrShtInsert() {
   let caNo = $('#caNo').val(); // 거래처 코드
   let orshDt = $('#orshDt').val(); // 주문일자
   let dlvryDt = $('#dlvryDt').val(); // 납기일자
-  for(let temp of rows) {
-    temp.caNo = caNo;
-    temp.orshDt = orshDt;
-    temp.dlvryDt = dlvryDt;
-    console.log("temp : ", temp);
-  }
-  
+
+  console.log($('#frmOrdrShtInsert').serialize(), ": $('frmOrdrShtInsert').serialize(),")
   console.log(caNo, " : caNo");
   console.log(orshDt, " : orshDt");
   console.log(dlvryDt, " : dlvryDt");
   console.log("rows", rows);
-  
+
   if (rows.length !== 0) {
-    // console.log("ordrProdList.getModifiedRows", ordrProdList.getModifiedRows());
-    // $.ajax({
-    //   url: 'ordrShtForm',
-    //   data: JSON.stringify(ordrProdList.getModifiedRows({ ignoredColumns: ['_attributes', 'rowKey'] })),
-    //   contentType: 'application/json',
-    //   type: 'POST',
-    //   async: false,
-    //   success: function (data) {
-        
-    //     Swal.fire({
-    //       icon: 'success',
-    //       title: '등록이 완료되었습니다.'
-    //     });
-    //   },
-    //   error: function (reject) {
-    //     console.log(reject);
-    //   }
-    // });
-    let data = []
     $.ajax({
       url: "ordrShtForm",
       method: "POST",
-      data: JSON.stringify(rows),
+      data: JSON.stringify({
+        dataHd : serializeObject($('#frmOrdrShtInsert').serializeArray()),
+        data : rows,
+      }),
       contentType: "application/json",
-      success: function (data) {
-        console.log("ordrShtFormdata : ", data);
-        // const rowsCprNm = []; 		 // 제품명 들고옴
-        // const rowsordrDtlCnt = []; // 수량 들고옴
-
-        // for (let i = 0; i < data.length; i++) {
-        //   rowsCprNm = rows[i].cprNm;
-        //   rowsordrDtlCnt = rows[i].ordrDtlCnt
-        // }
-
-        // for (let i = 0; i < data.length; i++) {
-        //   rowsCprNm = rows[i].cprNm;
-        //   rowsordrDtlCnt = rows[i].ordrDtlCnt
-        //   for(let i = 0; i < data.letgth; i++) {
-        //     listItems[i] = { cprNm: data[i].cprNm, ordrDtlCnt: data[i].ordrDtlCnt };
-        //   }
-        // }
-
+      success: function (response) {
+        console.log("ordrShtFormdata : ", response);
         Swal.fire({
           icon: 'success',
           title: "주문서등록완료",
