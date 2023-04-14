@@ -1,10 +1,13 @@
 package com.yedam.mes.material.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Singular;
 
 @Data
 public class MaterialInputVO {
@@ -49,4 +52,4 @@ public class MaterialInputVO {
 	private String start;	//시작일자
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private String end;		//종료일자
-}
+}	

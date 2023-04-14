@@ -36,8 +36,8 @@ public interface ProcService {
 	
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
-	public int addPlan(List<ProcPlanVO> planVO);
-	public int addPlanDetail(List<ProcPlanVO> planVO);
+	public int addPlan(List<ProcPlanVO> planVO); // 생산계획 헤더
+	public int addPlanDetail(List<ProcPlanVO> planVO); // 디테일
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
 	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO);
@@ -49,7 +49,7 @@ public interface ProcService {
 	/* 생산지시 매퍼 시작 */
 	
 	// 생산계획조회 - 생산계힉정보를 넘겨받음
-	public List<ProcPlanVO> getPlan(ProcPlanVO ppVO); 
+	public List<ProcPlanVO> getPlan(); 
 	
 	// 생산지시저장 - 조회된 계획으로 지시를 내릴 수 있다.
 	public int addOrder(ProcOrderVO orderVO);

@@ -11,7 +11,6 @@
 
 			<style>
 				.procOder button {
-
 					padding: 5px 20px;
 				}
 			</style>
@@ -28,8 +27,6 @@
 								</div>
 							</div>
 							<div class="modal-body">
-
-								<input type="hidden" name="prpldStatus" id="prpldStatus" value="계획완료" readonly>
 								<div id="procPlanList"></div>
 							</div>
 							<div class="modal-footer">
@@ -162,9 +159,6 @@
 				var rowKey = "";
 				var columnName = "";
 				var row = "";
-				document.getElementById("cprNm").addEventListener("input", () => {
-					search();
-				});
 				function search() {
 					$.ajax({
 						url: "cprSearch",
@@ -184,13 +178,15 @@
 
 				$(document).ready(function () {
 
+					document.getElementById("cprNm").addEventListener("input", () => {
+						search();
+					});
+
+
 					$('#planBtn').on('click', function () {
 						$.ajax({
 							url: 'ProcPlanOrder',
-							method: 'post',
-							data: {
-								prpldStatus: $('#prpldStatus').val()
-							},
+							method: 'get',
 							success: function (data) {
 								procPlanGrid.resetData(data);
 								setTimeout(() => procPlanGrid.refreshLayout(), 200);
