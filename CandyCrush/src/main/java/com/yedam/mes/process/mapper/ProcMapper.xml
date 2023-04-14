@@ -63,12 +63,11 @@
            AND ca_nm = #{caNm}
 		 ORDER BY 5
 	</select>
+	<!-- 계획 등록 전 정보 -->
 	<select id="addPlanbefore" resultType="OrderPlanVO">
 		SELECT SUM(ordr_dtl_cnt) as sum_dtl_cnt
 			 , d.cpr_cd as cpr_cd
 			 , p.cpr_nm as cpr_nm
-			 , o.orsh_no as orsh_no
-			 , d.ordr_dtl_cd as ordr_dtl_cd
 		  FROM order_sheet o
 		     , order_sheet_detail d
 			 , cm_product_mng p
@@ -82,8 +81,6 @@
 				</foreach>
 	     GROUP BY p.cpr_nm
 	            , d.cpr_cd
-			    , o.orsh_no
-			    , d.ordr_dtl_cd
 		 ORDER BY d.cpr_cd
 	 
 	</select>
@@ -131,11 +128,11 @@
 			SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
 			  FROM DUAL
 		</selectKey>
-		INSERT INTO proc_plan (prpl_cd, orsh_no, prpl_status)
+		INSERT INTO proc_plan (prpl_cd, prpl_status, prpl_mng)
 		VALUES(
 				  #{prplCd}
-				, #{orshNo}
 				, #{prplStatus}
+				, #{prplMng}
 			   )
 	</update>
 
@@ -145,16 +142,13 @@
 			SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
 			  FROM DUAL
 		</selectKey>
-		INSERT INTO proc_plan_detail (prpld_cd, prpld_work_tsk_pri, cpr_cd, prpld_cnt, prst_dt, prpld_mng, prpld_status, prpl_cd)
+		INSERT INTO proc_plan_detail (prpld_cd, prpl_cd, cpr_cd, prpld_cnt, prpld_status)
 		VALUES (
 				   #{prpldCd}
-				 , #{prpldWorkTskPri}
+				 , #{prplCd}
 				 , #{cprCd}
 				 , #{prpldCnt}
-				 , #{prstDt}
-				 , #{prpldMng}
 				 , #{prpldStatus}
-				 , #{prplCd}
 			   )
 	</update>
 	<!-- 생산계획 리스트 -->
@@ -169,7 +163,7 @@
 		  FROM proc_plan pp, proc_plan_detail ppd, cm_product_mng cpm
 		 WHERE pp.prpl_cd = ppd.prpl_cd
 		   AND ppd.cpr_cd = cpm.cpr_cd
-		   AND prpld_status = #{prpldStatus}
+		   AND prpld_status = '계획완료'
 		 ORDER BY 1
 	</select>
 

@@ -83,8 +83,8 @@ public class procServiceImpl implements ProcService {
 		return r;
 	}
 	@Override
-	public List<ProcPlanVO> getPlan(ProcPlanVO ppVO) {
-		return procMapper.seletPlanList(ppVO);
+	public List<ProcPlanVO> getPlan() {
+		return procMapper.seletPlanList();
 	}
 
 	@Override

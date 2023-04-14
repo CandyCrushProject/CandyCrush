@@ -10,6 +10,7 @@ public class ProcPlanVO {
 	private String prplDt; // 생산계획일자
 	private String prplSuceDt; // 납기일자
 	private String prplStatus; // 완료여부
+	private String prplMng; // 계획관리자
 
 	// 생산계획디테일
 	private String prpldCd; // 생산계획상세코드
