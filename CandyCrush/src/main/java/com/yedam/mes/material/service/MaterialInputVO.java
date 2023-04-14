@@ -17,6 +17,7 @@ public class MaterialInputVO {
 	
 	//발주관리
 	private String moCd;	//발주코드
+	private String moStt;	//발주진행상황
 	
 	//자재발주상세
 	private String modCd;	//발주상세코드
@@ -40,6 +41,8 @@ public class MaterialInputVO {
 	
 	//LOT관리
 	private String cmlNm;	//LOT코드
+	private int cmlInCnt;	//LOT수량
+	private String CmlInDt;	//입고일자
 	
 	//날짜검색
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")

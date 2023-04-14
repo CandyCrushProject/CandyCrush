@@ -56,4 +56,7 @@ public interface MaterialService {
 	
 	//입고목록 -> 입고상세
 	public List<MaterialInputVO> mtrlInputDetailList(@Param("minCd") String minCd);
+	
+	//입고등록
+	public int mtrlInputALLInsert(List<MaterialInputVO> vo);
 }

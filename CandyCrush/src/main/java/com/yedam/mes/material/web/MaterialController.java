@@ -62,7 +62,6 @@ public class MaterialController {
 		
 		//vo 인스턴스 선언
 		MaterialOrderVO newVo = new MaterialOrderVO();
-//		newVo.setMoCd(vo.get(0).getMoCd());					// moCd 값을 가져와서 db에 전달
 		newVo.setMoTitle(vo.get(0).getMoTitle()				// moTitle 값을 가져와서 db에 전달
 						 + " 외 " + (vo.size() - 1)			//  ㄴ 예시) 딸기향료 외 3건
 						 + "건" );
@@ -177,13 +176,32 @@ public class MaterialController {
 		return "material/mtrlInspCheck";
 	};
 	
+	//------------------------------------------------------------------------
+	
+	//자재재고조회페이지
+	@GetMapping("mtrlCnt")
+	public String mtrlCnt(Model model) {
+		model.addAttribute("accountList", service.accountCheck());
+		return "material/mtrlCnt";
+	}
+	
+	//자재재고조회 / 검색기능 및 조회
+	@PostMapping("mtrlChk")
+	@ResponseBody
+	public List<MaterialVO> mtrlChk(@RequestParam(required = false)  String cmmNm, @RequestParam(required = false) String caNm) {
+		return service.mtrlSearch(caNm, cmmNm);
+	}
+	
+	
+	//------------------------------------------------------------------------
+	
 	//자재입고검사관리(품질로빼버리기) 페이지
 	@GetMapping("mtrlInspManagement")
 	public String mtrlInspManagement(Model model) {
 		return "material/mtrlInspManagement";
 	};
 	
-	
+	//--------------------------------------------------------------------------
 	
 	//자재출고관리 페이지
 	@GetMapping("mtrlOutputManagement")

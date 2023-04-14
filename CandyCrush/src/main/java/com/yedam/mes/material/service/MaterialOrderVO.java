@@ -30,6 +30,7 @@ public class MaterialOrderVO {
 	private String cmmSafStc;	//안전재고
 	private int cmlInCnt;		//LOT 입고량
 	private String moStt;		//진행상황
+	private String cmlNm;		//LOT코드
 	
 	//날짜검색
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")

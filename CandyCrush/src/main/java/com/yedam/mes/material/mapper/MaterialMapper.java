@@ -60,5 +60,11 @@ public interface MaterialMapper {
 	//입고목록 -> 입고상세
 	public List<MaterialInputVO> mtrlInputDetailList(@Param("minCd") String minCd);
 	
+	//입고등록
+	public int mtrlInputInsert(MaterialInputVO vo);
+	
+	//LOT등록
+	public int mtrlLotInsert(MaterialInputVO vo);
+	
 	
 }

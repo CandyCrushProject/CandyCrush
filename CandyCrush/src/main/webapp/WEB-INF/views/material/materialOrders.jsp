@@ -12,6 +12,9 @@
 	input[type="text"]{
 		width: 90%;
 	}
+	.tui-grid-cell.cell-red {background-color: rgba(255, 121, 121, 0.432)}
+	.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
+
 	</style>
 <main>
 	<!-- 업체검색모달 -->
@@ -212,6 +215,17 @@
 				data : {cmmNm : cmmNm, caNm : caNm},
 				success : function(data){
 					material.resetData(data);
+					material.getData().forEach(row => {
+						//Grid Row color change
+						let cmmInven = row.cmmInven;		//현재재고
+						let cmmSafStc = row.cmmSafStc; 	//안전재고
+						if(cmmInven < cmmSafStc){
+							material.addRowClassName(row.rowKey, 'cell-red');
+						} else {
+							material.addRowClassName(row.rowKey, 'cell-green');
+						}
+					});
+
 				} 
 			});
 		}
@@ -601,7 +615,7 @@
 				delMocd += rows[i].moCd + ',';
 				delMoStt[i] = {value : rows[i].moStt};
 
-				if(delMoStt[i].value === '진행중' || delMoStt[i].value === '진행완료'){
+				if(delMoStt[i].value === '진행중' || delMoStt[i].value === '입고완료'){
 					setTimeout(() => {
 						Swal.fire({
 							icon: 'error',
@@ -796,12 +810,11 @@
 			let moReqDt = "";
 			let realMoReqDt = "";
 			let cmmCd = "";
-
+			
 			for(let i = 0 ; i < rowDate2.length ; i++){
 				moCnt = rowDate2[i].moCnt;
 				moReqDt = rowDate2[i].moReqDt;
 				cmmCd = rowDate2[i].cmmCd;
-
 				realMoReqDt = dateChange(moReqDt);
 
 				//넘어가는 데이터 확인
@@ -809,7 +822,7 @@
 				/*console.log(realMoReqDt);
 				console.log(cmmCd);*/
 
-				if(moStt === '진행완료' || moStt === '진행중'){
+				if(moStt === '입고완료' || moStt === '진행중'){
 					setTimeout(() => {
 						Swal.fire({
 							icon: 'error',
@@ -859,8 +872,9 @@
 
 		//발주수량 값 바뀌면 예상재고량 자동계산되도록 하는 방법
 		moModal.on('editingFinish', (e) => {
+			
 			let oneMoStt = $('#modalMoStt').val();
-			if(oneMoStt === '진행중' || oneMoStt ==='진행완료'){
+			if(oneMoStt === '진행중' || oneMoStt ==='입고완료'){
 				setTimeout(() => {
 					Swal.fire({
 						icon: 'error',
@@ -921,7 +935,7 @@
 				delModCd += moModal.getRow(rowKey[i]).modCd + ",";		//삭제할 발주상세코드 -> mo001, mo002, mo003, ...
 			};
 
-			if(oneMoStt === '진행중' || oneMoStt ==='진행완료'){
+			if(oneMoStt === '진행중' || oneMoStt ==='입고완료'){
 				//setTimeout(() => {
 					Swal.fire({
 						icon: 'error',
@@ -1049,6 +1063,8 @@
 		$('#orderInsert').on('click',(ev)=>{
 			const rows = materialOrder.getCheckedRows();
 			
+			materialOrderList .finishEditing();
+
 			if (rows.length !== 0) {
 				$.ajax({
 					url : "mtrlOrder",

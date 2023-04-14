@@ -111,8 +111,12 @@
 	
 	<!-- 발주관리 헤더 INSERT -->
 	<insert id="orderHeaderInsert" parameterType="MaterialOrderVO">
+		<selectKey resultType="String" keyProperty="moCd" order="BEFORE">
+			SELECT 'mo' || TO_CHAR(sysdate, 'yyMMdd') ||MO_SEQ.NEXTVAL AS mo_cd
+			FROM dual
+		</selectKey>
 		INSERT INTO MTRL_ORDER(mo_cd, mo_title, mo_reo_dt, mo_stt)
-		VALUES('mo' || TO_CHAR(sysdate, 'yyMMdd') ||MO_SEQ.NEXTVAL , #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'), '발주완료')
+		VALUES(#{moCd} , #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'), '발주완료')
 	</insert>
 	
 	<!-- 발주관리디테일 INSERT -->
@@ -201,5 +205,26 @@
 		WHERE min.min_cd = #{minCd}
 		ORDER BY min.mi_cd
 	</select>
+	
+	<!-- 자재입고 등록 -->
+	<insert id="mtrlInputInsert" parameterType="MaterialInputVO">
+		<selectKey resultType="String" keyProperty="minCd" order="BEFORE">
+		SELECT 'min' || TO_CHAR(sysdate, 'yyMMdd') || min_seq.NEXTVAL
+		FROM dual
+		</selectKey>
+		INSERT INTO mtrl_input(min_cd, mi_cd, min_cnt, min_dt)
+		VALUES(#{minCd}, #{miCd}, #{minCnt}, ${minDt})
+	</insert>
+	
+	<!-- 자재입고시 LOT로 넣어버려 -->
+	<insert id="mtrlLotInsert" parameterType="MaterialInputVO">
+		INSERT
+			INTO cm_mtrl_lot(cml_nm, cml_in_cnt, cml_in_dt, mod_cd, cmm_cd, mi_cd)
+		VALUES
+			('cml' || TO_CHAR(sysdate, 'yyMMdd') || cml_seq.NEXTVAL, #{cmlInCnt}, #{cmlInDt}, #{modCd}, #{cmmCd}, #{miCd})
+	</insert>
+	
+	<!-- 자재입고시 발주 진행상황 업데이트 -->
+	<!-- <update id=""></update> -->
 
 </mapper>
