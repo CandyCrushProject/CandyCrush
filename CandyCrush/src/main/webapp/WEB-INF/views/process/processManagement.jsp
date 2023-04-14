@@ -171,8 +171,7 @@
 				$(document).ready(function () {
 					let prpldStatus = $('#prpldStatus').val();
 					let prplStatus = $('#prplStatus').val();
-					$('#prplDt').val(getToday());
-					let prplDt = $('#prplDt').val();
+					let prplDt = $('#prplDt').val(getToday());
 					addOrderPlanGrid.on("editingFinish", (ev) => {
 						getrow = addOrderPlanGrid.getRow(ev.rowKey);
 						if (getrow.prpldCnt != null &&
