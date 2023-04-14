@@ -113,7 +113,6 @@
 	       AND bm.cmm_cd = mm.cmm_cd(+)
 	       AND bm.cm_cd = pc.cm_cd(+)
 	       AND od.cpr_cd = pm.cpr_cd(+)
-	       AND od.orsh_no = #{orshNo}
 	       AND od.cpr_cd = #{cprCd}
 	     ORDER BY 3, 1
 	</select>
@@ -123,10 +122,7 @@
 		UPDATE order_sheet_detail
 		   SET orsh_pr = '계획완료',
 			   stt_cng_dt = SYSDATE
-		 WHERE orsh_no IN
-			  <foreach collection='orshNo' index='index' item='orshNo' open='(' close=')' separator=','>
-			  #{orshNo}
-			  </foreach>
+		 WHERE orsh_no = #{orshNo}
 	</update>
 	
 	<!-- 계획 등록 -->

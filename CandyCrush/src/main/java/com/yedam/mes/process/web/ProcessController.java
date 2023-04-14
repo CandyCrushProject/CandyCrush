@@ -83,39 +83,41 @@ public class ProcessController {
 	
 	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
-	public String insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
+	@ResponseBody
+	public Map<String, Object> insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
 
-		ProcPlanVO ordrDtlCd = insertList.get(0);
-		String[] ordrDtlCdArr = ordrDtlCd.getOrdrDtlCd().split(",");
-
-		List<ProcPlanVO> planVO = new ArrayList<>();
-		for(int i=0;i<insertList.size();i++) {
-			if(i>0) {
-				planVO.add(insertList.get(i));
-			}
-		}
 		
-//		int update = procService.updateOrderStatus(ordrDtlCdArr);	
-		int insert = procService.addPlan(planVO);
-		int insert2 = procService.addPlanDetail(planVO);
-		String message = null;
-//		if(insert != -1 && insert2 != -1 && update != -1) {
-		if(insert != -1 && insert2 != -1) {
-			message = "실패";
+		List<ProcPlanVO> planVO = new ArrayList<>();
+		Map<String, Object> message = new HashMap<>();
+		
+		
+		for(int i=0;i<insertList.size();i++) {
+				planVO.add(insertList.get(i));
+			
+		}
+
+//		int update = procService.updateOrderStatus(planVO);	
+		int insertPlan = procService.addPlan(planVO);
+		int insertPlanDetail = procService.addPlanDetail(planVO);
+		
+//		if(insertPlan < 1 && insertPlanDetail < 1 && update < 1) {
+		if(insertPlan < 1 && insertPlanDetail < 1) {
+			message.put("retCode","실패");
+			
 		} else {
-			message = "성공";
+			message.put("retCode","성공");
 		} 
-		rrtt.addFlashAttribute("message",message);
-		return "redirect:ProcManagement";
+
+		
+		return message;
 	}
 	
 	// 생산관리 -> 생산계획 -> BOM 자재 정보
-	@GetMapping("getBomInfo")
+	@PostMapping("getBomInfo")
 	@ResponseBody
-	public Map<String, Object> getBomInfo(OrderPlanVO opVO) {
-	    Map<String, Object> resultMap = new HashMap<>();
-	    resultMap.put("bomInfo", procService.getBomMtrl(opVO));
-	    
+	public Map<String, Object> getBomInfo(@RequestBody OrderPlanVO opVO) {
+	    System.out.println(opVO);
+		Map<String, Object> resultMap = new HashMap<>();
 		return resultMap;
 	}
 	// 생산관리 -> 생산지시관리 -> 페이지
