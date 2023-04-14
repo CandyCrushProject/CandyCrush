@@ -49,12 +49,10 @@
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
 							<div>
-								<h5><b>▶ 검사자료 조회</b></h5>
+								<h5><b>▶제품명</b></h5>
 								<div>
-									<label for="caNmInput">업체명</label> 
-									<input type="text" id="caNmInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);" readonly>&nbsp;
-									<button class="srchBtn" id="companySearch"><i class="fa-solid fa-magnifying-glass"></i></button>
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<label for="caNmInput">제품명</label> 
+									<input type="text" id="caNmInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
 									<label for="start">검사자료</label>
 									<input type="date" id="start"
 											style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
@@ -93,9 +91,6 @@
 				<div class="col-md-4">
 					<div class="card">
 						<div class="card-action">▶입고목록</div>
-						<div style="padding-left: 5px; margin-bottom: 20px">
-							<label for="inputGuide" id="inputGuide"> >> 기준 : 7일이내 기준</label>
-						</div>
 						<div class="card-content">
 							<div class="table-responsive">
 								<div id="mtrlInputList"></div>

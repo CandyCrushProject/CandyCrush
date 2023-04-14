@@ -260,7 +260,7 @@
 									</a>
 								</li>
 								<li>
-									<a href="${pageContext.request.contextPath}/" class="waves-effect waves-dark">
+									<a href="${pageContext.request.contextPath}/prodInputMngmnt" class="waves-effect waves-dark">
 										제품입고관리
 									</a>
 								</li>
