@@ -1,5 +1,6 @@
 package com.yedam.mes.quality.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -14,5 +15,7 @@ public interface QualityServcie {
 	public List<MtOrderInspStatVO> selectMtOrderInspStat();
 	public List<QualityMtTestVO> selectMtQualityTestList(@Param("modCd") String modCd);
 	public List<MtBadCodeVO> selectMtBadCode();
-	public String InsertMtInsps(@Param("MtInspInsert") MtInspInsertVO inspvo,@Param("MtInspBadInsert")List<MtInspBadInsertVO>badvo);
+	public int InsertMtInsps(HashMap<String, Object> map);
+	public int getNewMiCd();
+	public int InsertMtBadInsp(List<MtInspBadInsertVO> badvo); 
 }

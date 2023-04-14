@@ -1,11 +1,16 @@
 package com.yedam.mes.quality.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yedam.mes.quality.mapper.QualityMapper;
 import com.yedam.mes.quality.service.QualityServcie;
 import com.yedam.mes.quality.service.vo.MtBadCodeVO;
@@ -37,13 +42,29 @@ public class QualityServiceImpl implements QualityServcie {
 	}
 
 	@Override
-	public String InsertMtInsps(MtInspInsertVO inspvo, List<MtInspBadInsertVO> badvo) {
+	public int InsertMtInsps(HashMap<String, Object> map) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		MtInspInsertVO inspvo = objectMapper.convertValue(map.get("MtInspInsert"), MtInspInsertVO.class);
+		qualityMapper.InsertMtInsp(inspvo);
+		return 0;
+	}
+
+	@Override
+	public int getNewMiCd() {
 		// TODO Auto-generated method stub
-			qualityMapper.InsertMtInsp(inspvo);
-			for(MtInspBadInsertVO vo:badvo) {
-				qualityMapper.InsertMtBadInsp(badvo);
-			};
-		return null;
+		return qualityMapper.getNewMiCd();
+	}
+
+
+	@Override
+	public int InsertMtBadInsp(List<MtInspBadInsertVO> badvo) {
+		// TODO Auto-generated method stub
+		System.out.println(badvo);
+		for(MtInspBadInsertVO vo:badvo) {
+			System.out.println(vo);
+			qualityMapper.InsertMtBadInsp(vo);
+		}
+		return 0;
 	}
 	
 

@@ -14,6 +14,7 @@ public interface QualityMapper {
 	public List<MtOrderInspStatVO> selectMtOrderInspStat();
 	public List<QualityMtTestVO> selectMtQualityTestList(@Param("modCd") String modCd);
 	public List<MtBadCodeVO> selectMtBadCode();
-	public String InsertMtInsp(@Param("MtInspInsert") MtInspInsertVO vo);
-	public String InsertMtBadInsp(@Param("MtInspBadInsert")List<MtInspBadInsertVO>badvo); 
+	public int InsertMtInsp(MtInspInsertVO vo);
+	public int InsertMtBadInsp(MtInspBadInsertVO badvo); 
+	public int getNewMiCd();
 }
