@@ -34,10 +34,20 @@
           >&times;</span
         >
         <h2 id="modalCmm">검사등록</h2>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-action">불량항목</div>
+            <div class="card-content">
+              <div class="table-responsive">
+                <div id="BadCodeList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
           <div class="row">
             <div class="col-md-6">
               <div class="card">
-                <div class="card-action">검사항목</div>
+                <div class="card-action">검사항목 <button class="cndInsBtn" id="badInsert">등록</button></div>
                 <div class="card-content">
                   <table class="candyTab">
                     <tr>
@@ -47,24 +57,14 @@
                       <th>검사량</th>
                     </tr>
                     <tr>
-                      <td><input type="text" readonly name="inspMgr" id="inspMgr" value="" placeholder="담당자 이름"></td>
+                      <td><input type="text" name="inspMgr" id="inspMgr" value="" placeholder="담당자 이름"></td>
                       <td><input type="number" placeholder="정상자재수 입력" name="passMat" id="passMat" value="0"></td>
                       <td><input type="number" placeholder="불량자재" name="badMat" id="badMat" readonly></td>
-                      <td><input type="text" name="inspMat" id="inspMat" value=""  readonly></td>
+                      <td><input type="number" name="inspMat" id="inspMat" value=""  readonly></td>
                     </tr>
                   </table>
                   <div class="table-responsive">
                     <div id="BadInputList"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-action">불량항목</div>
-                <div class="card-content">
-                  <div class="table-responsive">
-                    <div id="BadCodeList"></div>
                   </div>
                 </div>
               </div>
@@ -180,12 +180,19 @@
           },
         </c:forEach>
       ];
-
+      Grid.applyTheme('striped');
       const odList = new Grid({
       el: document.getElementById('OrderListGrid'), // Container element
       data: orderData,
       columns: [
-      {
+    	  {
+              header: '발주코드',
+              name: 'moCd',
+              sortingType: 'asc',
+              sortable: true,
+              rowSpan: true
+            },
+      	{
           header: '발주상세코드',
           name: 'modCd',
           sortingType: 'asc',
@@ -289,8 +296,9 @@
 			const rowData = BadCodeList.getRow(e.rowKey);
 			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
 			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
-			if (BadInputList.getRow(e.rowKey) === null) {
-				rowData.miCnt = 0;							//불량수량
+			if (BadInputList.getRow(e.rowKey) == null) {
+				rowData.mbhCnt = 0;		//불량수량
+        rowData.miCd = "${NewMiCd}";				
 				BadInputList.appendRow(rowData);
         BadInputList.sort("cmbCd", true); 
 			} else {
@@ -302,7 +310,7 @@
 			}
 		});
     
-
+    console.log('${NewMiCd}'+'새코드');
 
     //불량 insert용 그리드================================================================
     const BadInputList =new Grid({
@@ -316,30 +324,34 @@
         perPage: 30
           },
       columns: [
+        
         {
           header: '불량코드',
           name: 'cmbCd',
           sortingType: 'asc',
-          sortable: true,
         },
         {
           header: '불량명',
           name: 'cmbNm',
-          sortingType: 'asc',
-          sortable: true
         },
         {
           header: '수량',
-          name: 'miCnt',
+          name: 'mbhCnt',
           sortable: true,
           editor:'text'
+        },
+        {
+          header: '검사코드',
+          name: 'miCd',
+          sortingType: 'asc',
+          hidden: true,
         },
       ],
       summary: {
         position: 'bottom',
         height: 20,  // by pixel
         columnContent: {
-          miCnt: {
+          mbhCnt: {
             template(valueMap) {
               return '불량합계'+valueMap.sum;
             }
@@ -358,8 +370,8 @@
 
     //value값 바뀔때마다 호출할 event
     function BadInputValueEvent(){
-      inspMat.value = parseInt(BadInputList.getSummaryValues('miCnt').sum)+parseInt(passMat.value);
-      badMat.value = parseInt(BadInputList.getSummaryValues('miCnt').sum);
+      inspMat.value = parseInt(BadInputList.getSummaryValues('mbhCnt').sum)+parseInt(passMat.value);
+      badMat.value = parseInt(BadInputList.getSummaryValues('mbhCnt').sum);
     }
     //================================================================
 
@@ -369,11 +381,12 @@
     let PubCmmNm = null; //자재명
     let PubMiCnt = null; //검사한양
     let pubMoCnt = null; //주문양
-
+    let pubSelectedModCd = null; //
     //odlist 클릭한 행의 modcd값 담기
     odList.on("dblclick", (e) => {
 			const rowData = odList.getRow(e.rowKey);
       let selectedModCd=rowData.modCd;
+      pubSelectedModCd=rowData.modCd;
       PubCmmNm = rowData.cmmNm;
       pubMoCnt = rowData.moCnt;
       //클릭한 항목의 검사이력 가져오기
@@ -486,8 +499,56 @@
       }
       
     });
-    
-    
+    //=========등록AJAX===============================🙄🙄🙄
+    $('#badInsert').on('click',(ev)=>{
+    const badData = BadInputList.getData();
+    // let ProcessedBadData = new Array;
+    // console.log(badData);
+    // for(let i = 0; i < badData.length; i++) {
+    //   ProcessedBadData[i].mbhCnt=badData[i].mbhCnt;
+    //   ProcessedBadData[i].mbhCd=badData[i].mbhCd;
+    //   ProcessedBadData[i].miCd='${NewMiCd}';
+    // };
+    const data= JSON.stringify(
+      { "MtInspInsert":
+        {"miCd":'${NewMiCd}',
+        "modCd":pubSelectedModCd,
+        "miMng":inspMgr.value,
+        "miCnt":inspMat.value,
+        "miBadCnt":badMat.value,
+        "miPassCnt":passMat.value
+        }, 
+      });
+      $.ajax({
+        url : "MtInspInsert",
+        method : "POST",
+        contentType: 'application/json',
+        dataType : "json",
+        data : data,
+        success : function(result){
+          console.log(result);
+        },
+        error : function(reject){
+          console.log(reject);
+          console.log("mtrlOrderList Insert error!");
+        }
+      }).then(()=>{
+        $.ajax({
+          url : "MtInspBadInsert",
+          method : "POST",
+          contentType: 'application/json',
+          dataType : "json",
+          data : JSON.stringify(badData),
+          success : function(result){
+            console.log(result);
+          },
+          error : function(reject){
+            console.log(reject);
+            console.log("mtrlOrderList Insert error!");
+          }
+        });
+      });
+    });
     
     
     
@@ -500,6 +561,6 @@
 				: newData.getMonth() + 1) +
 				"-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
 		return result;
-}
+  } 
   </script>
 </main>

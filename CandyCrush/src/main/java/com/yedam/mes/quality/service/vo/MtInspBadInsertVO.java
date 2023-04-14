@@ -9,6 +9,7 @@ import lombok.Data;
 public class MtInspBadInsertVO {//검사기록 input용
 	private String mbhCd;
 	private int mbhCnt;
-	private int mbhNote;
-	private int cmbCd;
+	private String mbhNote;
+	private String cmbCd;
+	private String miCd;
 }

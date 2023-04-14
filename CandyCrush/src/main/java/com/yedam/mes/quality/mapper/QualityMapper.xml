@@ -50,6 +50,9 @@
 	    CMB_CTT
 	FROM cm_mtrl_bad_code
   </select>
+  <select id="getNewMiCd" resultType="int">
+  	SELECT NVL(MAX(TO_NUMBER(MI_CD)),0)+1 MI_CD FROM MTRL_INSP
+  </select>
   <insert id="InsertMtInsp" parameterType='MtInspInsertVO'>
   	INSERT INTO MTRL_INSP
 	    (
@@ -60,10 +63,12 @@
 	    MI_CNT,
 	    MI_BAD_CNT,
 	    MI_PASS_CNT
+	    )
 	VALUES(
 	    #{miCd},
 	    #{modCd},
 	    #{miDt},
+	    #{miMng},
 	    #{miCnt},
 	    #{miBadCnt},
 	    #{miPassCnt}
@@ -79,11 +84,12 @@
 		CMB_CD
 		)
 	VALUES(
-		#{mbhCd},
+		(SELECT NVL(MAX(TO_NUMBER(MBH_CD)),0)+1 MBH_CD FROM MTRL_BAD_HSTR),
 		#{mbhCnt},
 		#{mbhNote},
 		#{miCd},
 		#{cmbCd}
 		)
   </insert>
+
   </mapper>
