@@ -120,6 +120,7 @@ public class OrdrShtController {
 //		return response;
 //	};
 	
+	// 주문서 등록 해야함 ㅠㅠ
 	@PostMapping("ordrShtForm")
 	@ResponseBody
 	public Map<String, Object> ordrShtInsertProcess(@RequestBody Map<String, Object> map){
@@ -129,25 +130,10 @@ public class OrdrShtController {
 		
 		return map;
 	}
-//	public Boolean ordrShtInsertProcess(@RequestBody List<OrdrShtVO> vo){
-//		
-//		//vo 인스턴스 선언
-//		OrdrShtVO newVo = new OrdrShtVO();
-//		
-//		// newVo.setCaNo(vo.get(0).getCaNo());
-//		// newVo.setOrshDt(vo.get(0).getOrshDt());
-//		// newVo.setDlvryDt(vo.get(0).getDlvryDt());
-//		newVo.setCprCd(vo.get(0).getCprCd());	// CprCd 값을 가져와서 db에 전달
-//		newVo.setCprNm(vo.get(0).getCprNm());	// CprNm 값을 가져와서 db에 전달
-//		newVo.setOrdrDtlCnt(vo.get(0).getOrdrDtlCnt());	// OrdrDtlCnt 값을 가져와서 db에 전달
-//		System.out.println(newVo.getCprCd() + ", " + newVo.getCprNm() + ", " + newVo.getOrdrDtlCnt());
-//		
-//		Boolean response = true;
-//		int result = service.insertOrdrSht(newVo, vo); 	//발주관리헤더, 발주관리디테일
-//		if(result < 1) {
-//			response = false;
-//		};
-//		
-//		return response;
-//	};
+	
+	@GetMapping("prodInputMngmnt")
+	public String prodInputMngmnt(Model model) {
+		
+		return "sales/prodInputMngmnt";
+	}
 }
