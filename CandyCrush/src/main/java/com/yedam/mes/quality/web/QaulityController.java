@@ -44,6 +44,7 @@ public class QaulityController {
 	@ResponseBody
 	public int InsertMtBadInsp(@RequestBody List<MtInspBadInsertVO> badvo) {
 		return qualityService.InsertMtBadInsp(badvo);
+
 	}
 	
 

@@ -10,6 +10,7 @@ import com.yedam.mes.process.vo.ProcOrderVO;
 import com.yedam.mes.process.vo.ProcPerfVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 import com.yedam.mes.process.vo.ProcProgVO;
+import com.yedam.mes.process.vo.ProcResultAllVO;
 
 public interface ProcMapper {
 	/* 생산계획 매퍼 시작 */
@@ -71,6 +72,8 @@ public interface ProcMapper {
 	public List<ProcPerfVO> selectPerfList(ProcPerfVO perfVO);
 	public List<ProcProgVO> selectProgList(ProcProgVO progVO);
 	
+	//실적페이지 지시조회===============이하실적페이지 구역
+	public List<ProcResultAllVO> getProcCommand(ProcResultAllVO comVO);
 	
 	
 	

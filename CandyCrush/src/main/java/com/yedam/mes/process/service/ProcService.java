@@ -10,6 +10,7 @@ import com.yedam.mes.process.vo.ProcOrderVO;
 import com.yedam.mes.process.vo.ProcPerfVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 import com.yedam.mes.process.vo.ProcProgVO;
+import com.yedam.mes.process.vo.ProcResultAllVO;
 
 public interface ProcService {
 
@@ -73,8 +74,9 @@ public interface ProcService {
 	public List<ProcPerfVO> getPerfList(ProcPerfVO perfVO);
 	public List<ProcProgVO> getProgList(ProcProgVO progVO);
 	
+	//실적페이지 지시조회용========================== 이하 실적페이용=========
 	
-	
+	public List<ProcResultAllVO> getProcCommand(ProcResultAllVO comVO);
 	
 	/* 생산공정 매퍼 끝 */
 }
