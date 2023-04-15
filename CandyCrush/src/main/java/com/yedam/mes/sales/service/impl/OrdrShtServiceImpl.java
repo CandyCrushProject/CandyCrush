@@ -1,15 +1,16 @@
 package com.yedam.mes.sales.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.sales.mapper.OrdrShtMapper;
 import com.yedam.mes.sales.service.OrdrShtService;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
+import com.yedam.mes.sales.service.vo.ProdInOutPutVO;
 
 @Service
 public class OrdrShtServiceImpl implements OrdrShtService{
@@ -75,26 +76,38 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	
 	// 모달창 주문서헤더 + 주문서디테일 등록
 	@Override
-	public int insertOrdrSht(OrdrShtVO vo, List<OrdrShtVO> list) {
+	public int insertOrdrSht(Map<String,Object> map, List<Map<String,Object>> list) {
 		int cnt = 0;
 		
+		// 주문번호 때문
 		String ordrShtCode = mapper.getOrdrShtCode();
-		vo.setOrshNo(ordrShtCode);
+		map.put("ordrShtCode", ordrShtCode);
 		
-		cnt = mapper.insertOrdrShtHdr(vo);
+		// 주문서 헤더 등록 (한건)	
+		cnt = mapper.insertOrdrShtHdr(map);
 		
-		for(OrdrShtVO ordrShtVO: list) {
-			ordrShtVO.setOrshNo(ordrShtCode);
-			cnt += mapper.insertOrdrShtDtl(ordrShtVO);
+		// 주문서 디테일 등록(여러건)
+		for(Map<String,Object> ordrShtMap : list) {
+			ordrShtMap.put("orshNo", ordrShtCode);
+			cnt += mapper.insertOrdrShtDtl(ordrShtMap);
 		}
 		
 		return cnt;
 	}
-
-
 	
-	// 주문서 수정
+	// 주문서관리페이지 주문서 상세조회리스트 모달창
+	public List<OrdrShtVO> getOrdrShtDtlList() {
+		return mapper.getOrdrShtDtlList();
+	}
 
+	// 제품입고 관리페이지
+	@Override
+	public List<ProdInOutPutVO> prodInputList() {
+		
+		return null;
+	}
+	
+	
 	
 	// 주문서 삭제
 

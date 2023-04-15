@@ -49,15 +49,10 @@
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
 							<div>
-								<h5><b>▶제품명</b></h5>
+								<h5><b>▶입고대기목록</b></h5>
 								<div>
 									<label for="caNmInput">제품명</label> 
 									<input type="text" id="caNmInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
-									<label for="start">검사자료</label>
-									<input type="date" id="start"
-											style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
-									<input type="date" id="end" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
-									<button type="button" id="inspSearchBtn" class="cndInsBtn">가져오기</button>
 								</div>
 							</div>
 							<div style="clear:both"></div>

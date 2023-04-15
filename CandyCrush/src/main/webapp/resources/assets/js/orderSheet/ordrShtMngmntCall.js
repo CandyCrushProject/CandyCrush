@@ -126,7 +126,7 @@ function formatDate() {
 //   }
 // }
 
-//------
+//---------------------------------------------------------------------------------------------
 // serialize 배열형태로 반들어줌
 // serialize 기존형태 => { name : name, value : value }
 // serialize 바꾼형태 => { name : value }

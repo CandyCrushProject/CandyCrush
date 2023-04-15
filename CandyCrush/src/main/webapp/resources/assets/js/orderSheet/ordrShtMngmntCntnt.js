@@ -128,7 +128,7 @@ ordrShtList();
 //발주목록 행 더블클릭 이벤트
 accntList.on('dblclick', (e) => {
   if (e.targetType != 'cell') return; // cell이 아닌타입을 클릭했을 때 종료
-  const rowData = accntList.getRow(e.rowKey);
+  const rowData = accntList.getRow(e.rowKey); // 그리드 row값
   // console.log(e, rowData);
 
   // Modal input내용들
@@ -180,29 +180,65 @@ accntList.on('dblclick', (e) => {
     }
   });
   //---------------------------------------------------------------------------------------------
-  // 주문서 모달창에 제품선택을 안했을때 경고창 띄움
-  ordrProdList.on('editingFinish', (e) => {
-    if (e.columnName != 'cprNm') return;
-    let mdlRowData = ordrProdList.getRow(e.rowKey);
-    console.log("mdlRowData", mdlRowData)
-    let ordrCprNm = mdlRowData.cprNm;
-    if (ordrCprNm == "" || ordrCprNm == null || ordrCprNm == undefined) {
-      setTimeout(() => {
-        Swal.fire({
-          icon: 'error',
-          title: '경고',
-          text: '상품을 선택하세요',
-        });
-        
-        return;
-      }, 9);
+  // 주문서 조회 더블클릭시 열리는 상세조회 모달창
+  orderList.on('dblclick', (e) => {
+    if (e.targetType != 'cell') return;
+    console.log(e.targetType);
+    const rowData = orderList.getRow(e.rowKey);
+    
+    let rowDataOrshNo = rowData.orshNo; // 주문서번호
+    let rowDataCaNa = rowData.caNa; // 거래처코드
+    let rowDataOrshDt = rowData.orshDt; // 주문일자
+    let rowDataDlvryDt = rowData.dlvryDt; // 납기일자
+
+    $("#orshNo").val(rowDataOrshNo); // 주문서번호
+    $("#caNm").val(rowDataCaNa); // 거래처명
+    $("#orshDt").val(rowDataOrshDt); // 주문일자
+    $("#dlvryDt").val(rowDataDlvryDt); // 납기일자
+
+    document.getElementById('ordrDtilMdl').style.display = 'block';
+    //document.getElementById('orshNoBox').style.display = 'block';
+    // select박스안에 제품명 list 내용 
+
+    // 주문서관리페이지 주문서 상세조회 모달창
+    function getOrdrShtDtlList() {
+      $.ajax({
+        url: "getOrdrShtDtlList",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+          setTimeout(() => ordrProdList.refreshLayout(), 0);
+        },
+        error: function (reject) {
+          console.log(reject)
+        }
+      });
     }
   });
+  //---------------------------------------------------------------------------------------------
+  // 주문서 모달창에 제품선택을 안했을때 경고창 띄움
+  // ordrProdList.on('editingFinish', (e) => {
+  //   if (e.columnName != 'cprNm') return;
+  //   let mdlRowData = ordrProdList.getRow(e.rowKey);
+  //   console.log("mdlRowData", mdlRowData)
+  //   let ordrCprNm = mdlRowData.cprNm;
+  //   if (ordrCprNm == "" || ordrCprNm == null || ordrCprNm == undefined) {
+  //     setTimeout(() => {
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: '경고',
+  //         text: '상품을 선택하세요',
+  //       });
+        
+  //       return;
+  //     }, 9);
+  //   }
+  // });
 });
 //---------------------------------------------------------------------------------------------
 // 그리드안에 select 배열생성
 let listItems = [];
-
+// select박스안에 제품명 list 내용 
 function prodListItems() {
   $.ajax({
     url: "getProdList",
@@ -256,19 +292,16 @@ const ordrProdList = new Grid({
     perPage: 30
   }
 });
-
+$('grid').mouseleave(ev => {
+  ordrProdList.finishEditing();
+});
 //---------------------------------------------------------------------------------------------
 //주문서등록 
 function ordrShtInsert() {
-  const rows = ordrProdList.getCheckedRows({ ignoredColumns: ['_attributes', 'rowKey'] });
-  let caNo = $('#caNo').val(); // 거래처 코드
-  let orshDt = $('#orshDt').val(); // 주문일자
-  let dlvryDt = $('#dlvryDt').val(); // 납기일자
+  const rows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).createdRows;
+  const updateRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).updatedRows;
+  const deleteRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).deletedRows;
 
-  console.log($('#frmOrdrShtInsert').serialize(), ": $('frmOrdrShtInsert').serialize(),")
-  console.log(caNo, " : caNo");
-  console.log(orshDt, " : orshDt");
-  console.log(dlvryDt, " : dlvryDt");
   console.log("rows", rows);
 
   if (rows.length !== 0) {
@@ -278,6 +311,8 @@ function ordrShtInsert() {
       data: JSON.stringify({
         dataHd : serializeObject($('#frmOrdrShtInsert').serializeArray()),
         data : rows,
+        updateRows : updateRows,
+        deleteRows : deleteRows,
       }),
       contentType: "application/json",
       success: function (response) {
