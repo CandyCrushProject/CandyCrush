@@ -66,16 +66,14 @@ public class procServiceImpl implements ProcService {
 		return procMapper.selectBomMtrl(opVO);
 	}
 	@Override
-	public int addPlan(List<ProcPlanVO> planVO) {
-		int r = 0;
-		for(ProcPlanVO pvo:planVO) {
-			r += procMapper.insertPlan(pvo);
-		}
+	public int addPlan(ProcPlanVO planVO) {
+		int r = procMapper.insertPlan(planVO);
+			
 		return r;
 	}
 
 	@Override
-	public int addPlanDetail(List<ProcPlanVO> planVO) {
+	public int addPlanDetail(List<ProcPlanVO> planVO) { 
 		int r = 0;
 		for(ProcPlanVO pvo:planVO) {
 			r += procMapper.insertPlanDetail(pvo);

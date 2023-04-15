@@ -128,27 +128,31 @@
 			SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
 			  FROM DUAL
 		</selectKey>
-		INSERT INTO proc_plan (prpl_cd, prpl_status, prpl_mng)
+		INSERT INTO proc_plan (prpl_cd,prpl_dt, prpl_mng)
 		VALUES(
 				  #{prplCd}
-				, #{prplStatus}
+				, TO_DATE(SYSDATE, 'rrrr-MM-dd')
 				, #{prplMng}
 			   )
 	</update>
 
 	<!-- 계획 상세 등록 -->
 	<update id="insertPlanDetail" parameterType="ProcPlanVO">
-		<selectKey keyProperty="prpldCd" resultType="String" order="BEFORE">
-			SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
-			  FROM DUAL
+		<selectKey keyProperty="prplCd" resultType="String" order="BEFORE">
+           SELECT prpl_cd
+			  FROM (
+					SELECT prpl_cd
+					  FROM proc_plan
+					 ORDER BY 1 DESC
+				   ) p
+			 WHERE ROWNUM BETWEEN 1 AND 1
 		</selectKey>
-		INSERT INTO proc_plan_detail (prpld_cd, prpl_cd, cpr_cd, prpld_cnt, prpld_status)
+		INSERT INTO proc_plan_detail (prpld_cd, prpl_cd, cpr_cd, prpld_cnt)
 		VALUES (
-				   #{prpldCd}
+				   'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099'))
 				 , #{prplCd}
 				 , #{cprCd}
 				 , #{prpldCnt}
-				 , #{prpldStatus}
 			   )
 	</update>
 	<!-- 생산계획 리스트 -->

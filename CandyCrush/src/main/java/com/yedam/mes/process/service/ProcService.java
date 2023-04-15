@@ -36,7 +36,7 @@ public interface ProcService {
 	
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
-	public int addPlan(List<ProcPlanVO> planVO); // 생산계획 헤더
+	public int addPlan(ProcPlanVO planVO); // 생산계획 헤더
 	public int addPlanDetail(List<ProcPlanVO> planVO); // 디테일
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
