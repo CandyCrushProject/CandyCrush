@@ -4,14 +4,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style>
     label{
-      width: 100px;
+		width: 100px;
     }
     #floatBtn{
-			float: right;
-			margin-bottom: 5px;
-		}
-		.tui-grid-cell.cell-red {background-color: rgba(255, 121, 121, 0.432)}
-		.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
+		float: right;
+		margin-bottom: 5px;
+	}
+	.tui-grid-cell.cell-red {background-color: rgba(255, 121, 121, 0.432)}
+	.tui-grid-cell.cell-green {background-color: rgba(255, 255, 255, 0.877)}
 </style>
 <main>
 	<!-- /. NAV SIDE  -->
