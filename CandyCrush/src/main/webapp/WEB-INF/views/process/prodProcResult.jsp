@@ -48,8 +48,8 @@
                         <th>공정명</th>
                       </tr>
                       <tr>
-                        <td><input type="text" name="" id="" value="(받아온제품명)" placeholder=""></td>
-                        <td><input type="text" name="" id="" value="(받아온공정명)" placeholder=""></td>
+                        <td><input type="text" name="" id="prodNm" value="(받아온제품명)" placeholder=""></td>
+                        <td><input type="text" name="" id="procNm" value="(받아온공정명)" placeholder=""></td>
                       </tr>
                       <tr>
                         <th>사용설비</th>
@@ -95,7 +95,7 @@
       </div>
     </div>
   </div>
-  <!-- End 자재발주조회 더블클릭하면 나오는 모달 -->
+  <!-- End 자재발주조회 클릭하면 나오는 모달 -->
   <!-- /. NAV SIDE  -->
   <div id="page-wrapper">
     <div class="header">
@@ -114,7 +114,7 @@
             <div class="card-action">생산지시</div>
             <div class="card-content">
               <div class="table-responsive">
-                <div id="OrderListGrid"></div>
+                <div id="ProcOrderListGrid"></div>
               </div>
             </div>
           </div>
@@ -132,7 +132,7 @@
             </div>
             <div class="card-content">
               <div class="table-responsive">
-                <div id="ProcessOrderGrid"></div>
+                <div id="ProcessProgGrid"></div>
               </div>
             </div>
           </div>
@@ -166,52 +166,38 @@
 
 
 
-    function getOrderList(modCd){
-			$.ajax({
-				url : "MtTestSearch",
-				method :"POST",
-        async : false,
-				dataType : "JSON",
-				data : {modCd : modCd},
-				success : function(data){
-					console.log(data);
-          testList.clear();
-					testList.resetData(data);
-				},
-				error : function(reject){
-					console.log(reject);
-					console.log("통신오류");
-				},
-			})
-      setTimeout(function(){setSumHeader()}, 300);
-		}
 
 const Grid = tui.Grid;
 Grid.setLanguage('ko');
-    const odList = new Grid({
-      el: document.getElementById('OrderListGrid'), // Container element
+    const ProcOdList = new Grid({
+      el: document.getElementById('ProcOrderListGrid'), // Container element
       data: null,//나중에 데이타 넣어!
       columns: [
+      { 
+            header: '생산지시코드', //==========================코드숨겨놓음
+            name: 'prcmCd',
+            hidden:true,
+        },
         { 
             header: '제품코드', //==========================코드숨겨놓음
-            name: '',
+            name: 'cprCd',
             hidden:true,
         },
         {
           header: '제품명',
-          name: '',
+          name: 'cprNm',
         },
         {
           header: '생산지시일',
-          name: '',
+          name: 'prcmDt',
         },
         {
           header: '생산시작일',
-          name: '',
+          name: 'prcmStartDt',
         },
         {
           header: '생산종료일',
-          name: '',
+          name: 'prcmEndDt',
         },
         {
           header: '생산진행도',
@@ -226,59 +212,84 @@ Grid.setLanguage('ko');
           }
     });
 
-    const odProcList = new Grid({
-      el: document.getElementById('ProcessOrderGrid'), // Container element
+    function getProcOrderList(){
+      $.ajax({
+        url : "getProcCommand",
+        method :"GET",
+        async : false,
+        dataType : "JSON",
+        // data : {modCd : modCd},
+        
+        success : function(data){
+          console.log(data);
+          ProcOdList.clear();
+          ProcOdList.resetData(data);
+        },
+        error : function(reject){
+          console.log(reject);
+          console.log("통신오류");
+        },
+      })
+    }
+    getProcOrderList();
+//====공정현황조회==================================================
+    const ProcProgList = new Grid({
+      el: document.getElementById('ProcessProgGrid'), // Container element
       data: null,//나중에 데이타 넣어!
       columns: [
-
+        {
+          header: '공정지시코드', //공정코드숨겨놨음====================== 
+          name: 'prcmPrcd',
+          sortable: true,
+          hidden: true,
+        },
         {
           header: '공정코드', //공정코드숨겨놨음====================== 
-          name: '',
-          sortingType: 'asc',
+          name: 'cmCd',
           sortable: true,
           hidden: true,
         },
         {
             header: '제품코드',
-            name: '',
-            sortingType: 'asc',
+            name: 'cprCd',
             sortable: true,
             hidden: true,
         },
         {
           header: '제품명',
-          name: '',
+          name: 'cprNm',
+
+          sortable: true,
+        },
+        {
+          header: '공정순번',
+          name: 'prcmTurn',
           sortingType: 'asc',
           sortable: true,
         },
         {
           header: '공정명',
-          name: '',
-          sortingType: 'asc',
+          name: 'cmNm',
           sortable: true,
         },
         {
           header: '목표생산량',
-          name: '',
-          sortingType: 'asc',
+          name: 'prcmQnt',
           sortable: true
         },
         {
           header: '생산량',
-          name: '',
-          sortingType: 'asc',
+          name: 'prprQnt',
           sortable: true
         },
         {
           header: '불량량',
-          name: '',
-          sortingType: 'asc',
+          name: 'prprBad',
           sortable: true
         },
         {
           header: '총작업량',
-          name: '',
-          sortingType: 'asc',
+          name: 'prQntSum',
           sortable: true
         },
       ],
@@ -290,6 +301,41 @@ Grid.setLanguage('ko');
           }
     });
 
+
+    function getProcProg(commandCD){
+      console.log(commandCD);
+      $.ajax({
+        url : "getProcProg",
+        method :"POST",
+        async : false,
+        dataType : "JSON",
+        data : {prcmCd : commandCD},
+        
+        success : function(data){
+          console.log(data);
+          ProcProgList.resetData(data);
+        },
+        error : function(reject){
+          console.log(reject);
+          console.log("통신오류");
+        },
+      })
+    }
+    //지시리스트에서 고르면 공정표시하기
+    ProcOdList.on("dblclick", (e) => {
+			const rowData = ProcOdList.getRow(e.rowKey);
+			getProcProg(rowData.prcmCd);
+		});
+
+    //공정리스트에서 클릭하면 모달창 필요한정보 넘겨서띄우기
+    ProcProgList.on("dblclick", (e) => {
+			const rowData = ProcProgList.getRow(e.rowKey);
+      prodNm.value=rowData.cprNm;
+      procNm.value=rowData.cmNm;
+      document.getElementById('procInsertModal').style.display='block';
+		});
+
+//=========================================================
     const odResultList = new Grid({
       el: document.getElementById('resultListGrid'), // Container element
       data: null,//나중에 데이타 넣어!

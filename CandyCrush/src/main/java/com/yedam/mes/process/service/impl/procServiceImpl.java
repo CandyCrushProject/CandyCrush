@@ -104,16 +104,16 @@ public class procServiceImpl implements ProcService {
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO) {
 		return procMapper.searchPlanList(ppVO);
 	}
-
-	public List<ProcResultAllVO> getProcCommand(ProcResultAllVO comVO){
-		return procMapper.getProcCommand(comVO);
+	@Override
+	public List<ProcResultAllVO> getProcCommand(){
+		return procMapper.getProcCommand();
 	}
 
-
-
-
-
-
+	@Override
+	public List<ProcResultAllVO> getProcProg(@Param("prcmCd")String prcmCd) {
+		return 	procMapper.getProcProg(prcmCd);
+	}
+	
 
 
 }

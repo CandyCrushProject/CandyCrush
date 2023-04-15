@@ -73,8 +73,10 @@ public interface ProcMapper {
 	public List<ProcProgVO> selectProgList(ProcProgVO progVO);
 	
 	//실적페이지 지시조회===============이하실적페이지 구역
-	public List<ProcResultAllVO> getProcCommand(ProcResultAllVO comVO);
+	public List<ProcResultAllVO> getProcCommand();
 	
+	
+	public List<ProcResultAllVO> getProcProg(@Param("prcmCd") String prcmCd);
 	
 	
 	/* 생산공정 매퍼 끝 */
