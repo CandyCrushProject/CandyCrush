@@ -9,22 +9,21 @@
 		margin-bottom: 30px !important;
 		margin-top:10px !important;
 	}
-	.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
 </style>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
 		<div class="header">
-			<h1 class="page-header">자재입고관리</h1>
+			<h1 class="page-header">제품관리</h1>
 			<ol class="breadcrumb">
 				<li><a href="#">candy</a></li>
-				<li><a href="#">자재관리</a></li>
-				<li class="active">자재입고관리</li>
+				<li><a href="#">영업관리</a></li>
+				<li class="active">제품입고관리</li>
 			</ol>
 		</div>
 
 		<!-- 업체명 검색 모달 -->
-		<div id="modal" class="w3-modal" style="z-index: 100;">
+		<!-- <div id="modal" class="w3-modal" style="z-index: 100;">
 			<div class="w3-modal-content">
 				<div class="w3-container">
 					<span class="w3-button w3-display-topright" onclick="document.getElementById('modal').style.display='none'">&times;</span>
@@ -37,25 +36,10 @@
 					<div id="caModal"></div>
 				</div>
 			</div>
-		</div><!-- End 업체명 검색 모달 -->
+		</div>End 업체명 검색 모달 -->
 
 		<!-- 입고목록 상세 모달 -->
-		<div id="inputDetailModal" class="w3-modal" style="z-index: 101;">
-		<div class="w3-modal-content">
-			<div class="w3-container">
-				<span class="w3-button w3-display-topright" onclick="document.getElementById('inputDetailModal').style.display='none'">&times;</span>
-				<h3>입고상세목록</h3>
-				<div style="clear:both"></div>
-				<div id="rigth">
-					<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
-					<button type="button" id="dateUpdateBtn" class="cndUdtBtn">수정</button>
-				</div>
-				<label for="modalMinCd">입고코드</label>
-				<input type="text" id="modalMinCd" style="width: 300px;" readonly>
-				<div id="inputModal"></div>
-			</div>
-		</div>
-	</div><!-- End 자재발주조회 더블클릭하면 나오는 모달 -->
+		<!-- End 자재발주조회 더블클릭하면 나오는 모달 -->
 
 		<div id="page-inner">
 			<div class="row">
@@ -65,12 +49,10 @@
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
 							<div>
-								<h5><b>▶ 검사자료 조회</b></h5>
+								<h5><b>▶제품명</b></h5>
 								<div>
-									<label for="caNmInput">업체명</label> 
-									<input type="text" id="caNmInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);" readonly>&nbsp;
-									<button class="srchBtn" id="companySearch"><i class="fa-solid fa-magnifying-glass"></i></button>
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<label for="caNmInput">제품명</label> 
+									<input type="text" id="caNmInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
 									<label for="start">검사자료</label>
 									<input type="date" id="start"
 											style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
@@ -109,9 +91,6 @@
 				<div class="col-md-4">
 					<div class="card">
 						<div class="card-action">▶입고목록</div>
-						<div style="padding-left: 5px; margin-bottom: 20px">
-							<label for="inputGuide" id="inputGuide"> >> 기준 : 7일이내 기준</label>
-						</div>
 						<div class="card-content">
 							<div class="table-responsive">
 								<div id="mtrlInputList"></div>
@@ -307,8 +286,12 @@
 					header : '입고수량',
 					name : 'minCnt',
 					formatter: function(value) {
-						return '<div style="font-weight : bolder;">'+value.value+'</div>';
+						return '<div style="width:100%;height:100%;background-color:#fff">'+value.value+'</div>';
 					}
+					// editor : 'text',
+					// validation: {
+					// 	dataType: 'number'
+					// }
 				}
 			],
 			bodyHeight: 520,
@@ -375,23 +358,17 @@
 			}
 		});
 
-		//입고등록 Grid ajax 함수
+		//입고등록 ajax 함수
 		const mtrlInspList = (caNm = undefined, start = undefined, end = undefined) => {
-			let minDt = $('#mtrlInput').val();
 			$.ajax({
 				url : "mtrlInputGetList",
 				method :"POST",
 				dataType : "JSON",
 				success : function(data){
 					data.map((item) => {
-						item.minCnt = item.miPassCnt;
-						item.cmlInCnt = item.minCnt;
+						item.minCnt = item.miPassCnt
 					});
-					console.log(data);
 					materialInspGetList.resetData(data);
-					materialInspGetList.getData().forEach(row => {
-						materialInspGetList.addCellClassName(row.rowKey, 'minCnt', 'cell-green');
-					});
 				}
 			});
 		};
@@ -409,31 +386,61 @@
 					text: "입고수량 변경 기능은 준비중입니다."
 				})
 			};
+			// console.log(e.rowKey);
+			// materialInspGetList.focusChange = -1;
+			
 		});
+
+		// materialInspGetList.on('editingFinish', (e)=>{
+		// 	let rowDate = materialInspGetList.getRow(e.rowKey);
+		// 	let minCntData = Number(rowDate.minCnt);					//입고수량
+		// 	let miPassCntData = Number(rowDate.miPassCnt);	  //입고가능수량
+
+		// 	//입고가능한 수량 값을 String을 입력했을 경우
+		// 	if(isNaN(minCntData)){
+		// 		setTimeout(() => {
+		// 			Swal.fire({
+		// 				icon : 'error',
+		// 				title : '경고',
+		// 				text: '숫자만 입력 가능합니다',
+		// 			});
+		// 			materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+		// 			return;
+		// 		}, 10);
+		// 	}
+
+		// 	//입고가능한 수량보다 입고할 수량이 더 많은 경우
+		// 	if(minCntData > miPassCntData){
+		// 		setTimeout(() => {
+		// 			Swal.fire({
+		// 				icon : 'error',
+		// 				title : '다시 입력해주세요',
+		// 				text: '입고가능한 수량보다 많습니다',
+		// 			});
+		// 			materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+		// 			return;
+		// 		}, 10);
+		// 	};
+
+		// 	//입고수량을 0 또는 빈값을 입력했을 경우
+		// 	if(minCntData === 0 || minCntData === null){
+		// 		setTimeout(() => {
+		// 			Swal.fire({
+		// 					icon: 'error',
+		// 					title: '경고',
+		// 					text: "입고수량이 기재되지 않았습니다",
+		// 				});
+		// 				materialInspGetList.setValue(e.rowKey, 'minCnt', beforeMoCnt);
+		// 				return;
+		// 		}, 10);
+		// 	};
+		// });
 
 		//체크한 행만 입고코드를 입힌다
 		$('#mtrlInputSaveBtn').on('click',(e)=>{
 			let checkRows = materialInspGetList.getCheckedRows();
-			
 			if(checkRows.length !== 0){
-				checkRows.map((item) => {
-					item.minDt = $("#mtrlInput").val();		//입고관리/입고일자
-					item.cmlInDt = $("#mtrlInput").val();	//LOT관리/등록일자
-				});
-				console.log(checkRows);
-				$.ajax({
-					url : "mtrlInputInsert",
-					method :"POST",
-					dataType : "JSON",
-					contentType: "application/json",
-					data: JSON.stringify(checkRows),
-					success : function(data){
-						console.log(data);
-					},
-					error : function(reject){
-						console.log(reject);
-					}
-				});
+				
 			} else {
 				Swal.fire({
 					icon: 'error',
@@ -456,9 +463,7 @@
 					name: 'minDt',
 					formatter: function (e) {
 						let newData = new Date(e.value);
-						let result = newData.getFullYear() + "-" +
-									(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
-									+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+						let result = newData.getFullYear() + "-" + (newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1) + "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
 							return result;
 					}
 				},
@@ -467,7 +472,6 @@
 					name: 'minCdCount'
 				}
 			],
-
 			bodyHeight: 520,
 		});
 		mtrlMngInputList.resetData(inpuerList7Days);
@@ -519,5 +523,5 @@
 		$('#mtrlInput').attr("min", today);
 
 
-</script>
+	</script>
 </main>

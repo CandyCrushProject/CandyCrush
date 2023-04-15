@@ -85,54 +85,55 @@ public class ProcessController {
 	
 	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
-	public String insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
-		ProcPlanVO ordrDtlCd = insertList.get(0);
-		String[] ordrDtlCdArr = ordrDtlCd.getOrdrDtlCd().split(",");
+	@ResponseBody
+	public Map<String, Object> insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
+
+		
 		List<ProcPlanVO> planVO = new ArrayList<>();
+		Map<String, Object> message = new HashMap<>();
+		
+		
 		for(int i=0;i<insertList.size();i++) {
-			if(i>0) {
 				planVO.add(insertList.get(i));
-			}
+			
 		}
-		int update = procService.updateOrderStatus(ordrDtlCdArr);	
-		int insert = procService.addPlan(planVO);
-		int insert2 = procService.addPlanDetail(planVO);
-		String message = null;
-		if(insert != -1 && insert2 != -1 && update != -1) {
-			message = "실패";
+
+//		int update = procService.updateOrderStatus(planVO);	
+		int insertPlan = procService.addPlan(planVO);
+		int insertPlanDetail = procService.addPlanDetail(planVO);
+		
+//		if(insertPlan < 1 && insertPlanDetail < 1 && update < 1) {
+		if(insertPlan < 1 && insertPlanDetail < 1) {
+			message.put("retCode","실패");
+			
 		} else {
-			message = "성공";
+			message.put("retCode","성공");
 		} 
-		rrtt.addFlashAttribute("message",message);
-		return "redirect:ProcManagement";
+
+		
+		return message;
 	}
 	
-	// 생산관리 -> 생산계획 -> BOM 자재 정보
-	@GetMapping("getBomInfo")
-	@ResponseBody
-	public Map<String, Object> getBomInfo(OrderPlanVO opVO) {
-	    Map<String, Object> resultMap = new HashMap<>();
-	    resultMap.put("bomInfo", procService.getBomMtrl(opVO));
-	    
-		return resultMap;
-	}
+	
 	// 생산관리 -> 생산지시관리 -> 페이지
 	@GetMapping("ProcOrder")
 	public String ProcOrderManagement() {
 		return "process/processOrder";
 	}
 	
-	@PostMapping("ProcPlanOrder")
-	@ResponseBody
-	public List<ProcPlanVO> getProcPlanOrder(ProcPlanVO ppVO){
-		return procService.getPlan(ppVO);
-	}
-	
+
 	@PostMapping("cprSearch")
 	@ResponseBody
 	public List<ProcPlanVO> planCprSearch(ProcPlanVO ppVO){
 		return procService.searchPlanList(ppVO);
 	}
+	
+	@GetMapping("ProcPlanOrder")
+	@ResponseBody
+	public List<ProcPlanVO> getProcPlanOrder(){
+		return procService.getPlan();
+	}
+	
 	
 	
 	// 생산관리 -> 생산공정관리

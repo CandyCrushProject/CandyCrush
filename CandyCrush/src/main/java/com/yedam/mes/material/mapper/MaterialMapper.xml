@@ -111,8 +111,12 @@
 	
 	<!-- 발주관리 헤더 INSERT -->
 	<insert id="orderHeaderInsert" parameterType="MaterialOrderVO">
+		<selectKey resultType="String" keyProperty="moCd" order="BEFORE">
+			SELECT 'mo' || TO_CHAR(sysdate, 'yyMMdd') ||MO_SEQ.NEXTVAL AS mo_cd
+			FROM dual
+		</selectKey>
 		INSERT INTO MTRL_ORDER(mo_cd, mo_title, mo_reo_dt, mo_stt)
-		VALUES('mo' || TO_CHAR(sysdate, 'yyMMdd') ||MO_SEQ.NEXTVAL , #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'), '발주완료')
+		VALUES(#{moCd} , #{moTitle}, TO_CHAR(#{moReoDt}, 'yyyy-MM-dd'), '발주완료')
 	</insert>
 	
 	<!-- 발주관리디테일 INSERT -->
@@ -201,5 +205,58 @@
 		WHERE min.min_cd = #{minCd}
 		ORDER BY min.mi_cd
 	</select>
+	
+	<!-- 자재입고 등록 -->
+	<insert id="mtrlInputInsert" parameterType="MaterialInputVO">
+		<selectKey resultType="string" keyProperty="minCd" order="BEFORE">
+		SELECT 'min' || TO_CHAR(sysdate, 'yyMMdd') || min_seq.NEXTVAL
+		FROM dual
+		</selectKey>
+		<foreach collection="list" item="vo" open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO 
+				mtrl_input(min_cd, mi_cd, min_cnt, min_dt)
+			VALUES
+				(
+					#{minCd},
+					#{vo.miCd},
+					#{vo.minCnt},
+					#{vo.minDt}
+				)
+		</foreach>
+	</insert>
+	
+	<!-- 자재입고시 LOT로 넣어버려 -->
+	<insert id="mtrlLotInsert" parameterType="MaterialInputVO">
+	<selectKey resultType="string" keyProperty="minCd" order="BEFORE">
+		SELECT MAX(min_cd)
+		FROM mtrl_input
+	</selectKey>
+		INSERT INTO
+			CM_MTRL_LOT (
+				cml_nm, 
+				min_cd,
+				cml_in_cnt, 
+				cml_in_dt, 
+				cmm_cd, 
+				mi_cd
+			)
+		SELECT 
+			'cml' || TO_CHAR(sysdate, 'yyMMdd') || cml_seq.NEXTVAL,
+			'min' || TO_CHAR(sysdate, 'yyMMdd') || min_seq.CURRVAL, 
+			A.*
+		FROM (
+			<foreach collection="list" item="vo" separator="UNION ALL">
+			SELECT
+				#{vo.cmlInCnt} AS cml_in_cnt,
+				#{vo.cmlInDt} AS cml_in_dt,
+				#{vo.cmmCd} AS cmm_cd,
+				#{vo.miCd} AS mi_cd
+			FROM
+				DUAL
+			</foreach>
+		) A
+
+	</insert>
+	<!-- <update id=""></update> -->
 
 </mapper>

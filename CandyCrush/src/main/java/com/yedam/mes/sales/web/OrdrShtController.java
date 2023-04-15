@@ -1,7 +1,10 @@
 package com.yedam.mes.sales.web;
 
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.yedam.mes.material.service.MaterialOrderVO;
 import com.yedam.mes.sales.service.OrdrShtService;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
 
@@ -118,27 +120,20 @@ public class OrdrShtController {
 //		return response;
 //	};
 	
+	// 주문서 등록 해야함 ㅠㅠ
 	@PostMapping("ordrShtForm")
 	@ResponseBody
-	public Boolean ordrShtInsertProcess(@RequestBody List<OrdrShtVO> vo){
+	public Map<String, Object> ordrShtInsertProcess(@RequestBody Map<String, Object> map){
+	
+		System.out.println(map.get("data"));
+		System.out.println(map.get("dataHd"));
 		
-		//vo 인스턴스 선언
-		OrdrShtVO newVo = new OrdrShtVO();
+		return map;
+	}
+	
+	@GetMapping("prodInputMngmnt")
+	public String prodInputMngmnt(Model model) {
 		
-		newVo.setCaNo(vo.get(0).getCaNo());
-		newVo.setOrshDt(vo.get(0).getOrshDt());
-		newVo.setDlvryDt(vo.get(0).getDlvryDt());
-		newVo.setCprCd(vo.get(0).getCprCd());	// CprCd 값을 가져와서 db에 전달
-		newVo.setCprNm(vo.get(0).getCprNm());	// CprNm 값을 가져와서 db에 전달
-		newVo.setOrdrDtlCnt(vo.get(0).getOrdrDtlCnt());	// OrdrDtlCnt 값을 가져와서 db에 전달
-		System.out.println(newVo.getCprCd() + ", " + newVo.getCprNm() + ", " + newVo.getOrdrDtlCnt());
-		
-		Boolean response = true;
-		int result = service.insertOrdrSht(newVo, vo); 	//발주관리헤더, 발주관리디테일
-		if(result < 1) {
-			response = false;
-		};
-		
-		return response;
-	};
+		return "sales/prodInputMngmnt";
+	}
 }

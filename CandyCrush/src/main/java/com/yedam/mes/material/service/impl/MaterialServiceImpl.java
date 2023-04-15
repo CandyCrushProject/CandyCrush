@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.mvel2.optimizers.impl.refl.nodes.ArrayLength;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yedam.mes.material.mapper.MaterialMapper;
 import com.yedam.mes.material.service.MaterialInputVO;
@@ -62,7 +64,7 @@ public class MaterialServiceImpl implements MaterialService {
 		return mapper.getMtrlOrderCode();
 	};*/
 		
-	//자재발주헤더 + 자재발주디테일 INSERT
+	//자재발주헤더 + 자재발주디테일 INSERT, 수정해야함
 	@Override
 	public int orderInsert(MaterialOrderVO vo, List<MaterialOrderVO> listVO) {
 		int cnt = 0;
@@ -70,7 +72,9 @@ public class MaterialServiceImpl implements MaterialService {
 		cnt = mapper.orderHeaderInsert(vo);
 		
 		for(MaterialOrderVO matlVO: listVO) {
+			matlVO.setMoCd(vo.getMoCd());
 			cnt += mapper.orderDetailInsert(matlVO);
+			System.out.println(matlVO);
 		}
 		
 		return cnt;
@@ -138,5 +142,16 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialInputVO> mtrlInputDetailList(@Param("minCd") String minCd) {
 		return mapper.mtrlInputDetailList(minCd);
 	}
-
+	
+	@Transactional
+	@Override
+	public int mtrlInputALLInsert(List<MaterialInputVO> vo) {
+		int implResponse = 0;
+		int inputInsertResult = mapper.mtrlInputInsert(vo);				//입고관리/입고코드
+		int lotInsertResult = mapper.mtrlLotInsert(vo);
+		if(inputInsertResult != 0 && lotInsertResult != 0) {
+			implResponse++;
+		}
+		return implResponse;
+	}
 }

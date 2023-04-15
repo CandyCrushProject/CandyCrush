@@ -63,13 +63,14 @@
            AND ca_nm = #{caNm}
 		 ORDER BY 5
 	</select>
+	<!-- 계획 등록 전 정보 -->
 	<select id="addPlanbefore" resultType="OrderPlanVO">
 		SELECT SUM(ordr_dtl_cnt) as sum_dtl_cnt
 			 , d.cpr_cd as cpr_cd
 			 , p.cpr_nm as cpr_nm
-		  FROM order_sheet_detail d
+		  FROM order_sheet o
+		     , order_sheet_detail d
 			 , cm_product_mng p
-             , order_sheet o
 		 WHERE d.cpr_cd = p.cpr_cd(+)
            AND o.orsh_no = d.orsh_no
 	       AND d.orsh_pr = '접수완료'
@@ -109,7 +110,6 @@
 	       AND bm.cmm_cd = mm.cmm_cd(+)
 	       AND bm.cm_cd = pc.cm_cd(+)
 	       AND od.cpr_cd = pm.cpr_cd(+)
-	       AND od.orsh_no = #{orshNo}
 	       AND od.cpr_cd = #{cprCd}
 	     ORDER BY 3, 1
 	</select>
@@ -119,75 +119,37 @@
 		UPDATE order_sheet_detail
 		   SET orsh_pr = '계획완료',
 			   stt_cng_dt = SYSDATE
-		 WHERE orsh_no IN
-			  <foreach collection='orshNo' index='index' item='orshNo' open='(' close=')' separator=','>
-			  #{orshNo}
-			  </foreach>
+		 WHERE orsh_no = #{orshNo}
 	</update>
 	
-	
 	<!-- 계획 등록 -->
-<!-- 	<insert id="insertPlan" parameterType="ProcPlanVO">
+	<update id="insertPlan" parameterType="ProcPlanVO">
 		<selectKey keyProperty="prplCd" resultType="String" order="BEFORE">
 			SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
 			  FROM DUAL
 		</selectKey>
-		INSERT INTO proc_plan (prpl_cd, orsh_no, prpl_status)
-		VALUES
-		 	 ( #{prplCd}
-		 	 , #{orshNo}
-		 	 , '미지시'
-		 	 )
-	</insert> -->
-		<!-- 계획 상세 등록 -->
-	<!-- <insert id="insertPlanDetail" parameterType="ProcPlanVO">
+		INSERT INTO proc_plan (prpl_cd, prpl_status, prpl_mng)
+		VALUES(
+				  #{prplCd}
+				, #{prplStatus}
+				, #{prplMng}
+			   )
+	</update>
+
+	<!-- 계획 상세 등록 -->
+	<update id="insertPlanDetail" parameterType="ProcPlanVO">
 		<selectKey keyProperty="prpldCd" resultType="String" order="BEFORE">
 			SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
 			  FROM DUAL
 		</selectKey>
-		INSERT INTO proc_plan_detail
-		VALUES
-			 ( #{prpldCd}
-			 , #{prpldWorkTskPri}
-			 , #{cprCd}
-			 , #{prpldCnt}
-			 , #{prstDt}
-			 , #{prpldMng}
-			 , '계획완료'
-			 , #{prplCd}
-			 )
-	</insert> -->
-	<!-- 계획 등록 -->
-	<update id="insertPlan" parameterType="list">
-		INSERT INTO proc_plan (prpl_cd, orsh_no, prpl_status)
-		SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
-		     , T.*
-		  FROM (
-				<foreach collection="planVO" item="vo" index="index" separator="union all">
-					SELECT #{vo.orshNo} as orshNo
-					     , #{vo.prplStatus} as prplStatus
-					  FROM DUAL
-				</foreach>
-				)T
-	</update>
-
-	<!-- 계획 상세 등록 -->
-	<update id="insertPlanDetail" parameterType="list">
-		INSERT INTO proc_plan_detail
-		SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
-		     , T.*
-	      FROM (
-				<foreach collection="planVO" item="vo" separator=" ">
-					SELECT #{vo.prpldWorkTskPri} as prpldWorkTskPri
-						 , #{vo.cprCd} as cprCd
-						 , #{vo.prpldCnt} as prpldCnt
-						 , #{vo.prstDt} as prstDt
-						 , #{vo.prpldMng} as prpldMng
-						 , #{vo.prpldStatus} as prpldStatus
-						 , #{vo.prplCd} as prplCd
-					  FROM DUAL
-				</foreach>
-			    )T
+		INSERT INTO proc_plan_detail (prpld_cd, prpl_cd, cpr_cd, prpld_cnt, prpld_status)
+		VALUES (
+				   #{prpldCd}
+				 , #{prplCd}
+				 , #{cprCd}
+				 , #{prpldCnt}
+				 , #{prpldStatus}
+			   )
 	</update>
 	<!-- 생산계획 리스트 -->
 	<select id="seletPlanList" parameterType="ProcPlanVO" resultType="ProcPlanVO">
@@ -201,7 +163,7 @@
 		  FROM proc_plan pp, proc_plan_detail ppd, cm_product_mng cpm
 		 WHERE pp.prpl_cd = ppd.prpl_cd
 		   AND ppd.cpr_cd = cpm.cpr_cd
-		   AND prpld_status = #{prpldStatus}
+		   AND prpld_status = '계획완료'
 		 ORDER BY 1
 	</select>
 

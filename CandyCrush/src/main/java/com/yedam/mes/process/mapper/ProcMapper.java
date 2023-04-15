@@ -31,11 +31,11 @@ public interface ProcMapper {
 	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo);
 
 	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
-	public int updateOrderStatus(@Param("orshNo")String[] orshNo);
+	public int updateOrderStatus(ProcPlanVO planVO);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
-	public int insertPlan(@Param("planVO")List<ProcPlanVO> planVO);
-	public int insertPlanDetail(@Param("planVO")List<ProcPlanVO> planVO);
+	public int insertPlan(ProcPlanVO planVO); // 생산계획 헤더
+	public int insertPlanDetail(ProcPlanVO planVO); // 디테일
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
 	public List<BomInfoVO> selectBomMtrl(OrderPlanVO opVO);
@@ -46,7 +46,7 @@ public interface ProcMapper {
 	/* 생산지시 매퍼 시작 */
 	
 	// 생산계획조회 - 생산계힉정보를 넘겨받음
-	public List<ProcPlanVO> seletPlanList(ProcPlanVO ppVO); 
+	public List<ProcPlanVO> seletPlanList(); 
 	
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO); 
 	// 생산지시저장 - 조회된 계획으로 지시를 내릴 수 있다.
