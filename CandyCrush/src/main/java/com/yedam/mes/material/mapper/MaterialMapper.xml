@@ -184,7 +184,7 @@
 		FROM mtrl_input
 		WHERE min_dt >= TO_CHAR(SYSDATE-7,'yyyy-MM-dd')
 		GROUP BY min_cd, min_dt
-		ORDER BY min_cd
+		ORDER BY min_cd DESC
 	</select>
 	
 	<!-- 자재입고관리 / 입고상세 -->
@@ -255,8 +255,13 @@
 				DUAL
 			</foreach>
 		) A
-
 	</insert>
-	<!-- <update id=""></update> -->
+	
+	<update id="mtrlMoSttUpdate" parameterType="MaterialInputVO" statementType="CALLABLE">
+		{ call mtrl_update(
+		        #{moCd, mode=IN, jdbcType=VARCHAR, javaType=String}
+		       )
+		}
+	</update>
 
 </mapper>

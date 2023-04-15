@@ -341,16 +341,16 @@
 										자재발주관리
 									</a>
 								</li>
-								<li>
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/mtrlOrderList" class="waves-effect waves-dark">
 										자재발주조회
 									</a>
-								</li>
-								<li>
+								</li> -->
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/mtrlInspCheck" class="waves-effect waves-dark">
 										자재입고검사조회
 									</a>
-								</li>
+								</li> -->
 								<!-- <li>
 									<a href="${pageContext.request.contextPath}/mtrlInspManagement" class="waves-effect waves-dark">
 										자재입고검사관리(품질로빼기)
@@ -408,15 +408,15 @@
 									</a>
 								</li>
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcOrder" class="waves-effect waves-dark">
+									<a href="${pageContext.request.contextPath}/QualityProduct" class="waves-effect waves-dark">
 										제품품질관리
 									</a>
 								</li>
-								<li>
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/ProdProcManagement" class="waves-effect waves-dark">
 										???빈칸
 									</a>
-								</li>
+								</li>-->
 							</ul>
 						</li>
 

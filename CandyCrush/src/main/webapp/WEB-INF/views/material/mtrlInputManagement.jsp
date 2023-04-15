@@ -48,7 +48,7 @@
 				<div style="clear:both"></div>
 				<div id="rigth">
 					<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
-					<button type="button" id="dateUpdateBtn" class="cndUdtBtn">수정</button>
+					<!--<button type="button" id="dateUpdateBtn" class="cndUdtBtn">수정</button>-->
 				</div>
 				<label for="modalMinCd">입고코드</label>
 				<input type="text" id="modalMinCd" style="width: 300px;" readonly>
@@ -91,7 +91,7 @@
 							<div class="card-action">▶입고등록</div>
 							<div style="clear:both"></div>
 							<button type="button" class="cndInsBtn mtrlInputMngFloatBtn" id="mtrlInputSaveBtn">저장</button>
-							<button type="button" class="cndDelBtn mtrlInputMngFloatBtn">삭제</button>
+							<!--<button type="button" class="cndDelBtn mtrlInputMngFloatBtn">삭제</button>-->
 							<div id="inputReset" style="padding-left: 5px;">
 								<label for="mtrlInput" style="margin-left: 10px; width: 80px;">입고일자</label>
 								<input type="date" id="mtrlInput" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
@@ -181,21 +181,35 @@
 									},
 								</c:forEach>
 							];
+		const initData = () => {
+			$.ajax({
+				url: "test",
+				method: "POST",
+				dataType: "JSON",
+				contentType: "application/json",
+				success: (response) => {
+					mtrlMngInputList.resetData(response);
+				}
+				
+			});
+		}		
+		initData();
 
-		let inpuerList7Days = [
-									<c:forEach items="${inpuerList7Days}" var="inSht">
-										{
-											minCd : '${inSht.minCd}',
-											minDt : '${inSht.minDt}',
-											minCdCount : '${inSht.minCdCount}'
-										},
-									</c:forEach>
-								];
+		// let inpuerList7Days = [
+		// 							<c:forEach items="${inpuerList7Days}" var="inSht">
+		// 								{
+		// 									minCd : '${inSht.minCd}',
+		// 									minDt : '${inSht.minDt}',
+		// 									minCdCount : '${inSht.minCdCount}'
+		// 								},
+		// 							</c:forEach>
+		// 						];
 
 //--------------------------------------------------------------Grud
 		//업체명 검색 Grid
 		const caModal = new Grid({
 			el: document.getElementById('caModal'),
+			scrollX: false,
 			columns: [
 				{
 					header: '업체코드',
@@ -297,7 +311,8 @@
 				},
 				{
 					header: '발주코드',
-					name: 'moCd'
+					name: 'moCd',
+					rowSpan: true
 				},
 				{
 					header: '입고가능수량',
@@ -356,12 +371,12 @@
 				},
 				{
 					header: '발주코드',
-					name: 'moCd'
+					name: 'moCd',
+					rowSpan: true
 				},
 				{
 					header : '입고수량',
 					name : 'minCnt',
-					editor : 'text',
 					validation: {
 						dataType: 'number'
 					}
@@ -383,13 +398,12 @@
 				method :"POST",
 				dataType : "JSON",
 				success : function(data){
-					data.map((item) => {
+					data.map((item) => {							//그리드에 있는 값을 다른 컬럼에 값을 부여
 						item.minCnt = item.miPassCnt;
 						item.cmlInCnt = item.minCnt;
 					});
-					console.log(data);
-					materialInspGetList.resetData(data);
-					materialInspGetList.getData().forEach(row => {
+					materialInspGetList.resetData(data);			//아작스 결과를 그리드에 그려준다
+					materialInspGetList.getData().forEach(row => {	//입고수량의 Cell에 바탕화면을 연두색으로 변경
 						materialInspGetList.addCellClassName(row.rowKey, 'minCnt', 'cell-green');
 					});
 				}
@@ -411,38 +425,6 @@
 			};
 		});
 
-		//체크한 행만 입고코드를 입힌다
-		$('#mtrlInputSaveBtn').on('click',(e)=>{
-			let checkRows = materialInspGetList.getCheckedRows();
-			
-			if(checkRows.length !== 0){
-				checkRows.map((item) => {
-					item.minDt = $("#mtrlInput").val();		//입고관리/입고일자
-					item.cmlInDt = $("#mtrlInput").val();	//LOT관리/등록일자
-				});
-				console.log(checkRows);
-				$.ajax({
-					url : "mtrlInputInsert",
-					method :"POST",
-					dataType : "JSON",
-					contentType: "application/json",
-					data: JSON.stringify(checkRows),
-					success : function(data){
-						console.log(data);
-					},
-					error : function(reject){
-						console.log(reject);
-					}
-				});
-			} else {
-				Swal.fire({
-					icon: 'error',
-					title: '경고',
-					text: "선택된 자재가 없거나 데이터가 없습니다.",
-				});
-			}
-		})
-		
 		//입고목록 Grid
 		const mtrlMngInputList = new Grid({
 			el: document.getElementById('mtrlInputList'), // Container element
@@ -470,7 +452,47 @@
 
 			bodyHeight: 520,
 		});
-		mtrlMngInputList.resetData(inpuerList7Days);
+		//mtrlMngInputList.resetData(inpuerList7Days);
+		
+		//체크한 행만 입고코드를 입힌다
+		$('#mtrlInputSaveBtn').on('click',(e)=>{					//저장버튼
+			let checkRows = materialInspGetList.getCheckedRows();
+			
+			if(checkRows.length !== 0){
+				checkRows.map((item) => {
+					item.minDt = $("#mtrlInput").val();				//입고관리/입고일자
+					item.cmlInDt = $("#mtrlInput").val();			//LOT관리/등록일자
+				});
+
+				// 입고관리 / LOT관리 동시 INSERT AJAX
+				$.ajax({
+					url : "mtrlInputInsert",
+					method :"POST",
+					dataType : "JSON",
+					contentType: "application/json",
+					data: JSON.stringify(checkRows),
+					success : function(data){
+						Swal.fire({
+							icon: 'success',
+							title: '성공',
+							text: "입고완료되었습니다.",
+						});
+						materialInspGetList.removeCheckedRows();	//체크된 행을 그리드에서 삭제한다
+						initData();									//입고목록 AJAX 재호출
+						mtrlMngInputList.addRowClassName(data.rowKey, 'cell-green');	//등록완료된 행을 연두색으로 표시한다
+					},
+					error : function(reject){
+						console.log(reject);
+					}
+				});
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: '경고',
+					text: "선택된 자재가 없거나 데이터가 없습니다.",
+				});
+			}
+		});
 
 		//입고목록 Grid 행을 클릭하면 상세 모달이 뜬다
 		mtrlMngInputList.on('dblclick', (e)=>{
@@ -492,7 +514,39 @@
 				success : function(data){
 					materialInspDetail.resetData(data);
 				}
-			})
+			});
+		});
+
+		//엑셀버튼 클릭 이벤트
+		const options = {
+			includeHiddenColumns: true,
+			onlySelected: true,
+			fileName: 'mtrlExport',
+		};
+
+		//엑셀버튼을 누르면 해당되는 발주상세목록을 엑셀로 만들어준다
+		$("#excelBtn").on('click', function(){
+			Swal.fire({
+				title: '엑셀파일로 받아보시겠습니까?',
+				text: "원하지 않는다면 취소를 눌러주세요",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: '확인',
+				cancelButtonText: '취소',
+				reverseButtons: true, // 버튼 순서 거꾸로
+				
+			}).then((result) => {
+				if (result.isConfirmed) {
+					materialInspDetail.export('xlsx', options);
+				} else {
+					Swal.fire({
+						title: '취소되었습니다',
+						icon : 'success'
+					});
+				}
+			});
 		});
 
 		//Modal을 Esc 누르면 없어지게 만드는 곳

@@ -2,7 +2,9 @@ package com.yedam.mes.material.web;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -145,6 +147,12 @@ public class MaterialController {
 	};
 	
 	//------------------------------------------------------------------------
+	@PostMapping("test")
+	@ResponseBody
+	public List<MaterialInputVO> test() {
+		
+		return service.mtrlInputList7Days();
+	}
 	
 	//자재입고관리 페이지, 자재입고목록(7일이내)
 	@GetMapping("mtrlInputManagement")
@@ -166,7 +174,7 @@ public class MaterialController {
 	@ResponseBody
 	public List<MaterialInputVO> mtrlInputDeateilList(@Param("minCd") String minCd){
 		return service.mtrlInputDetailList(minCd);
-	}
+	};
 	
 	//자재입고관리/등록
 	@PostMapping("mtrlInputInsert")
@@ -181,7 +189,22 @@ public class MaterialController {
 		};
 		
 		return response;
-	}
+	};
+	
+	@PostMapping("moSttUpdate")
+	@ResponseBody
+	public Boolean moSttUpdate(@RequestBody MaterialInputVO vo) {
+		Boolean response = false;
+		System.out.println(vo);
+		
+		int result = service.mtrlMoSttUpdate(vo);
+		
+		if(result != 0) {
+			response = true;
+		}
+		
+		return response;
+	};
 	
 	//------------------------------------------------------------------------
 	
@@ -198,15 +221,14 @@ public class MaterialController {
 	public String mtrlCnt(Model model) {
 		model.addAttribute("accountList", service.accountCheck());
 		return "material/mtrlCnt";
-	}
+	};
 	
 	//자재재고조회 / 검색기능 및 조회
 	@PostMapping("mtrlChk")
 	@ResponseBody
 	public List<MaterialVO> mtrlChk(@RequestParam(required = false)  String cmmNm, @RequestParam(required = false) String caNm) {
 		return service.mtrlSearch(caNm, cmmNm);
-	}
-	
+	};
 	
 	//------------------------------------------------------------------------
 	
