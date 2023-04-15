@@ -47,6 +47,13 @@ public class QaulityController {
 
 	}
 	
+	//제품검사관리 페이지
+	@GetMapping("QualityProduct")
+	public String QualityProduct() {
+		return "quality/QualityProdManagement";
+	}
+	
+	
 
 	
 }

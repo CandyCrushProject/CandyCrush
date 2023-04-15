@@ -154,4 +154,10 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 		return implResponse;
 	}
+
+	//진행여부 업데이트
+	@Override
+	public int mtrlMoSttUpdate(MaterialInputVO vo) {
+		return mapper.mtrlMoSttUpdate(vo);
+	}
 }
