@@ -128,27 +128,31 @@
 			SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
 			  FROM DUAL
 		</selectKey>
-		INSERT INTO proc_plan (prpl_cd, prpl_status, prpl_mng)
+		INSERT INTO proc_plan (prpl_cd,prpl_dt, prpl_mng)
 		VALUES(
 				  #{prplCd}
-				, #{prplStatus}
+				, TO_DATE(SYSDATE, 'rrrr-MM-dd')
 				, #{prplMng}
 			   )
 	</update>
 
 	<!-- 계획 상세 등록 -->
 	<update id="insertPlanDetail" parameterType="ProcPlanVO">
-		<selectKey keyProperty="prpldCd" resultType="String" order="BEFORE">
-			SELECT 'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099')) as prpld_cd
-			  FROM DUAL
+		<selectKey keyProperty="prplCd" resultType="String" order="BEFORE">
+           SELECT prpl_cd
+			  FROM (
+					SELECT prpl_cd
+					  FROM proc_plan
+					 ORDER BY 1 DESC
+				   ) p
+			 WHERE ROWNUM BETWEEN 1 AND 1
 		</selectKey>
-		INSERT INTO proc_plan_detail (prpld_cd, prpl_cd, cpr_cd, prpld_cnt, prpld_status)
+		INSERT INTO proc_plan_detail (prpld_cd, prpl_cd, cpr_cd, prpld_cnt)
 		VALUES (
-				   #{prpldCd}
+				   'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099'))
 				 , #{prplCd}
 				 , #{cprCd}
 				 , #{prpldCnt}
-				 , #{prpldStatus}
 			   )
 	</update>
 	<!-- 생산계획 리스트 -->
@@ -198,6 +202,28 @@
 		FROM PROC_COMMAND C
 		LEFT JOIN CM_PRODUCT_MNG M
 		ON C.CPR_CD = M.CPR_CD
+	</select>
+	<!-- 	실적페이지 공정 조회용 -->
+	<select id="getProcProg" resultType="ProcResultAllVO" >
+		SELECT PRCM_PRCD,
+            P.PRCM_CD,
+            P.CM_CD,
+            M.CPR_NM,
+            CM_NM,
+            PRCM_TURN,
+            PRCM_QNT,
+            PRPR_QNT,
+            PRPR_BAD,
+            (PRPR_QNT+PRPR_BAD)PR_QNT_SUM,
+            PRPR_END   
+        FROM PROC_PROGRESS P
+        LEFT JOIN CM_PROCESS_CODE C
+        ON P.CM_CD = C.CM_CD
+        LEFT JOIN PROC_COMMAND PC
+        ON P.PRCM_CD = PC.PRCM_CD
+        LEFT JOIN CM_PRODUCT_MNG M
+        ON PC.CPR_CD=M.CPR_CD
+        WHERE P.PRCM_CD = #{prcmCd}
 	</select>
 
 
