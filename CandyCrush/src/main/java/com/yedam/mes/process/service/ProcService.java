@@ -26,7 +26,7 @@ public interface ProcService {
 	public List<OrderPlanVO> getOrdrDtlCd(@Param("orshNo")String[] orshNo);
 	
 	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
-	public int updateOrderStatus(List<ProcPlanVO> planVO);
+	public int updateOrderStatus(@Param("orshNo")String[] orshNo);
 	
 	// 미계획 주문서에 대한 상세 정보 목록
 	public List<OrderPlanVO> getOrderDetail(OrderPlanVO opVO);

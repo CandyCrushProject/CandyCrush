@@ -155,6 +155,27 @@
 			</main>
 
 			<script>
+
+
+				// 날짜 포맷 변경 함수
+				function formatDate(time) {
+					var date = new Date(time);
+					var year = date.getFullYear();
+					var month = ("0" + (date.getMonth() + 1)).slice(-2);
+					var day = ("0" + date.getDate()).slice(-2);
+					var formattedDate = year + "-" + month + "-" + day;
+					return formattedDate;
+				}
+				// 오늘날짜
+				function getToday() {
+					var date = new Date();
+					var year = date.getFullYear();
+					var month = ("0" + (date.getMonth() + 1)).slice(-2);
+					var day = ("0" + date.getDate()).slice(-2);
+					var formattedDate = year + "-" + month + "-" + day;
+					return formattedDate;
+				}
+
 				var cprNm = "";
 				var rowKey = "";
 				var columnName = "";
@@ -205,8 +226,18 @@
 					rowHeaders: ['rowNum'],
 					columns: [
 						{
-							header: '주문서번호',
-							name: 'orshNo',
+							header: '생산계획헤더코드',
+							name: 'prplCd',
+							hidden: true
+						},
+						{
+							header: '제품코드',
+							name: 'cprCd',
+							hidden: true
+						},
+						{
+							header: '계획상세코드',
+							name: 'prpldCd',
 							align: 'center'
 						},
 						{
@@ -217,7 +248,7 @@
 						{
 							header: '생산계획수량',
 							name: 'prpldCnt',
-							align: 'center'
+							align: 'center',
 						},
 						{
 							header: '생산계획일자',
@@ -225,13 +256,8 @@
 							align: 'center'
 						},
 						{
-							header: '완료여부',
-							name: 'prplStatus',
-							align: 'center'
-						},
-						{
-							header: '담당자',
-							name: 'prpldMng',
+							header: '계획관리자',
+							name: 'prplMng',
 							align: 'center'
 						},
 						{

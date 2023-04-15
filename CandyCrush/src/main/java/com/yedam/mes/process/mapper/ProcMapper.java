@@ -31,7 +31,7 @@ public interface ProcMapper {
 	public List<OrderPlanVO> addPlanbefore(@Param("orshNo")String[] orshNo);
 
 	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
-	public int updateOrderStatus(ProcPlanVO planVO);
+	public int updateOrderStatus(String orshNo);
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
 	public int insertPlan(ProcPlanVO planVO); // 생산계획 헤더

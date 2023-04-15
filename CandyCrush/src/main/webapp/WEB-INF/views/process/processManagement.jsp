@@ -124,7 +124,7 @@
 				</div>
 			</main>
 			<script>
-				let list ="";
+				let list = "";
 				let getrow;
 				let sendrows = [];
 				let orshNoList = [];
@@ -178,7 +178,6 @@
 						const rows = orderSheetGrid.getCheckedRows();
 						for (let i = 0; i < rows.length; i++) {
 							orshNoSet += rows[i].orshNo + ",";
-							orshNoList.push({osrhNo : rows[i].orshNo});
 						}
 						list = {
 							orshNo: orshNoSet
@@ -214,29 +213,29 @@
 
 				});
 
-				function addUpdate(){
+				function addUpdate() {
+					console.log(list);
 					$.ajax({
-						url :'orderUpdate',
-						method :'post',
-						data: JSON.stringify(orshNoSet),
+						url: 'orderUpdate',
+						method: 'post',
+						data: JSON.stringify(list),
 						contentType: 'application/json',
 						dataType: 'json',
 						success: function (data) {
-							console.log("성공",data)
+							console.log("성공", data)
 						}, error: function (rej) {
 							console.log("안되는데요?")
 						}
 					});
 				}
 				$(document).ready(function () {
-					
+
 
 					$('#addPlanBtn').on('click', function () {
-						console.log(orshNoList);
 						$.ajax({
 							url: 'insertProcPlan',
 							method: 'POST',
-							data: JSON.stringify(addOrderPlanGrid.getData({ignoredColumns: ['_attributes', 'rowKey']})),
+							data: JSON.stringify(addOrderPlanGrid.getData({ ignoredColumns: ['_attributes', 'rowKey'] })),
 							contentType: 'application/json',
 							dataType: 'json',
 							success: function (data) {
