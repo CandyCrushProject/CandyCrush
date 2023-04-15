@@ -76,7 +76,7 @@ public interface ProcService {
 	
 	//실적페이지 지시조회용========================== 이하 실적페이용=========
 	
-	public List<ProcResultAllVO> getProcCommand(ProcResultAllVO comVO);
-	
+	public List<ProcResultAllVO> getProcCommand();
+	public List<ProcResultAllVO> getProcProg(@Param("prcmCd")String prcmCd);
 	/* 생산공정 매퍼 끝 */
 }

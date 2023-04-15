@@ -199,6 +199,28 @@
 		LEFT JOIN CM_PRODUCT_MNG M
 		ON C.CPR_CD = M.CPR_CD
 	</select>
+	<!-- 	실적페이지 공정 조회용 -->
+	<select id="getProcProg" resultType="ProcResultAllVO" >
+		SELECT PRCM_PRCD,
+            P.PRCM_CD,
+            P.CM_CD,
+            M.CPR_NM,
+            CM_NM,
+            PRCM_TURN,
+            PRCM_QNT,
+            PRPR_QNT,
+            PRPR_BAD,
+            (PRPR_QNT+PRPR_BAD)PR_QNT_SUM,
+            PRPR_END   
+        FROM PROC_PROGRESS P
+        LEFT JOIN CM_PROCESS_CODE C
+        ON P.CM_CD = C.CM_CD
+        LEFT JOIN PROC_COMMAND PC
+        ON P.PRCM_CD = PC.PRCM_CD
+        LEFT JOIN CM_PRODUCT_MNG M
+        ON PC.CPR_CD=M.CPR_CD
+        WHERE P.PRCM_CD = #{prcmCd}
+	</select>
 
 
 

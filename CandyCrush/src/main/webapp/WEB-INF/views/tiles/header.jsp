@@ -216,6 +216,11 @@
 										생산공정관리
 									</a>
 								</li>
+								<li>
+									<a href="${pageContext.request.contextPath}/ProcResult" class="waves-effect waves-dark">
+										생산실적관리
+									</a>
+								</li>
 
 
 
