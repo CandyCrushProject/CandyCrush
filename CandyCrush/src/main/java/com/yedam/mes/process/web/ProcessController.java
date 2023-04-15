@@ -82,6 +82,25 @@ public class ProcessController {
 		return resultMap;
 	}
 	
+	// 생산관리 -> 생산계획 -> 계획등록후 주문서 상태 변경
+	@PostMapping("orderUpdate")
+	@ResponseBody
+	public Map<String, Object> orderUpdate(@RequestBody Map<String, Object> orshNoSet){
+		
+
+		System.out.println(orshNoSet);
+		Map<String, Object> message = new HashMap<>();
+		int update = 0;
+		if(update < 1) {
+			message.put("retCode","실패");
+			
+		} else {
+			message.put("retCode","성공");
+		} 
+
+		
+		return message;
+	}
 	
 	// 생산관리 -> 생산계획 -> 계획등록
 	@PostMapping("insertProcPlan")
@@ -89,20 +108,11 @@ public class ProcessController {
 	public Map<String, Object> insertProcPlan(@RequestBody List<ProcPlanVO> insertList, RedirectAttributes rrtt) {
 
 		
-		List<ProcPlanVO> planVO = new ArrayList<>();
 		Map<String, Object> message = new HashMap<>();
 		
+		int insertPlan = procService.addPlan(insertList.get(0));
+		int insertPlanDetail = procService.addPlanDetail(insertList);
 		
-		for(int i=0;i<insertList.size();i++) {
-				planVO.add(insertList.get(i));
-			
-		}
-
-//		int update = procService.updateOrderStatus(planVO);	
-		int insertPlan = procService.addPlan(planVO);
-		int insertPlanDetail = procService.addPlanDetail(planVO);
-		
-//		if(insertPlan < 1 && insertPlanDetail < 1 && update < 1) {
 		if(insertPlan < 1 && insertPlanDetail < 1) {
 			message.put("retCode","실패");
 			

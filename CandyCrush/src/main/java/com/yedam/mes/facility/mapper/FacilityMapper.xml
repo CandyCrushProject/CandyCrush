@@ -2,67 +2,72 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
-   <mapper namespace = "com.yedam.mes.facility.mapper.FacilityMapper">
-  <select id="selectFacilityStat" resultType="FacilityStatVO">
-	select f.FAC_CD,f.fac_nm,f.fac_dt,f.fac_cy,f.fac_rct_MTN,f.fac_info,s.fac_run,NVL(FAC_RCT_MTN,f.fac_dt)+f.fac_cy MTN_PLANNED
-	from
-	    (select f.fac_cd,f.fac_nm,f.fac_dt,f.fac_cy,i.FAC_RCT_MTN,f.fac_info
-	    from FAC f
-	    LEFT JOIN
-	        (
-	        select FAC_CD, max(FAC_MTN_DT) FAC_RCT_MTN 
-	        from FAC_INSP 
-	        group by FAC_CD 
-	        order by FAC_CD) i
-	    ON f.FAC_CD = i.FAC_CD) f
-	LEFT JOIN
-	FAC_STAT s
-	ON
-	f.fac_cd=s.fac_cd
-  </select>
-  
-    <select id="selectFacilityMaintenance" resultType="FacilityMaintenanceVO">
-	select 
-	fac_mtn,
-	fac_cd,
-	fac_rtn,
-	fac_mtn_dt,
-	fac_rslt,
-	fac_act,
-	fac_act_dtl,
-	fac_mgr
- 	from fac_INSP
- 	order by FAC_MTN_DT
-  </select>
-  
-  <insert id="insertFacilityMaintenance" parameterType='FacilityMaintenanceVO'>
-  	insert into FAC_INSP
-	 (
+
+<mapper namespace="com.yedam.mes.facility.mapper.FacilityMapper">
+	<select id="selectFacilityStat" resultType="FacilityStatVO">
+		select
+		f.FAC_CD,f.fac_nm,f.fac_dt,f.fac_cy,f.fac_rct_MTN,f.fac_info,s.fac_run,NVL(FAC_RCT_MTN,f.fac_dt)+f.fac_cy
+		MTN_PLANNED
+		from
+		(select f.fac_cd,f.fac_nm,f.fac_dt,f.fac_cy,i.FAC_RCT_MTN,f.fac_info
+		from FAC f
+		LEFT JOIN
+		(
+		select FAC_CD, max(FAC_MTN_DT) FAC_RCT_MTN
+		from FAC_INSP
+		group by FAC_CD
+		order by FAC_CD) i
+		ON f.FAC_CD = i.FAC_CD) f
+		LEFT JOIN
+		FAC_STAT s
+		ON
+		f.fac_cd=s.fac_cd
+	</select>
+
+	<select id="selectFacilityMaintenance"
+		resultType="FacilityMaintenanceVO">
+		select
+		fac_mtn,
+		fac_cd,
+		fac_rtn,
+		fac_mtn_dt,
+		fac_rslt,
+		fac_act,
+		fac_act_dtl,
+		fac_mgr
+		from fac_INSP
+		order by FAC_MTN_DT
+	</select>
+
+	<insert id="insertFacilityMaintenance"
+		parameterType='FacilityMaintenanceVO'>
+		insert into FAC_INSP
+		(
 		FAC_MTN,
-	  	FAC_CD,
-	  	FAC_RTN,
-	  	FAC_MTN_DT,
-	  	FAC_RSLT,
-	  	FAC_ACT,
-	  	FAC_ACT_DTL,
-	  	FAC_MGR)
-  	VALUES
-  	(	
-	  	'MTN'||(select (NVL(numcode,0))+1
-				from (select MAX(TO_NUMBER(substr(FAC_MTN,4))) as numcode
-			    from FAC_INSP)),
-	  	#{facCd},
-	  	#{facRtn},
-	  	#{facMtnDt},
-	  	#{facRslt},
-	  	#{facAct},
-	  	#{facActDtl},
-	  	#{facMgr}
-	  )
-  </insert>
-  <select id="selectFacilityOperation" resultType="FacilityOperationVO">
-	select FDM_CD,
+		FAC_CD,
+		FAC_RTN,
+		FAC_MTN_DT,
+		FAC_RSLT,
+		FAC_ACT,
+		FAC_ACT_DTL,
+		FAC_MGR)
+		VALUES
+		(
+		'MTN'||(select (NVL(numcode,0))+1
+		from (select MAX(TO_NUMBER(substr(FAC_MTN,4))) as numcode
+		from FAC_INSP)),
+		#{facCd},
+		#{facRtn},
+		#{facMtnDt},
+		#{facRslt},
+		#{facAct},
+		#{facActDtl},
+		#{facMgr}
+		)
+	</insert>
+	<select id="selectFacilityOperation"
+		resultType="FacilityOperationVO">
+		select FDM_CD,
 		F.FAC_CD,
 		FAC_NM,
 		FDM_MGR,
@@ -73,91 +78,95 @@
 		FAC_INFO,
 		CFD_TITLE,
 		CFD_CONTENT
-	from FAC_DWN_MNG D , 
+		from FAC_DWN_MNG D ,
 		FAC_STAT S,
 		FAC F,
 		CM_FAC_DWN_CODE C
-	where D.FAC_CD = S.FAC_CD 
-		AND D.FAC_CD = F.FAC_CD 
+		where D.FAC_CD = S.FAC_CD
+		AND D.FAC_CD = F.FAC_CD
 		AND D.CFD_CD = C.CFD_CD
-	ORDER BY FDM_STOP DESC
-  </select>
-  
-    <select id="facilityOperationStat" resultType="FacilityOperationStatVO">
-		SELECT 
-		    D.FAC_CD,
-		    FAC_NM,
-		    FDM_CD,
-		    FDM_MGR,
-		    RCT_STP,
-		    FDM_RUN,
-		    D.CFD_CD,
-		    CFD_TITLE,
-		    CFD_CONTENT,
-		    FAC_RUN
+		ORDER BY FDM_STOP DESC
+	</select>
+
+	<select id="facilityOperationStat"
+		resultType="FacilityOperationStatVO">
+		SELECT
+		D.FAC_CD,
+		FAC_NM,
+		FDM_CD,
+		FDM_MGR,
+		RCT_STP,
+		FDM_RUN,
+		D.CFD_CD,
+		CFD_TITLE,
+		CFD_CONTENT,
+		FAC_RUN
 		FROM FAC_DWN_MNG D
-		    ,(
-		        SELECT FAC_CD, MAX(FDM_STOP) RCT_STP
-		        FROM FAC_DWN_MNG
-		        GROUP BY FAC_CD
-		     ) R 
-		     ,CM_FAC_DWN_CODE C
-		     ,FAC_STAT S
-		     ,FAC F
-		where 
-		    D.FAC_CD = R.FAC_CD AND 
-		    D.FDM_STOP = R.RCT_STP AND
-		    D.CFD_CD = C.CFD_CD AND
-		    D.FAC_CD = S.FAC_CD AND
-		    D.FAC_CD = F.FAC_CD
+		,(
+		SELECT FAC_CD, MAX(FDM_STOP) RCT_STP
+		FROM FAC_DWN_MNG
+		GROUP BY FAC_CD
+		) R
+		,CM_FAC_DWN_CODE C
+		,FAC_STAT S
+		,FAC F
+		where
+		D.FAC_CD = R.FAC_CD AND
+		D.FDM_STOP = R.RCT_STP AND
+		D.CFD_CD = C.CFD_CD AND
+		D.FAC_CD = S.FAC_CD AND
+		D.FAC_CD = F.FAC_CD
 		ORDER BY D.FAC_CD
-  </select>
-  
-  <select id="getFacilityDownCode" resultType="FacilityDownVO">
- 	 select cfd_cd,cfd_title,cfd_content from CM_FAC_DWN_CODE
-  </select>
-  
-  
-  
-    <insert id="insertFacilityAbortOpertation" parameterType='FacilityOperationVO'>
-  	insert 
-	  	into FAC_DWN_MNG
-	  	(FDM_CD,
-	  	FDM_MGR,
-	  	FDM_STOP,
-	  	FDM_RUN,
-	  	FAC_CD,
-	  	CFD_CD
-	  	)
-	  	VALUES
-	  	(
-		  	  	'FDM'||(select max(NVL(numcode,0))+1
-				from (select MAX (TO_NUMBER(substr(fdm_cd,4))) as numcode
-			    from FAC_DWN_MNG)),
-		  	#{fdmMgr},
-		  	#{fdmStop},
-		  	NULL,
-		  	#{facCd},
-		  	#{cfdCd}
-		  )
-  </insert>
-  
-  <update id="updateFacilityOpertationStat" parameterType='FacilityOperationVO'>
-  	UPDATE
-	  	FAC_STAT 
-	SET
+	</select>
+
+	<select id="getFacilityDownCode" resultType="FacilityDownVO">
+		select cfd_cd,cfd_title,cfd_content from CM_FAC_DWN_CODE
+	</select>
+
+
+
+	<insert id="insertFacilityAbortOpertation"
+		parameterType='FacilityOperationVO'>
+		insert
+		into FAC_DWN_MNG
+		(FDM_CD,
+		FDM_MGR,
+		FDM_STOP,
+		FDM_RUN,
+		FAC_CD,
+		CFD_CD
+		)
+		VALUES
+		(
+		'FDM'||(select max(NVL(numcode,0))+1
+		from (select MAX (TO_NUMBER(substr(fdm_cd,4))) as numcode
+		from FAC_DWN_MNG)),
+		#{fdmMgr},
+		#{fdmStop},
+		NULL,
+		#{facCd},
+		#{cfdCd}
+		)
+	</insert>
+
+	<update id="updateFacilityOpertationStat"
+		parameterType='FacilityOperationVO'>
+		UPDATE
+		FAC_STAT
+		SET
 		FAC_RUN = #{facRun}
-	WHERE
+		WHERE
 		FAC_CD = #{facCd}
-  </update>
-  
-  <update id="insertFacilityRestartOpertation" parameterType='FacilityOperationVO'>
-  	UPDATE 
+	</update>
+
+	<update id="insertFacilityRestartOpertation"
+		parameterType='FacilityOperationVO'>
+		UPDATE
 		FAC_DWN_MNG
-	SET
+		SET
 		FDM_RUN=#{fdmRun}
-	WHERE 
+		WHERE
 		FDM_CD=#{fdmCd}
-  </update>
-  
+	</update>
+
 </mapper>
