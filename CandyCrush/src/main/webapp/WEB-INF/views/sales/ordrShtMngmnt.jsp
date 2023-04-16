@@ -19,7 +19,7 @@
 							<label for="orshNo">주문서번호</label>
 							<input id="orshNo" name="orshNo" type="text" readonly>
 						</div>
-						<div class="accntInfo">
+						<div id="caNoBox" class="accntInfo">
 							<label for="caNo">거래처코드</label>
 							<input id="caNo" name="caNo" type="text" readonly>
 						</div>
@@ -60,6 +60,7 @@
         
         <div id="ordrModal"></div>
 				<button id="ordrShtInsert" class="cndInsBtn" type="button">등록</button>
+				<button id="ordrShtSave" class="cndInsBtn" type="button">저장</button>
       </div>
     </div>
   </div><!-- End 주문서 등록 -->
@@ -103,9 +104,6 @@
 						<div class="card-action">주문서조회</div>
 						<div class="card-content">
 							<div id="contextBox">
-								<button class="cndUdtBtn" type="button">
-									수정
-								</button>
 								<button id="orderDelete" class="cndDelBtn">
 									삭제
 								</button>
@@ -114,9 +112,9 @@
 							<div class="table-responsive">
 								<div id="orderList"></div>
 							</div> <!-- end 주문서 목록 조회박스 -->
-							<div>
+							<!-- <div>
 								<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
-							</div>
+							</div> -->
 						</div>
 			
 					</div>

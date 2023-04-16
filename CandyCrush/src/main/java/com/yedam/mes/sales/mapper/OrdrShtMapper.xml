@@ -116,4 +116,8 @@
                               		  , '접수완료', #{orshNo}, SYSDATE)
 	</insert>
 	
+	<!-- 주문서관리페이지 주문서 목록 상세조회 모달창 -->
+	<select id="getOrdrShtDtlList" resultType="OrdrShtVO">
+	
+	</select>
 </mapper>

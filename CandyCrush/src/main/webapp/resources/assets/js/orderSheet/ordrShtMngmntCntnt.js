@@ -144,6 +144,9 @@ accntList.on('dblclick', (e) => {
 
   document.getElementById('ordrDtilMdl').style.display = 'block';
   document.getElementById('orshNoBox').style.display = 'none';
+  document.getElementById('caNoBox').style.display = 'block';
+  document.getElementById('ordrShtInsert').style.display = 'block';
+  document.getElementById('ordrShtSave').style.display = 'none';
   $("#orshDt").val(formatDate());
   prodListItems();
   //---------------------------------------------------------------------------------------------
@@ -182,8 +185,6 @@ accntList.on('dblclick', (e) => {
     }
   });
   //---------------------------------------------------------------------------------------------
-  
-  //---------------------------------------------------------------------------------------------
   // 주문서 모달창에 제품선택을 안했을때 경고창 띄움
   // ordrProdList.on('editingFinish', (e) => {
   //   if (e.columnName != 'cprNm') return;
@@ -196,8 +197,7 @@ accntList.on('dblclick', (e) => {
   //         icon: 'error',
   //         title: '경고',
   //         text: '상품을 선택하세요',
-  //       });
-        
+  //       });   
   //       return;
   //     }, 9);
   //   }
@@ -206,12 +206,8 @@ accntList.on('dblclick', (e) => {
 
 // 주문서 조회 더블클릭시 열리는 상세조회 모달창
 orderList.on('dblclick', (e) => {
-  console.log(e);
   if (e.targetType != 'cell') return;
-  console.log(e.targetType);
   const rowData = orderList.getRow(e.rowKey);
-  
-  console.log(rowData);
 
   let rowDataOrshNo = rowData.orshNo; // 주문서번호
   let rowDataCaNm = rowData.caNm; // 거래처명
@@ -225,6 +221,9 @@ orderList.on('dblclick', (e) => {
 
   document.getElementById('ordrDtilMdl').style.display = 'block';
   document.getElementById('orshNoBox').style.display = 'block';
+  document.getElementById('caNoBox').style.display = 'none';
+  document.getElementById('ordrShtInsert').style.display = 'none';
+  document.getElementById('ordrShtSave').style.display = 'block';
   // select박스안에 제품명 list 내용 
 
   // 주문서관리페이지 주문서 상세조회 모달창
@@ -232,6 +231,7 @@ orderList.on('dblclick', (e) => {
     $.ajax({
       url: "getOrdrShtDtlList",
       method: "GET",
+      data : { orshNo : rowDataOrshNo,  },
       dataType: "JSON",
       success: function (data) {
         setTimeout(() => ordrProdList.refreshLayout(), 0);
@@ -308,8 +308,6 @@ function ordrShtInsert() {
   const rows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).createdRows;
   const updateRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).updatedRows;
   const deleteRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).deletedRows;
-
-  console.log("rows", rows);
 
   if (rows.length !== 0) {
     $.ajax({

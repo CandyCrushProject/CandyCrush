@@ -37,7 +37,7 @@ public interface OrdrShtService {
 	// 주문서 등록 모달창 상품 리스트
 	public List<OrdrShtVO> getProdList();
 	
-	// 주문서관리페이지 주문서 상세조회리스트 모달창
+	// 주문서관리페이지 주문서 목록 상세조회 모달창
 	public List<OrdrShtVO> getOrdrShtDtlList();
 	
 	// 모달창 주문서 등록
@@ -45,4 +45,5 @@ public interface OrdrShtService {
 	
 	// 제품입고관리 페이지 입고대기 리스트
 	public List<ProdInOutPutVO> prodInputList();
+	
 }

@@ -95,7 +95,7 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		return cnt;
 	}
 	
-	// 주문서관리페이지 주문서 상세조회리스트 모달창
+	// 주문서관리페이지 주문서 목록 상세조회 모달창
 	public List<OrdrShtVO> getOrdrShtDtlList() {
 		return mapper.getOrdrShtDtlList();
 	}
