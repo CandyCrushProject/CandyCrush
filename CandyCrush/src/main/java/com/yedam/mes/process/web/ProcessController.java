@@ -1,12 +1,10 @@
 package com.yedam.mes.process.web;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.yedam.mes.process.service.ProcService;
+import com.yedam.mes.process.vo.BomInfoVO;
 import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 import com.yedam.mes.process.vo.ProcResultAllVO;
@@ -85,12 +84,15 @@ public class ProcessController {
 	// 생산관리 -> 생산계획 -> 계획등록후 주문서 상태 변경
 	@PostMapping("orderUpdate")
 	@ResponseBody
-	public Map<String, Object> orderUpdate(@RequestBody Map<String, Object> orshNoSet){
-		
+	public Map<String, Object> orderUpdate(@RequestBody Map<String, Object> list){
 
-		System.out.println(orshNoSet);
+		String orshNoList = (String) list.get("orshNo");
+		
+		String[] orshNo = orshNoList.split(",");
+		
+		
 		Map<String, Object> message = new HashMap<>();
-		int update = 0;
+		int update = procService.updateOrderStatus(orshNo);
 		if(update < 1) {
 			message.put("retCode","실패");
 			
@@ -125,6 +127,8 @@ public class ProcessController {
 	}
 	
 	
+	
+	
 	// 생산관리 -> 생산지시관리 -> 페이지
 	@GetMapping("ProcOrder")
 	public String ProcOrderManagement() {
@@ -132,9 +136,9 @@ public class ProcessController {
 	}
 	
 
-	@PostMapping("cprSearch")
+	@PostMapping("ProcPlanOrderDetail")
 	@ResponseBody
-	public List<ProcPlanVO> planCprSearch(ProcPlanVO ppVO){
+	public List<ProcPlanVO> procPlanOrderDetail(@RequestBody ProcPlanVO ppVO){
 		return procService.searchPlanList(ppVO);
 	}
 	
@@ -143,6 +147,21 @@ public class ProcessController {
 	public List<ProcPlanVO> getProcPlanOrder(){
 		return procService.getPlan();
 	}
+	
+	@PostMapping("getBomInfo")
+	@ResponseBody
+	public List<BomInfoVO> getBomInfoProcess(@RequestBody OrderPlanVO opVO){
+		System.out.println(procService.getBom(opVO));
+		return procService.getBom(opVO);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -170,9 +189,21 @@ public class ProcessController {
 		return procService.getProcProg(prcmCd);
 	}
 	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	@PostMapping("getProcFac")
 	@ResponseBody
 	public List<ProcResultAllVO> getProcFac(@RequestParam("prcmPrcd") String prcmPrcd){
 		return procService.getProcFac(prcmPrcd);
 	}
+
 }

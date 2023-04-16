@@ -47,10 +47,10 @@ public class procServiceImpl implements ProcService {
 
 	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
 	@Override
-	public int updateOrderStatus(List<ProcPlanVO> planVO) {
+	public int updateOrderStatus(@Param("orshNo")String[] orshNo) {
 		int r = 0;
-		for(ProcPlanVO pvo:planVO) {
-			r += procMapper.updateOrderStatus(pvo);
+		for(String orNo:orshNo) {
+			r += procMapper.updateOrderStatus(orNo);
 		}
 		return r;
 	}
@@ -62,8 +62,8 @@ public class procServiceImpl implements ProcService {
 	}
 
 	@Override
-	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO) {
-		return procMapper.selectBomMtrl(opVO);
+	public List<BomInfoVO> getBom(OrderPlanVO opVO) {
+		return procMapper.selectBom(opVO);
 	}
 	@Override
 	public int addPlan(ProcPlanVO planVO) {
@@ -123,13 +123,11 @@ public class procServiceImpl implements ProcService {
 	public List<ProcResultAllVO> getProcProg(@Param("prcmCd")String prcmCd) {
 		return 	procMapper.getProcProg(prcmCd);
 	}
-
+  
 	@Override
 	public List<ProcResultAllVO> getProcFac(String prcmPrcd) {
 		// TODO Auto-generated method stub
 		return procMapper.getProcProg(prcmPrcd);
 	}
 	
-
-
 }

@@ -86,36 +86,33 @@
 	</select>
 	
 	<!-- BOM 자재 정보 -->
-	<select id="selectBomMtrl" parameterType="OrderPlanVO" resultType="BomInfoVO">
-	    SELECT ordr_dtl_cd
-	         , cbmt_cd
-	         , bm.cm_cd
-	         , cm_nm
-	         , mm.cmm_cd as cmm_cd
-	         , mm.cmm_nm as cmm_nm
-	         , cbmt_qtt
-	         , cpr_nm
-	         , od.cpr_cd as cpr_cd
-	         , bi.bom_cd as bom_cd
-	      FROM cm_bom_mtrl bm
-	         , cm_bom_mng bi
-	         , order_sheet_detail od
-	         , order_sheet os
-	         , cm_mtrl_mng mm
-	         , cm_process_code pc
-	         , cm_product_mng pm
-	     WHERE bm.bom_cd = bi.bom_cd(+)
-	       AND od.cpr_cd = bi.cpr_cd
-	       AND od.orsh_no = os.orsh_no(+)
-	       AND bm.cmm_cd = mm.cmm_cd(+)
-	       AND bm.cm_cd = pc.cm_cd(+)
-	       AND od.cpr_cd = pm.cpr_cd(+)
-	       AND od.cpr_cd = #{cprCd}
-	     ORDER BY 3, 1
+	<select id="selectBom" parameterType="OrderPlanVO" resultType="BomInfoVO">
+		SELECT mng.bom_cd
+		     , cpr_cd
+		     , mnf.cbm_cd
+		     , cpc.cm_cd
+		     , cm_nm
+		     , cm_sq
+		     , mtr.cmm_cd
+		     , cmm_nm
+		     , cbmt_cnsm
+		     , cbmt_ms
+		  FROM cm_bom_mng mng
+		     , cm_bom_mnfct mnf
+		     , cm_bom_mtrl mtr
+		     , cm_mtrl_mng cmm
+		     , cm_process_code cpc
+		 WHERE mng.bom_cd = mnf.bom_cd
+		   AND mtr.cmm_cd = cmm.cmm_cd(+)
+		   AND mng.bom_cd = mtr.bom_cd
+		   AND mnf.cbm_cd = mtr.cbm_cd(+)
+		   AND mnf.cm_cd = cpc.cm_cd (+)
+		   AND cpr_cd = #{cprCd}
+		 ORDER BY cm_cd
 	</select>
 	
 	<!-- 주문서 상세 현재상태 업데이트 -->
-	<update id="updateOrderStatus" parameterType="ProcPlanVO">
+	<update id="updateOrderStatus" parameterType="String">
 		UPDATE order_sheet_detail
 		   SET orsh_pr = '계획완료',
 			   stt_cng_dt = SYSDATE
@@ -123,7 +120,7 @@
 	</update>
 	
 	<!-- 계획 등록 -->
-	<update id="insertPlan" parameterType="ProcPlanVO">
+	<insert id="insertPlan" parameterType="ProcPlanVO">
 		<selectKey keyProperty="prplCd" resultType="String" order="BEFORE">
 			SELECT 'plan'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_seq.nextval,'099')) as prpl_cd
 			  FROM DUAL
@@ -134,10 +131,10 @@
 				, TO_DATE(SYSDATE, 'rrrr-MM-dd')
 				, #{prplMng}
 			   )
-	</update>
+	</insert>
 
 	<!-- 계획 상세 등록 -->
-	<update id="insertPlanDetail" parameterType="ProcPlanVO">
+	<insert id="insertPlanDetail" parameterType="ProcPlanVO">
 		<selectKey keyProperty="prplCd" resultType="String" order="BEFORE">
            SELECT prpl_cd
 			  FROM (
@@ -154,38 +151,38 @@
 				 , #{cprCd}
 				 , #{prpldCnt}
 			   )
-	</update>
+	</insert>
 	<!-- 생산계획 리스트 -->
 	<select id="seletPlanList" parameterType="ProcPlanVO" resultType="ProcPlanVO">
-		SELECT orsh_no
-		     , TO_CHAR(prpl_dt,'rrrr-MM-dd') as prpl_dt
-		     , prpl_status
-		     , cpr_nm
-		     , prpld_cnt
-		     , prpld_mng
-		     , prpld_status
-		  FROM proc_plan pp, proc_plan_detail ppd, cm_product_mng cpm
-		 WHERE pp.prpl_cd = ppd.prpl_cd
-		   AND ppd.cpr_cd = cpm.cpr_cd
-		   AND prpld_status = '계획완료'
-		 ORDER BY 1
+        SELECT pp.prpl_cd
+             , COUNT(ppd.cpr_cd) cpr_cnt
+             , prpld_status
+             , prpl_mng
+             , TO_CHAR(prpl_dt,'rrrr-MM-dd') as prpl_dt
+          FROM proc_plan pp, proc_plan_detail ppd
+         WHERE pp.prpl_cd = ppd.prpl_cd(+)
+           AND prpld_status = '미지시'
+         GROUP BY prpld_status
+                , prpl_mng
+                , TO_CHAR(prpl_dt,'rrrr-MM-dd')
+                , pp.prpl_cd
+         ORDER BY 1
 	</select>
 
 	<select id="searchPlanList" parameterType="ProcPlanVO" resultType="ProcPlanVO">
-		SELECT orsh_no
-		     , TO_CHAR(prpl_dt,'rrrr-MM-dd') as prpl_dt
-		     , prpl_status
+        SELECT prpld_cd 
+		     , cpm.cpr_cd
 		     , cpr_nm
 		     , prpld_cnt
-		     , prpld_mng
 		     , prpld_status
+		     , prpl_mng
+		     , TO_CHAR(prpl_dt,'rrrr-MM-dd') as prpl_dt
+		     , pp.prpl_cd
 		  FROM proc_plan pp, proc_plan_detail ppd, cm_product_mng cpm
-		 WHERE pp.prpl_cd = ppd.prpl_cd
-		   AND ppd.cpr_cd = cpm.cpr_cd
-		   AND prpld_status = #{prpldStatus}
-			   <if test="cprNm != null and !cprNm.equals('')">
-			   AND cpr_nm LIKE '%' || #{cprNm} || '%'
-			   </if>
+		 WHERE pp.prpl_cd = ppd.prpl_cd(+)
+		   AND ppd.cpr_cd = cpm.cpr_cd(+)
+		   AND prpld_status = '미지시'
+           AND pp.prpl_cd = #{prplCd}
 		 ORDER BY 1
 	</select>
 		 
@@ -249,6 +246,60 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<insert id="insertProcOrder" parameterType="ProcPlanVO">
+		<selectKey keyProperty="prcmCd" resultType="String" order="BEFORE">
+			SELECT 'prder'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(proc_com_seq.nextval,'099')) as prcm_cd
+			  FROM DUAL
+		</selectKey>
+		INSERT INTO proc_command
+		       (
+		         prcm_cd
+		       , prcm_cnt
+		       , cpr_cd
+		       , prcm_dt
+		       , prcm_start_dt
+		       , prcm_mng
+		       )
+		VALUES ( 
+		         #{prcmCd} 
+		       , #{prcmCnt}
+		       , #{cprCd}
+		       , TO_DATE(SYSDATE, 'rrrr-MM-dd')
+		       , #{prcmStartDt}
+		       , #{prcmMng}
+		       )
+
+	</insert>
 
 
 </mapper>
