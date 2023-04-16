@@ -105,7 +105,7 @@ function formatDate() {
   let month = ("0" + (date.getMonth() + 1)).slice(-2);
   let day = ("0" + date.getDate()).slice(-2);
   formattedDate = year + "-" + month + "-" + day;
-  console.log(formattedDate, " : formattedDate");
+  //console.log(formattedDate, " : formattedDate");
   return formattedDate;
 }
 
