@@ -15,8 +15,8 @@
         <h3 class="mdlTitle">주문서</h3>
         <form id="frmOrdrShtInsert" action="">
           <div class="accntInfoMngBox">
-						<div id="orshNoBox" class="accntInfo">
-							<label for="orshNo" style="display: none;">주문서번호</label>
+						<div id="orshNoBox" class="accntInfo" style="display: none;">
+							<label for="orshNo">주문서번호</label>
 							<input id="orshNo" name="orshNo" type="text" readonly>
 						</div>
 						<div class="accntInfo">

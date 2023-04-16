@@ -125,7 +125,7 @@ const orderList = new Grid({
 ordrShtList();
 
 //---------------------------------------------------------------------------------------------
-//발주목록 행 더블클릭 이벤트
+//거래처 행 더블클릭 이벤트
 accntList.on('dblclick', (e) => {
   if (e.targetType != 'cell') return; // cell이 아닌타입을 클릭했을 때 종료
   const rowData = accntList.getRow(e.rowKey); // 그리드 row값
@@ -136,12 +136,14 @@ accntList.on('dblclick', (e) => {
   let rowDataCaNm = rowData.caNm; // 거래처명
   let rowDataCaMng = rowData.caMng; // 거래처 담당자
   let rowDataCaMngPh = rowData.caMngPh; // 거래처 담당자 번호
+  
   $("#caNo").val(rowDataCaNo);
   $("#caNm").val(rowDataCaNm);
   $("#caMng").val(rowDataCaMng);
   $("#caMngPh").val(rowDataCaMngPh);
 
   document.getElementById('ordrDtilMdl').style.display = 'block';
+  document.getElementById('orshNoBox').style.display = 'none';
   $("#orshDt").val(formatDate());
   prodListItems();
   //---------------------------------------------------------------------------------------------
@@ -180,41 +182,7 @@ accntList.on('dblclick', (e) => {
     }
   });
   //---------------------------------------------------------------------------------------------
-  // 주문서 조회 더블클릭시 열리는 상세조회 모달창
-  orderList.on('dblclick', (e) => {
-    if (e.targetType != 'cell') return;
-    console.log(e.targetType);
-    const rowData = orderList.getRow(e.rowKey);
-    
-    let rowDataOrshNo = rowData.orshNo; // 주문서번호
-    let rowDataCaNa = rowData.caNa; // 거래처코드
-    let rowDataOrshDt = rowData.orshDt; // 주문일자
-    let rowDataDlvryDt = rowData.dlvryDt; // 납기일자
-
-    $("#orshNo").val(rowDataOrshNo); // 주문서번호
-    $("#caNm").val(rowDataCaNa); // 거래처명
-    $("#orshDt").val(rowDataOrshDt); // 주문일자
-    $("#dlvryDt").val(rowDataDlvryDt); // 납기일자
-
-    document.getElementById('ordrDtilMdl').style.display = 'block';
-    //document.getElementById('orshNoBox').style.display = 'block';
-    // select박스안에 제품명 list 내용 
-
-    // 주문서관리페이지 주문서 상세조회 모달창
-    function getOrdrShtDtlList() {
-      $.ajax({
-        url: "getOrdrShtDtlList",
-        method: "GET",
-        dataType: "JSON",
-        success: function (data) {
-          setTimeout(() => ordrProdList.refreshLayout(), 0);
-        },
-        error: function (reject) {
-          console.log(reject)
-        }
-      });
-    }
-  });
+  
   //---------------------------------------------------------------------------------------------
   // 주문서 모달창에 제품선택을 안했을때 경고창 띄움
   // ordrProdList.on('editingFinish', (e) => {
@@ -234,6 +202,45 @@ accntList.on('dblclick', (e) => {
   //     }, 9);
   //   }
   // });
+});
+
+// 주문서 조회 더블클릭시 열리는 상세조회 모달창
+orderList.on('dblclick', (e) => {
+  console.log(e);
+  if (e.targetType != 'cell') return;
+  console.log(e.targetType);
+  const rowData = orderList.getRow(e.rowKey);
+  
+  console.log(rowData);
+
+  let rowDataOrshNo = rowData.orshNo; // 주문서번호
+  let rowDataCaNm = rowData.caNm; // 거래처명
+  let rowDataOrshDt = rowData.orshDt; // 주문일자
+  let rowDataDlvryDt = rowData.dlvryDt; // 납기일자
+
+  $("#orshNo").val(rowDataOrshNo); // 주문서번호
+  $("#caNm").val(rowDataCaNm); // 거래처명
+  $("#orshDt").val(dateChange(rowDataOrshDt)); // 주문일자
+  $("#dlvryDt").val(dateChange(rowDataDlvryDt)); // 납기일자
+
+  document.getElementById('ordrDtilMdl').style.display = 'block';
+  document.getElementById('orshNoBox').style.display = 'block';
+  // select박스안에 제품명 list 내용 
+
+  // 주문서관리페이지 주문서 상세조회 모달창
+  function getOrdrShtDtlList() {
+    $.ajax({
+      url: "getOrdrShtDtlList",
+      method: "GET",
+      dataType: "JSON",
+      success: function (data) {
+        setTimeout(() => ordrProdList.refreshLayout(), 0);
+      },
+      error: function (reject) {
+        console.log(reject)
+      }
+    });
+  }
 });
 //---------------------------------------------------------------------------------------------
 // 그리드안에 select 배열생성
