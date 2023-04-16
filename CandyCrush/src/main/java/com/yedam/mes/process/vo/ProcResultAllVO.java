@@ -57,10 +57,11 @@ public class ProcResultAllVO {
 	
 	//기타 제품명 자재명 등등 불러오기용도
 	private String cprNm; //제품명
-	private String cmNM; //공정명
+	private String cmNm; //공정명
 	private String cmmNm; //자재명
 	private String facCd; //설비코드
 	private String facNm; //설비명
-	
+	private int prQntSum;//합계출력용
+	private String facRun;//기동중 설비
 	
 }

@@ -110,7 +110,7 @@
 										<input type="hidden" name="prpldStatus" id="prpldStatus" value="미지시" readonly>
 										<input type="hidden" name="prplStatus" id="prplStatus" value="계획완료" readonly>
 										<h4>생산계획일자</h4>
-										<input type="date" name="prplDt" id="prplDt" readonly>
+										<input type="date" name="prplDt" id="prplDt" value="" readonly>
 										<div id="insertPlanGrid"></div>
 
 									</div>
@@ -124,8 +124,15 @@
 				</div>
 			</main>
 			<script>
+				let list = "";
+				let getrow;
+				let sendrows = [];
+				let orshNoList = [];
+				let ordrDtlCdSet = "";
+				let orshNoSet = "";
 				$(function () {
 					getOrder();
+					$('#prplDt').val(getToday());
 				})
 				// 처음 뿌려주는 미계획주문서 리스트
 				function getOrder() {
@@ -164,35 +171,71 @@
 					var formattedDate = year + "-" + month + "-" + day;
 					return formattedDate;
 				}
-				let getrow;
-				let sendrows = [];
-				let orshNoList = [];
 
 				$(document).ready(function () {
-					let prpldStatus = $('#prpldStatus').val();
-					let prplStatus = $('#prplStatus').val();
-					let prplDt = $('#prplDt').val(getToday());
-					addOrderPlanGrid.on("editingFinish", (ev) => {
-						getrow = addOrderPlanGrid.getRow(ev.rowKey);
-						if (getrow.prpldCnt != null &&
-							getrow.prplMng != null) {
-							sendrows.push({
-								orshNo: getrow.orshNo,
-								ordrDtlCd: getrow.ordrDtlCd,
-								cprCd: getrow.cprCd,
-								prpldCnt: getrow.prpldCnt,
-								prpldStatus: prpldStatus,
-								prplStatus: prplStatus,
-								prplDt: prplDt
+					// 미계획 주문서 리스트 체크된 데이터를 가져와 db에서 정보 가져옴
+					$('#planAddBtn').on('click', function () {
+						const rows = orderSheetGrid.getCheckedRows();
+						for (let i = 0; i < rows.length; i++) {
+							orshNoSet += rows[i].orshNo + ",";
+						}
+						list = {
+							orshNo: orshNoSet
+						};
+						if (rows.length > 0) {
+							$.ajax({
+								url: "getDownOrders",
+								method: "POST",
+								contentType: 'application/json',
+								data: JSON.stringify(list),
+								dataType: 'json',
+								success: function (data) {
+									let orshNom = "";
+									let op = data.orderNPlan;
+									addOrderPlanGrid.resetData(op);
+									orderSheetGrid.removeCheckedRows();
+								}, error: function (err) {
+									Swal.fire({
+										icon: 'error',
+										title: '경고',
+										text: "목록을 불러올 수 없습니다.",
+									});
+								}
 							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: '경고',
+								text: "선택된 주문서나 데이터가 없습니다.",
+							});
+						};
+					});
+
+				});
+
+				function addUpdate() {
+					console.log(list);
+					$.ajax({
+						url: 'orderUpdate',
+						method: 'post',
+						data: JSON.stringify(list),
+						contentType: 'application/json',
+						dataType: 'json',
+						success: function (data) {
+							console.log("성공", data)
+						}, error: function (rej) {
+							console.log("안되는데요?")
 						}
 					});
+				}
+				$(document).ready(function () {
+
 
 					$('#addPlanBtn').on('click', function () {
 						$.ajax({
 							url: 'insertProcPlan',
 							method: 'POST',
-							data: JSON.stringify(sendrows),
+							data: JSON.stringify(addOrderPlanGrid.getData({ ignoredColumns: ['_attributes', 'rowKey'] })),
 							contentType: 'application/json',
 							dataType: 'json',
 							success: function (data) {
@@ -203,6 +246,7 @@
 									title: '등록',
 									text: "생산계획 등록이 완료되었습니다.",
 								});
+								addUpdate();
 							}, error: function (rej) {
 								Swal.fire({
 									icon: 'error',
@@ -249,50 +293,6 @@
 					]
 				});
 
-
-				let ordrDtlCdSet = "";
-				let orshNoSet = "";
-				$(document).ready(function () {
-					// 미계획 주문서 리스트 체크된 데이터를 가져와 db에서 정보 가져옴
-					$('#planAddBtn').on('click', function () {
-						const rows = orderSheetGrid.getCheckedRows();
-						for (let i = 0; i < rows.length; i++) {
-							orshNoSet += rows[i].orshNo + ",";
-						}
-						var list = {
-							orshNo: orshNoSet
-						};
-
-						if (rows.length > 0) {
-							$.ajax({
-								url: "getDownOrders",
-								method: "POST",
-								contentType: 'application/json',
-								data: JSON.stringify(list),
-								dataType: 'json',
-								success: function (data) {
-									let orshNom = "";
-									let op = data.orderNPlan;
-									addOrderPlanGrid.resetData(op);
-									orderSheetGrid.removeCheckedRows();
-								}, error: function (err) {
-									Swal.fire({
-										icon: 'error',
-										title: '경고',
-										text: "목록을 불러올 수 없습니다.",
-									});
-								}
-							});
-						} else {
-							Swal.fire({
-								icon: 'error',
-								title: '경고',
-								text: "선택된 주문서나 데이터가 없습니다.",
-							});
-						};
-					});
-
-				});
 				var row;
 				// 행 클릭시 모달이 뜨며 정보가 들어있는 그리드 함수 실행
 				orderSheetGrid.on('dblclick', function (ev) {

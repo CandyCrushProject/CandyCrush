@@ -79,3 +79,27 @@ input[type="date"] {
 /* 모달 CSS */
 .modal { padding-right: 0px !important; }
 .modal-open { padding-right: 0px !important; }
+
+/* 제품검수 CSS */
+#qualityProdInspInsertModal{
+	bottom: 240px;
+	right: 90px;
+	position: relative;
+	float: right;
+	width: 400px;
+}
+.inspInputStyle{
+	width: 60px !important;
+	border: 1px solid rgba(128, 128, 128, 0.61) !important;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+#badInsert{
+	padding-right: 10px;
+	text-align: right;
+	width: 90px !important;
+	border: 1px solid rgba(128, 128, 128, 0.61) !important;
+}

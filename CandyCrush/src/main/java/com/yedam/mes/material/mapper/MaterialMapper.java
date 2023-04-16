@@ -66,5 +66,8 @@ public interface MaterialMapper {
 	//LOT등록
 	public int mtrlLotInsert(List<MaterialInputVO> vo);
 	
+	//진행여부 업데이트
+	public int mtrlMoSttUpdate(MaterialInputVO vo);
+	
 	
 }

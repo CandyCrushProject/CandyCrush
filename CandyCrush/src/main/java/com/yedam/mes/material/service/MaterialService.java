@@ -59,4 +59,7 @@ public interface MaterialService {
 	
 	//입고등록
 	public int mtrlInputALLInsert(List<MaterialInputVO> vo);
+	
+	//진행여부 업데이트
+	public int mtrlMoSttUpdate(MaterialInputVO vo);
 }

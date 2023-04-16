@@ -202,11 +202,11 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
-										생산계획관리
+									<a href="${pageContext.request.contextPath}/bomCheck" class="waves-effect waves-dark">
+										BOM관리
 									</a>
 								</li>
-								<li>
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/ProcOrder" class="waves-effect waves-dark">
 										생산지시관리
 									</a>
@@ -216,6 +216,11 @@
 										생산공정관리
 									</a>
 								</li>
+								<li>
+									<a href="${pageContext.request.contextPath}/ProcResult" class="waves-effect waves-dark">
+										생산실적관리
+									</a>
+								</li> -->
 
 
 
@@ -341,16 +346,16 @@
 										자재발주관리
 									</a>
 								</li>
-								<li>
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/mtrlOrderList" class="waves-effect waves-dark">
 										자재발주조회
 									</a>
-								</li>
-								<li>
+								</li> -->
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/mtrlInspCheck" class="waves-effect waves-dark">
 										자재입고검사조회
 									</a>
-								</li>
+								</li> -->
 								<!-- <li>
 									<a href="${pageContext.request.contextPath}/mtrlInspManagement" class="waves-effect waves-dark">
 										자재입고검사관리(품질로빼기)
@@ -361,11 +366,11 @@
 										자재입고관리
 									</a>
 								</li>
-								<li>
+								<!--<li>
 									<a href="${pageContext.request.contextPath}/mtrlOutputManagement" class="waves-effect waves-dark">
 										자재출고관리
 									</a>
-								</li>
+								</li>-->
 
 
 
@@ -408,15 +413,15 @@
 									</a>
 								</li>
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcOrder" class="waves-effect waves-dark">
+									<a href="${pageContext.request.contextPath}/QualityProduct" class="waves-effect waves-dark">
 										제품품질관리
 									</a>
 								</li>
-								<li>
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/ProdProcManagement" class="waves-effect waves-dark">
 										???빈칸
 									</a>
-								</li>
+								</li>-->
 							</ul>
 						</li>
 

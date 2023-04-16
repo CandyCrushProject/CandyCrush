@@ -26,7 +26,7 @@ public interface ProcService {
 	public List<OrderPlanVO> getOrdrDtlCd(@Param("orshNo")String[] orshNo);
 	
 	// 생산계획 - 주문서 접수완료 -> 계획완료 변경
-	public int updateOrderStatus(List<ProcPlanVO> planVO);
+	public int updateOrderStatus(@Param("orshNo")String[] orshNo);
 	
 	// 미계획 주문서에 대한 상세 정보 목록
 	public List<OrderPlanVO> getOrderDetail(OrderPlanVO opVO);
@@ -36,11 +36,11 @@ public interface ProcService {
 	
 	
 	// 생산계획등록 - 읽어온 주문서의 정보로 계획 등록하는거
-	public int addPlan(List<ProcPlanVO> planVO); // 생산계획 헤더
+	public int addPlan(ProcPlanVO planVO); // 생산계획 헤더
 	public int addPlanDetail(List<ProcPlanVO> planVO); // 디테일
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
-	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO);
+	public List<BomInfoVO> getBom(OrderPlanVO opVO);
 
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO); 
 	
@@ -76,7 +76,8 @@ public interface ProcService {
 	
 	//실적페이지 지시조회용========================== 이하 실적페이용=========
 	
-	public List<ProcResultAllVO> getProcCommand(ProcResultAllVO comVO);
-	
+	public List<ProcResultAllVO> getProcCommand();
+	public List<ProcResultAllVO> getProcProg(@Param("prcmCd")String prcmCd);
+	public List<ProcResultAllVO> getProcFac(@Param("prcmPrcd") String prcmPrcd);
 	/* 생산공정 매퍼 끝 */
 }

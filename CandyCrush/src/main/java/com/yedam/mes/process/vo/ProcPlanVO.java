@@ -24,4 +24,7 @@ public class ProcPlanVO {
 	
 	// 주문서
 	private String ordrDtlCd; // 주문서상세코드
+	
+	// 생산지시에서 조회할때
+	private int cprCnt; // 제품 개수
 }
