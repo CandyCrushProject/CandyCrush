@@ -22,6 +22,7 @@ public class BomVO {
 	
 	//공정코드관리
 	private String cmCd;		//공정코드
+	private String cmNm;		//공정명
 	
 	//완제품관리
 	private String cprCd;		//제품코드
@@ -32,4 +33,5 @@ public class BomVO {
 	
 	//자재관리
 	private String cmmCd;		//자재코드
+	private String cmmNm;		//자재명
 }

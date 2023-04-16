@@ -37,7 +37,7 @@ public class CommonController {
 	
 	@PostMapping("bomDetailList")
 	@ResponseBody
-	public List<BomVO> bomDetailList(@RequestParam String cprNm){
+	public List<BomVO> bomDetailList(@RequestParam(required = false) String cprNm){
 		return service.prodBomDetailList(cprNm);
 	}
 }
