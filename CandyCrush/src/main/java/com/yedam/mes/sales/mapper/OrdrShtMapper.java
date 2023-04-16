@@ -1,6 +1,7 @@
 package com.yedam.mes.sales.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -35,8 +36,13 @@ public interface OrdrShtMapper {
 	public List<OrdrShtVO> getProdList();
 	
 	// 모달창 주문서헤더 등록
-	public int insertOrdrShtHdr(OrdrShtVO vo);
+	public int insertOrdrShtHdr(Map<String,Object> map);
 	// 모달창 주문서디테일 등록
-	public int insertOrdrShtDtl(OrdrShtVO vo);
+	public int insertOrdrShtDtl(Map<String,Object> map);
+
+	// 주문서관리페이지 주문서 상세조회리스트 모달창
+	public List<OrdrShtVO> getOrdrShtDtlList();
+	
+	//주문서관리 페이지 주문서 수정
 
 }

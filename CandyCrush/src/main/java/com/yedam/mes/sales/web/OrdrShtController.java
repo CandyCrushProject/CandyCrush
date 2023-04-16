@@ -2,7 +2,6 @@ package com.yedam.mes.sales.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +23,13 @@ public class OrdrShtController {
 	@Autowired
 	OrdrShtService service;
 	
+	// 주문서관리 페이지 띄워주는거
+	@GetMapping("ordrMngntPage")
+	public String ordrMngntPage(Model model) {
+		
+		return "sales/ordrShtMngmnt";
+	}
+	
 	// 거래처 검색조회
 	@PostMapping("ordrAccntSrch")
 	@ResponseBody
@@ -31,13 +37,6 @@ public class OrdrShtController {
 		
 		System.out.println("caNm" + caNm + ", caNo" + caNo);
 		return service.accoutnSrchList(caNm, caNo);
-	}
-	
-	// 주문서관리 페이지 띄워주는거
-	@GetMapping("ordrMngntPage")
-	public String ordrMngntPage(Model model) {
-		
-		return "sales/ordrShtMngmnt";
 	}
 	
 	// 주문서관리페이지 주문서 리스트 조회
@@ -91,7 +90,7 @@ public class OrdrShtController {
 		return vo;
 	}
 	
-	// 조회검색 페이지
+	// 주문서관리 페이지 주문서 제품등록 상품 리스트
 	@GetMapping("getProdList")
 	@ResponseBody
 	public List<OrdrShtVO> getProdList() {
@@ -120,20 +119,51 @@ public class OrdrShtController {
 //		return response;
 //	};
 	
-	// 주문서 등록 해야함 ㅠㅠ
+	// 주문서관리 페이지 주문서 등록 
+	@SuppressWarnings("unchecked")
 	@PostMapping("ordrShtForm")
 	@ResponseBody
 	public Map<String, Object> ordrShtInsertProcess(@RequestBody Map<String, Object> map){
 	
-		System.out.println(map.get("data"));
-		System.out.println(map.get("dataHd"));
+		Map<String, Object> headerMap = new HashMap<>();
+		List<Map<String, Object>> detailList = new ArrayList<Map<String,Object>>();
+		detailList = (List<Map<String, Object>>) map.get("data"); // 등록정보
+		headerMap = (Map<String, Object>) map.get("dataHd");
+		if(detailList.size() > 0) {
+			service.insertOrdrSht(headerMap, detailList);
+		}
+	
+		List<Map<String, Object>> updateList = new ArrayList<Map<String,Object>>();
+		updateList = (List<Map<String, Object>>) map.get("updateRows"); // 수정정보
+		//headerMap = (Map<String, Object>) map.get("dataHd");
+		if(detailList.size() > 0) {
+			service.insertOrdrSht(headerMap, updateList);
+		}
 		
+		List<Map<String, Object>> deleteList = new ArrayList<Map<String,Object>>();
+		deleteList = (List<Map<String, Object>>) map.get("deleteRows"); // 삭제정보
+		//headerMap = (Map<String, Object>) map.get("dataHd");
+		if(detailList.size() > 0) {
+			service.insertOrdrSht(headerMap, deleteList);
+		}
+		
+		headerMap = (Map<String, Object>) map.get("dataHd");
+		service.insertOrdrSht(headerMap, detailList);
 		return map;
 	}
 	
+	// 주문서관리페이지 주문서 상세조회리스트 모달창
+	@GetMapping("getOrdrShtDtlList")
+	@ResponseBody
+	public List<OrdrShtVO> getOrdrShtDtlList(Model model) {
+		
+		return service.getOrdrShtDtlList();
+	}
+	
+	// 제품입고 관리페이지(페이지 리턴)
 	@GetMapping("prodInputMngmnt")
 	public String prodInputMngmnt(Model model) {
-		
+			
 		return "sales/prodInputMngmnt";
 	}
 }

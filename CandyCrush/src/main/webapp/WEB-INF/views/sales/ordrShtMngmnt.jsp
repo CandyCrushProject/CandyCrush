@@ -6,7 +6,7 @@
 <script src="assets/js/orderSheet/ordrShtMngmntCall.js"></script>
 <main>
 	
-	<!-- 주문서 등록 모달 -->
+	<!-- 주문서 등록 + 수정 모달 -->
 	<div id="ordrDtilMdl" class="w3-modal" style="z-index: 100;">
     <div class="w3-modal-content">
       <div class="w3-container">
@@ -15,6 +15,10 @@
         <h3 class="mdlTitle">주문서</h3>
         <form id="frmOrdrShtInsert" action="">
           <div class="accntInfoMngBox">
+						<div id="orshNoBox" class="accntInfo" style="display: none;">
+							<label for="orshNo">주문서번호</label>
+							<input id="orshNo" name="orshNo" type="text" readonly>
+						</div>
 						<div class="accntInfo">
 							<label for="caNo">거래처코드</label>
 							<input id="caNo" name="caNo" type="text" readonly>

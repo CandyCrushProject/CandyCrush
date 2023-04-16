@@ -1,9 +1,12 @@
 package com.yedam.mes.sales.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
+import com.yedam.mes.sales.service.vo.ProdInOutPutVO;
 
 public interface OrdrShtService {
 	
@@ -34,6 +37,12 @@ public interface OrdrShtService {
 	// 주문서 등록 모달창 상품 리스트
 	public List<OrdrShtVO> getProdList();
 	
+	// 주문서관리페이지 주문서 상세조회리스트 모달창
+	public List<OrdrShtVO> getOrdrShtDtlList();
+	
 	// 모달창 주문서 등록
-	public int insertOrdrSht(OrdrShtVO vo, List<OrdrShtVO> list);
+	public int insertOrdrSht(Map<String,Object> map, List<Map<String,Object>> list);
+	
+	// 제품입고관리 페이지 입고대기 리스트
+	public List<ProdInOutPutVO> prodInputList();
 }

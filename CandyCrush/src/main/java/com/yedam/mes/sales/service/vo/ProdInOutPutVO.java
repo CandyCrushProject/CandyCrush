@@ -33,5 +33,4 @@ public class ProdInOutPutVO {
 	private String caNo; // 거래처코드
 	private String ouputMng;
 	
-
 }
