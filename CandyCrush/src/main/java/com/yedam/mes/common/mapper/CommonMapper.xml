@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.mes.common.mapper.CommonMapper">
+	<select id="prodAllList" resultType="BomVO">
+		SELECT cpr_cd, cpr_nm, cpr_unit, cpr_spec, cpr_typ
+		FROM cm_product_mng
+		WHERE 1=1
+		<if test="cprCd != null and !cprCd.equals('')">
+		AND cpr_cd LIKE '%' || #{cprCd} || '%'
+		</if>
+		<if test="cprNm != null and !cprNm.equals('')">
+		AND cpr_nm LIKE '%' || #{cprNm} || '%'
+		</if>
+		ORDER BY cpr_cd
+	</select>
+	
+	<select id="prodBomList" resultType="BomVO">
+		SELECT bom_cd, bom_start_dt ,bom.cpr_cd, cpr_nm
+		FROM cm_product_mng cpr
+			JOIN cm_bom_mng bom
+				ON cpr.cpr_cd = bom.cpr_cd
+		WHERE 1=1
+		<if test="cprNm != null and !cprNm.equals('')">
+		AND cpr_nm LIKE '%' || #{cprNm} || '%'
+		</if>
+		ORDER BY bom_cd
+	</select>
+	
+	<select id="prodBomDetailList" resultType="BomVO">
+		SELECT cbm.cm_cd, cm_nm, cm_sq, cmm_nm, cbmt_cnsm, cbmt_ms
+		FROM cm_bom_mng bom
+		    JOIN cm_bom_mnfct cbm
+		        ON bom.bom_cd = cbm.bom_cd
+		            JOIN cm_process_code cm
+		                ON cbm.cm_cd = cm.cm_cd
+		                    JOIN cm_bom_mtrl cbmt
+		                        ON cbm.cbm_cd = cbmt.cbm_cd
+		                            JOIN cm_mtrl_mng cmm
+		                                ON cbmt.cmm_cd = cmm.cmm_cd
+		                                    JOIN cm_product_mng cpr
+		                                        ON bom.cpr_cd = cpr.cpr_cd
+		WHERE cpr_nm LIKE '%' || #{cprNm} || '%'
+		ORDER BY cm_sq
+	</select>
+</mapper>

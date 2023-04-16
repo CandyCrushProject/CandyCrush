@@ -202,11 +202,11 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<li>
-									<a href="${pageContext.request.contextPath}/ProcManagement" class="waves-effect waves-dark">
-										생산계획관리
+									<a href="${pageContext.request.contextPath}/bomCheck" class="waves-effect waves-dark">
+										BOM관리
 									</a>
 								</li>
-								<li>
+								<!-- <li>
 									<a href="${pageContext.request.contextPath}/ProcOrder" class="waves-effect waves-dark">
 										생산지시관리
 									</a>
@@ -220,7 +220,7 @@
 									<a href="${pageContext.request.contextPath}/ProcResult" class="waves-effect waves-dark">
 										생산실적관리
 									</a>
-								</li>
+								</li> -->
 
 
 
@@ -366,11 +366,11 @@
 										자재입고관리
 									</a>
 								</li>
-								<li>
+								<!--<li>
 									<a href="${pageContext.request.contextPath}/mtrlOutputManagement" class="waves-effect waves-dark">
 										자재출고관리
 									</a>
-								</li>
+								</li>-->
 
 
 
