@@ -189,6 +189,7 @@ public class ProcessController {
 		return procService.getProcProg(prcmCd);
 	}
 	
+
 	
 	
 	
@@ -198,4 +199,11 @@ public class ProcessController {
 	
 	
 	
+
+	@PostMapping("getProcFac")
+	@ResponseBody
+	public List<ProcResultAllVO> getProcFac(@RequestParam("prcmPrcd") String prcmPrcd){
+		return procService.getProcFac(prcmPrcd);
+	}
+
 }

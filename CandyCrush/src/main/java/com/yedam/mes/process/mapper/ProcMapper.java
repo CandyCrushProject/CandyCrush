@@ -77,7 +77,7 @@ public interface ProcMapper {
 	
 	
 	public List<ProcResultAllVO> getProcProg(@Param("prcmCd") String prcmCd);
-	
+	public List<ProcResultAllVO> getProcFac(@Param("prcmPrcd") String prcmPrcd);
 	
 	/* 생산공정 매퍼 끝 */
 }

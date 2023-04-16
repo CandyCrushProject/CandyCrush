@@ -54,8 +54,8 @@
                       <tr>
                         <th>사용설비</th>
                         <td>
-                          <select name="" id="">
-                            <option value="설비가 여기들어갑니다~"></option>
+                          <select name="" id="facAble">
+                            
                           </select>
                         </td>
                       </tr>
@@ -301,7 +301,7 @@ Grid.setLanguage('ko');
           }
     });
 
-
+    //해당 지시건 공정정보 가져오기
     function getProcProg(commandCD){
       console.log(commandCD);
       $.ajax({
@@ -321,6 +321,31 @@ Grid.setLanguage('ko');
         },
       })
     }
+
+    //해당 공정건 가동가능 설비 가져오기
+    function getProcFac(commandCD){
+      console.log(commandCD);
+      $.ajax({
+        url : "getProcFac",
+        method :"POST",
+        async : false,
+        dataType : "JSON",
+        data : {prcmPrcd : commandCD},
+        
+        success : function(data){
+          console.log(data);
+          facAble.InnerHTML = `
+          <c:forEach var="facs" items=${data}>
+          <option id="" value="${facs.FacCd}">${facs.FacNm}</option>
+          </c:forEach>`
+        },
+        error : function(reject){
+          console.log(reject);
+          console.log("통신오류");
+        },
+      })
+    }
+
     //지시리스트에서 고르면 공정표시하기
     ProcOdList.on("dblclick", (e) => {
 			const rowData = ProcOdList.getRow(e.rowKey);
@@ -332,6 +357,7 @@ Grid.setLanguage('ko');
 			const rowData = ProcProgList.getRow(e.rowKey);
       prodNm.value=rowData.cprNm;
       procNm.value=rowData.cmNm;
+      getProcFac(rowData.prcmPrcd);
       document.getElementById('procInsertModal').style.display='block';
 		});
 

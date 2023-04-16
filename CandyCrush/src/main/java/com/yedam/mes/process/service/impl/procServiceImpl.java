@@ -123,31 +123,11 @@ public class procServiceImpl implements ProcService {
 	public List<ProcResultAllVO> getProcProg(@Param("prcmCd")String prcmCd) {
 		return 	procMapper.getProcProg(prcmCd);
 	}
-
+  
+	@Override
+	public List<ProcResultAllVO> getProcFac(String prcmPrcd) {
+		// TODO Auto-generated method stub
+		return procMapper.getProcProg(prcmPrcd);
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
 }

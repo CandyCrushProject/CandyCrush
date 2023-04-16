@@ -222,6 +222,20 @@
         ON PC.CPR_CD=M.CPR_CD
         WHERE P.PRCM_CD = #{prcmCd}
 	</select>
+	
+	<select id="getProcFac" resultType="ProcResultAllVO" >
+		SELECT PRCM_PRCD,P.CM_CD,C.FAC_CD,FAC_NM,FAC_RUN
+		FROM PROC_PROGRESS P
+		LEFT JOIN CM_PROCESS_CODE C
+		    ON C.CM_CD = P.CM_CD
+		LEFT JOIN FAC F
+		    ON UPPER(F.FAC_CD)=UPPER(C.FAC_CD)
+		LEFT JOIN FAC_STAT S
+		    ON F.FAC_CD = S.FAC_CD
+		WHERE FAC_RUN = 'Y'
+		    AND PRCM_PRCD=#{prcmPrcd};
+	</select>
+	
 
 
 
