@@ -38,7 +38,7 @@ public interface ProcMapper {
 	public int insertPlanDetail(ProcPlanVO planVO); // 디테일
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
-	public List<BomInfoVO> selectBomMtrl(OrderPlanVO opVO);
+	public List<BomInfoVO> selectBom(OrderPlanVO opVO);
 	
 	
 	/* 생산계획 매퍼 끝 */

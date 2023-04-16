@@ -16,4 +16,8 @@ public class BomInfoVO {
 	private String cprCd; // 제품코드
 	private String cprNm; // 제품명
 	private String crshNo; // 주문코드
+	private String cbmCd; // bom공정코드
+	private int cmSq; // 공정 순번
+	private int cbmtCnsm; // 자재투입량
+	private String cbmtMs; // 자재 단위
 }

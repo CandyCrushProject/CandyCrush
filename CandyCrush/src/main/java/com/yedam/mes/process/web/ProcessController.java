@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.yedam.mes.process.service.ProcService;
+import com.yedam.mes.process.vo.BomInfoVO;
 import com.yedam.mes.process.vo.OrderPlanVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 import com.yedam.mes.process.vo.ProcResultAllVO;
@@ -126,6 +127,8 @@ public class ProcessController {
 	}
 	
 	
+	
+	
 	// 생산관리 -> 생산지시관리 -> 페이지
 	@GetMapping("ProcOrder")
 	public String ProcOrderManagement() {
@@ -133,9 +136,9 @@ public class ProcessController {
 	}
 	
 
-	@PostMapping("cprSearch")
+	@PostMapping("ProcPlanOrderDetail")
 	@ResponseBody
-	public List<ProcPlanVO> planCprSearch(ProcPlanVO ppVO){
+	public List<ProcPlanVO> procPlanOrderDetail(@RequestBody ProcPlanVO ppVO){
 		return procService.searchPlanList(ppVO);
 	}
 	
@@ -144,6 +147,21 @@ public class ProcessController {
 	public List<ProcPlanVO> getProcPlanOrder(){
 		return procService.getPlan();
 	}
+	
+	@PostMapping("getBomInfo")
+	@ResponseBody
+	public List<BomInfoVO> getBomInfoProcess(@RequestBody OrderPlanVO opVO){
+		System.out.println(procService.getBom(opVO));
+		return procService.getBom(opVO);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -170,4 +188,14 @@ public class ProcessController {
 	public List<ProcResultAllVO> getProcProg(@RequestParam String prcmCd) {
 		return procService.getProcProg(prcmCd);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

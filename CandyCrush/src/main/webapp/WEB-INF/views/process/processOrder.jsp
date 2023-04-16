@@ -21,13 +21,10 @@
 						<div class="modal-content">
 							<div class="modal-header" style="border:none;">
 								<h4>생산계획 조회</h4>
-								<div>
-									<input type="text" id="cprNm" placeholder="제품명" style="width: 20%; display: inline;"
-										autocomplete="off">
-								</div>
 							</div>
 							<div class="modal-body">
-								<div id="procPlanList"></div>
+								<div id="procPlanList">
+								</div>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="cndRstBtn" data-dismiss="modal">Close</button>
@@ -51,111 +48,93 @@
 
 						<div class="row">
 							<div class="col-md-12">
-								<ul>
-									<li class="procOderBtn-r">
-										<button class="cndInsBtn ">
-											<i class="fa-solid fa-plus"></i>
-											등록
-										</button>
-									</li>
-									<li class="procOderBtn-r">
-										<button class="cndSelBtn" id="planBtn" type="button" data-toggle="modal" data-target="#plan">
-											<i class="fa-regular fa-folder-open"></i>
-											계획조회
-										</button>
-									</li>
-									<li class="procOderBtn-r">
-										<button class="cndRstBtn ">
-											<i class="fa-solid fa-rotate-right"></i>
-											초기화
-										</button>
-									</li>
-								</ul>
-								<div class="clearBoth"></div>
+								<div class="card">
+									<div class="card-action">
+										<div class="procOderBtn-r">
+											<button class="cndRstBtn">
+												<i class="fa-solid fa-rotate-right"></i>
+												초기화
+											</button>
+											<button class="cndSelBtn" id="planBtn" type="button" data-toggle="modal" data-target="#plan">
+												<i class="fa-regular fa-folder-open"></i>
+												계획조회
+											</button>
+											<button class="cndInsBtn" id="addOrderBefore">
+												<i class="fa-solid fa-plus"></i>
+												등록
+											</button>
+										</div>
+										<h3>생산지시관리</h3>
+										<h4>생산 지시 대기</h4>
+									</div>
+									<div class="card-content">
+										<div id="procOrderFormGrid"></div>
+										<div class="clearBoth">
+											<br />
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card">
+									<div class="card-action">
+										<h4>생산 지시 등록</h4>
+									</div>
+									<div class="card-content">
+										<input type="date" name="prcmDt" id="prcmDt" value="" style="width: 120px;" readonly>
+										<div id="insertOrderForm"></div>
+										<div class="clearBoth">
+											<br />
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 
 
 						<div class="row">
+
+
 							<div class="col-md-8">
 								<div class="card">
 									<div class="card-action">
-										<h3>공정자재</h3>
+										<h4>생산공정(공정 및 자재)</h4>
 									</div>
 									<div class="card-content">
-										<div class="prodProc">
-											<table class="candyTab">
-												<thead>
-													<tr>
-														<th>공정코드</th>
-														<th>자재명</th>
-														<th>LOT번호</th>
-														<th>출고수량</th>
-														<th>재고수량</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>qeqw231</td>
-														<td>된장</td>
-														<td>qweasd124fsd</td>
-														<td>300</td>
-														<td>600</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
+										<div id="procGrid"></div>
 										<div class="clearBoth">
 											<br />
 										</div>
-
-
 									</div>
 								</div>
-
 							</div>
+
 							<div class="col-md-4">
 								<div class="card">
 									<div class="card-action">
-										<h3>자재지시</h3>
+										<h4>자재지시</h4>
 									</div>
 									<div class="card-content">
-										<div class="prodProc">
-											<table class="candyTab">
-												<thead>
-													<tr>
-														<th>공정코드</th>
-														<th>LOT번호</th>
-														<th>출고수량</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>fac0001</td>
-														<td>canwewet153534</td>
-														<td>500</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
+										<div id="mtrlGrid"></div>
 										<div class="clearBoth">
 											<br />
 										</div>
-
-
 									</div>
 								</div>
 							</div>
+
 						</div>
-						<!-- /. PAGE INNER  -->
+
 					</div>
-					<!-- /. PAGE WRAPPER  -->
-				</div>
 				</div>
 			</main>
 
 			<script>
-
+				$('#prcmDt').val(getToday());
 
 				// 날짜 포맷 변경 함수
 				function formatDate(time) {
@@ -176,32 +155,12 @@
 					return formattedDate;
 				}
 
-				var cprNm = "";
-				var rowKey = "";
-				var columnName = "";
-				var row = "";
-				function search() {
-					$.ajax({
-						url: "cprSearch",
-						method: "POST",
-						dataType: "JSON",
-						data: {
-							cprNm: $('#cprNm').val(),
-							prpldStatus: "계획완료"
-						},
-						success: function (data) {
-							procPlanGrid.resetData(data);
-						}, error: function (err) {
-							console.log("실패");
-						}
-					});
-				}
-
+				let cprNm = "";
+				let rowKey = "";
+				let columnName = "";
+				let row = "";
+				let prplCdSet;
 				$(document).ready(function () {
-
-					document.getElementById("cprNm").addEventListener("input", () => {
-						search();
-					});
 
 
 					$('#planBtn').on('click', function () {
@@ -210,13 +169,30 @@
 							method: 'get',
 							success: function (data) {
 								procPlanGrid.resetData(data);
-								setTimeout(() => procPlanGrid.refreshLayout(), 200);
+								setTimeout(() => procPlanGrid.refreshLayout(), 300);
 							}, error: function (err) {
 								console.log("실패");
 							}
 						});
 					})
-				})
+
+
+					$('#addOrderBefore').on('click', function () {
+						const rows = procOrderFormGrid.getCheckedRows();
+						procOrderFormGrid.removeCheckedRows();
+						if (rows.length > 0) {
+							insertOrderFormGrid.resetData(rows);
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: '경고',
+								text: "선택된 생산계획이 없습니다.",
+							});
+						};
+					})
+
+				});
+
 				const procPlanGrid = new tui.Grid({
 					el: document.getElementById('procPlanList'),
 					scrollX: false,
@@ -224,6 +200,64 @@
 					minBodyHeight: 30,
 					selectionUnit: 'row',
 					rowHeaders: ['rowNum'],
+					columns: [
+						{
+							header: '생산계획코드',
+							name: 'prplCd',
+							align: 'center'
+						},
+						{
+							header: '생산제품개수',
+							name: 'cprCnt',
+							align: 'center'
+						},
+						{
+							header: '생산계획일자',
+							name: 'prplDt',
+							align: 'center'
+						},
+						{
+							header: '계획관리자',
+							name: 'prplMng',
+							align: 'center'
+						},
+					]
+				});
+				procPlanGrid.on('dblclick', function (ev) {
+					rowKey = ev.rowKey;
+					columnName = ev.columnName;
+					row = procPlanGrid.getRow(rowKey);
+					console.log(row);
+					prplCdSet = {
+						prplCd: row.prplCd
+					};
+					$('#plan').modal('hide');
+					procPlanDetail();
+				});
+
+				function procPlanDetail() {
+					console.log(prplCdSet);
+					$.ajax({
+						url: 'ProcPlanOrderDetail',
+						method: 'POST',
+						data: JSON.stringify(prplCdSet),
+						dataType: 'json',
+						contentType: 'application/json',
+						success: function (data) {
+							procOrderFormGrid.resetData(data);
+						}, error: function (err) {
+							console.log(err);
+						}
+					});
+				}
+
+
+				const procOrderFormGrid = new tui.Grid({
+					el: document.getElementById('procOrderFormGrid'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					rowHeaders: ['checkbox'],
 					columns: [
 						{
 							header: '생산계획헤더코드',
@@ -267,13 +301,213 @@
 						},
 					]
 				});
-				procPlanGrid.on('dblclick', function (ev) {
-					rowKey = ev.rowKey;
-					columnName = ev.columnName;
-					row = procPlanGrid.getRow(rowKey);
-					console.log(row);
 
-					$('#plan').modal('hide');
+				const insertOrderFormGrid = new tui.Grid({
+					el: document.getElementById('insertOrderForm'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					rowHeaders: ['rowNum'],
+					columns: [
+						{
+							header: '제품코드',
+							name: 'cprCd',
+							hidden: true
+						},
+						{
+							header: '계획상세코드',
+							name: 'prpldCd',
+							align: 'center'
+						},
+						{
+							header: '제품명',
+							name: 'cprNm',
+							align: 'center'
+						},
+						{
+							header: '생산계획수량',
+							name: 'prpldCnt',
+							align: 'center',
+						},
+						{
+							header: '생산지시수량',
+							name: 'prcmCnt',
+							align: 'center',
+							editor: 'text'
+						},
+						{
+							header: '생산시작일자',
+							name: 'prcmStartDt',
+							align: 'center',
+							formatter: function (data) {
+								let dateVal = '';
+								if (data.value != null) {
+									dateVal = formatDate(data.value);
+								} else {
+									dateVal = getToday();
+								}
+								return dateVal;
+							},
+							editor: {
+								type: 'datePicker',
+								options: {
+									format: 'yyyy-MM-dd',
+									date: getToday()
+								}
+							}
+						},
+						{
+							header: '지시담당자',
+							name: 'prcmMng',
+							align: 'center',
+							editor: 'text'
+						},
+					]
+				});
+
+				insertOrderFormGrid.on('click', function (ev) {
+					row = insertOrderFormGrid.getRow(ev.rowKey);
+					console.log(row.cprCd);
+					getBom(row.cprCd);
+				});
+
+				function getBom(cprCd) {
+					let ccd = { cprCd: cprCd };
+					$.ajax({
+						url: 'getBomInfo',
+						method: 'post',
+						data: JSON.stringify(ccd),
+						contentType: 'application/json',
+						dataType: 'json',
+						success: function (data) {
+							console.log(data);
+							procGrid.resetData(data);
+						}, error: function (rej) {
+							console.log(rej);
+						}
+					});
+				}
+
+
+
+				const procGrid = new tui.Grid({
+					el: document.getElementById('procGrid'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					columns: [
+						{
+							header: '제품코드',
+							name: 'cprCd',
+							hidden: true
+						},
+						{
+							header: '자재코드',
+							name: 'cmmCd',
+							hidden: true
+						},
+						{
+							header: 'BOM코드',
+							name: 'bomCd',
+							hidden: true
+						},
+						{
+							header: '공정코드',
+							name: 'cmCd',
+							hidden: true
+						},
+						{
+							header: '공정순서',
+							name: 'cmSq',
+							align: 'center'
+						},
+						{
+							header: '공정명',
+							name: 'cmNm',
+							align: 'center'
+						},
+						{
+							header: '자재명',
+							name: 'cmmNm',
+							align: 'center'
+						},
+						{
+							header: '자재소모량',
+							name: 'cbmtCnsm',
+							align: 'center',
+						},
+						{
+							header: '자재단위',
+							name: 'cbmtMs',
+							align: 'center',
+						}
+					]
+				});
+
+				procGrid.on('click', function (ev) {
+					let rowdd = procGrid.getRow(ev.rowKey);
+					setBom(rowdd.cprCd);
+				})
+
+
+
+				function setBom(cprCd) {
+					let cpCd = {
+						cprCd: cprCd
+					}
+					console.log(cpCd);
+					$.ajax({
+						url: 'getBomInfo',
+						method: 'post',
+						data: JSON.stringify(cpCd),
+						contentType: 'application/json',
+						dataType: 'json',
+						success: function (data) {
+							mtrlGrid.resetData(data);
+						}, error: function (rej) {
+							console.log(rej);
+						}
+					});
+				}
+
+				const mtrlGrid = new tui.Grid({
+					el: document.getElementById('mtrlGrid'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					columns: [
+						{
+							header: '자재코드',
+							name: 'cmmCd',
+							hidden: true
+						},
+						{
+							header: '공정코드',
+							name: 'cmCd',
+							hidden: true
+						},
+						{
+							header: '공정명',
+							name: 'cmNm',
+							align: 'center'
+						},
+						{
+							header: '자재명',
+							name: 'cmmNm',
+							align: 'center'
+						},
+						{
+							header: '투입예정량',
+							name: 'prmpPutQnt',
+							align: 'center',
+							editor: 'text'
+						},
+						{
+							header: '자재단위',
+							name: 'cbmtMs',
+							align: 'center',
+						}
+					]
 				});
 
 			</script>

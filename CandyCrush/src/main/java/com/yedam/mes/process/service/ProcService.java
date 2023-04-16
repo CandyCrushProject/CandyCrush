@@ -40,7 +40,7 @@ public interface ProcService {
 	public int addPlanDetail(List<ProcPlanVO> planVO); // 디테일
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
-	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO);
+	public List<BomInfoVO> getBom(OrderPlanVO opVO);
 
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO); 
 	

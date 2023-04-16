@@ -62,8 +62,8 @@ public class procServiceImpl implements ProcService {
 	}
 
 	@Override
-	public List<BomInfoVO> getBomMtrl(OrderPlanVO opVO) {
-		return procMapper.selectBomMtrl(opVO);
+	public List<BomInfoVO> getBom(OrderPlanVO opVO) {
+		return procMapper.selectBom(opVO);
 	}
 	@Override
 	public int addPlan(ProcPlanVO planVO) {
@@ -123,6 +123,30 @@ public class procServiceImpl implements ProcService {
 	public List<ProcResultAllVO> getProcProg(@Param("prcmCd")String prcmCd) {
 		return 	procMapper.getProcProg(prcmCd);
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 
