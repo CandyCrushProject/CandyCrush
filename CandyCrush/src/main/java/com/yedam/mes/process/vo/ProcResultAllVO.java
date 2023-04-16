@@ -62,6 +62,6 @@ public class ProcResultAllVO {
 	private String facCd; //설비코드
 	private String facNm; //설비명
 	private int prQntSum;//합계출력용
-	
+	private String facRun;//기동중 설비
 	
 }
