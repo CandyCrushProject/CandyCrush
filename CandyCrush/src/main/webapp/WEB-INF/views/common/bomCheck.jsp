@@ -11,7 +11,7 @@
 		margin-bottom: 5px;
 	}
 	.tui-grid-cell.cell-red {background-color: rgba(255, 121, 121, 0.432)}
-	.tui-grid-cell.cell-green {background-color: rgba(255, 255, 255, 0.877)}
+	.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
     #prodExcelBtn, #procExcelBtn{
         margin-left: 15px;
     }
@@ -68,7 +68,7 @@
 				</div>
 			</div> <!--END row-->
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-5">
 					<div class="card">
 						<div class="card-action">제품리스트</div>
                         <button type="button" id="prodExcelBtn" class="cndInsBtn">EXCEL</button>
@@ -86,14 +86,14 @@
 						</div>
 					</div>
 				</div> <!--END row-->
-                <div class="col-md-8">
+                <div class="col-md-7">
 					<div class="card">
 						<div class="card-action">공정리스트</div>
-                        <button type="button" id="procExcelBtn" class="cndInsBtn">EXCEL</button>
+                        <button type="button" id="procDetailExcelBtn" class="cndInsBtn">EXCEL</button>
                         <div class="mtrlOrderRightBtn">
-                            <button id="bomInAndUp" class="cndInsBtn">저장</button>
-                            <button id="bomInsert" class="cndUdtBtn">추가</button>
-                            <button id="bomDelete" class="cndDelBtn">삭제</button>
+                            <button id="bomDetailInAndUp" class="cndInsBtn">저장</button>
+                            <button id="bomDetailInsert" class="cndUdtBtn">추가</button>
+                            <button id="bomDetailDelete" class="cndDelBtn">삭제</button>
                         </div>
                         <div class="card-content">
                             <div style="clear:both"></div>
@@ -112,6 +112,16 @@
         const Grid = tui.Grid;
 		let cprNm = "";
 		let cprCd = "";
+		let changecprNm = "";
+
+		//날짜 가공
+		const date = new Date();
+		const years = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0");
+		const month2 = String(date.getMonth() + 2).padStart(2, "0");
+		const day = String(date.getDate()).padStart(2, "0");
+		const getStartToday = years+ "-" + month + "-" + day;
+
 		//제품 검색 모달
 		const prodGetData = (cprNm = undefined, cprCd = undefined) => {
 			$.ajax({
@@ -167,12 +177,12 @@
             rowHeaders: ['rowNum', 'checkbox'],
             scrollX: false,
 			columns: [
-				{
+				/*{
 					header: 'BOM코드',
 					name: 'bomCd',
 					sortingType: 'asc',
 					sortable: true
-				},
+				},*/
 				{
 					header: '제품코드',
 					name: 'cprCd',
@@ -185,7 +195,10 @@
 				},
 				{
 					header: 'BOM등록일',
-					name: 'bomStartDt'
+					name: 'bomStartDt',
+					formatter: function (e) {
+						return dateChange(e.value);
+					},
 				}
 			],
 			bodyHeight: 400,
@@ -194,6 +207,13 @@
 				type: 'scroll',
 				perPage: 30
 			}
+		});
+
+		$('#bomInsert').on('click',()=>{
+			document.getElementById('modal').style.display='block';
+			changecprNm = "bomInsert";
+			setTimeout(()=> prodModal.refreshLayout() , 0);
+			//prodList.appendRow();
 		});
 
         //공정리스트
@@ -214,11 +234,11 @@
 				},
 				{
 					header: '공정순번',
-					name: 'prcmTurn'			//BOM공정
+					name: 'cmSq'				//BOM공정
 				},
 				{
 					header: '자재명',
-					name: 'cprNm'				//자재관리
+					name: 'cmmNm'				//자재관리
 				},
 				{
 					header: '자재소요량',
@@ -239,13 +259,15 @@
 
         //초기화버튼
 		$('#resetBtn').on('click', () => {
-			prodList.clear();		//제품리스트 Grid 초기화
-			procList.clear();		//공정리스트 Grid 초기화
+			//prodList.clear();		//제품리스트 Grid 초기화
+			//procList.clear();		//공정리스트 Grid 초기화
+			$('#prodCprNm').val("");
 		});
 
 		//제품명 input click
 		$('#prodCprNm').on('click',()=>{
 			document.getElementById('modal').style.display='block';
+			changecprNm = "prodCprNm";
 			setTimeout(()=> prodModal.refreshLayout() , 0);
 		});
 
@@ -286,7 +308,10 @@
 
 		//모달창에서 tr 선택하면 input으로 값 들어가는 부분
 		prodModal.on('click', (e)=>{
+			let rowData = prodModal.getRow(e.rowKey);
+
 			let prodSelect = prodModal.getData()[e.rowKey].cprNm;
+			
 			if(e.targetType !== "columnHeader"){
 				Swal.fire({
 					icon: 'success',
@@ -294,9 +319,26 @@
 					text: '제품명 : ' + prodSelect,
 				});
 
-				$("#modal").hide();
-				$("#prodCprNm").val(prodSelect);
+				if(changecprNm === "prodCprNm"){
+					$("#prodCprNm").val(prodSelect);
+				} else{
+					if (prodList.getRow(e.rowKey) === null) {
+						rowData.cprNm = rowData.cprNm;
+						rowData.cprCd = rowData.cprCd;
+						rowData.bomStartDt = getStartToday;
+						prodList.appendRow(rowData);
+					} else {
+						Swal.fire({
+							icon: 'warning',
+							title: '경고',
+							text: "(" + rowData.cprCd + ")" + rowData.cprNm + "은(는) 이미 있습니다.",
+						});
+						return;
+					};
+				};
+				
 			};
+			$("#modal").hide();
 		});
 
 		//제품 검색 모달
@@ -305,13 +347,25 @@
 				url : "bomListSearch",
 				method :"POST",
 				dataType : "JSON",
-				data : {cprNm : cprNm},
 				success : function(data){
 					prodList.resetData(data);
 				} 
 			});
 		};
 		bomGetList();
+
+		//제품 검색 모달
+		const bomDetailGetList = (cprNm = undefined) => {
+			$.ajax({
+				url : "bomDetailList",
+				method :"POST",
+				dataType : "JSON",
+				success : function(data){
+					procList.resetData(data);
+				} 
+			});
+		};
+		bomDetailGetList();
 
 		function bomSearch(){
 			let cprNm2 = document.getElementById('prodCprNm').value;	//제품명
@@ -322,8 +376,18 @@
 				dataType : "JSON",
 				data : {cprNm : cprNm2},
 				success : function(data){
-					//console.log(data);
 					prodList.resetData(data);
+					let getRowData = prodList.getData(data.rowKey);
+
+					$.ajax({
+						url : "bomDetailList",
+						method :"POST",
+						dataType : "JSON",
+						data : {cprNm : cprNm2},
+						success : function(data){
+							procList.resetData(data);
+						} 
+					});
 				},
 				error : function(reject){	
 					console.log(reject);
@@ -345,9 +409,22 @@
 				method :"POST",
 				data : {cprNm : getCprNm},
 				success : function(data){
-					console.log(data);
+					//console.log(data);
+					procList.resetData(data);
 				} 
 			});
-		})
+		});
+		
+		//날짜변환 함수
+		function dateChange(data) {
+		let newData = new Date(data);
+		let result = newData.getFullYear() + "-" +
+					(newData.getMonth() < 10
+					? "0" + (newData.getMonth() + 1)
+					: newData.getMonth() + 1) +
+					"-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+			return result;
+		};
+
     </script>
 </main>

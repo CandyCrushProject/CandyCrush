@@ -41,7 +41,11 @@
 		                                ON cbmt.cmm_cd = cmm.cmm_cd
 		                                    JOIN cm_product_mng cpr
 		                                        ON bom.cpr_cd = cpr.cpr_cd
-		WHERE cpr_nm LIKE '%' || #{cprNm} || '%'
+		     
+		WHERE 1=1
+		<if test="cprNm != null and !cprNm.equals('')">
+		AND cpr_nm LIKE '%' || #{cprNm} || '%'
+		</if>
 		ORDER BY cm_sq
 	</select>
 </mapper>
