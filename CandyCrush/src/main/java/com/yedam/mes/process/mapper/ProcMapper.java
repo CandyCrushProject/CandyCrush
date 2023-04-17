@@ -63,15 +63,14 @@ public interface ProcMapper {
 	
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO); 
 	// 생산지시저장 - 조회된 계획으로 지시를 내릴 수 있다.
-	public int insertOrder(ProcOrderVO orderVO);
+	public int insertProcOrder(ProcOrderVO poVO);
 	
-	// 공정자재 - 공정의 자재 정보
-	
-	// 자재지시 - 공정에 들어갈 자재 정보
+	// 공정자재 - 공정 등록
+	public int insertProgress(ProcOrderVO poVO);
+	// 자재지시 - 공정에 들어갈 자재 등록
+	public int insertProgMtrl(ProcOrderVO poVO);
 
 
-	
-	
 	
 	
 	

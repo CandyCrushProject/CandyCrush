@@ -105,15 +105,16 @@
 	<insert id="insertOrdrShtHdr" parameterType="hashmap">
 		INSERT INTO order_sheet(orsh_no, ca_no, orsh_dt, dlvry_dt)
 			             VALUES('ordr' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
-			                  , #{caNo}, TO_DATE(#{orshDt}, 'rrrr-MM-dd'), TO_DATE(#{dlvryDt}, 'yyyy-MM-dd'))
+			                  , #{caNo}, TO_DATE(#{orshDt}, 'rrrr-MM-dd'), TO_DATE(#{dlvryDt}, 'rrrr-MM-dd'))
 	</insert>
 	
 	<!-- 모달창 주문서 디테일 등록 -->
 	<insert id="insertOrdrShtDtl" parameterType="hashmap">
 		INSERT INTO order_sheet_detail(ordr_dtl_cd, ordr_dtl_cnt, cpr_cd, orsh_pr, orsh_no, stt_cng_dt)
-		                        VALUES('orderdtl' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_DETAIL_SEQ.NEXTVAL,'099'))
-                              		  , #{ordrDtlCnt}, (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cprNm})
-                              		  , '접수완료', #{orshNo}, SYSDATE)
+		                        VALUES('orderdtl' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
+                              		  , #{ordrDtlCnt}
+                              		  , (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cprNm})
+                              		  , '접수완료', #{orshNo}, TO_DATE(SYSDATE,'rrrr-MM-dd'))
 	</insert>
 	
 	<!-- 주문서관리페이지 주문서 목록 상세조회 모달창 -->

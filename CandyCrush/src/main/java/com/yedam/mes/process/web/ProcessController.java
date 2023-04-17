@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.yedam.mes.process.service.ProcService;
 import com.yedam.mes.process.vo.BomInfoVO;
 import com.yedam.mes.process.vo.OrderPlanVO;
+import com.yedam.mes.process.vo.ProcOrderVO;
 import com.yedam.mes.process.vo.ProcPlanVO;
 import com.yedam.mes.process.vo.ProcResultAllVO;
 
@@ -71,9 +72,11 @@ public class ProcessController {
 	@ResponseBody
 	public Map<String, Object> getDownOrders(@RequestBody Map<String, Object> list) {
 		
+		System.out.println(list);
 		String orshNoList = (String) list.get("orshNo");
 		
 		String[] orshNo = orshNoList.split(",");
+		System.out.println(orshNo[0]);
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("orderNPlan", procService.addPlanbefore(orshNo));
@@ -166,13 +169,56 @@ public class ProcessController {
 		return mtrlMap;
 	}
 	
+	@PostMapping("insertProcOrder")
+	@ResponseBody
+	public Map<String, Object> insertProcOrder(@RequestBody List<ProcOrderVO> poVO){
+		
+		procService.addOrder(poVO.get(0));
+		
+		Map<String, Object> message = new HashMap<>();
+
+		message.put("retCode","성공");
+
+		return message;
+	}
 	
 	
+	@PostMapping("insertProg")
+	@ResponseBody
+	public Map<String, Object> insertProg(@RequestBody List<ProcOrderVO> progVO){
+		
+		int insertOrder = procService.insertProgress(progVO);
+		Map<String, Object> message = new HashMap<>();
+		
+		
+		if(insertOrder < 1 ) {
+			message.put("retCode","실패");
+			
+		} else {
+			message.put("retCode","성공");
+		} 
+
+		return message;
+	}
 	
 	
-	
-	
-	
+	@PostMapping("insertMtrl")
+	@ResponseBody
+	public Map<String, Object> insertMtrl(@RequestBody List<ProcOrderVO> mtrlVO){
+		
+		int insertMtrl = procService.insertProgMtrl(mtrlVO);
+		Map<String, Object> message = new HashMap<>();
+		
+		
+		if(insertMtrl < 1 ) {
+			message.put("retCode","실패");
+			
+		} else {
+			message.put("retCode","성공");
+		} 
+
+		return message;
+	}
 	
 	
 	
