@@ -20,10 +20,10 @@ public interface QualityMapper {
 	public String getNewMiCd();
 	
 	//제품검수
-	//생산지시 전체목록 모달
+	//SELECT
 	public List<ProdInspVO> procProdList();
-	//생산지시 전체목록
 	public List<ProdInspVO> procPrprEndIsNAllList(@Param("cprNm") String cprNm, @Param("start") String start, @Param("end") String end);
-	//생산지시 디테일(공정)
 	public List<ProdInspVO> procDetailList(@Param("prcmCd") String prcmCd);
+	//검수DB INSERT
+	public int prodInspInsert(List<ProdInspVO> vo);
 }

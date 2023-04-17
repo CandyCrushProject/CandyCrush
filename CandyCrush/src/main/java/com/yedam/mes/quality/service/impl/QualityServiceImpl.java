@@ -69,19 +69,28 @@ public class QualityServiceImpl implements QualityServcie {
 	}
 
 	//제품검사
-	//생산지시 전체목록 모달
 	public List<ProdInspVO> procProdList(){
 		return qualityMapper.procProdList();
 	};
-	//생산지시 전체목록
 	@Override
 	public List<ProdInspVO> procPrprEndIsNAllList(@Param("cprNm") String cprNm, @Param("start") String start, @Param("end") String end) {
 		return qualityMapper.procPrprEndIsNAllList(cprNm, start, end);
 	}
-	//생산지시 디테일(공정)
 	@Override
 	public List<ProdInspVO> procDetailList(String prcmCd) {
 		return qualityMapper.procDetailList(prcmCd);
+	}
+	//검수DB INSERT
+	@Override
+	public int prodInspInsert(List<ProdInspVO> vo) {
+		int result = 0;
+		
+		if(result != 0) {
+			result = qualityMapper.prodInspInsert(vo);
+		} else {
+			result = -1;
+		}
+		return result;
 	};
 	
 

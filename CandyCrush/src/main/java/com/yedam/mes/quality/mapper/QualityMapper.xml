@@ -54,7 +54,7 @@
   	SELECT 'MI' 
         ||mi_seq.NEXTVAL ||
         TO_CHAR(SYSDATE, 'yyMMdd')
-FROM DUAL
+	FROM DUAL
   </select>
   <insert id="InsertMtInsp" parameterType='MtInspInsertVO'>
   	INSERT INTO MTRL_INSP
@@ -98,20 +98,27 @@ FROM DUAL
   <!-- ///////////////////제품검수////////////////////- -->
   <!-- 생산지시 모달 검색 -->
   <select id="procProdList" resultType="prodInspVO">
-  	SELECT prcm_dt, prcm_cd, pc.cpr_cd, cpr_nm, cpr_typ
+	SELECT prcm_dt, pc.prcm_cd, pc.cpr_cd, cpr_nm, cpr_typ
 	FROM proc_command pc
 	    JOIN cm_product_mng cpr
 	        ON pc.cpr_cd = cpr.cpr_cd
+	        	LEFT OUTER JOIN prdct_inspc pi
+	        		ON pc.prcm_cd = pi.prcm_cd
+	WHERE prcm_end_dt IS NOT NULL
+	AND pi_cd IS NULL
 	ORDER BY prcm_cd DESC
   </select>
   
   <!-- 생산지시 리스트 -->
   <select id="procPrprEndIsNAllList" resultType="prodInspVO">
-  	SELECT prcm_cd, cpr_nm, prcm_start_dt, prcm_end_dt
+  	SELECT proc.prcm_cd, cpr_nm, prcm_start_dt, prcm_end_dt
 	FROM proc_command proc
-	    JOIN cm_product_mng cpr
+        JOIN cm_product_mng cpr
 	        ON proc.cpr_cd = cpr.cpr_cd
-	WHERE 1=1
+	        	LEFT OUTER JOIN prdct_inspc pi
+	        		ON proc.prcm_cd = pi.prcm_cd
+	WHERE prcm_end_dt IS NOT NULL
+	AND pi_cd IS NULL
 	<if test="cprNm != null and !cprNm.equals('')">
 	AND cpr_nm LIKE '%' || #{cprNm} || '%'
 	</if>
@@ -123,9 +130,8 @@ FROM DUAL
   
   <!-- 생산지시 상세 -->
   <select id="procDetailList" resultType="prodInspVO">
-  	SELECT prpr.prcm_cd, cpr_nm, prpr_end, prpr.cm_cd,
-   		   prcm_qnt, prpr_qnt, prpr_bad,
-   		   prpe_mng, prpe_wk_start_dt, prpe_wk_end_dt
+  	SELECT prpr.prcm_cd, cpr_nm, prpr_end, prpr.cm_cd, pr.cpr_cd,
+   		   prcm_qnt, prpr_qnt, prpr_bad
 	FROM proc_command pr
 	    JOIN proc_progress prpr
 	        ON pr.prcm_cd = prpr.prcm_cd
@@ -135,7 +141,68 @@ FROM DUAL
 	                            ON pr.cpr_cd = cpr.cpr_cd
 	                            	JOIN proc_perf prpe
                                     	ON prpr.prcm_prcd = prpe.prcm_prcd
-	WHERE UPPER(pr.prcm_cd) = #{prcmCd}
+	WHERE UPPER(pr.prcm_cd) = #{prcmCd} OR LOWER(prpr.prcm_cd) = #{prcmCd}
+	AND prpr_end = 'Y'
+	AND PRCM_TURN = '5'
   </select>
+  
+  <!-- 검사코드등록 -->
+  <insert id="prodInspInsert" parameterType="prodInspVO">
+  	<selectKey resultType="string" keyProperty="piCd" order="BEFORE">
+  		SELECT 'PIC' || TO_CHAR(sysdate, 'yyMMdd') || prdct_inspc_seq.NEXTVAL
+		FROM dual
+  	</selectKey>
+  	INSERT INTO
+  		PRDCT_INSPC (
+			  			PI_CD,
+			  			PI_DT,
+			  			PI_STR_DT,
+			  			PI_END_DT,
+			  			PI_MNG,
+			  			PI_CNT,
+			  			PI_BAD_CNT,
+			  			PI_PASS_CNT,
+			  			PI_NOTE,
+			  			CPR_CD,
+			  			PRCM_CD
+			  		)
+  		VALUES (
+  					#{piCd},
+  					#{piDt},
+  					#{piStrDt},
+  					#{piEndDt},
+  					#{piMng},
+  					#{piCnt},
+  					#{piBadCnt},
+  					#{piPassCnt},
+  					#{piNote},
+  					#{cprCd},
+  					#{prcmCd}
+  				)
+  </insert>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   </mapper>
