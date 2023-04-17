@@ -188,48 +188,113 @@
 		 
 		<select id="selectMtrlInput" resultType="BomInfoVO">
 		select cmm.cmm_cd
-		     , cmm_nm
-		     , cml.min_cd
-		     , cml_nm
-		     , cml_in_cnt
-		     , cml_in_dt
-		  from cm_mtrl_lot cml
-		     , mtrl_input mi
-		     , cm_mtrl_mng cmm
+             , cmm.cmm_nm
+             , cbmt_cd
+		  from cm_mtrl_mng cmm
 		     , cm_bom_mtrl cbm
 		     , cm_bom_mng bmg
-		 WHERE cml.min_cd = mi.min_cd
-		   AND cml.cmm_cd = cmm.cmm_cd
-		   AND cmm.cmm_cd = cbm.cmm_cd
+		 WHERE cmm.cmm_cd = cbm.cmm_cd
 		   AND cbm.bom_cd = bmg.bom_cd
 		   AND bmg.cpr_cd = #{cprCd}
 	</select>
 
-	<insert id="insertProcOrder" parameterType="ProcPlanVO">
+	<insert id="insertProcOrder" parameterType="ProcOrderVO">
 		<selectKey keyProperty="prcmCd" resultType="String" order="BEFORE">
-			SELECT 'prder'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(proc_com_seq.nextval,'099')) as prcm_cd
+			SELECT 'prcm'||TO_CHAR(SYSDATE,'rrrrMMdd')||TRIM(TO_CHAR(proc_com_seq.nextval,'099')) as prcm_cd
 			  FROM DUAL
 		</selectKey>
-		INSERT INTO proc_command
-		       (
-		         prcm_cd
-		       , prcm_cnt
-		       , cpr_cd
-		       , prcm_dt
-		       , prcm_start_dt
-		       , prcm_mng
-		       )
-		VALUES ( 
-		         #{prcmCd} 
-		       , #{prcmCnt}
-		       , #{cprCd}
-		       , TO_DATE(SYSDATE, 'rrrr-MM-dd')
-		       , #{prcmStartDt}
-		       , #{prcmMng}
-		       )
+		BEGIN
+			INSERT INTO proc_command
+			       (
+			         prcm_cd
+			       , prcm_cnt
+			       , cpr_cd
+			       , prcm_dt
+			       , prcm_start_dt
+			       , prcm_mng
+			       )
+			VALUES ( 
+			         #{prcmCd} 
+			       , #{prcmCnt}
+			       , #{cprCd}
+			       , TO_DATE(SYSDATE, 'rrrr-MM-dd')
+			       , #{prcmStartDt}
+			       , #{prcmMng}
+			       );
+			       
+			UPDATE proc_plan_detail
+			   SET prpld_status = '지시완료'
+			 WHERE prpld_cd = #{prpldCd};
+		  END;
 
 	</insert>
-		 
+	<insert id="insertProgress" parameterType="ProcOrderVO">
+		<selectKey keyProperty="prcmPrcd" resultType="String" order="BEFORE">
+			SELECT 'picd'||TO_CHAR(SYSDATE,'rrrrMMdd')||TRIM(TO_CHAR(proc_prog_seq.nextval,'099')) as prcm_prcd
+			  FROM DUAL
+		</selectKey>
+		INSERT INTO proc_progress 
+			   (
+			     prcm_prcd
+			   , prcm_cd
+			   , cm_cd
+			   , prcm_turn
+			   , prcm_qnt
+			   , prpr_end
+			   )
+		VALUES (
+				 #{prcmPrcd}
+			   , (
+			    	SELECT prcm_cd
+			    	  FROM (
+			    	  	     SELECT prcm_cd
+			    	  	       FROM proc_command
+			    	  	      ORDER BY 1 DESC
+			    	       ) t
+			    	 WHERE ROWNUM BETWEEN 1 AND 1
+			     )
+			   , #{cmCd}
+			   , #{cmSq}
+			   , (
+			    	SELECT prcm_cnt
+			    	  FROM (
+			    	  	     SELECT prcm_cnt
+			    	  	       FROM proc_command
+			    	  	      ORDER BY 1 DESC
+			    	       ) t
+			    	 WHERE ROWNUM BETWEEN 1 AND 1
+			     )
+			   , 'N'
+			   )
+	</insert>
+	
+	<insert id="insertProgMtrl" parameterType="ProcOrderVO">
+		<selectKey keyProperty="prmpWkNo" resultType="String" order="BEFORE">
+			SELECT 'pimt'||TO_CHAR(SYSDATE,'rrrrMMdd')||TRIM(TO_CHAR(proc_mtrl_seq.nextval,'099')) as prmp_wk_no
+			  FROM DUAL
+		</selectKey>
+		INSERT INTO proc_mtrl_progress 
+			   (
+			     prmp_wk_no
+			   , prcm_prcd
+			   , prmp_put_qnt
+			   , cmm_cd
+			   )
+		VALUES (
+				 #{prmpWkNo}
+			   , (
+			    	SELECT prcm_prcd
+			    	  FROM (
+			    	  	     SELECT prcm_prcd
+			    	  	       FROM proc_progress
+			    	  	      ORDER BY 1 DESC
+			    	       ) t
+			    	 WHERE ROWNUM BETWEEN 1 AND 1
+			     )
+			   , #{prmpPutQnt}
+			   , #{cmmCd}
+			   )
+	</insert>
 		 
 		 
 		 

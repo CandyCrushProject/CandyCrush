@@ -57,7 +57,7 @@
 											</button>
 											<button class="cndInsBtn" id="addOrderBefore">
 												<i class="fa-solid fa-plus"></i>
-												등록
+												목록추가
 											</button>
 										</div>
 										<h3>생산지시관리</h3>
@@ -81,7 +81,7 @@
 										<div class="procOderBtn-r">
 											<button class="cndInsBtn" id="addProcOrder">
 												<i class="fa-solid fa-plus"></i>
-												등록
+												지시등록
 											</button>
 										</div>
 										<h4>생산 지시 등록</h4>
@@ -118,7 +118,7 @@
 							<div class="col-md-4">
 								<div class="card">
 									<div class="card-action">
-										<h4>자재지시</h4>
+										<h4>공정자재지시</h4>
 									</div>
 									<div class="card-content">
 										<div id="mtrlGrid"></div>
@@ -185,6 +185,7 @@
 						procOrderFormGrid.removeCheckedRows();
 						if (rows.length > 0) {
 							insertOrderFormGrid.resetData(rows);
+							insertOrderFormGrid.uncheckAll();
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -194,7 +195,65 @@
 						};
 					})
 
+
+
+
+					$('#addProcOrder').on('click', function (ev) {
+						const insertOrder = insertOrderFormGrid.getCheckedRows();
+						$.ajax({
+							url: 'insertProcOrder',
+							method: 'POST',
+							data: JSON.stringify(insertOrder),
+							dataType: 'json',
+							contentType: 'application/json',
+							success: function (data) {
+								insertProg();
+							}, error: function (err) {
+								console.log(err);
+							}
+						});
+					})
+
 				});
+
+				function insertProg() {
+					const insertProg = procGrid.getData();
+					$.ajax({
+						url: 'insertProg',
+						method: 'POST',
+						data: JSON.stringify(insertProg),
+						dataType: 'json',
+						contentType: 'application/json',
+						success: function (data) {
+							insertMtrl();
+						}, error: function (err) {
+							console.log(err);
+						}
+					});
+				}
+
+				function insertMtrl() {
+					const insertMtrl = mtrlGrid.getData();
+					$.ajax({
+						url: 'insertMtrl',
+						method: 'POST',
+						data: JSON.stringify(insertMtrl),
+						dataType: 'json',
+						contentType: 'application/json',
+						success: function (data) {
+							insertOrderFormGrid.removeCheckedRows();
+							procGrid.clear();
+							mtrlGrid.clear();
+							Swal.fire({
+								icon: 'success',
+								title: '완료',
+								text: "해당 계획의 생산지시가 완료되었습니다..",
+							});
+						}, error: function (err) {
+							console.log(err);
+						}
+					});
+				}
 
 				const procPlanGrid = new tui.Grid({
 					el: document.getElementById('procPlanList'),
@@ -238,7 +297,6 @@
 				});
 
 				function procPlanDetail() {
-					console.log(prplCdSet);
 					$.ajax({
 						url: 'ProcPlanOrderDetail',
 						method: 'POST',
@@ -369,6 +427,7 @@
 
 				insertOrderFormGrid.on('click', function (ev) {
 					row = insertOrderFormGrid.getRow(ev.rowKey);
+					console.log(row);
 					getBom(row.cprCd);
 					setBom(row.cprCd);
 				});
@@ -433,7 +492,7 @@
 							align: 'center'
 						},
 						{
-							header: '자재소모량',
+							header: '자재 소모량/1박스',
 							name: 'cbmtCnsm',
 							align: 'center',
 						},
@@ -451,7 +510,6 @@
 					let cmm = {
 						cprCd: cprCd
 					}
-					console.log(cmm);
 					$.ajax({
 						url: 'getMtrlInput',
 						method: 'post',
@@ -473,13 +531,13 @@
 					minBodyHeight: 30,
 					columns: [
 						{
-							header: '자재코드',
-							name: 'cmmCd',
+							header: '생산계획상세코드',
+							name: 'prpldCd',
 							hidden: true
 						},
 						{
-							header: '입고코드',
-							name: 'minCd',
+							header: '자재코드',
+							name: 'cmmCd',
 							hidden: true
 						},
 						{
@@ -488,8 +546,8 @@
 							align: 'center'
 						},
 						{
-							header: '자재LoT번호',
-							name: 'cmlNm',
+							header: '자재BOM코드',
+							name: 'cbmtCd',
 							align: 'center'
 						},
 						{

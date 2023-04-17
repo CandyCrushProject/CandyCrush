@@ -176,12 +176,15 @@
 					// 미계획 주문서 리스트 체크된 데이터를 가져와 db에서 정보 가져옴
 					$('#planAddBtn').on('click', function () {
 						const rows = orderSheetGrid.getCheckedRows();
+						console.log(rows);
 						for (let i = 0; i < rows.length; i++) {
 							orshNoSet += rows[i].orshNo + ",";
 						}
 						list = {
 							orshNo: orshNoSet
 						};
+						console.log(list);
+
 						if (rows.length > 0) {
 							$.ajax({
 								url: "getDownOrders",
