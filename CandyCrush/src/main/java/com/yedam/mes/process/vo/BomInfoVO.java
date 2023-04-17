@@ -20,4 +20,11 @@ public class BomInfoVO {
 	private int cmSq; // 공정 순번
 	private int cbmtCnsm; // 자재투입량
 	private String cbmtMs; // 자재 단위
+	
+	// 공정 자재 사용 후 출고 위한 조회
+	private String minCd; // 입고코드
+	private String cmlNm; // 로뜨번호
+	private String cmlInCnt; // 입고수량
+	private String cmlInDt; // 입고일자
+	
 }

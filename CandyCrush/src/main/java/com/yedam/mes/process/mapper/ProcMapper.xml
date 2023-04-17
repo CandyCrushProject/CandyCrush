@@ -186,6 +186,108 @@
 		 ORDER BY 1
 	</select>
 		 
+		<select id="selectMtrlInput" resultType="BomInfoVO">
+		select cmm.cmm_cd
+		     , cmm_nm
+		     , cml.min_cd
+		     , cml_nm
+		     , cml_in_cnt
+		     , cml_in_dt
+		  from cm_mtrl_lot cml
+		     , mtrl_input mi
+		     , cm_mtrl_mng cmm
+		     , cm_bom_mtrl cbm
+		     , cm_bom_mng bmg
+		 WHERE cml.min_cd = mi.min_cd
+		   AND cml.cmm_cd = cmm.cmm_cd
+		   AND cmm.cmm_cd = cbm.cmm_cd
+		   AND cbm.bom_cd = bmg.bom_cd
+		   AND bmg.cpr_cd = #{cprCd}
+	</select>
+
+	<insert id="insertProcOrder" parameterType="ProcPlanVO">
+		<selectKey keyProperty="prcmCd" resultType="String" order="BEFORE">
+			SELECT 'prder'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(proc_com_seq.nextval,'099')) as prcm_cd
+			  FROM DUAL
+		</selectKey>
+		INSERT INTO proc_command
+		       (
+		         prcm_cd
+		       , prcm_cnt
+		       , cpr_cd
+		       , prcm_dt
+		       , prcm_start_dt
+		       , prcm_mng
+		       )
+		VALUES ( 
+		         #{prcmCd} 
+		       , #{prcmCnt}
+		       , #{cprCd}
+		       , TO_DATE(SYSDATE, 'rrrr-MM-dd')
+		       , #{prcmStartDt}
+		       , #{prcmMng}
+		       )
+
+	</insert>
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
 		 <!-- 실적페이지 생산지시 데이터 조회용 -->
 	<select id="getProcCommand" resultType="ProcResultAllVO">
 		SELECT PRCM_CD,
@@ -276,30 +378,57 @@
 
 
 
-	<insert id="insertProcOrder" parameterType="ProcPlanVO">
-		<selectKey keyProperty="prcmCd" resultType="String" order="BEFORE">
-			SELECT 'prder'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(proc_com_seq.nextval,'099')) as prcm_cd
-			  FROM DUAL
-		</selectKey>
-		INSERT INTO proc_command
-		       (
-		         prcm_cd
-		       , prcm_cnt
-		       , cpr_cd
-		       , prcm_dt
-		       , prcm_start_dt
-		       , prcm_mng
-		       )
-		VALUES ( 
-		         #{prcmCd} 
-		       , #{prcmCnt}
-		       , #{cprCd}
-		       , TO_DATE(SYSDATE, 'rrrr-MM-dd')
-		       , #{prcmStartDt}
-		       , #{prcmMng}
-		       )
 
-	</insert>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </mapper>

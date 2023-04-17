@@ -51,10 +51,6 @@
 								<div class="card">
 									<div class="card-action">
 										<div class="procOderBtn-r">
-											<button class="cndRstBtn">
-												<i class="fa-solid fa-rotate-right"></i>
-												초기화
-											</button>
 											<button class="cndSelBtn" id="planBtn" type="button" data-toggle="modal" data-target="#plan">
 												<i class="fa-regular fa-folder-open"></i>
 												계획조회
@@ -82,6 +78,12 @@
 							<div class="col-md-12">
 								<div class="card">
 									<div class="card-action">
+										<div class="procOderBtn-r">
+											<button class="cndInsBtn" id="addProcOrder">
+												<i class="fa-solid fa-plus"></i>
+												등록
+											</button>
+										</div>
 										<h4>생산 지시 등록</h4>
 									</div>
 									<div class="card-content">
@@ -160,6 +162,7 @@
 				let columnName = "";
 				let row = "";
 				let prplCdSet;
+				let mtrlMapArr = [];
 				$(document).ready(function () {
 
 
@@ -227,7 +230,6 @@
 					rowKey = ev.rowKey;
 					columnName = ev.columnName;
 					row = procPlanGrid.getRow(rowKey);
-					console.log(row);
 					prplCdSet = {
 						prplCd: row.prplCd
 					};
@@ -307,7 +309,7 @@
 					scrollX: false,
 					scrollY: false,
 					minBodyHeight: 30,
-					rowHeaders: ['rowNum'],
+					rowHeaders: ['checkbox'],
 					columns: [
 						{
 							header: '제품코드',
@@ -367,8 +369,8 @@
 
 				insertOrderFormGrid.on('click', function (ev) {
 					row = insertOrderFormGrid.getRow(ev.rowKey);
-					console.log(row.cprCd);
 					getBom(row.cprCd);
+					setBom(row.cprCd);
 				});
 
 				function getBom(cprCd) {
@@ -380,7 +382,6 @@
 						contentType: 'application/json',
 						dataType: 'json',
 						success: function (data) {
-							console.log(data);
 							procGrid.resetData(data);
 						}, error: function (rej) {
 							console.log(rej);
@@ -444,26 +445,21 @@
 					]
 				});
 
-				procGrid.on('click', function (ev) {
-					let rowdd = procGrid.getRow(ev.rowKey);
-					setBom(rowdd.cprCd);
-				})
-
 
 
 				function setBom(cprCd) {
-					let cpCd = {
+					let cmm = {
 						cprCd: cprCd
 					}
-					console.log(cpCd);
+					console.log(cmm);
 					$.ajax({
-						url: 'getBomInfo',
+						url: 'getMtrlInput',
 						method: 'post',
-						data: JSON.stringify(cpCd),
+						data: JSON.stringify(cmm),
 						contentType: 'application/json',
 						dataType: 'json',
 						success: function (data) {
-							mtrlGrid.resetData(data);
+							mtrlGrid.resetData(data.mtrlMap);
 						}, error: function (rej) {
 							console.log(rej);
 						}
@@ -482,14 +478,9 @@
 							hidden: true
 						},
 						{
-							header: '공정코드',
-							name: 'cmCd',
+							header: '입고코드',
+							name: 'minCd',
 							hidden: true
-						},
-						{
-							header: '공정명',
-							name: 'cmNm',
-							align: 'center'
 						},
 						{
 							header: '자재명',
@@ -497,16 +488,16 @@
 							align: 'center'
 						},
 						{
-							header: '투입예정량',
+							header: '자재LoT번호',
+							name: 'cmlNm',
+							align: 'center'
+						},
+						{
+							header: '자재투입량',
 							name: 'prmpPutQnt',
 							align: 'center',
 							editor: 'text'
 						},
-						{
-							header: '자재단위',
-							name: 'cbmtMs',
-							align: 'center',
-						}
 					]
 				});
 

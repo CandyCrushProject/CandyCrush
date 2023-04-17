@@ -19,4 +19,5 @@ public class OrderPlanVO {
 	private String sttCngDt; // 상태변경일자
 	private int ordrCdCnt; // 주문건수
 	private String sumDtlCnt; // 상품별 주문 개수
+	
 }

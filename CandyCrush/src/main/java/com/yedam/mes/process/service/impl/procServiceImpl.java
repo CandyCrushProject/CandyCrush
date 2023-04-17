@@ -126,8 +126,61 @@ public class procServiceImpl implements ProcService {
   
 	@Override
 	public List<ProcResultAllVO> getProcFac(String prcmPrcd) {
-		// TODO Auto-generated method stub
 		return procMapper.getProcProg(prcmPrcd);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public List<BomInfoVO> selectMtrlInput(BomInfoVO biVO) {
+		return procMapper.selectMtrlInput(biVO);
+	}
+
+	
+	
+	
 	
 }
