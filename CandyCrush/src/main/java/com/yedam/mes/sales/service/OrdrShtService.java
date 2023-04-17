@@ -10,7 +10,7 @@ import com.yedam.mes.sales.service.vo.ProdInOutPutVO;
 
 public interface OrdrShtService {
 	
-	// 주문서조회 페이지
+	
 	// 주문서 전체조회
 	public List<OrdrShtVO> ordrShtAllList();
 	
@@ -38,12 +38,23 @@ public interface OrdrShtService {
 	public List<OrdrShtVO> getProdList();
 	
 	// 주문서관리페이지 주문서 목록 상세조회 모달창
-	public List<OrdrShtVO> getOrdrShtDtlList();
+	public List<OrdrShtVO> getOrdrShtDtlList(String orshNo);
 	
 	// 모달창 주문서 등록
 	public int insertOrdrSht(Map<String,Object> map, List<Map<String,Object>> list);
 	
+	// 모달창 주문서 수정
+	//public void updateOrdrSht(Map<String, Object> headerMap, List<Map<String, Object>> updateList);
+	
+	// 모달창 주문서 삭제
+	//public void deleteOrdrSht(Map<String, Object> headerMap, List<Map<String, Object>> deleteList);
+	
+	//----------------------------------------------------------------------------------------------------
 	// 제품입고관리 페이지 입고대기 리스트
 	public List<ProdInOutPutVO> prodInputList();
+	
+	
+	
+	
 	
 }

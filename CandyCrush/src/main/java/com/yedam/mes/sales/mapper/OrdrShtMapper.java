@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
+import com.yedam.mes.sales.service.vo.ProdInOutPutVO;
 
 public interface OrdrShtMapper {
 	
@@ -41,8 +42,13 @@ public interface OrdrShtMapper {
 	public int insertOrdrShtDtl(Map<String,Object> map);
 
 	// 주문서관리페이지 주문서 상세조회리스트 모달창
-	public List<OrdrShtVO> getOrdrShtDtlList();
-	
+	public List<OrdrShtVO> getOrdrShtDtlList(String orshNo);
+
 	//주문서관리 페이지 주문서 수정
+	
+	//----------------------------------------------------------------------------------------------------
+	// 제품입고관리 페이지 입고대기 리스트
+	public List<ProdInOutPutVO> prodInputList();
+	
 
 }

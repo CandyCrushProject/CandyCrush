@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <link rel="stylesheet" href="assets/css/orderSheetModal.css">
-<script src="assets/js/orderSheet/ordrShtMngmntCall.js"></script>
+<script src="assets/js/sales/orderSheet/ordrShtMngmntCall.js"></script>
 <main>
 	
 	<!-- 주문서 등록 + 수정 모달 -->
@@ -123,5 +123,5 @@
 		</div>
 		<!-- /. PAGE INNER  -->
 	</div>
-	<script src="assets/js/orderSheet/ordrShtMngmntCntnt.js"></script>
+	<script src="assets/js/sales/orderSheet/ordrShtMngmntCntnt.js"></script>
 </main>
