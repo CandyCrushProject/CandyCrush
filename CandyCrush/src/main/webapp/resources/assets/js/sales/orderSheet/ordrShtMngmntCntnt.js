@@ -1,4 +1,6 @@
 const Grid = tui.Grid;
+
+let listItems = []; // 그리드안에 select 배열생성
 //---------------------------------------------------------------------------------------------
 // 거래처 관리 페이지 거래처 조회
 const accntGetData = () => {
@@ -128,6 +130,9 @@ ordrShtList();
 //거래처 행 더블클릭 이벤트
 accntList.on('dblclick', (e) => {
   if (e.targetType != 'cell') return; // cell이 아닌타입을 클릭했을 때 종료
+
+  ordrProdList.clear();
+
   const rowData = accntList.getRow(e.rowKey); // 그리드 row값
   // console.log(e, rowData);
 
@@ -137,10 +142,10 @@ accntList.on('dblclick', (e) => {
   let rowDataCaMng = rowData.caMng; // 거래처 담당자
   let rowDataCaMngPh = rowData.caMngPh; // 거래처 담당자 번호
   
-  $("#caNo").val(rowDataCaNo);
-  $("#caNm").val(rowDataCaNm);
-  $("#caMng").val(rowDataCaMng);
-  $("#caMngPh").val(rowDataCaMngPh);
+  $("#caNo").val(rowDataCaNo); // 거래처코드
+  $("#caNm").val(rowDataCaNm); // 거래처명
+  $("#caMng").val(rowDataCaMng); // 거래처 담당자
+  $("#caMngPh").val(rowDataCaMngPh); // 거래처 담당자 번호
 
   document.getElementById('ordrDtilMdl').style.display = 'block';
   document.getElementById('orshNoBox').style.display = 'none';
@@ -149,16 +154,19 @@ accntList.on('dblclick', (e) => {
   document.getElementById('ordrShtSave').style.display = 'none';
   $("#orshDt").val(formatDate());
   prodListItems();
+
   //---------------------------------------------------------------------------------------------
   // 주문서 모달창에 입력한 숫자값을 저장함
   let beforeOrdrDtlCnt = 0;
   ordrProdList.on("editingStart", (e) => {
     beforeOrdrDtlCnt = ordrProdList.getRow(e.rowKey).ordrDtlCnt;
   });
+
   //---------------------------------------------------------------------------------------------
   // 주문서 모달창에 숫자아닌 문자를 입력했을때 경고창 띄움
   ordrProdList.on('editingFinish', (e) => {
     if (e.columnName != 'ordrDtlCnt' ) return;
+
     let mdlRowData = ordrProdList.getRow(e.rowKey);
     let ordrDtlCntData = Number(mdlRowData.ordrDtlCnt);
     if (isNaN(ordrDtlCntData)) {
@@ -209,21 +217,23 @@ orderList.on('dblclick', (e) => {
   if (e.targetType != 'cell') return;
   const rowData = orderList.getRow(e.rowKey);
 
-  let rowDataOrshNo = rowData.orshNo; // 주문서번호
-  let rowDataCaNm = rowData.caNm; // 거래처명
-  let rowDataOrshDt = rowData.orshDt; // 주문일자
-  let rowDataDlvryDt = rowData.dlvryDt; // 납기일자
+  const rowDataOrshNo = rowData.orshNo; // 주문서번호
+  const rowDataCaNm = rowData.caNm; // 거래처명
+  const rowDataOrshDt = rowData.orshDt; // 주문일자
+  const rowDataDlvryDt = rowData.dlvryDt; // 납기일자
 
   $("#orshNo").val(rowDataOrshNo); // 주문서번호
   $("#caNm").val(rowDataCaNm); // 거래처명
+  
   $("#orshDt").val(dateChange(rowDataOrshDt)); // 주문일자
   $("#dlvryDt").val(dateChange(rowDataDlvryDt)); // 납기일자
+  
 
-  document.getElementById('ordrDtilMdl').style.display = 'block';
-  document.getElementById('orshNoBox').style.display = 'block';
-  document.getElementById('caNoBox').style.display = 'none';
-  document.getElementById('ordrShtInsert').style.display = 'none';
-  document.getElementById('ordrShtSave').style.display = 'block';
+  document.getElementById('ordrDtilMdl').style.display = 'block'; // 모달창 띄움
+  document.getElementById('orshNoBox').style.display = 'block'; // 주문서 헤더 코드 보여줌
+  document.getElementById('caNoBox').style.display = 'none'; // 거래처코드 숨김
+  document.getElementById('ordrShtInsert').style.display = 'none'; // 등록버튼 숨김
+  document.getElementById('ordrShtSave').style.display = 'block'; // 저장버튼 보여줌
   // select박스안에 제품명 list 내용 
 
   // 주문서관리페이지 주문서 상세조회 모달창
@@ -234,6 +244,14 @@ orderList.on('dblclick', (e) => {
       data : { orshNo : rowDataOrshNo,  },
       dataType: "JSON",
       success: function (data) {
+        console.log(data);
+        console.log("caMng", data[0].caMng);
+        console.log("caMngPh", data[0].caMngPh);
+
+        $("#caMng").val(data[0].caMng); // 담당자
+        $("#caMngPh").val(data[0].caMngPh); // 담당자번호
+
+        ordrProdList.resetData(data);
         setTimeout(() => ordrProdList.refreshLayout(), 0);
       },
       error: function (reject) {
@@ -241,10 +259,12 @@ orderList.on('dblclick', (e) => {
       }
     });
   }
+
+  getOrdrShtDtlList();
 });
+
 //---------------------------------------------------------------------------------------------
-// 그리드안에 select 배열생성
-let listItems = [];
+
 // select박스안에 제품명 list 내용 
 function prodListItems() {
   $.ajax({
@@ -299,11 +319,13 @@ const ordrProdList = new Grid({
     perPage: 30
   }
 });
-$('grid').mouseleave(ev => {
-  ordrProdList.finishEditing();
-});
+
+// $('grid').mouseleave(ev => {
+//   ordrProdList.finishEditing();
+// });
+
 //---------------------------------------------------------------------------------------------
-//주문서등록 
+//주문서등록 + 수정 + 삭제
 function ordrShtInsert() {
   const rows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).createdRows;
   const updateRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).updatedRows;

@@ -96,18 +96,23 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	}
 	
 	// 주문서관리페이지 주문서 목록 상세조회 모달창
-	public List<OrdrShtVO> getOrdrShtDtlList() {
-		return mapper.getOrdrShtDtlList();
+	public List<OrdrShtVO> getOrdrShtDtlList(String orshNo) {
+		
+		return mapper.getOrdrShtDtlList(orshNo);
+		
 	}
 
-	// 제품입고 관리페이지
+	// 주문서관리페이지 주문서 목록 상세조회했을때 수정가능
+	
+	
+	
+	//----------------------------------------------------------------------------------------------------
+	// 제품입고관리 페이지 입고대기 리스트
 	@Override
 	public List<ProdInOutPutVO> prodInputList() {
 		
-		return null;
+		return mapper.prodInputList();
 	}
-	
-	
 	
 	// 주문서 삭제
 
