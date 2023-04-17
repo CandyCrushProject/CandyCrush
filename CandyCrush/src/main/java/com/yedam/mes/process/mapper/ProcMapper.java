@@ -39,6 +39,19 @@ public interface ProcMapper {
 	
 	// 제품공정확인 - 제품마다 사용되는 공정정보
 	public List<BomInfoVO> selectBom(OrderPlanVO opVO);
+	// 자재확인 - 자재입고된 로트조회
+	public List<BomInfoVO> selectMtrlInput(BomInfoVO biVO);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/* 생산계획 매퍼 끝 */
@@ -55,8 +68,22 @@ public interface ProcMapper {
 	// 공정자재 - 공정의 자재 정보
 	
 	// 자재지시 - 공정에 들어갈 자재 정보
-	
 
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/* 생산지시 매퍼 끝 */
 	
 	/* 생산공정 매퍼 시작 */
@@ -78,6 +105,20 @@ public interface ProcMapper {
 	
 	public List<ProcResultAllVO> getProcProg(@Param("prcmCd") String prcmCd);
 	public List<ProcResultAllVO> getProcFac(@Param("prcmPrcd") String prcmPrcd);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/* 생산공정 매퍼 끝 */
 }

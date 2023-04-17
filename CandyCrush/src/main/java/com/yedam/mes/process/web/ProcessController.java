@@ -156,6 +156,38 @@ public class ProcessController {
 	}
 	
 	
+	@PostMapping("getMtrlInput")
+	@ResponseBody
+	public Map<String, Object> getMtrlInput(@RequestBody BomInfoVO biVO){
+		Map<String, Object> mtrlMap = new HashMap<>();
+		
+		mtrlMap.put("mtrlMap", procService.selectMtrlInput(biVO));
+		
+		return mtrlMap;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
