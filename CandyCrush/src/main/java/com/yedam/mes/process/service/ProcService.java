@@ -121,12 +121,21 @@ public interface ProcService {
 	public List<ProcPerfVO> getPerfList(ProcPerfVO perfVO);
 	public List<ProcProgVO> getProgList(ProcProgVO progVO);
 	
+	/* 생산공정 매퍼 끝 */
+	
+	
+	
+	
+	
+	
+	
 	//실적페이지 지시조회용========================== 이하 실적페이용=========
 	
 	public List<ProcResultAllVO> getProcCommand();
-	public List<ProcResultAllVO> getProcProg(@Param("prcmCd")String prcmCd);
+	public List<ProcResultAllVO> getProc(@Param("prcmCd")String prcmCd);
 	public List<ProcResultAllVO> getProcFac(@Param("prcmPrcd") String prcmPrcd);
-	/* 생산공정 매퍼 끝 */
+	public List<ProcResultAllVO> getProcProg();
+	public int startProg(ProcResultAllVO startVO);
 	
 	
 	

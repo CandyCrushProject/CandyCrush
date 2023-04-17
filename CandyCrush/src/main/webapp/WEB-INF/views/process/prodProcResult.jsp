@@ -24,7 +24,7 @@
 
 <main>
 
-  <!-- 등록 모달 -->
+
   <div id="procInsertModal" class="w3-modal" style="z-index: 101">
     <div class="w3-modal-content">
       <div class="w3-container">
@@ -38,33 +38,99 @@
             <div class="col-md-16">
               <div class="card">
                 <div class="card-action">공정작업등록
+                  
+                </div>
+                <div class="card-content">
+                  <table class="candyTab">
+                    <tbody>
+                      <!-- 데이터전송용 숨겨진데이터 -->
+                      <form name="startForm" action="startProg" onsubmit="return false">
+                        <tr style="display: none;">
+                          <input type="text" name="prcmPrcd" id="prcmPrcd" required readonly>
+                          <input type="text" name="cmCd" id="cmCd" required readonly>
+                        </tr>
+                        <!-- ========================= -->
+                        <tr>
+                          <th>제품명</th>
+                          <th>공정명</th>
+                        </tr>
+                        <tr>
+                          <td><input type="text" name="" id="cprNm" value="(받아온제품명)" placeholder="" required readonly></td>
+                          <td><input type="text" name="" id="cmNm" value="(받아온공정명)" placeholder="" required readonly></td>
+                        </tr>
+                        <tr>
+                          <th>작업자</th>
+                          <th>사용설비</th>
+                        </tr>
+                        <tr>
+                          <td><input type="text" name="prpeMng" id="prpeMng" value="" placeholder="담당자 이름" required></td>
+                          <td>
+                            <select name="facCd" id="facAble">
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>작업시작일</th>
+                        </tr>
+                        <tr>
+                          <td><input type="datetime-local" placeholder="작업시작" name="prpeWkStartDt" id="ProgStartTime" required readonly></td>
+                          <td><button onclick="startInsert();" style="display: inline;" class="cndInsBtn">작업시작</button></td>
+                        </tr>
+                      </form>
+                    </tbody>
+                  </table>
+                  <div class="table-responsive">
+                    <div id="BadInputList"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 작업종료 모달 -->
+  <div id="procFinishModal" class="w3-modal" style="z-index: 101">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <span
+          class="w3-button w3-display-topright"
+          onclick="document.getElementById('procFinishModal').style.display='none'"
+          >&times;</span
+        >
+        <h2 id="">작업등록</h2>
+          <div class="row">
+            <div class="col-md-16">
+              <div class="card">
+                <div class="card-action">공정작업등록
                   <button onclick="" style="display: inline;" class="cndInsBtn">작업시작</button>
                 </div>
                 <div class="card-content">
                   <table class="candyTab">
                     <tbody>
+                      <tr style="display: none;">
+                        <input type="text" name="prcmPrcd" id="prcmPrcdF" required readonly>
+                        <input type="text" name="cmCd" id="cmCdF" required readonly>
+                      </tr>
                       <tr>
                         <th>제품명</th>
                         <th>공정명</th>
                       </tr>
                       <tr>
-                        <td><input type="text" name="" id="prodNm" value="(받아온제품명)" placeholder=""></td>
-                        <td><input type="text" name="" id="procNm" value="(받아온공정명)" placeholder=""></td>
+                        <td><input type="text" name="" id="cprNmF" value="" placeholder=""></td>
+                        <td><input type="text" name="" id="cmNmF" value="" placeholder=""></td>
                       </tr>
                       <tr>
                         <th>사용설비</th>
-                        <td>
-                          <select name="" id="facAble">
-                            
-                          </select>
-                        </td>
+                        <td><input type="text" id="usedFac" readonly></td>
                       </tr>
                       <tr>
                         <th>작업자</th>
                         <th>작업량</th>
                       </tr>
                       <tr>
-                        <td><input type="text" name="" id="" value="" placeholder="담당자 이름"></td>
+                        <td><input type="text" name="" id="prpeMngF" value="" placeholder="담당자 이름" readonly></td>
                         <td><input type="number" placeholder="작업량" name="" id="" value="" readonly></td>
                       </tr>
                       <tr>
@@ -80,8 +146,8 @@
                         <th>작업종료일</th>
                       </tr>
                       <tr>
-                        <td><input type="datetime-local" placeholder="작업시작" name="" id=""></td>
-                        <td><input type="datetime-local" placeholder="작업종료" name="" id="" ></td>
+                        <td><input type="datetime-local" placeholder="작업시작" name="" id="prpeWkStartDtF"></td>
+                        <td><input type="datetime-local" placeholder="작업종료" name="" id="prpeWkEndDtF" ></td>
                       </tr>
                     </tbody>
                   </table>
@@ -95,7 +161,8 @@
       </div>
     </div>
   </div>
-  <!-- End 자재발주조회 클릭하면 나오는 모달 -->
+  <!-- End  -->
+
   <!-- /. NAV SIDE  -->
   <div id="page-wrapper">
     <div class="header">
@@ -108,7 +175,7 @@
     </div>
     <div id="page-inner">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <!-- Advanced Tables -->
           <div class="card">
             <div class="card-action">생산지시</div>
@@ -119,11 +186,27 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
           <!-- Advanced Tables -->
           <div class="card">
             <div class="card-action">공정현황조회
-              <button onclick=" document.getElementById('procInsertModal').style.display='block';" style="display: inline;" class="cndInsBtn">작업시작</button>
+              <br>
+              <div>
+                <table class="candyTab">
+                </table>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="table-responsive">
+                <div id="ProcessGrid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <!-- Advanced Tables -->
+          <div class="card">
+            <div class="card-action">진행중 작업조회
               <br>
               <div>
                 <table class="candyTab">
@@ -168,7 +251,7 @@
 
 
 const Grid = tui.Grid;
-Grid.setLanguage('ko');
+Grid.setLanguage('ko');//생산지시 조회
     const ProcOdList = new Grid({
       el: document.getElementById('ProcOrderListGrid'), // Container element
       data: null,//나중에 데이타 넣어!
@@ -190,14 +273,23 @@ Grid.setLanguage('ko');
         {
           header: '생산지시일',
           name: 'prcmDt',
+          formatter: function (e) {
+						return dateChange(e.value);
+					},
         },
         {
           header: '생산시작일',
           name: 'prcmStartDt',
+          formatter: function (e) {
+						return dateChange(e.value);
+					},
         },
         {
           header: '생산종료일',
           name: 'prcmEndDt',
+          formatter: function (e) {
+						return dateChange(e.value);
+					},
         },
         {
           header: '생산진행도',
@@ -231,11 +323,11 @@ Grid.setLanguage('ko');
         },
       })
     }
-    getProcOrderList();
-//====공정현황조회==================================================
-    const ProcProgList = new Grid({
-      el: document.getElementById('ProcessProgGrid'), // Container element
-      data: null,//나중에 데이타 넣어!
+    getProcOrderList(); //시작시조회
+//====공정지시조회==================================================
+    const ProcList = new Grid({
+      el: document.getElementById('ProcessGrid'), // Container element
+      data: null,
       columns: [
         {
           header: '공정지시코드', //공정코드숨겨놨음====================== 
@@ -301,11 +393,11 @@ Grid.setLanguage('ko');
           }
     });
 
-    //해당 지시건 공정정보 가져오기
-    function getProcProg(commandCD){
+    // 해당 지시건 공정정보 가져오기
+    function getProc(commandCD){
       console.log(commandCD);
       $.ajax({
-        url : "getProcProg",
+        url : "getProc",
         method :"POST",
         async : false,
         dataType : "JSON",
@@ -313,7 +405,7 @@ Grid.setLanguage('ko');
         
         success : function(data){
           console.log(data);
-          ProcProgList.resetData(data);
+          ProcList.resetData(data);
         },
         error : function(reject){
           console.log(reject);
@@ -333,11 +425,12 @@ Grid.setLanguage('ko');
         data : {prcmPrcd : commandCD},
         
         success : function(data){
-          console.log(data);
-          facAble.InnerHTML = `
-          <c:forEach var="facs" items=${data}>
-          <option id="" value="${facs.FacCd}">${facs.FacNm}</option>
-          </c:forEach>`
+          console.log(data +"설비가져옴");
+          ableFacData=data;
+
+          for(i=0;i<data.length;i++){
+            facAble.options[i]=new Option(data[i].facNm,data[i].facCd);
+          }
         },
         error : function(reject){
           console.log(reject);
@@ -349,16 +442,150 @@ Grid.setLanguage('ko');
     //지시리스트에서 고르면 공정표시하기
     ProcOdList.on("dblclick", (e) => {
 			const rowData = ProcOdList.getRow(e.rowKey);
-			getProcProg(rowData.prcmCd);
+			getProc(rowData.prcmCd);
 		});
 
     //공정리스트에서 클릭하면 모달창 필요한정보 넘겨서띄우기
-    ProcProgList.on("dblclick", (e) => {
-			const rowData = ProcProgList.getRow(e.rowKey);
-      prodNm.value=rowData.cprNm;
-      procNm.value=rowData.cmNm;
+    ProcList.on("dblclick", (e) => {
+			const rowData = ProcList.getRow(e.rowKey);
+      console.log(rowData.cmCd);
+      cmCd.value=rowData.cmCd;
+      prcmPrcd.value=rowData.prcmPrcd;
+      cprNm.value=rowData.cprNm;
+      cmNm.value=rowData.cmNm;
+      resetTime(ProgStartTime);
       getProcFac(rowData.prcmPrcd);
+      console.log(rowData.prcmPrcd+'이거 설비 가져와야됨');
       document.getElementById('procInsertModal').style.display='block';
+		});
+    //작업시작 insert
+    function startInsert(){
+      let startData = $("form[name=startForm]").serialize() ;
+      $.ajax({
+        type : 'post',
+        url : 'startProg',
+        data : startData,
+        dataType : 'json',
+        error: function(xhr, status, error){
+          Swal.fire({
+            icon: 'error',
+						title: '경고',
+						text: "입력실패",
+				});
+        },
+        success : function(data){
+          Swal.fire({
+					icon: 'success',
+					title: '입력완료 작업개시!',
+					text: '작업코드'
+				  });
+          document.getElementById('procInsertModal').style.display='none';
+          setTimeout(()=>getProcProg(), 100);
+        }
+      });
+    }
+
+//===================================================진행중인 공정 확인============
+    const ProcProgList = new Grid({
+      el: document.getElementById('ProcessProgGrid'), // Container element
+      data: null,
+      columns: [
+        {
+          header: '공정실적코드', //공정코드숨겨놨음====================== 
+          name: 'prpeCd',
+          sortable: true,
+          hidden: true,
+        },
+        {
+          header: '공정지시코드', //공정코드숨겨놨음====================== 
+          name: 'prpePrcd',
+          sortable: true,
+          hidden: true,
+        },
+        {
+          header: '작업시작일시', //공정코드숨겨놨음====================== 
+          name: 'prpeWkStartDt',
+          sortable: true,
+          hidden: true,
+        },
+        {
+          header: '사용설비코드',
+          name: 'facCd',
+          sortable: true,
+          hidden: true,
+        },
+        {
+          header: '사용설비명',
+          name: 'facNm',
+          sortable: true,
+          // hidden: true,
+        },
+        {
+            header: '제품코드',
+            name: 'cprCd',
+            sortable: true,
+            hidden: true,
+        },
+        {
+          header: '제품명',
+          name: 'cprNm',
+          sortable: true,
+        },
+        {
+          header: '공정명',
+          name: 'cmNm',
+          sortable: true,
+        },
+        {
+          header: '작업자',
+          name: 'prpeMng',
+          sortable: true,
+        },
+      ],
+      bodyHeight: 500,
+      pageOptions: {
+        useClient: true,
+        type: 'scroll',
+        perPage: 30
+          }
+    });
+
+    //진행공정현황 가져오기
+    function getProcProg(){
+      console.log();
+      $.ajax({
+        url : "getProcProg",
+        method :"GET",
+        async : false,
+        
+        success : function(data){
+          console.log(data +"진행공정 가져옴");
+          ableFacData=data;
+          ProcProgList.resetData(data);
+        },
+        error : function(reject){
+          console.log(reject);
+          console.log("통신오류");
+        },
+      })
+    }
+    getProcProg();
+
+    //진행중 공정 더블클릭으로 해당공정 모달띄우기
+    ProcProgList.on("dblclick", (e) => {
+			const rowDataF = ProcProgList.getRow(e.rowKey);
+      //모달 정보 업데이트
+      prcmPrcdF.value=rowDataF.prpeCd;
+      cmCdF.value=rowDataF.cmCd;
+      cmNmF.value=rowDataF.cmNm;
+      cprNmF.value=rowDataF.cprNm;
+      usedFac.value=rowDataF.facNm;
+      prpeMngF.value=rowDataF.prpeMng;
+      console.log(rowDataF.prpeWkStartDt);
+      prpeWkStartDtF.value =formatTimestamp(rowDataF.prpeWkStartDt);
+      resetTime(prpeWkEndDtF);
+      console.log(formatTimestamp(rowDataF.prpeWkStartDt));
+      document.getElementById('procFinishModal').style.display='block';
 		});
 
 //=========================================================
@@ -445,5 +672,57 @@ Grid.setLanguage('ko');
         perPage: 30
           }
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //날짜 포메터
+    function dateChange(data) {
+      if(data!=null && data!=0){
+      let newData = new Date(data);
+      let result = newData.getFullYear() + "-" +
+            (newData.getMonth() < 10
+            ? "0" + (newData.getMonth() + 1)
+            : newData.getMonth() + 1) +
+            "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+        return result;
+      }
+      else return null;
+		};
+
+
+    //모달시간 input에 현재시간 넣기
+		function resetTime(id){
+      id.value=timestamp();
+      console.log("reset timestamp");
+    };
+	  //현재시간 htmlinput format
+		function timestamp(){
+		    let today = new Date();
+		    today.setHours(today.getHours() + 9);
+		    return today.toISOString().replace('T', ' ').substring(0, 19);
+		}
+    function formatTimestamp(time){
+      let formedTime=new Date(time);
+      formedTime.setHours(formedTime.getHours() + 9);
+		    return formedTime.toISOString().replace('T', ' ').substring(0, 19);
+		}
   </script>
 </main>

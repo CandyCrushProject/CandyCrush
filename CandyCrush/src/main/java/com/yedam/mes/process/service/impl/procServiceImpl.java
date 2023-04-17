@@ -114,20 +114,6 @@ public class procServiceImpl implements ProcService {
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO) {
 		return procMapper.searchPlanList(ppVO);
 	}
-	@Override
-	public List<ProcResultAllVO> getProcCommand(){
-		return procMapper.getProcCommand();
-	}
-
-	@Override
-	public List<ProcResultAllVO> getProcProg(@Param("prcmCd")String prcmCd) {
-		return 	procMapper.getProcProg(prcmCd);
-	}
-  
-	@Override
-	public List<ProcResultAllVO> getProcFac(String prcmPrcd) {
-		return procMapper.getProcProg(prcmPrcd);
-	}
 	
 	
 	
@@ -144,40 +130,46 @@ public class procServiceImpl implements ProcService {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//V이거 왜 맨아래있음 누구꺼?
 	
 	@Override
 	public List<BomInfoVO> selectMtrlInput(BomInfoVO biVO) {
 		return procMapper.selectMtrlInput(biVO);
 	}
+	
+	
+	//여기부터 영주영역~~~~~~~~~~
+	@Override //실적페이지 지시조회
+	public List<ProcResultAllVO> getProcCommand(){
+		return procMapper.getProcCommand();
+	}
+
+	@Override //실적페이지 공정조회
+	public List<ProcResultAllVO> getProc(@Param("prcmCd")String prcmCd) {
+		return 	procMapper.getProc(prcmCd);
+	}
+  
+	@Override //실적페이지 가용설비조회
+	public List<ProcResultAllVO> getProcFac(@Param("prcmPrcd") String prcmPrcd) {
+		return procMapper.getProcFac(prcmPrcd);
+	}
+	
+	@Override //실적페이지 현제 작업중목록조회
+	public List<ProcResultAllVO> getProcProg() {
+		// TODO Auto-generated method stub
+		return procMapper.getProcProg();
+	}
+	
+	@Override //실적페이지 작업시작 insert
+	public int startProg(ProcResultAllVO startVO) {
+		// TODO Auto-generated method stub
+		return procMapper.startProg(startVO);
+	
+
+
+	}
+
+
 
 	@Override
 	public int insertProgress(List<ProcOrderVO> poVO) {

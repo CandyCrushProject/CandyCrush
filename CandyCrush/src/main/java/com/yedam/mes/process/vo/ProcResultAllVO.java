@@ -2,6 +2,8 @@ package com.yedam.mes.process.vo;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 //VO올인원 다때려박기신공ㅋㅋㄹㅃㅃㅃㅋㅋㅋㅋㅋ
 @Data
@@ -35,7 +37,9 @@ public class ProcResultAllVO {
 	private String prpeCd;
 	private String prprPrcd;
 	private String prpeMng;
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
 	private Date prpeWkStartDt;
+	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
 	private Date prpeWkEndDt;
 	private int prpeAmntWk;
 	//private String cmCd; 외래키

@@ -368,7 +368,7 @@
 		ON C.CPR_CD = M.CPR_CD
 	</select>
 	<!-- 	실적페이지 공정 조회용 -->
-	<select id="getProcProg" resultType="ProcResultAllVO" >
+	<select id="getProc" resultType="ProcResultAllVO" >
 		SELECT PRCM_PRCD,
             P.PRCM_CD,
             P.CM_CD,
@@ -390,6 +390,7 @@
         WHERE P.PRCM_CD = #{prcmCd}
 	</select>
 	
+	<!-- 실적페이지 가용 설비 조회용 -->
 	<select id="getProcFac" resultType="ProcResultAllVO" >
 		SELECT PRCM_PRCD,P.CM_CD,C.FAC_CD,FAC_NM,FAC_RUN
 		FROM PROC_PROGRESS P
@@ -400,11 +401,48 @@
 		LEFT JOIN FAC_STAT S
 		    ON F.FAC_CD = S.FAC_CD
 		WHERE FAC_RUN = 'Y'
-		    AND PRCM_PRCD=#{prcmPrcd};
+		    AND PRCM_PRCD=#{prcmPrcd}
 	</select>
 	
+	<!-- 실적페이지 현재 작업현황 조회용 -->
+	<select id="getProcProg" resultType="ProcResultAllVO">
+		SELECT PRPE_CD,P.PRCM_PRCD,P.CM_CD,CM_NM,PRPE_MNG,PC.CPR_CD,CPR_NM,C.FAC_CD,FAC_NM,PRPE_WK_START_DT
+		FROM proc_perf P
+		LEFT JOIN CM_PROCESS_CODE C
+		ON P.CM_CD=C.CM_CD
+		LEFT JOIN PROC_PROGRESS PP
+		ON P.PRCM_PRCD = PP.PRCM_PRCD
+		LEFT JOIN PROC_COMMAND PC
+		ON PP.PRCM_CD = PC.PRCM_CD
+		LEFT JOIN CM_PRODUCT_MNG CPM
+		ON PC.CPR_CD = CPM.CPR_CD
+		LEFT JOIN FAC F
+		ON F.FAC_CD=C.FAC_CD
+		WHERE PRPE_WK_END_DT IS NULL
 
-
+	</select>
+	<!-- 작업시작 인서트 -->
+	<insert id="startProg" parameterType="ProcResultAllVO">
+		<selectKey resultType="string" keyProperty="prpeCd" order="BEFORE">
+			SELECT 'PRPE'||MAX(TO_NUMBER((NVL(SUBSTR(PRPE_CD,5),'1'))+1)) FROM PROC_PERF
+		</selectKey>
+	INSERT INTO PROC_PERF
+	    (PRPE_CD,
+	    PRCM_PRCD,
+	    PRPE_MNG,
+	    CM_CD,
+	    PRPE_WK_START_DT,
+	    FAC_CD
+	    )
+    VALUES(
+	    #{prpeCd},
+	    #{prcmPrcd},
+	    #{prpeMng},
+	    #{cmCd},
+	    #{prpeWkStartDt},
+	    #{facCd}
+	    )
+	</insert>
 
 
 
