@@ -40,21 +40,16 @@ public interface OrdrShtService {
 	// 주문서관리페이지 주문서 목록 상세조회 모달창
 	public List<OrdrShtVO> getOrdrShtDtlList(String orshNo);
 	
-	// 모달창 주문서 등록
-	public int insertOrdrSht(Map<String,Object> map, List<Map<String,Object>> list);
+	// 모달창 주문서 등록 + 수정 + 삭제(모달창 그리드 행 삭제)
+	public int insertOrdrSht(Map<String,Object> map, List<Map<String,Object>> list, List<Map<String,Object>> list2, List<Map<String,Object>> list3);
 	
-	// 모달창 주문서 수정
-	//public void updateOrdrSht(Map<String, Object> headerMap, List<Map<String, Object>> updateList);
-	
-	// 모달창 주문서 삭제
-	//public void deleteOrdrSht(Map<String, Object> headerMap, List<Map<String, Object>> deleteList);
+	// 주문서목록 조회 그리드에서 삭제하기
+	public int deleteOrdrShtHd();
+	// 주문서목록 조회 그리드에서 삭제하기(디테일도 지워져야함)
+	public int deleteOrdrShtDtl(List<OrdrShtVO> vo);
 	
 	//----------------------------------------------------------------------------------------------------
 	// 제품입고관리 페이지 입고대기 리스트
 	public List<ProdInOutPutVO> prodInputList();
-	
-	
-	
-	
 	
 }

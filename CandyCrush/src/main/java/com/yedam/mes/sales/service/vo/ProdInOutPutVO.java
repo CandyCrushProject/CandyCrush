@@ -14,6 +14,7 @@ public class ProdInOutPutVO {
 	private String prcmPrcd; // 공정지시코드
 	private String orsNo; //주문서 번호
 	private String piPassCnt; // 제품검사코드
+	private String cprNm; // 제품명
 	
 	// 제품입고
 	private String prodRcvNo; // 제품입고번호

@@ -17,20 +17,14 @@ $(document).ready(function () {
     };
   });
 
-  // 납기날짜 체크하기
-  // $("#dlvryDt").on('change', function () {
-  //   dlvryDtCheck();
-  // });
-
   // 주문서 등록
   $('#ordrShtInsert').on('click', () => {
-    // if (dlvryDtChk == null || dlvryDtChk == undefined || dlvryDtChk == "") {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: '경고',
-    //     text: "납기일을 선택 하세요.",
-    //   });
-    // }
+    ordrProdList.blur();
+    ordrShtInsert();
+  });
+
+  // 주문서 수정
+  $('#ordrShtSave').on('click', () => {
     ordrProdList.blur();
     ordrShtInsert();
   });
@@ -49,6 +43,7 @@ $(document).ready(function () {
   $('#orderDelete').on('click', () => {
     
   })
+  
 });
 
 let accountName = "";
@@ -89,6 +84,10 @@ function accntSrch() {
     }
   });
 }
+//---------------------------------------------------------------------------------------------
+function ordrShtDelete() {
+  
+}
 
 //---------------------------------------------------------------------------------------------
 // ajax로 불러온 날짜데이터(시간으로 불러와짐) 변환
@@ -111,23 +110,6 @@ function formatDate() {
   formattedDate = year + "-" + month + "-" + day;
   //console.log(formattedDate, " : formattedDate");
   return formattedDate;
-}
-
-//---------------------------------------------------------------------------------------------
-// 납기일짜선택할 때 현재날짜 이전여부 체크
-
-function dlvryDtCheck() {
-  if (dlvryDtChk < formattedDate) {
-    Swal.fire({
-      icon: 'error',
-      title: '경고',
-      text: "납기일을 확인 하세요.",
-    });
-    console.log(dlvryDtChk, "dlvryDtChkdlvryDtChkdlvryDtChk");
-    console.log(formattedDate, "formattedDateformattedDate");
-  } else {
-    return;
-  }
 }
 
 //---------------------------------------------------------------------------------------------
