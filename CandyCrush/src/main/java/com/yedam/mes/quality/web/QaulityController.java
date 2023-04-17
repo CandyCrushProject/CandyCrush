@@ -48,15 +48,12 @@ public class QaulityController {
 	
 	//제품검사----------------------------------------------------------------------
 	//제품검사관리 페이지
-	//생산지시 리스트를 모달창으로 보여준다
 	@GetMapping("QualityProduct")
 	public String QualityProduct(Model model) {
 		model.addAttribute("procProdList",qualityService.procProdList());
 		return "quality/QualityProdManagement";
 	};
 	
-	
-	//생산지시 리스트를 제품명기준으로 가져온다
 	@PostMapping("procProdAllList")
 	@ResponseBody
 	public List<ProdInspVO> prodIsEndDtNotNull(@RequestParam(required = false) String cprNm,
@@ -70,7 +67,22 @@ public class QaulityController {
 	@ResponseBody
 	public List<ProdInspVO> procPrprDetailList(@RequestParam String prcmCd){
 		return qualityService.procDetailList(prcmCd);
-	}
+	};
+	
+	@PostMapping("prodInspInsert")
+	@ResponseBody
+	public Boolean prodInspInsert(@RequestBody List<ProdInspVO> vo) {
+		Boolean response = false;
+		
+		int result = qualityService.prodInspInsert(vo);
+		System.out.println("INSERT 잘 되고 있는거냐고 : " + result);
+		
+		if(result != 0) {
+			response = true;
+		};
+		
+		return response;
+	};
 	
 	
 }

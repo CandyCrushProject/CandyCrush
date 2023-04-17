@@ -85,7 +85,7 @@
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
 							<div>
-								<h5><b>▶ 생산지시조회</b></h5>
+								<h5><b>▶ 제품검사 등록</b></h5>
 								<div>
 									<label for="prodPass">생산완료제품</label> 
 									<input type="text" id="prodPass" style="width: 440px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;
@@ -161,6 +161,22 @@
 		let cprNm = "";
 		let start = "";
 		let end = "";
+
+		//날짜 가공
+		const date = new Date();
+		const years = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0");
+		const month2 = String(date.getMonth() + 2).padStart(2, "0");
+		const day = String(date.getDate()).padStart(2, "0");
+		const getStartToday = years+ "-" + month + "-" + day;
+		const getOneMonthLater = years+ "-" + month2 + "-" + day;
+
+		var hours = ('0' + date.getHours()).slice(-2); 
+		var minutes = ('0' + date.getMinutes()).slice(-2);
+		var timeString = hours + ":" + minutes;
+		//var seconds = ('0' + date.getSeconds()).slice(-2); 
+
+		var timeString = hours + ':' + minutes;
 		
 		const procCommandIsNotNullList = (cprNm = undefined, start = undefined, end = undefined) => {
 			$.ajax({
@@ -200,7 +216,7 @@
 						let result = newData.getFullYear() + "-" +
 									(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
 									+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
-							return result;
+						return result;
 					}
 				},
 				{//PRCM_END_DT
@@ -209,14 +225,15 @@
 					formatter: function (e) {
 						let newData = new Date(e.value);
 						let result = "";
-						if(result){
+						if(newData){
 							result = newData.getFullYear() + "-" +
 										(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
 										+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
 						} else {
 							result = "";
 						}
-							return result;
+						
+						return result;
 					},
 					sortingType: 'desc',
 					sortable: true
@@ -233,20 +250,24 @@
 		//생산지시상세목록 Grid(공정지시) // prodcProgressList
 		const prodcProgressList = new Grid({
 			el: document.getElementById('prodcProgressList'),
+			rowHeaders: ['checkbox'],
 			columns: [
 				{
-					header: '공정코드',
-					name: 'cmCd',
+					header: '제품번호',
+					name: 'cprCd',
+					rowSpan: true,
 					sortingType: 'asc',
-					sortable: true,
+					sortable: true
 				},
 				{
 					header: '제품명',
 					name: 'cprNm',
-					rowSpan: true
+					rowSpan: true,
+					sortingType: 'asc',
+					sortable: true
 				},
 				{
-					header: '생산지시량',
+					header: '검사수량',
 					name: 'prcmQnt',
 					sortingType: 'asc',
 					sortable: true
@@ -263,37 +284,41 @@
 				},
 				{
 					header: '작업자',
-					name: 'prpeMng'
+					name: 'piMng',
+					editor: 'text'
+				},
+				{
+					header: '검사일자',
+					name: 'piDt',
+					editor: {
+						type: 'datePicker',
+						options: {
+							format: 'yyyy-MM-dd',
+							//시작일자와 종료일자를 설정해줌
+							selectableRanges : [[getStartToday, getOneMonthLater]],
+							language: 'ko'
+						}
+					}
 				},
 				{
 					header: '검사시작시간',
-					name: 'prpeWkStartDt',
+					name: 'piStrDt',
 					formatter: function (e) {
-						let newData = new Date(e.value);
-						let result = newData.getFullYear() + "-" +
-									(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
-									+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
-							return result;
-					}
+						return timeString;
+					},
 				},
 				{
 					header: '검사종료시간',
-					name: 'prpeWkEndDt',
-					formatter: function (e) {
-						let newData = new Date(e.value);
-						let result = "";
-						if(result){
-							result = newData.getFullYear() + "-" +
-										(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
-										+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
-						} else {
-							result = "";
-						}
-							return result;
-					}
-				}
+					name: 'piEndDt',
+					editor: 'text'
+				},
+				{
+					header: '비고',
+					name: 'piNote',
+					editor: 'text'
+				},
 			],
-			bodyHeight: 400,
+			bodyHeight: 300,
 			pageOptions: {
 				useClient: true,
 				type: 'scroll',
@@ -377,6 +402,10 @@
 
 		procCommandList.on('click', (e)=>{
 			let getPrcmCdData = procCommandList.getData()[e.rowKey].prcmCd;
+
+			if(getPrcmCdData === undefined){
+				return;
+			}
 			
 			$.ajax({
 				url : "procPrprDetailList",
@@ -436,14 +465,63 @@
 			setTimeout(()=> prodModalGrid.refreshLayout() , 0);
 		});//inspModal
 
-		//생산지시 상세목록 Grid 쪽 등록버튼 누르면 모달창이 짠
 		$('#prodInsertBtn').on('click',()=>{
+			let procCd = $('#procCd').val();		//생산지시코드
+
+			let checkRows = prodcProgressList.getCheckedRows();
+			if(checkRows.length !== 0){
+				checkRows.map((item) => {
+					item.prcmCd = procCd;			//생산지시코드
+					item.piCnt = item.prcmQnt		//검사수량
+					item.piPassCnt = item.prprQnt	//합격수량
+					item.piBadCnt = item.prprBad	//불량수량
+					item.piStrDt = timeString;		//검사시작시간
+				});
+
+				//console.log(checkRows);
+				$.ajax({
+					url : "procPrprDetailList",
+					method :"POST",
+					data : JSON.stringify(checkRows),
+					dataType : "JSON",
+					contentType : "application/json",
+					success : function(data){
+						console.log(data);
+						/*Swal.fire({
+							icon: 'success',
+							title: "검사완료",
+							text:  "검사가 완료되었습니다."
+						});
+						prodcProgressList.removeCheckedRows();
+						procCommandIsNotNullList();*/
+					} 
+				});
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: '경고',
+					text: "선택된 데이터가 없습니다.",
+				});
+			};
+		});
+
+
+
+
+
+
+
+
+		//생산지시 상세목록 Grid 쪽 등록버튼 누르면 모달창이 짠
+		/*$('#prodInsertBtn').on('click',()=>{
 			document.getElementById('inspModal').style.display='block';
 			setTimeout(()=> inspInsert.refreshLayout() , 0);
-		})
-
-		$('#modalHide').on('click',()=>{
+		});*/
+		/*$('#modalHide').on('click',()=>{
 			$('#inspModal').hide();
-		})
+		});*/
+
+
+
 	</script>
 </main>
