@@ -17,6 +17,7 @@ import com.yedam.mes.quality.service.vo.MtBadCodeVO;
 import com.yedam.mes.quality.service.vo.MtInspBadInsertVO;
 import com.yedam.mes.quality.service.vo.MtInspInsertVO;
 import com.yedam.mes.quality.service.vo.MtOrderInspStatVO;
+import com.yedam.mes.quality.service.vo.ProdInspVO;
 import com.yedam.mes.quality.service.vo.QualityMtTestVO;
 @Service
 public class QualityServiceImpl implements QualityServcie {
@@ -66,6 +67,22 @@ public class QualityServiceImpl implements QualityServcie {
 		}
 		return 0;
 	}
+
+	//제품검사
+	//생산지시 전체목록 모달
+	public List<ProdInspVO> procProdList(){
+		return qualityMapper.procProdList();
+	};
+	//생산지시 전체목록
+	@Override
+	public List<ProdInspVO> procPrprEndIsNAllList(@Param("cprNm") String cprNm, @Param("start") String start, @Param("end") String end) {
+		return qualityMapper.procPrprEndIsNAllList(cprNm, start, end);
+	}
+	//생산지시 디테일(공정)
+	@Override
+	public List<ProdInspVO> procDetailList(String prcmCd) {
+		return qualityMapper.procDetailList(prcmCd);
+	};
 	
 
 }

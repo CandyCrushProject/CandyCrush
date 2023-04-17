@@ -2,6 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<style>
+	.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
+	.tui-grid-cell.cell-weight {font-weight: bold;}
+</style>
 <main>
 	<!-- 주의사항 -->
 	<!-- id와 class는 그대로 진행할 것 -->
@@ -66,7 +70,7 @@
 					<hr/>
 					<div class="mtrlOrderRightBtn" style="left:380px;">
 						<button type="button" id="" class="cndRstBtn">검사등록</button>
-						<button type="button" id="" class="cndRstBtn">등록취소</button>
+						<button type="button" id="modalHide" class="cndRstBtn">등록취소</button>
 					</div>
 					<div style="clear:both"></div>
 				</div>
@@ -88,12 +92,12 @@
 									<button class="srchBtn" id="prodSearch"><i class="fa-solid fa-magnifying-glass"></i></button>
 									
 									<br/>
-									<label for="start">검사일자</label>
+									<label for="start">생산완료일자</label>
 									<input type="date" id="start"
 									style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;ㅡ&nbsp;
 									<input type="date" id="end" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">&nbsp;&nbsp;&nbsp;
 									<div id="rigth">
-										<button type="button" id="inspSearchBtn" class="cndSrchBtn">검색</button>
+										<button type="button" id="procSearchBnt" class="cndSrchBtn">검색</button>
 										<button type="button" id="resetBtn" class="cndRstBtn ">초기화</button>
 									</div>
 									<div style="clear:both"></div>
@@ -122,12 +126,15 @@
 					<div class="card">
 						<div class="card-action">
 							<span>▶생산지시 상세목록</span>
+							<br/>
 							<div class="mtrlOrderRightBtn">
-									<button id="prodInsertBtn" class="cndInsBtn">등록</button>
+								<label for="procCd">생산지시코드</label>
+								<input type="text" id="procCd" style="width: 200px;">
+								<button id="prodInsertBtn" class="cndInsBtn">등록</button>
 							</div>
 						</div>
+						<div style="clear:both"></div>
 						<div class="card-content">
-							<div style="clear:both"></div>
 							<div class="table-responsive">
 								<div id="prodcProgressList"></div>
 							</div>
@@ -140,6 +147,35 @@
 	</div>
 	<script>
 		const Grid = tui.Grid;
+		let procProdAllList = [
+														<c:forEach items="${procProdList}" var="item">
+															{
+																prcmDt : '${item.prcmDt}',
+																prcmCd : '${item.prcmCd}',
+																cprCd : '${item.cprCd}',
+																cprNm : '${item.cprNm}',
+																cprTyp : '${item.cprTyp}',
+															},
+														</c:forEach>
+													]
+		let cprNm = "";
+		let start = "";
+		let end = "";
+		
+		const procCommandIsNotNullList = (cprNm = undefined, start = undefined, end = undefined) => {
+			$.ajax({
+				url : "procProdAllList",
+				method :"POST",
+				dataType : "JSON",
+				success : function(data){
+					procCommandList.resetData(data);			//아작스 결과를 그리드에 그려준다
+					procCommandList.getData().forEach(row => {	//입고수량의 Cell에 바탕화면을 연두색으로 변경
+						procCommandList.addCellClassName(row.rowKey, 'cprNm', 'cell-weight');
+					});
+				}
+			});
+		};
+		procCommandIsNotNullList();
 
 		//생산지시목록 Grid(생산지시) // procCommandList
 		const procCommandList = new Grid({
@@ -148,17 +184,42 @@
 			columns: [
 				{
 					header: '생산지시코드',
-					name: 'prcmCd',			//생산지시/생산지시코드
+					name: 'prcmCd',				//생산지시/생산지시코드
 					sortingType: 'asc',
 					sortable: true
 				},
 				{
 					header: '생산제품명',
-					name: 'cprNm'			//완제품관리/제품명
+					name: 'cprNm'					//완제품관리/제품명
 				},
 				{
-					header: '작업일자',
-					name: 'prcmStartDt'		//생산지시/생산시작일자
+					header: '작업시작일자',
+					name: 'prcmStartDt',		//생산지시/생산시작일자
+					formatter: function (e) {
+						let newData = new Date(e.value);
+						let result = newData.getFullYear() + "-" +
+									(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
+									+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+							return result;
+					}
+				},
+				{//PRCM_END_DT
+					header: '작업종료일자',
+					name: 'prcmEndDt',		//생산지시/생산시작일자
+					formatter: function (e) {
+						let newData = new Date(e.value);
+						let result = "";
+						if(result){
+							result = newData.getFullYear() + "-" +
+										(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
+										+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+						} else {
+							result = "";
+						}
+							return result;
+					},
+					sortingType: 'desc',
+					sortable: true
 				}
 			],
 			bodyHeight: 250,
@@ -175,45 +236,61 @@
 			columns: [
 				{
 					header: '공정코드',
-					name: 'cmCd',			//공통/공정코드
+					name: 'cmCd',
 					sortingType: 'asc',
 					sortable: true,
 				},
 				{
-					header: '제품명',		//제품관리
-					name: 'cprNm'
+					header: '제품명',
+					name: 'cprNm',
+					rowSpan: true
 				},
 				{
-					header: '검사수량',		//제품검사
-					name: 'piCnt',
+					header: '생산지시량',
+					name: 'prcmQnt',
 					sortingType: 'asc',
 					sortable: true
 				},
 				{
-					header: '불량수량',		//제품검사
-					name: 'piBadCnt',
+					header: '합격수량',
+					name: 'prprQnt'
+				},
+				{
+					header: '불량수량',
+					name: 'prprBad',
 					sortingType: 'asc',
 					sortable: true
 				},
 				{
-					header: '합격수량',		//제품검사
-					name: 'piPassCnt'
+					header: '작업자',
+					name: 'prpeMng'
 				},
 				{
-					header: '작업자',		//제품검사
-					name: 'piMng'
+					header: '검사시작시간',
+					name: 'prpeWkStartDt',
+					formatter: function (e) {
+						let newData = new Date(e.value);
+						let result = newData.getFullYear() + "-" +
+									(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
+									+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+							return result;
+					}
 				},
 				{
-					header: '검사시작시간',	 //제품검사
-					name: 'piStrDt'
-				},
-				{
-					header: '검사종료시간',	 //제품검사
-					name: 'piEndDt',
-				},
-				{
-					header : '검사일자',	//제품검사
-					name : 'piDt'
+					header: '검사종료시간',
+					name: 'prpeWkEndDt',
+					formatter: function (e) {
+						let newData = new Date(e.value);
+						let result = "";
+						if(result){
+							result = newData.getFullYear() + "-" +
+										(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
+										+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+						} else {
+							result = "";
+						}
+							return result;
+					}
 				}
 			],
 			bodyHeight: 400,
@@ -261,6 +338,67 @@
 				perPage: 30
 			}
 		});
+		prodModalGrid.resetData(procProdAllList);
+
+		//그리드에서 행 클릭해서 제품명을 input에 넣기
+		prodModalGrid.on('click',(e)=>{
+			let cprNm = prodModalGrid.getData()[e.rowKey].cprNm;
+
+			if (e.targetType !== "columnHeader") {
+				Swal.fire({
+					icon: 'success',
+					title: '선택상품 : ' + cprNm,
+				});
+			};
+
+			$("#prodPass").val(cprNm);
+			$("#prodModal").hide();	
+		})
+
+		//조회버튼 클릭시 조건에 해당되는 제품명 조회
+		$('#procSearchBnt').on('click',()=>{
+			let prodInput = $('#prodPass').val();
+			let dateStart = $('#start').val();
+			let dateEnd = $('#end').val();
+
+			$.ajax({
+				url : "procProdAllList",
+				method :"POST",
+				dataType : "JSON",
+				data : {cprNm : prodInput, start : dateStart, end : dateEnd},
+				success : function(data){
+					procCommandList.resetData(data);
+					procCommandList.getData().forEach(row => {
+						procCommandList.addCellClassName(row.rowKey, 'cprNm', 'cell-weight');
+					});
+				}
+			});
+		});
+
+		procCommandList.on('click', (e)=>{
+			let getPrcmCdData = procCommandList.getData()[e.rowKey].prcmCd;
+			
+			$.ajax({
+				url : "procPrprDetailList",
+				method :"POST",
+				dataType : "JSON",
+				data : {prcmCd : getPrcmCdData},
+				success : function(data){
+					//자료가 없으면 자료없다고 알림 띄우기
+					if(data.length === 0){
+						Swal.fire({
+							title: '자료가 없습니다.',
+							text: getPrcmCdData + '에 대한 자료가 없습니다.',
+							icon: 'error'
+						})
+						return;
+					} else {
+						$('#procCd').val(getPrcmCdData);
+						prodcProgressList.resetData(data);
+					};
+				}
+			});
+		})
 
 		//생산완료제품 모달 검색 Grid
 		const inspInsert = new Grid({
@@ -302,6 +440,10 @@
 		$('#prodInsertBtn').on('click',()=>{
 			document.getElementById('inspModal').style.display='block';
 			setTimeout(()=> inspInsert.refreshLayout() , 0);
+		})
+
+		$('#modalHide').on('click',()=>{
+			$('#inspModal').hide();
 		})
 	</script>
 </main>

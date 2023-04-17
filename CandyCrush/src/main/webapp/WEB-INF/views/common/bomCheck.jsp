@@ -12,7 +12,7 @@
 	}
 	.tui-grid-cell.cell-red {background-color: rgba(255, 121, 121, 0.432)}
 	.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
-    #prodExcelBtn, #procExcelBtn{
+	#prodExcelBtn, #procDetailExcelBtn{
         margin-left: 15px;
     }
 	#prodCprNm{
@@ -58,10 +58,10 @@
 								<!--<button class="srchBtn" id="companySearch">
 									<i class="fa-solid fa-magnifying-glass"></i>
 								</button>-->
-                                <div id="floatBtn" style="bottom: 20px; position: relative;"> 
+								<div id="floatBtn" style="bottom: 20px; position: relative;"> 
 									<button type="button" class="cndSelBtn" id="prodSearch">조회</button>
-                                    <button type="button" id="resetBtn" class="cndRstBtn">초기화</button>
-                                </div>
+									<button type="button" id="resetBtn" class="cndRstBtn">초기화</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -71,18 +71,18 @@
 				<div class="col-md-5">
 					<div class="card">
 						<div class="card-action">제품리스트</div>
-                        <button type="button" id="prodExcelBtn" class="cndInsBtn">EXCEL</button>
-                        <div class="mtrlOrderRightBtn">
-                            <button id="bomInAndUp" class="cndInsBtn">저장</button>
-                            <button id="bomInsert" class="cndUdtBtn">추가</button>
-                            <button id="bomDelete" class="cndDelBtn">삭제</button>
-                        </div>
-                        <div class="card-content">
-                            <div style="clear:both"></div>
-                            <div class="table-responsive">
-                                <!-- 제품리스트 -->
-                                <div id="prodList"></div>
-                            </div>
+					<button type="button" id="prodExcelBtn" class="cndInsBtn">EXCEL</button>
+					<!--<div class="mtrlOrderRightBtn">
+							<button id="bomInAndUp" class="cndInsBtn">저장</button>
+							<button id="bomInsert" class="cndUdtBtn">추가</button>
+							<button id="bomDelete" class="cndDelBtn">삭제</button>
+					</div>-->
+							<div class="card-content">
+							<div style="clear:both"></div>
+							<div class="table-responsive">
+									<!-- 제품리스트 -->
+									<div id="prodList"></div>
+							</div>
 						</div>
 					</div>
 				</div> <!--END row-->
@@ -90,11 +90,11 @@
 					<div class="card">
 						<div class="card-action">공정리스트</div>
                         <button type="button" id="procDetailExcelBtn" class="cndInsBtn">EXCEL</button>
-                        <div class="mtrlOrderRightBtn">
+                        <!--<div class="mtrlOrderRightBtn">
                             <button id="bomDetailInAndUp" class="cndInsBtn">저장</button>
                             <button id="bomDetailInsert" class="cndUdtBtn">추가</button>
                             <button id="bomDetailDelete" class="cndDelBtn">삭제</button>
-                        </div>
+                        </div>-->
                         <div class="card-content">
                             <div style="clear:both"></div>
                             <div class="table-responsive">
@@ -171,8 +171,8 @@
 		};
 
 
-        //제품리스트
-        const prodList = new Grid({
+		//제품리스트
+		const prodList = new Grid({
 			el: document.getElementById('prodList'),
             rowHeaders: ['rowNum', 'checkbox'],
             scrollX: false,
@@ -217,7 +217,7 @@
 		});
 
         //공정리스트
-        const procList = new Grid({
+		const procList = new Grid({
 			el: document.getElementById('procList'),
             rowHeaders: ['rowNum', 'checkbox'],
             scrollX: false,
@@ -355,7 +355,7 @@
 		bomGetList();
 
 		//제품 검색 모달
-		const bomDetailGetList = (cprNm = undefined) => {
+		/*const bomDetailGetList = (cprNm = undefined) => {
 			$.ajax({
 				url : "bomDetailList",
 				method :"POST",
@@ -365,7 +365,7 @@
 				} 
 			});
 		};
-		bomDetailGetList();
+		bomDetailGetList();*/
 
 		function bomSearch(){
 			let cprNm2 = document.getElementById('prodCprNm').value;	//제품명
@@ -425,6 +425,71 @@
 					"-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
 			return result;
 		};
+
+		//엑셀버튼 클릭 이벤트
+		const options = {
+			includeHiddenColumns: true,
+			onlySelected: true,
+			fileName: 'mtrlExport',
+		};
+
+		//엑셀버튼을 누르면 해당되는 발주상세목록을 엑셀로 만들어준다
+		$("#prodExcelBtn").on('click', function(){
+			Swal.fire({
+				title: '엑셀파일로 받아보시겠습니까?',
+				text: "원하지 않는다면 취소를 눌러주세요",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: '확인',
+				cancelButtonText: '취소',
+				reverseButtons: true, // 버튼 순서 거꾸로
+				
+			}).then((result) => {
+				if (result.isConfirmed) {
+					prodList.export('xlsx', options);		//제품리스트\
+				} else {
+					Swal.fire({
+						title: '취소되었습니다',
+						icon : 'success'
+					});
+				}
+			});
+		});
+
+		//엑셀버튼을 누르면 해당되는 발주상세목록을 엑셀로 만들어준다
+		$("#procDetailExcelBtn").on('click', function(){
+			if(procList.getData().length === 0){
+				Swal.fire({
+						title: '다운로드 받을 자료가 없습니다',
+						icon : 'error'
+					});
+					return;
+			} else {
+				Swal.fire({
+					title: '엑셀파일로 받아보시겠습니까?',
+					text: "원하지 않는다면 취소를 눌러주세요",
+					icon: 'question',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '확인',
+					cancelButtonText: '취소',
+					reverseButtons: true, // 버튼 순서 거꾸로
+					
+				}).then((result) => {
+					if (result.isConfirmed) {
+						procList.export('xlsx', options);		//공정리스트
+					} else {
+						Swal.fire({
+							title: '취소되었습니다',
+							icon : 'success'
+						});
+					}
+				});
+			};
+		});
 
     </script>
 </main>
