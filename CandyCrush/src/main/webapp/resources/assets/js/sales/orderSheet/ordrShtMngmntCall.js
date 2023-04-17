@@ -1,13 +1,21 @@
+let dlvryDtChk = $('#dlvryDt').val(); // 납기일자 인풋값
+
 $(document).ready(function () {
-  // 거래처 검색
+  
+  // 주문서관리 페이지 거래처 검색
   $('#accountName').on('input', function () {
     accntSrch();
   });
 
-  // 주문서관리 페이지 거래처 검색
-  // $('#accntMdlCaNm').on('input', function () {
-  //   accntSrch();
-  // });
+  // ESC 누르면 모달창 없어짐
+  $(window).on("keydown", (e) => {
+    let ordrDtilMdl = $("#ordrDtilMdl");
+
+    //e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
+    if (e.keyCode === 27 && ordrDtilMdl.css("display") === "block") {
+      ordrDtilMdl.hide();
+    };
+  });
 
   // 납기날짜 체크하기
   // $("#dlvryDt").on('change', function () {
@@ -23,17 +31,8 @@ $(document).ready(function () {
     //     text: "납기일을 선택 하세요.",
     //   });
     // }
+    ordrProdList.blur();
     ordrShtInsert();
-  });
-
-  // ESC 누르면 모달창 없어짐
-  $(window).on("keydown", (e) => {
-    let ordrDtilMdl = $("#ordrDtilMdl");
-
-    //e.keyCode === 27 : <ESC Key Code> , 해당 키코드의 키 값을 확인
-    if (e.keyCode === 27 && ordrDtilMdl.css("display") === "block") {
-      ordrDtilMdl.hide();
-    };
   });
 
   // 주문서관리페이지 주문서 모달창에서 제품주문 쪽 +버튼 눌렀을때 행 추가
@@ -44,6 +43,11 @@ $(document).ready(function () {
   // 주문서관리페이지 주문서 모달창에서 제품주문 쪽 -버튼 눌렀을때 체크된 행 삭제
   $('#delRowBtn').on('click', () => {
     ordrProdList.removeCheckedRows();
+  })
+
+  // 주문서관리페이지 주문서 목록에서 주문서 삭제
+  $('#orderDelete').on('click', () => {
+    
   })
 });
 
@@ -111,20 +115,20 @@ function formatDate() {
 
 //---------------------------------------------------------------------------------------------
 // 납기일짜선택할 때 현재날짜 이전여부 체크
-// let dlvryDtChk = $('#dlvryDt').val();
-// function dlvryDtCheck() {
-//   if (dlvryDtChk < formattedDate) {
-//     Swal.fire({
-//       icon: 'error',
-//       title: '경고',
-//       text: "납기일을 확인 하세요.",
-//     });
-//     console.log(dlvryDtChk, "dlvryDtChkdlvryDtChkdlvryDtChk");
-//     console.log(formattedDate, "formattedDateformattedDate");
-//   } else {
-//     return;
-//   }
-// }
+
+function dlvryDtCheck() {
+  if (dlvryDtChk < formattedDate) {
+    Swal.fire({
+      icon: 'error',
+      title: '경고',
+      text: "납기일을 확인 하세요.",
+    });
+    console.log(dlvryDtChk, "dlvryDtChkdlvryDtChkdlvryDtChk");
+    console.log(formattedDate, "formattedDateformattedDate");
+  } else {
+    return;
+  }
+}
 
 //---------------------------------------------------------------------------------------------
 // serialize 배열형태로 반들어줌
