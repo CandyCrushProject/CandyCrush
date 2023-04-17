@@ -16,5 +16,5 @@ public interface QualityMapper {
 	public List<MtBadCodeVO> selectMtBadCode();
 	public int InsertMtInsp(MtInspInsertVO vo);
 	public int InsertMtBadInsp(MtInspBadInsertVO badvo); 
-	public int getNewMiCd();
+	public String getNewMiCd();
 }

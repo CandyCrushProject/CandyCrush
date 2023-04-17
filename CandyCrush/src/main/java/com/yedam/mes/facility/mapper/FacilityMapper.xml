@@ -91,7 +91,7 @@
 	<select id="facilityOperationStat"
 		resultType="FacilityOperationStatVO">
 		SELECT
-		D.FAC_CD,
+		F.FAC_CD,
 		FAC_NM,
 		FDM_CD,
 		FDM_MGR,
@@ -101,21 +101,20 @@
 		CFD_TITLE,
 		CFD_CONTENT,
 		FAC_RUN
-		FROM FAC_DWN_MNG D
-		,(
+        from
+        FAC F
+        LEFT JOIN FAC_STAT S
+        ON F.FAC_CD = S.FAC_CD
+        LEFT JOIN FAC_DWN_MNG D
+        ON D.FAC_CD = F.FAC_CD
+		LEFT JOIN CM_FAC_DWN_CODE C
+        ON D.CFD_CD = C.CFD_CD
+        LEFT JOIN(
 		SELECT FAC_CD, MAX(FDM_STOP) RCT_STP
 		FROM FAC_DWN_MNG
 		GROUP BY FAC_CD
 		) R
-		,CM_FAC_DWN_CODE C
-		,FAC_STAT S
-		,FAC F
-		where
-		D.FAC_CD = R.FAC_CD AND
-		D.FDM_STOP = R.RCT_STP AND
-		D.CFD_CD = C.CFD_CD AND
-		D.FAC_CD = S.FAC_CD AND
-		D.FAC_CD = F.FAC_CD
+        ON D.FAC_CD = R.FAC_CD AND D.FDM_STOP = R.RCT_STP
 		ORDER BY D.FAC_CD
 	</select>
 

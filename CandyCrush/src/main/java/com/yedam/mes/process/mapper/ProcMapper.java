@@ -99,24 +99,19 @@ public interface ProcMapper {
 	public List<ProcPerfVO> selectPerfList(ProcPerfVO perfVO);
 	public List<ProcProgVO> selectProgList(ProcProgVO progVO);
 	
+	
+	
+	
+	
+	
 	//실적페이지 지시조회===============이하실적페이지 구역
 	public List<ProcResultAllVO> getProcCommand();
 	
 	
-	public List<ProcResultAllVO> getProcProg(@Param("prcmCd") String prcmCd);
+	public List<ProcResultAllVO> getProc(@Param("prcmCd") String prcmCd);
 	public List<ProcResultAllVO> getProcFac(@Param("prcmPrcd") String prcmPrcd);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public List<ProcResultAllVO> getProcProg();
+	public int startProg(ProcResultAllVO startVO);
 	
 	
 	

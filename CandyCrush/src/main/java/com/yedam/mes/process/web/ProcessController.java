@@ -215,21 +215,11 @@ public class ProcessController {
 		return procService.getProcCommand();
 	}
 	
-	@PostMapping("getProcProg")
+	@PostMapping("getProc")
 	@ResponseBody
 	public List<ProcResultAllVO> getProcProg(@RequestParam String prcmCd) {
-		return procService.getProcProg(prcmCd);
+		return procService.getProc(prcmCd);
 	}
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
 	
 
 	@PostMapping("getProcFac")
@@ -237,5 +227,16 @@ public class ProcessController {
 	public List<ProcResultAllVO> getProcFac(@RequestParam("prcmPrcd") String prcmPrcd){
 		return procService.getProcFac(prcmPrcd);
 	}
-
+	
+	@GetMapping("getProcProg")
+	@ResponseBody
+	public List<ProcResultAllVO> getProcProg(){
+		return procService.getProcProg();
+	}
+	
+	@PostMapping("startProg")
+	@ResponseBody
+	public int startProg(ProcResultAllVO startVO) {
+		return procService.startProg(startVO);
+	}
 }

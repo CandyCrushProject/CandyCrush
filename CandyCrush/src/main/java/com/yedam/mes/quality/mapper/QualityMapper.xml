@@ -50,8 +50,11 @@
 	    CMB_CTT
 	FROM cm_mtrl_bad_code
   </select>
-  <select id="getNewMiCd" resultType="int">
-  	SELECT NVL(MAX(TO_NUMBER(MI_CD)),0)+1 MI_CD FROM MTRL_INSP
+  <select id="getNewMiCd" resultType="String">
+  	SELECT 'MI' 
+        ||mi_seq.NEXTVAL ||
+        TO_CHAR(SYSDATE, 'yyMMdd')
+FROM DUAL
   </select>
   <insert id="InsertMtInsp" parameterType='MtInspInsertVO'>
   	INSERT INTO MTRL_INSP

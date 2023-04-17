@@ -16,6 +16,6 @@ public interface QualityServcie {
 	public List<QualityMtTestVO> selectMtQualityTestList(@Param("modCd") String modCd);
 	public List<MtBadCodeVO> selectMtBadCode();
 	public int InsertMtInsps(HashMap<String, Object> map);
-	public int getNewMiCd();
+	public String getNewMiCd();
 	public int InsertMtBadInsp(List<MtInspBadInsertVO> badvo); 
 }
