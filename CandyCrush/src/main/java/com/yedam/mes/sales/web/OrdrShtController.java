@@ -126,6 +126,8 @@ public class OrdrShtController {
 	public Map<String, Object> ordrShtInsertProcess(@RequestBody Map<String, Object> map){
 	
 		Map<String, Object> headerMap = new HashMap<>();
+		
+		// 주문서 등록
 		List<Map<String, Object>> detailList = new ArrayList<Map<String,Object>>();
 		detailList = (List<Map<String, Object>>) map.get("data"); // 등록정보
 		headerMap = (Map<String, Object>) map.get("dataHd");
@@ -133,31 +135,34 @@ public class OrdrShtController {
 			service.insertOrdrSht(headerMap, detailList);
 		}
 	
-		List<Map<String, Object>> updateList = new ArrayList<Map<String,Object>>();
-		updateList = (List<Map<String, Object>>) map.get("updateRows"); // 수정정보
-		//headerMap = (Map<String, Object>) map.get("dataHd");
-		if(detailList.size() > 0) {
-			service.insertOrdrSht(headerMap, updateList);
-		}
+		// 주문서 수정
+//		List<Map<String, Object>> updateList = new ArrayList<Map<String,Object>>();
+//		updateList = (List<Map<String, Object>>) map.get("updateRows"); // 수정정보
+//		headerMap = (Map<String, Object>) map.get("dataHd");
+//		if(detailList.size() > 0) {
+//			service.updateOrdrSht(headerMap, updateList);
+//		}
 		
-		List<Map<String, Object>> deleteList = new ArrayList<Map<String,Object>>();
-		deleteList = (List<Map<String, Object>>) map.get("deleteRows"); // 삭제정보
-		//headerMap = (Map<String, Object>) map.get("dataHd");
-		if(detailList.size() > 0) {
-			service.insertOrdrSht(headerMap, deleteList);
-		}
+		// 주문서 삭제
+//		List<Map<String, Object>> deleteList = new ArrayList<Map<String,Object>>();
+//		deleteList = (List<Map<String, Object>>) map.get("deleteRows"); // 삭제정보
+//		headerMap = (Map<String, Object>) map.get("dataHd");
+//		if(detailList.size() > 0) {
+//			service.deleteOrdrSht(headerMap, deleteList);
+//		}
 		
-		headerMap = (Map<String, Object>) map.get("dataHd");
-		service.insertOrdrSht(headerMap, detailList);
+		// 주문서 
+//		headerMap = (Map<String, Object>) map.get("dataHd");
+//		service.insertOrdrSht(headerMap, detailList);
 		return map;
 	}
 	
 	// 주문서관리페이지 주문서 상세조회리스트 모달창
 	@GetMapping("getOrdrShtDtlList")
 	@ResponseBody
-	public List<OrdrShtVO> getOrdrShtDtlList(Model model) {
+	public List<OrdrShtVO> getOrdrShtDtlList(@RequestParam(required = false) String orshNo) {
 		
-		return service.getOrdrShtDtlList();
+		return service.getOrdrShtDtlList(orshNo);
 	}
 	
 	// 제품입고 관리페이지(페이지 리턴)

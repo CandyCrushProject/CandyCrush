@@ -86,8 +86,8 @@ public class procServiceImpl implements ProcService {
 	}
 
 	@Override
-	public int addOrder(ProcOrderVO orderVO) {
-		return 0;
+	public int addOrder(ProcOrderVO poVO) {
+		return procMapper.insertProcOrder(poVO);
 	}
 
 	@Override
@@ -170,6 +170,24 @@ public class procServiceImpl implements ProcService {
 	}
 
 
+
+	@Override
+	public int insertProgress(List<ProcOrderVO> poVO) {
+		int r = 0;
+		for(ProcOrderVO pvo:poVO) {
+			r += procMapper.insertProgress(pvo);
+		}
+		return r;
+	}
+
+	@Override
+	public int insertProgMtrl(List<ProcOrderVO> poVO) {
+		int r = 0;
+		for(ProcOrderVO pvo:poVO) {
+			r += procMapper.insertProgMtrl(pvo);
+		}
+		return r;
+	}
 
 	
 	

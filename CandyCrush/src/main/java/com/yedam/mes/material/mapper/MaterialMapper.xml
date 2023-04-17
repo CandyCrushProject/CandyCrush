@@ -49,7 +49,7 @@
 	<!-- 업체명 & 발주신청일 시작일자 ~ 종료일자  -->
 	<select id="mtrlOrderDateSearch" resultType="MaterialOrderVO">
 		SELECT DISTINCT mod.ca_no, ca_nm, mo.mo_cd, mo_reo_dt, mo_stt,
-				mo_title, mo_cplt_dt
+				mo_title
 		FROM mtrl_order mo JOIN mtrl_order_detail mod
 		    ON mo.mo_cd = mod.mo_cd
 		        JOIN cm_account ca

@@ -105,19 +105,51 @@
 	<insert id="insertOrdrShtHdr" parameterType="hashmap">
 		INSERT INTO order_sheet(orsh_no, ca_no, orsh_dt, dlvry_dt)
 			             VALUES('ordr' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
-			                  , #{caNo}, TO_DATE(#{orshDt}, 'rrrr-MM-dd'), TO_DATE(#{dlvryDt}, 'yyyy-MM-dd'))
+			                  , #{caNo}, TO_DATE(#{orshDt}, 'rrrr-MM-dd'), TO_DATE(#{dlvryDt}, 'rrrr-MM-dd'))
 	</insert>
 	
 	<!-- 모달창 주문서 디테일 등록 -->
 	<insert id="insertOrdrShtDtl" parameterType="hashmap">
 		INSERT INTO order_sheet_detail(ordr_dtl_cd, ordr_dtl_cnt, cpr_cd, orsh_pr, orsh_no, stt_cng_dt)
 		                        VALUES('orderdtl' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
-                              		  , #{ordrDtlCnt}, (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cprNm})
-                              		  , '접수완료', #{orshNo}, SYSDATE)
+                              		  , #{ordrDtlCnt}
+                              		  , (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cprNm})
+                              		  , '접수완료', #{orshNo}, TO_DATE(SYSDATE,'rrrr-MM-dd'))
 	</insert>
 	
 	<!-- 주문서관리페이지 주문서 목록 상세조회 모달창 -->
 	<select id="getOrdrShtDtlList" resultType="OrdrShtVO">
+		SELECT osd.ordr_dtl_cnt
+		     , acc.ca_nm
+		     , acc.ca_mng
+		     , acc.ca_mng_ph
+		     , cpm.cpr_nm
+		  FROM order_sheet_detail osd JOIN order_sheet orsh
+		                                ON osd.orsh_no = orsh.orsh_no
+		                                JOIN cm_account acc
+		                                  ON orsh.ca_no = acc.ca_no
+		                                  JOIN cm_product_mng cpm
+		                                    ON osd.cpr_cd = cpm.cpr_cd
+		 WHERE osd.ORSH_NO = #{orshNo}
+	</select>
 	
+	<!-- 상세조회 주문서 수정 -->
+<!-- 	<update id=""> -->
+<!-- 		UPDATE order_sheet_detail -->
+<!-- 		   SET cpr_cd = (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cprNm}), ordr_dtl_cnt = #{ordrDtlCnt} -->
+<!-- 		 WHERE ordr_dtl_cd = #{ordrDtlCd} -->
+<!-- 	</update> -->
+
+<!-- ================================================================================================================================== -->
+	<!-- 제품입고관리 페이지 입고대기 리스트 -->
+	<select id="prodInputList" resultType="OrdrShtVO">
+		SELECT proc.cpr_cd
+		     , cpm.cpr_nm
+		     , prpr_qnt
+		  FROM proc_command proc JOIN cm_product_mng cpm
+		                           ON proc.cpr_cd = cpm.cpr_cd
+		                         JOIN PROC_PROGRESS prpr
+		                           ON proc.prcm_cd = prpr.prcm_cd
+		 WHERE cm_cd = 'cmprcd006' AND prpr_end = 'Y';
 	</select>
 </mapper>
