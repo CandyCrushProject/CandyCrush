@@ -10,43 +10,53 @@
 	<security:http pattern="/css/**" security="none" />
 
 	<security:http>
-	
+	<!-- 로그인된 상태에서는 로그인이나 회원가입 화면에 접근 못하도록 함 -->
+		<security:intercept-url pattern="/login" access="isAnonymous()" />
 			
 		<!-- /admin/** 에 관해서는 ROLE_ADMIN 권한을 가진 회원(즉, 관리자만 접근 -->
 		<security:intercept-url pattern="/WEB-INF/views/**"
 			access="hasAuthority('ROLE_ADMIN')" />
-			
-		<!-- 그 외 나머지 경로에 대해서는 인증을 했건 안했건 모두 접근이 가능 -->
+		<!-- /admin/** 에 관해서는 ROLE_ADMIN 권한을 가진 회원(즉, 관리자만 접근 -->
 		<security:intercept-url pattern="/WEB-INF/views/**"
-			access="hasAuthority('ROLE_USER')" />
+			access="hasAuthority('ROLE_FAC')" />
+				<!-- /admin/** 에 관해서는 ROLE_ADMIN 권한을 가진 회원(즉, 관리자만 접근 -->
+		<security:intercept-url pattern="/WEB-INF/views/**"
+			access="hasAuthority('ROLE_PROC')" />
+				<!-- /admin/** 에 관해서는 ROLE_ADMIN 권한을 가진 회원(즉, 관리자만 접근 -->
+		<security:intercept-url pattern="/WEB-INF/views/**"
+			access="hasAuthority('ROLE_MTRL')" />
+				<!-- /admin/** 에 관해서는 ROLE_ADMIN 권한을 가진 회원(즉, 관리자만 접근 -->
+		<security:intercept-url pattern="/WEB-INF/views/**"
+			access="hasAuthority('ROLE_SALES')" />
+			
 
 
 		<!-- 로그인 성공시,-->
 		<security:form-login 
 					login-page="/login" 
 					default-target-url="/ProcManagement" />
+	
 		
 		<!-- 로그아웃 버튼 누르면...  혹은 URL 을 /logout 으로 입력시,   로그아웃을 성공적으로 했을 때  /login 으로 이동함 -->
 		<security:logout logout-url="/logout"
-			logout-success-url="/login" />
-
+						 logout-success-url="/login" 
+						 invalidate-session="true"
+						 delete-cookies="true" />
 		<security:csrf disabled="true" />
 	</security:http>
-
 
 	<!-- ↓ 프로젝트 때 이 방식 X.  userdetailservice 방식으로 쓸 거 같음(커스터마이징해서?) -->
 	<security:authentication-manager>
 		<security:authentication-provider>
 			<security:jdbc-user-service data-source-ref="dataSource"
 				users-by-username-query
-				="select LOGIN_ID, PASSWORD, 1
-              		from T_USER
-              		where LOGIN_ID = ?"
+				="select MEM_ID, MEM_PASS, 1
+              		from CM_MEMBER
+              		where MEM_ID = ?"
 				authorities-by-username-query
-				="select LOGIN_ID, ROLE_NAME
-              		from T_ROLE inner join T_USER_ROLE on T_ROLE.ID = T_USER_ROLE.ROLE_ID
-                	inner join T_USER on T_USER_ROLE.USER_ID = T_USER.ID
-              		where LOGIN_ID = ?" />
+				="select MEM_ID, ROLE_NAME
+              		from CM_MEMBER
+              		where MEM_ID = ?" />
           	<!-- ↓↓↓ 로그인 암호화?? -->
             <security:password-encoder hash="bcrypt"/>
 		</security:authentication-provider>
