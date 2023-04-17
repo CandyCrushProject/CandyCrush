@@ -78,6 +78,7 @@ const ordrShtList = () => {
   });
 };
 
+// 주문서 목록 그리드
 const orderList = new Grid({
   el: document.getElementById('orderList'), // Container element
   rowHeaders: ['checkbox'],
@@ -152,7 +153,19 @@ accntList.on('dblclick', (e) => {
   document.getElementById('caNoBox').style.display = 'block';
   document.getElementById('ordrShtInsert').style.display = 'block';
   document.getElementById('ordrShtSave').style.display = 'none';
+
   $("#orshDt").val(formatDate());
+  
+  // 납기날짜에 오늘날짜 부여 
+  $('#dlvryDt').val(new Date().toISOString().substring(0, 10)); 
+
+  //input Date 당일날짜 이후 날짜 선택하지 못하도록 설정해준다
+  let now_utc = Date.now();
+  let timeOff = new Date().getTimezoneOffset() * 60000;
+  let today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+  document.getElementById("dlvryDt").setAttribute("min", today);
+  $('#dlvryDt').attr("min", today);
+
   prodListItems();
 
   //---------------------------------------------------------------------------------------------
@@ -228,7 +241,6 @@ orderList.on('dblclick', (e) => {
   $("#orshDt").val(dateChange(rowDataOrshDt)); // 주문일자
   $("#dlvryDt").val(dateChange(rowDataDlvryDt)); // 납기일자
   
-
   document.getElementById('ordrDtilMdl').style.display = 'block'; // 모달창 띄움
   document.getElementById('orshNoBox').style.display = 'block'; // 주문서 헤더 코드 보여줌
   document.getElementById('caNoBox').style.display = 'none'; // 거래처코드 숨김
@@ -290,6 +302,13 @@ const ordrProdList = new Grid({
   rowHeaders: ['checkbox'],
   columns: [
     {
+      header: '제품코드',
+      name: 'ordrDtlCd',
+      hidden : true,
+      sortingType: 'asc',
+      sortable: true,
+    },
+    {
       header: '제품명',
       name: 'cprNm',
       editor: {
@@ -320,18 +339,19 @@ const ordrProdList = new Grid({
   }
 });
 
-// $('grid').mouseleave(ev => {
-//   ordrProdList.finishEditing();
-// });
-
 //---------------------------------------------------------------------------------------------
 //주문서등록 + 수정 + 삭제
+// getModifiedRows => 변경된row를 다 가져옴
 function ordrShtInsert() {
   const rows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).createdRows;
   const updateRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).updatedRows;
   const deleteRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).deletedRows;
-
-  if (rows.length !== 0) {
+  
+  console.log(deleteRows, "deleteRowsdeleteRowsdeleteRowsdeleteRowsdeleteRowsdeleteRows");
+  let rowLength = rows.length;
+  let updateLength = updateRows.length;
+  let deleteLength = deleteRows.length;
+  if (rowLength + updateLength + deleteLength !== 0) {
     $.ajax({
       url: "ordrShtForm",
       method: "POST",
@@ -341,13 +361,18 @@ function ordrShtInsert() {
         updateRows : updateRows,
         deleteRows : deleteRows,
       }),
+      
       contentType: "application/json",
       success: function (response) {
         console.log("ordrShtFormdata : ", response);
+        
         Swal.fire({
           icon: 'success',
           title: "주문서등록완료",
         });
+        ordrShtList();
+        let ordrDtilMdl = $("#ordrDtilMdl");
+        ordrDtilMdl.hide();
       }
     });
   } else {

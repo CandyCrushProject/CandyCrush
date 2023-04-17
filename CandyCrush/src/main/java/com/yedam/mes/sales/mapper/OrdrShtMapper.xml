@@ -104,8 +104,7 @@
 	<!-- 모달창 주문서 헤더 등록 -->
 	<insert id="insertOrdrShtHdr" parameterType="hashmap">
 		INSERT INTO order_sheet(orsh_no, ca_no, orsh_dt, dlvry_dt)
-			             VALUES('ordr' || TO_CHAR(SYSDATE,'yyMMdd') || TRIM(TO_CHAR(ORDER_SHEET_SEQ.NEXTVAL,'099'))
-			                  , #{caNo}, TO_DATE(#{orshDt}, 'rrrr-MM-dd'), TO_DATE(#{dlvryDt}, 'rrrr-MM-dd'))
+			             VALUES(#{orshNo}, #{caNo}, TO_DATE(#{orshDt}, 'rrrr-MM-dd'), TO_DATE(#{dlvryDt}, 'rrrr-MM-dd'))
 	</insert>
 	
 	<!-- 모달창 주문서 디테일 등록 -->
@@ -120,6 +119,7 @@
 	<!-- 주문서관리페이지 주문서 목록 상세조회 모달창 -->
 	<select id="getOrdrShtDtlList" resultType="OrdrShtVO">
 		SELECT osd.ordr_dtl_cnt
+			 , osd.ordr_dtl_cd
 		     , acc.ca_nm
 		     , acc.ca_mng
 		     , acc.ca_mng_ph
@@ -133,16 +133,32 @@
 		 WHERE osd.ORSH_NO = #{orshNo}
 	</select>
 	
-	<!-- 상세조회 주문서 수정 -->
-<!-- 	<update id=""> -->
+	<!-- 상세조회 헤더 수정 -->
+<!-- 	<update id="updateOrdrShtDtl" parameterType="hashmap"> -->
 <!-- 		UPDATE order_sheet_detail -->
 <!-- 		   SET cpr_cd = (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cprNm}), ordr_dtl_cnt = #{ordrDtlCnt} -->
 <!-- 		 WHERE ordr_dtl_cd = #{ordrDtlCd} -->
 <!-- 	</update> -->
+	
+	<!-- 상세조회 주문서 수정 -->
+	<update id="updateOrdrShtDtl" parameterType="hashmap">
+		UPDATE order_sheet_detail
+		   SET cpr_cd = (SELECT cpr_cd FROM cm_product_mng WHERE cpr_nm = #{cprNm}), ordr_dtl_cnt = #{ordrDtlCnt}
+		 WHERE ordr_dtl_cd = #{ordrDtlCd}
+	</update>
+	
+<!-- 	안되면 parameterType="List"로 해보 -->
+	<delete id="deleteOrdrShtHd" parameterType="String">
+		delete from order_sheet where orsh_no = #{orshNo}
+	</delete>
+	
+	<delete id="deleteOrdrShtDtl" parameterType="String">
+		delete from order_sheet_detail where orsh_no = #{orshNo}
+	</delete>
 
 <!-- ================================================================================================================================== -->
 	<!-- 제품입고관리 페이지 입고대기 리스트 -->
-	<select id="prodInputList" resultType="OrdrShtVO">
+	<select id="prodInputList" resultType="ProdInOutPutVO">
 		SELECT proc.cpr_cd
 		     , cpm.cpr_nm
 		     , prpr_qnt
@@ -150,6 +166,6 @@
 		                           ON proc.cpr_cd = cpm.cpr_cd
 		                         JOIN PROC_PROGRESS prpr
 		                           ON proc.prcm_cd = prpr.prcm_cd
-		 WHERE cm_cd = 'cmprcd006' AND prpr_end = 'Y';
+		 WHERE cm_cd = 'cmprcd006' AND prpr_end = 'Y'
 	</select>
 </mapper>

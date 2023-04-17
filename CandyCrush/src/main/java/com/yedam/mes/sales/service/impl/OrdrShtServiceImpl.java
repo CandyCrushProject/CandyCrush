@@ -74,22 +74,34 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		return mapper.getProdList();
 	}
 	
-	// 모달창 주문서헤더 + 주문서디테일 등록
+	// 모달창 주문서헤더 + 주문서디테일 등록 + 수정 + 삭제
 	@Override
-	public int insertOrdrSht(Map<String,Object> map, List<Map<String,Object>> list) {
+	public int insertOrdrSht(Map<String,Object> map, List<Map<String,Object>> list, List<Map<String,Object>> list2, List<Map<String,Object>> list3) {
 		int cnt = 0;
 		
 		// 주문번호 때문
 		String ordrShtCode = mapper.getOrdrShtCode();
-		map.put("ordrShtCode", ordrShtCode);
+		map.put("orshNo", ordrShtCode);
 		
 		// 주문서 헤더 등록 (한건)	
-		cnt = mapper.insertOrdrShtHdr(map);
+		cnt = mapper.insertOrdrShtHdr(map); //delete
 		
 		// 주문서 디테일 등록(여러건)
 		for(Map<String,Object> ordrShtMap : list) {
 			ordrShtMap.put("orshNo", ordrShtCode);
 			cnt += mapper.insertOrdrShtDtl(ordrShtMap);
+		}
+		
+		// 주문서 디테일 수정(여러건)
+		for(Map<String,Object> ordrShtMap : list2) {
+			ordrShtMap.put("orshNo", ordrShtCode);
+			cnt += mapper.updateOrdrShtDtl(ordrShtMap);
+		}
+		
+		// 주문서 디테일 삭제(여러건)
+		for(Map<String,Object> ordrShtMap : list3) {
+			ordrShtMap.put("orshNo", ordrShtCode);
+			cnt += mapper.deleteOrdrShtDtl(ordrShtMap);
 		}
 		
 		return cnt;
@@ -101,10 +113,36 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		return mapper.getOrdrShtDtlList(orshNo);
 		
 	}
-
-	// 주문서관리페이지 주문서 목록 상세조회했을때 수정가능
 	
+	// 주문서 삭제
+	// 주문서에 해당하는 모든 디테일 날려
+	// cnt = mapper.deletehdOrdrShtHdr(map); // 헤더랑 디테일 딜리트 두개 조건이 주문서 번호
 	
+	// 주문서목록 조회 그리드에서 삭제하기
+	@Override
+	public int deleteOrdrShtDtl(List<OrdrShtVO> vo) {
+//i		int cnt = 0;
+//		
+//		// 주문번호 때문
+//		String ordrShtCode = vo.addAll("orstNo", vo.);
+//		map.put("orshNo", ordrShtCode);
+//		
+//		// 주문서 헤더 등록 (한건)	
+//		cnt = mapper.insertOrdrShtHdr(map); //delete
+//		
+//		// 주문서 디테일 등록(여러건)
+//		for(List<OrdrShtVO> ordrShtList : vo) {
+//			ordrShtMap.put("orshNo", ordrShtCode);
+//			cnt += mapper.insertOrdrShtDtl(ordrShtMap);
+//		}
+		return 0;
+	}
+	
+	@Override
+	public int deleteOrdrShtHd() {
+		
+		return 0;
+	}
 	
 	//----------------------------------------------------------------------------------------------------
 	// 제품입고관리 페이지 입고대기 리스트
@@ -113,8 +151,7 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return mapper.prodInputList();
 	}
-	
-	// 주문서 삭제
 
+	
 
 }

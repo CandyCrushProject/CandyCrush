@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<link rel="stylesheet" href="assets/css/orderSheetModal.css">
 <script src="assets/js/sales/prodInputMngmnt/prodInputMngmntCall.js"></script>
 <style>
 	#inputGuide{
