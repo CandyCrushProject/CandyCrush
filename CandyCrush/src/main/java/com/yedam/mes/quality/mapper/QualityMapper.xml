@@ -91,5 +91,48 @@
 		#{cmbCd}
 		)
   </insert>
+  
+  <!-- ///////////////////제품검수////////////////////- -->
+  <!-- 생산지시 모달 검색 -->
+  <select id="procProdList" resultType="prodInspVO">
+  	SELECT prcm_dt, prcm_cd, pc.cpr_cd, cpr_nm, cpr_typ
+	FROM proc_command pc
+	    JOIN cm_product_mng cpr
+	        ON pc.cpr_cd = cpr.cpr_cd
+	ORDER BY prcm_cd DESC
+  </select>
+  
+  <!-- 생산지시 리스트 -->
+  <select id="procPrprEndIsNAllList" resultType="prodInspVO">
+  	SELECT prcm_cd, cpr_nm, prcm_start_dt, prcm_end_dt
+	FROM proc_command proc
+	    JOIN cm_product_mng cpr
+	        ON proc.cpr_cd = cpr.cpr_cd
+	WHERE 1=1
+	<if test="cprNm != null and !cprNm.equals('')">
+	AND cpr_nm LIKE '%' || #{cprNm} || '%'
+	</if>
+	<if test="start != null and !start.equals('') and end!= null and !end.equals('')">
+	AND prcm_end_dt BETWEEN #{start} AND #{end}
+	</if>
+	ORDER BY prcm_cd 
+  </select>
+  
+  <!-- 생산지시 상세 -->
+  <select id="procDetailList" resultType="prodInspVO">
+  	SELECT prpr.prcm_cd, cpr_nm, prpr_end, prpr.cm_cd,
+   		   prcm_qnt, prpr_qnt, prpr_bad,
+   		   prpe_mng, prpe_wk_start_dt, prpe_wk_end_dt
+	FROM proc_command pr
+	    JOIN proc_progress prpr
+	        ON pr.prcm_cd = prpr.prcm_cd
+	                JOIN CM_PROCESS_CODE cm
+	                    ON prpr.cm_cd = cm.cm_cd
+	                        JOIN cm_product_mng cpr
+	                            ON pr.cpr_cd = cpr.cpr_cd
+	                            	JOIN proc_perf prpe
+                                    	ON prpr.prcm_prcd = prpe.prcm_prcd
+	WHERE UPPER(pr.prcm_cd) = #{prcmCd}
+  </select>
 
   </mapper>

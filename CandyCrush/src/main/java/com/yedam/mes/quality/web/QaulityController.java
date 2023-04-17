@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yedam.mes.quality.service.QualityServcie;
 import com.yedam.mes.quality.service.vo.MtInspBadInsertVO;
-import com.yedam.mes.quality.service.vo.MtInspInsertVO;
+import com.yedam.mes.quality.service.vo.ProdInspVO;
 import com.yedam.mes.quality.service.vo.QualityMtTestVO;
 
 @Controller
@@ -47,13 +46,31 @@ public class QaulityController {
 
 	}
 	
+	//제품검사----------------------------------------------------------------------
 	//제품검사관리 페이지
+	//생산지시 리스트를 모달창으로 보여준다
 	@GetMapping("QualityProduct")
-	public String QualityProduct() {
+	public String QualityProduct(Model model) {
+		model.addAttribute("procProdList",qualityService.procProdList());
 		return "quality/QualityProdManagement";
+	};
+	
+	
+	//생산지시 리스트를 제품명기준으로 가져온다
+	@PostMapping("procProdAllList")
+	@ResponseBody
+	public List<ProdInspVO> prodIsEndDtNotNull(@RequestParam(required = false) String cprNm,
+												@RequestParam(required = false) String start,
+												@RequestParam(required = false) String end){
+		return qualityService.procPrprEndIsNAllList(cprNm, start, end);
+	};
+	
+	//생산지시를 기준으로 공정 상세를 가져온다
+	@PostMapping("procPrprDetailList")
+	@ResponseBody
+	public List<ProdInspVO> procPrprDetailList(@RequestParam String prcmCd){
+		return qualityService.procDetailList(prcmCd);
 	}
 	
-	
-
 	
 }
