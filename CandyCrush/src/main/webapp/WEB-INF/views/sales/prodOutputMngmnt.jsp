@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<script src="assets/js/sales/prodInputMngmnt/prodInputMngmntCall.js"></script>
+<script src="assets/js/sales/prodInputMngmnt/prodOutputMngmntCall.js"></script>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -11,7 +11,7 @@
 			<ol class="breadcrumb">
 				<li><a href="#">candy</a></li>
 				<li><a href="#">영업관리</a></li>
-				<li class="active">제품입고관리</li>
+				<li class="active">제품출고관리</li>
 			</ol>
 		</div>
 
@@ -44,7 +44,7 @@
 			</div> <!--END row-->
 			<div class="row">
 				<!-- 입고목록 그리드 -->
-				<div class="col-md-12">
+				<div class="col-md-7">
 					<div class="card">
 						<div>
 							<div class="card-action">▶입고목록</div>
@@ -62,10 +62,22 @@
 						</div>
 					</div>
 				</div><!-- End Lot 부여 테이블 -->
+				
+				<!-- 입고목록 테이블 -->
+				<div class="col-md-5">
+					<div class="card">
+						<div class="card-action">▶입고목록상세조회?</div>
+						<div class="card-content">
+							<div class="table-responsive">
+								<div id="mtrlInputList"></div>
+							</div>
+						</div>
+					</div> 
+				</div> <!--End 입고목록 테이블 -->
 			</div> <!--END row-->
 		</div>
 		<!-- /. PAGE INNER  -->
 	</div>
-	<script src="assets/js/sales/prodInputMngmnt/prodInputMngmntCntn.js"></script>
+	<script src="assets/js/sales/prodInputMngmnt/prodOutputMngmntCntn.js"></script>
 	
 </main>

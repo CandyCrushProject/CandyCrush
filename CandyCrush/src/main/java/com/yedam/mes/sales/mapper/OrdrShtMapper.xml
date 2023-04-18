@@ -158,7 +158,7 @@
 
 <!-- ================================================================================================================================== -->
 	<!-- 제품입고관리 페이지 입고대기 리스트 -->
-	<select id="prodInputList" resultType="ProdInOutPutVO">
+	<select id="prodInputListPage" resultType="ProdInOutPutVO">
 		SELECT prpr.prcm_prcd
 			 , proc.cpr_cd
 		     , cpm.cpr_nm
@@ -199,6 +199,36 @@
 	<insert id="prodWaitingListInsert" parameterType="ProdInOutPutVO" statementType="CALLABLE">
 		{call prod_store_pro(#{cprCd}, #{prprQnt}, #{inputMng}, #{prcmPrcd})}
 	</insert>
+	
+	<!-- 제품입고관리 입고된 제품 리스트 -->
+	<select id="prodInputList" resultType="ProdInOutPutVO">
+		SELECT pi.prod_rcv_no
+		     , pi.pls_no
+		     , pi.cpr_cd
+		     , cpm.cpr_nm
+		     , pi.pin_dt
+		     , pi.pin_cnt
+		     , pi.input_mng
+		  FROM PROD_INPUT pi JOIN cm_product_mng cpm
+		                       ON pi.cpr_cd = cpm.cpr_cd
+		 ORDER BY pin_dt DESC
+	</select>
+	
+	<!-- 제품입고관리 입고처리된 제품 리스트 날짜별 검색조회 -->
+	<select id="prodInputListSrchDt" resultType="ProdInOutPutVO">
+		SELECT pi.prod_rcv_no
+		     , pi.pls_no
+		     , pi.cpr_cd
+		     , cpm.cpr_nm
+		     , pi.pin_dt
+		     , pi.pin_cnt
+		     , pi.input_mng
+		  FROM PROD_INPUT pi JOIN cm_product_mng cpm
+		     v                  ON pi.cpr_cd = cpm.cpr_cd
+		 WHERE pin_dt = #{pinDt}
+		 ORDER BY pin_dt DESC
+	</select>
+	
 	
 	
 </mapper>

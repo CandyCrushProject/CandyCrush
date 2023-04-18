@@ -61,8 +61,9 @@ function accntSrch() {
     },
     error: function (rej) {
       Swal.fire({
+        icon: 'error',
         title: 'Error',
-        icon: 'error'
+        text: rej
       });
     }
   });
@@ -77,8 +78,8 @@ function accntSrch() {
     },
     error: function (rej) {
       Swal.fire({
-        title: 'Error',
         icon: 'error',
+        title: 'Error',
         text: rej
       });
     }
