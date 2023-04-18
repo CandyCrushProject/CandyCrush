@@ -19,6 +19,7 @@ public class ProcPlanVO {
 	private String cprNm; // 제품명
 	private int prpldCnt; // 생산계획수량
 	private String prstDt; // 생산작업일자
+	private String prcmStartDt; // 생산시작일자
 	private String prpldMng; // 담당자
 	private String prpldStatus; // 현재상황
 	

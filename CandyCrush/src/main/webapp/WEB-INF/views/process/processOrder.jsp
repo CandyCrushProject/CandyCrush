@@ -393,11 +393,53 @@
 							header: '생산지시수량',
 							name: 'prcmCnt',
 							align: 'center',
-							editor: 'text'
+							editor: 'text',
+							onAfterChange: function (data) { // 값이 변경되면 실행되는 함수
+								let tt = procGrid.getData();
+								let result = 0;
+
+								result = data.value * (tt[0].cbmtCnsm / 1000);
+								mtrlGrid.setValue(0, 'prmpPutQnt', result, false)
+
+								result = data.value * (tt[1].cbmtCnsm / 1000);
+								mtrlGrid.setValue(1, 'prmpPutQnt', result, false)
+
+								result = data.value * (tt[2].cbmtCnsm / 1000);
+								mtrlGrid.setValue(2, 'prmpPutQnt', result, false)
+
+								result = data.value * (tt[5].cbmtCnsm / 1000);
+								mtrlGrid.setValue(3, 'prmpPutQnt', result, false)
+
+								result = data.value * (tt[4].cbmtCnsm / 1000);
+								mtrlGrid.setValue(4, 'prmpPutQnt', result, false)
+
+
+							}
 						},
 						{
 							header: '생산시작일자',
 							name: 'prcmStartDt',
+							align: 'center',
+							formatter: function (data) {
+								let dateVal = '';
+								if (data.value != null) {
+									dateVal = formatDate(data.value);
+								} else {
+									dateVal = getToday();
+								}
+								return dateVal;
+							},
+							editor: {
+								type: 'datePicker',
+								options: {
+									format: 'yyyy-MM-dd',
+									date: getToday()
+								}
+							}
+						},
+						{
+							header: '생산종료일자',
+							name: 'prcmEndDt',
 							align: 'center',
 							formatter: function (data) {
 								let dateVal = '';
@@ -427,7 +469,6 @@
 
 				insertOrderFormGrid.on('click', function (ev) {
 					row = insertOrderFormGrid.getRow(ev.rowKey);
-					console.log(row);
 					getBom(row.cprCd);
 					setBom(row.cprCd);
 				});
@@ -479,12 +520,14 @@
 						{
 							header: '공정순서',
 							name: 'cmSq',
-							align: 'center'
+							align: 'center',
+							rowSpan: true
 						},
 						{
 							header: '공정명',
 							name: 'cmNm',
-							align: 'center'
+							align: 'center',
+							rowSpan: true
 						},
 						{
 							header: '자재명',
@@ -492,7 +535,7 @@
 							align: 'center'
 						},
 						{
-							header: '자재 소모량/1박스',
+							header: '자재소모량/1천개',
 							name: 'cbmtCnsm',
 							align: 'center',
 						},
@@ -546,16 +589,15 @@
 							align: 'center'
 						},
 						{
-							header: '자재BOM코드',
-							name: 'cbmtCd',
-							align: 'center'
-						},
-						{
-							header: '자재투입량',
+							header: '예상소모량/1천개',
 							name: 'prmpPutQnt',
 							align: 'center',
-							editor: 'text'
 						},
+						{
+							header: '자재단위',
+							name: 'cbmtMs',
+							align: 'center',
+						}
 					]
 				});
 

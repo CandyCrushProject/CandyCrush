@@ -94,25 +94,36 @@
 						</div>
 
 						<div class="row inpw">
-							<div class="col-md-12">
+							<div class="col-md-8">
 								<div class="card">
-									<div class="card-action">
+									<div class="card-action" style="padding-bottom: 0;">
 										<h3>생산계획등록</h3>
 									</div>
-									<div class="btnSet">
-										<button type="button" class="cndInsBtn hi" id="addPlanBtn">
-											<i class="fa-solid fa-plus"></i> 등록
-										</button>
-									</div>
-									<div class="clearBoth"></div>
-									<div class="card-content">
-
-										<input type="hidden" name="prpldStatus" id="prpldStatus" value="미지시" readonly>
-										<input type="hidden" name="prplStatus" id="prplStatus" value="계획완료" readonly>
+									<div class="card-content" style="padding-top: 0;">
+										<div class="btnSet">
+											<button type="button" class="cndInsBtn hi" id="addPlanBtn">
+												<i class="fa-solid fa-plus"></i> 등록
+											</button>
+										</div>
+										<div class="clearBoth"></div>
 										<h4>생산계획일자</h4>
 										<input type="date" name="prplDt" id="prplDt" value="" readonly>
 										<div id="insertPlanGrid"></div>
-
+									</div>
+									<div class="clearBoth">
+										<br />
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="card">
+									<div class="clearBoth"></div>
+									<div class="card-content">
+										<h4>자재재고현황</h4>
+										<div id="findMtrlCntSumGrid"></div>
+										<br>
+										<h4>자재LOT상세정보</h4>
+										<div id="findMtrlLotGrid"></div>
 									</div>
 									<div class="clearBoth">
 										<br />
@@ -152,7 +163,6 @@
 
 
 
-
 				// 날짜 포맷 변경 함수
 				function formatDate(time) {
 					var date = new Date(time);
@@ -183,7 +193,6 @@
 						list = {
 							orshNo: orshNoSet
 						};
-						console.log(list);
 
 						if (rows.length > 0) {
 							$.ajax({
@@ -217,7 +226,6 @@
 				});
 
 				function addUpdate() {
-					console.log(list);
 					$.ajax({
 						url: 'orderUpdate',
 						method: 'post',
@@ -301,7 +309,6 @@
 				orderSheetGrid.on('dblclick', function (ev) {
 
 					row = orderSheetGrid.getRow(ev.rowKey);
-					console.log(row);
 
 					getOrderDetail(row.orshNo, row.caNm);
 					$('#order').modal('show');
@@ -345,7 +352,8 @@
 						{
 							header: '거래처',
 							name: 'caNm',
-							align: 'center'
+							align: 'center',
+							rowSpan: true
 						},
 						{
 							header: '주문수량',
@@ -355,7 +363,8 @@
 						{
 							header: '현재상태',
 							name: 'orshPr',
-							align: 'center'
+							align: 'center',
+							rowSpan: true
 						},
 					]
 				});
@@ -385,30 +394,31 @@
 						},
 						{
 							header: '생산계획수량',
-							editor: 'text',
 							name: 'prpldCnt',
 							align: 'center',
+							editor: 'text',
 						},
-						// {
-						// 	header: '생산작업일자',
-						// 	name: 'prstDt',
-						// 	formatter: function (data) {
-						// 		let dateVal = '';
-						// 		if (data.value != null) {
-						// 			dateVal = formatDate(data.value);
-						// 		} else {
-						// 			dateVal = getToday();
-						// 		}
-						// 		return dateVal;
-						// 	},
-						// 	editor: {
-						// 		type: 'datePicker',
-						// 		options: {
-						// 			format: 'yyyy-MM-dd',
-						// 			date: getToday()
-						// 		}
-						// 	}
-						// },
+						{
+							header: '생산시작일자',
+							name: 'prcmStartDt',
+							align: 'center',
+							formatter: function (data) {
+								let dateVal = '';
+								if (data.value != null) {
+									dateVal = formatDate(data.value);
+								} else {
+									dateVal = getToday();
+								}
+								return dateVal;
+							},
+							editor: {
+								type: 'datePicker',
+								options: {
+									format: 'yyyy-MM-dd',
+									date: getToday()
+								}
+							}
+						},
 						{
 							header: '계획관리자',
 							name: 'prplMng',
@@ -417,5 +427,103 @@
 						}
 					]
 				});
+				let mtrlCprCd = [];
+				addOrderPlanGrid.on('click', function (ev) {
+					let rkInfo = addOrderPlanGrid.getRow(ev.rowKey)
+
+					mtrlCprCd = {
+						cprCd: rkInfo.cprCd
+					};
+					findMtrlCntSum();
+				});
+
+				function findMtrlCntSum() {
+					$.ajax({
+						url: 'findMtrlCntSum',
+						method: 'post',
+						data: JSON.stringify(mtrlCprCd),
+						contentType: 'application/json',
+						dataType: 'json',
+						success: function (data) {
+							findMtrlCntSumGrid.resetData(data);
+							findMtrlLot();
+						}, error: function (rej) {
+							console.log("안되는데요?")
+						}
+					});
+				}
+
+				function findMtrlLot() {
+					$.ajax({
+						url: 'findMtrlLot',
+						method: 'post',
+						data: JSON.stringify(mtrlCprCd),
+						contentType: 'application/json',
+						dataType: 'json',
+						success: function (data) {
+							findMtrlLotGrid.resetData(data);
+						}, error: function (rej) {
+							console.log("안되는데요?")
+						}
+					});
+				}
+
+				// 선택한 제품의 재고를 보여줌
+				const findMtrlCntSumGrid = new tui.Grid({
+					el: document.getElementById('findMtrlCntSumGrid'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					columns: [
+						{
+							header: '제품코드',
+							name: 'cprCd',
+							hidden: true
+						},
+						{
+							header: '제품명',
+							name: 'cprNm',
+							align: 'center'
+						},
+						{
+							header: '재고수량',
+							name: 'plsCntSum',
+							align: 'center',
+						},
+					]
+				});
+
+				// 해당 제품의 로트(입고)별로 나누어보여줌
+				const findMtrlLotGrid = new tui.Grid({
+					el: document.getElementById('findMtrlLotGrid'),
+					scrollX: false,
+					scrollY: false,
+					minBodyHeight: 30,
+					rowHeaders: ['rowNum'],
+					columns: [
+						{
+							header: '제품코드',
+							name: 'cprCd',
+							hidden: true
+						},
+						{
+							header: '제품명',
+							name: 'cprNm',
+							hidden: true
+						},
+						{
+							header: '자재LOT',
+							name: 'plsNo',
+							align: 'center',
+						},
+						{
+							header: '자재LOT수량',
+							name: 'plsCnt',
+							align: 'center',
+						},
+					]
+
+				});
+
 
 			</script>

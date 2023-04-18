@@ -23,7 +23,7 @@
 						<li>
 							<sec:authorize access="isAuthenticated()">
 								<form action="${pageContext.request.contextPath}/logout" method="post">
-									<a class="waves-effect waves-dark" href="#!"
+									<a class="waves-effect waves-dark" href="${pageContext.request.contextPath}/logout"
 										style="color: black; position: relative; bottom: 23px; text-decoration-line: none;">
 										<i class="fa fa-sign-out fa-fw"></i>
 										<b>로그아웃</b>

@@ -114,22 +114,20 @@ public class procServiceImpl implements ProcService {
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO) {
 		return procMapper.searchPlanList(ppVO);
 	}
+
+	@Override
+	public List<OrderPlanVO> findMtrlCntSum(OrderPlanVO opVO) {
+		return procMapper.findMtrlCntSum(opVO);
+	}
+
+	@Override
+	public List<OrderPlanVO> findMtrlLot(OrderPlanVO opVO) {
+		return procMapper.findMtrlLot(opVO);
+	}
+
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	//V이거 왜 맨아래있음 누구꺼?
 	
 	@Override
@@ -218,7 +216,6 @@ public class procServiceImpl implements ProcService {
 		}
 		return r;
 	}
-
 
 
 
