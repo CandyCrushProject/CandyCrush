@@ -48,4 +48,14 @@
 		</if>
 		ORDER BY cm_sq
 	</select>
+	
+	<!-- 공정모달 -->
+	<select id="cmModalList" resultType="BomVO">
+		SELECT * FROM cm_process_code
+	</select>
+	
+	<!-- 자재모달 -->
+	<select id="cmmModalList" resultType="MaterialVO">
+		SELECT * FROM cm_mtrl_mng
+	</select>
 </mapper>

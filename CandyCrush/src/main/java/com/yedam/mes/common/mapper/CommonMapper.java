@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.yedam.mes.common.service.vo.BomVO;
+import com.yedam.mes.material.service.MaterialVO;
 
 public interface CommonMapper {
 	//제품전체리스트
@@ -15,4 +16,9 @@ public interface CommonMapper {
 	
 	//BOM디테일리스트
 	public List<BomVO> prodBomDetailList(@Param("cprNm") String cprNm);
+	
+	//공정 모달
+	public List<BomVO> cmModalList();
+	
+	public List<MaterialVO> cmmModalList();
 }
