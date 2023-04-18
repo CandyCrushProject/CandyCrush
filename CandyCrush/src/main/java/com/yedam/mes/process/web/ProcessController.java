@@ -298,4 +298,12 @@ public class ProcessController {
 	public List<ProcResultAllVO> selectProcMtrl(@Param("prcmPrcd") String prcmPrcd){
 		return procService.selectProcMtrl(prcmPrcd);
 	};
+	
+	@PostMapping("insertResult")
+	@ResponseBody
+	public int selectProcMtrl(@RequestBody List<ProcResultAllVO> FinishVO){
+		return procService.insertResult(FinishVO);
+	};
+	
+	
 }

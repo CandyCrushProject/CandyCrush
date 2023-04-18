@@ -455,14 +455,10 @@
 	
 	<update id="insertResult" parameterType="ProcResultAllVO">
 	UPDATE PROC_PERF
-	SET (PRPE_WK_END_DT,
-	    PRPE_AMNT_WK,
-	    PRPE_PROD,
-	    PRPE_BAD_QNT)=
-	    (#{prpeWkEndDt},
-	    #{prpeAmntWk},
-	    #{prpeProd},
-	    #{prpeBadQnt})
+	SET PRPE_WK_END_DT = #{prpeWkEndDt},
+	    PRPE_AMNT_WK = #{prpeAmntWk},
+	    PRPE_PROD =  #{prpeProd},
+	    PRPE_BAD_QNT = #{prpeBadQnt}
 	WHERE PRPE_CD=#{prpeCd}
 	</update>
 	
@@ -500,8 +496,14 @@
 	ON P.CMM_CD=M.CMM_CD
 	WHERE PRCM_PRCD=#{prcmPrcd}
 	</select>
-
-
+	
+	<update id="updateProcProg" parameterType="ProcResultAllVO">
+	UPDATE PROC_PROGRESS 
+	SET 
+	    PRPR_QNT=(NVL(PRPR_QNT,0)+TO_NUMBER(#{prpeProd})),
+	    PRPR_BAD=(NVL(PRPR_BAD,0)+TO_NUMBER(#{prpeBadQnt}))
+	where PRCM_PRCD=#{prcmPrcd}
+	</update>
 
 
 
