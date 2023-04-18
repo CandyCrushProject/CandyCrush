@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.yedam.mes.common.mapper.CommonMapper;
 import com.yedam.mes.common.service.CommonService;
 import com.yedam.mes.common.service.vo.BomVO;
+import com.yedam.mes.material.service.MaterialVO;
 @Service
 public class CommonServiceImpl implements CommonService {
 
@@ -31,5 +32,16 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	public List<BomVO> prodBomDetailList(@Param("cprNm") String cprNm) {
 		return mapper.prodBomDetailList(cprNm);
+	}
+
+	//공정 모달
+	@Override
+	public List<BomVO> cmModalList() {
+		return mapper.cmModalList();
+	}
+
+	@Override
+	public List<MaterialVO> cmmModalList() {
+		return mapper.cmmModalList();
 	}
 }

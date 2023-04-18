@@ -20,6 +20,8 @@ public class CommonController {
 	
 	@GetMapping("bomCheck")
 	public String bomCheck(Model model) {
+		model.addAttribute("cmModalList", service.cmModalList());
+		model.addAttribute("cmmModalList", service.cmmModalList());
 		return "common/bomCheck";
 	};
 	
@@ -40,4 +42,6 @@ public class CommonController {
 	public List<BomVO> bomDetailList(@RequestParam(required = false) String cprNm){
 		return service.prodBomDetailList(cprNm);
 	}
+	
+	
 }
