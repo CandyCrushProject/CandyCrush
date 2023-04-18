@@ -24,7 +24,7 @@
 
 <main>
 
-
+  
   <div id="procInsertModal" class="w3-modal" style="z-index: 101">
     <div class="w3-modal-content">
       <div class="w3-container">
@@ -48,6 +48,7 @@
                         <tr style="display: none;">
                           <input type="text" name="prcmPrcd" id="prcmPrcd" required readonly>
                           <input type="text" name="cmCd" id="cmCd" required readonly>
+                          <input type="text" name="prcmCd" id="prcmCd" required readonly>
                         </tr>
                         <!-- ========================= -->
                         <tr>
@@ -115,6 +116,7 @@
                   <table class="candyTab">
                     <tbody>
                       <tr style="display: none;">
+                        <input type="text" name="prcmPrcdF" id="prcmPrcdF" required readonly>
                         <input type="text" name="prpeCdF" id="prpeCdF" required readonly>
                         <input type="text" name="cmCd" id="cmCdF" required readonly>
                       </tr>
@@ -140,7 +142,7 @@
                       </tr>
                       <tr>
                         <th>생산량</th>
-                        <th>불량량</th>
+                        <th>불량량(하단 불량목록에서 작성)</th>
                       </tr>
                       <tr>
                         <td><input type="number" placeholder="생산량" name="" id="makeQnt" value=""></td>
@@ -225,8 +227,6 @@
             <div class="card-action">공정현황조회
               <br>
               <div>
-                <table class="candyTab">
-                </table>
               </div>
             </div>
             <div class="card-content">
@@ -287,7 +287,7 @@ const Grid = tui.Grid;
 Grid.setLanguage('ko');//생산지시 조회
     const ProcOdList = new Grid({
       el: document.getElementById('ProcOrderListGrid'), // Container element
-      data: null,//나중에 데이타 넣어!
+      data: null,
       columns: [
       { 
             header: '생산지시코드', //==========================코드숨겨놓음
@@ -477,6 +477,7 @@ Grid.setLanguage('ko');//생산지시 조회
     ProcOdList.on("dblclick", (e) => {
 			const rowData = ProcOdList.getRow(e.rowKey);
 			getProc(rowData.prcmCd);
+      prcmCd.value = rowData.prcmCd;
 		});
 
     //공정리스트에서 클릭하면 모달창 필요한정보 넘겨서띄우기
@@ -609,6 +610,7 @@ Grid.setLanguage('ko');//생산지시 조회
 			const rowDataF = ProcProgList.getRow(e.rowKey);
       selectProcMtrl(rowDataF.prcmPrcd);
       //모달 정보 업데이트
+      prcmPrcdF.value=rowDataF.prcmPrcd;
       prpeCdF.value=rowDataF.prpeCd;
       cmCdF.value=rowDataF.cmCd;
       cmNmF.value=rowDataF.cmNm;
@@ -859,25 +861,41 @@ const badCdList = new Grid({
     //실적 INSERT가즈아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
 
     function insertResult(){
-      prcmPrcdF.value 
-      prpeWkEndDtF.value
-      makeQnt.value
-      badQntF.value
-      doneQnt.value
       let badData=badCdInsertList.getData();
-      console.log(badData.length)
-      for(let i=0;i<badData.length;i++){
-      badData[i].prpeWkEndDt=prpeWkEndDtF.value;
-      badData[i].prpeProd=makeQnt.value;
-      badData[i].prpeBadQnt=badQntF.value;
-      badData[i].prpeAmntWk=doneQnt.value;
+      console.log(badData);
+      if (badData.length==0)
+      {
+        badData=[];
+        var badDataInsertData = new Object();
+        console.log(prpeCdF.value);
+        badDataInsertData.prpeCd=prpeCdF.value;
+        badDataInsertData.prpeWkEndDt=prpeWkEndDtF.value;
+        badDataInsertData.prpeProd=makeQnt.value;
+        badDataInsertData.prpeBadQnt=badQntF.value;
+        badDataInsertData.prpeAmntWk=doneQnt.value;
+        badDataInsertData.prcmPrcd=prcmPrcdF.value;
+        badData.push(badDataInsertData);
+        console.log(badData);
       }
-      
+      else{
+        for(let i=0;i<badData.length;i++){//최소한개의 열만들기
+        console.log(prpeCdF.value);
+        badData[i].prpeCd=prpeCdF.value;
+        badData[i].prpeWkEndDt=prpeWkEndDtF.value;
+        badData[i].prpeProd=makeQnt.value;
+        badData[i].prpeBadQnt=badQntF.value;
+        badData[i].prpeAmntWk=doneQnt.value;
+        badData[i].prcmPrcd=prcmPrcdF.value;
+        console.log(badData);
+      }
+    };
+
       console.log(badData);
       $.ajax({
         type : 'post',
         url : 'insertResult',
-        data : badData,
+        contentType: 'application/json',
+        data : JSON.stringify(badData),
         dataType : 'json',
         error: function(xhr, status, error){
           Swal.fire({
@@ -887,13 +905,16 @@ const badCdList = new Grid({
 				});
         },
         success : function(data){
+          
           Swal.fire({
 					icon: 'success',
 					title: '입력완료 수고하셨습니다',
 					text: '작업코드'
 				  });
-          document.getElementById('procInsertModal').style.display='none';
+          document.getElementById('procFinishModal').style.display='none'
+
           setTimeout(()=>getProcProg(), 100);
+          setTimeout(()=>getProc(prcmCd.value),100);
         }
       });
 

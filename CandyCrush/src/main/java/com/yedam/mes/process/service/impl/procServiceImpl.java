@@ -179,7 +179,23 @@ public class procServiceImpl implements ProcService {
 		return procMapper.selectProcMtrl(prcmPrcd);
 	}
 	
-	
+	@Override
+	public int insertResult(List<ProcResultAllVO> finishVO) {
+		// TODO Auto-generated method stub
+		int result=0;
+		for(int i =0;i<finishVO.size();i++) {
+			if (i==0) {
+				result+=procMapper.insertResult(finishVO.get(0));
+				result+=procMapper.updateProcProg(finishVO.get(0));
+			}
+			if(finishVO.get(i).getBadQnt()>0) {
+				result+=procMapper.insertBad(finishVO.get(i));
+			}
+		}
+		return result;
+	}
+
+
 	
 	
 //================================================================
@@ -202,6 +218,8 @@ public class procServiceImpl implements ProcService {
 		}
 		return r;
 	}
+
+
 
 
 

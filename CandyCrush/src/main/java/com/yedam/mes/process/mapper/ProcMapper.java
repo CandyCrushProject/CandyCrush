@@ -113,7 +113,8 @@ public interface ProcMapper {
 	public int startProg(ProcResultAllVO startVO);
 	public List<ProcResultAllVO> getBadCd();
 	public List<ProcResultAllVO> selectProcMtrl(@Param("prcmPrcd") String prcmPrcd);
-	
-	
+	public int insertResult(ProcResultAllVO finishVO);
+	public int insertBad(ProcResultAllVO finishVO);
+	public int updateProcProg(ProcResultAllVO finishVO);
 	/* 생산공정 매퍼 끝 */
 }

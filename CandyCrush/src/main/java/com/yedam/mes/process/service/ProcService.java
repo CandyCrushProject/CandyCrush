@@ -138,6 +138,7 @@ public interface ProcService {
 	public int startProg(ProcResultAllVO startVO);
 	public List<ProcResultAllVO> getBadCd();
 	public List<ProcResultAllVO> selectProcMtrl(@Param("prcmPrcd") String prcmPrcd);
+	public int insertResult(List<ProcResultAllVO> finishVO);
 	
 	
 	
