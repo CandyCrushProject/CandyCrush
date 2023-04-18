@@ -191,6 +191,7 @@ public class MaterialController {
 		return response;
 	};
 	
+	//상태업데이트
 	@PostMapping("moSttUpdate")
 	@ResponseBody
 	public Boolean moSttUpdate(@RequestBody MaterialInputVO vo) {

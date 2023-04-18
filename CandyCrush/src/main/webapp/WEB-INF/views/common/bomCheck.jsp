@@ -23,11 +23,11 @@
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
 		<div class="header">
-			<h1 class="page-header">BOM관리</h1>
+			<h1 class="page-header">BOM조회</h1>
 			<ol class="breadcrumb">
 				<li><a href="#">candy</a></li>
 				<li><a href="#">공통관리</a></li>
-				<li class="active">BOM관리</li>
+				<li class="active">BOM조회</li>
 			</ol>
 		</div>
 

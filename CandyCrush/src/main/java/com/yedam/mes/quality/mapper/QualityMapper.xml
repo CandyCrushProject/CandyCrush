@@ -117,8 +117,12 @@
 	        ON proc.cpr_cd = cpr.cpr_cd
 	        	LEFT OUTER JOIN prdct_inspc pi
 	        		ON proc.prcm_cd = pi.prcm_cd
+                        JOIN PROC_PROGRESS prpr
+                            ON proc.prcm_cd = prpr.prcm_cd
 	WHERE prcm_end_dt IS NOT NULL
 	AND pi_cd IS NULL
+    AND PRPR_END = 'Y'
+    AND PRCM_TURN = '5'
 	<if test="cprNm != null and !cprNm.equals('')">
 	AND cpr_nm LIKE '%' || #{cprNm} || '%'
 	</if>
@@ -161,9 +165,58 @@
 	                    #{piCnt}, #{piBadCnt}, #{piPassCnt}, #{cprCd}, #{piNote}
 	                )           
   </insert>
-
-
-
+  
+  <update id="prodInspUpdate" parameterType="ProdInsertTestVO">
+  	UPDATE
+		PROC_PROGRESS
+	SET
+		PRCM_QNT = #{piCnt},
+		PRPR_QNT = #{piPassCnt},
+		PRPR_BAD = #{piBadCnt},
+		PRPR_END = 'Y'
+	WHERE
+		PRCM_CD = #{prcmCd}
+	AND
+		PRCM_TURN = '6'
+  </update>
+  
+  <insert id="procPeRfInsert" parameterType="ProdInsertTestVO">
+  	INSERT INTO PROC_PERF (
+	    PRPE_CD,
+	    PRCM_PRCD,
+	    PRPE_MNG,
+	    PRPE_WK_START_DT,
+	    PRPE_WK_END_DT,
+	    PRPE_AMNT_WK,
+	    CM_CD,
+	    PRPE_PROD,
+	    PRPE_BAD_QNT,
+	    FAC_CD
+	)
+	VALUES(
+	    (SELECT 'PRPE'||MAX(TO_NUMBER((NVL(SUBSTR(PRPE_CD,5),'1'))+1)) FROM PROC_PERF),
+	    (SELECT max(prcm_prcd) prcm_prcd FROM proc_progress WHERE prcm_cd = #{prcmCd}),
+	    #{piMng},
+	    #{piStrDt},
+	    #{piEndDt},
+	    #{piCnt},
+	    'cmprcd006',
+	    #{piPassCnt},
+	    #{piBadCnt},
+	    'fac6'
+	)
+  </insert>
+	
+  <!-- 공정지시코드 테이블 UPDATE -->
+ <update id="procProgUpdate" parameterType="ProdInsertTestVO" statementType="CALLABLE">
+ 	{ call proc_prpr_up(
+		        #{prcmCd, mode=IN, jdbcType=VARCHAR, javaType=String},
+		        #{piCnt},
+		        #{piBadCnt},
+		        #{piPassCnt}
+		       )
+	}
+ </update>
 
 
 

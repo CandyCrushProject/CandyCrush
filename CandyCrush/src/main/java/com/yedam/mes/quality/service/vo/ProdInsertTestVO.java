@@ -15,4 +15,8 @@ public class ProdInsertTestVO {
 	private int piPassCnt; // 합격량
 	private String cprCd; // 제품코드
 	private String piNote; // 비고
+	
+	private String prprEnd;
+	private String prpeCd;
+	
 }

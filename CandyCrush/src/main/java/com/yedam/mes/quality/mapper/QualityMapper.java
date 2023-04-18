@@ -25,6 +25,13 @@ public interface QualityMapper {
 	public List<ProdInspVO> procProdList();
 	public List<ProdInspVO> procPrprEndIsNAllList(@Param("cprNm") String cprNm, @Param("start") String start, @Param("end") String end);
 	public List<ProdInspVO> procDetailList(@Param("prcmCd") String prcmCd);
-	//검수DB INSERT
+	//검수DB INSERT, UPDATE
 	public int prodInspInsert(ProdInsertTestVO vo);
+	public int prodInspUpdate(ProdInsertTestVO vo);
+	
+	//공정실적 INSERT
+	public int procPeRfInsert(ProdInsertTestVO vo);
+	
+	//쓰는거임? 아니 안쓰는거임
+	public int procProgUpdate(ProdInsertTestVO vo);
 }
