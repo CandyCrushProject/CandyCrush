@@ -22,14 +22,18 @@
 					<ul class="nav navbar-top-links navbar-right">
 						<li>
 							<sec:authorize access="isAuthenticated()">
-								<form action="logout" method="post">
-									<i class="fa fa-sign-out fa-fw"></i> Logout
+								<form action="${pageContext.request.contextPath}/logout" method="post">
+									<a class="waves-effect waves-dark" href="#!"
+										style="color: black; position: relative; bottom: 23px; text-decoration-line: none;">
+										<i class="fa fa-sign-out fa-fw"></i>
+										<b>로그아웃</b>
+									</a>
 								</form>
 							</sec:authorize>
 						</li>
 						<li>
 							<a class="waves-effect waves-dark" href="#!">
-								<i class="fa fa-user fa-fw"></i> <b>John Doe</b></a>
+								<i class="fa fa-user fa-fw"></i> <b>관리자</b></a>
 						</li>
 					</ul>
 				</nav>
