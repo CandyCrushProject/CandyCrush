@@ -477,7 +477,7 @@
 					item.piBadCnt = item.prprBad	//불량수량
 					item.piStrDt = timeString;		//검사시작시간
 				});
-
+				console.log(JSON.stringify(checkRows));
 				//console.log(checkRows);
 				$.ajax({
 					url : "procPrprDetailList",
