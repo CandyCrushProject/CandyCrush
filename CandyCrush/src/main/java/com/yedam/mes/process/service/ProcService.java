@@ -136,7 +136,8 @@ public interface ProcService {
 	public List<ProcResultAllVO> getProcFac(@Param("prcmPrcd") String prcmPrcd);
 	public List<ProcResultAllVO> getProcProg();
 	public int startProg(ProcResultAllVO startVO);
-	
+	public List<ProcResultAllVO> getBadCd();
+	public List<ProcResultAllVO> selectProcMtrl(@Param("prcmPrcd") String prcmPrcd);
 	
 	
 	

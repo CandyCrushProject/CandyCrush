@@ -37,7 +37,7 @@
           <div class="row">
             <div class="col-md-16">
               <div class="card">
-                <div class="card-action">공정작업등록
+                <div class="card-action">작업시작등록
                   
                 </div>
                 <div class="card-content">
@@ -86,6 +86,11 @@
               </div>
             </div>
           </div>
+          
+
+          
+
+
       </div>
     </div>
   </div>
@@ -103,14 +108,14 @@
           <div class="row">
             <div class="col-md-16">
               <div class="card">
-                <div class="card-action">공정작업등록
-                  <button onclick="" style="display: inline;" class="cndInsBtn">작업시작</button>
+                <div class="card-action">작업종료등록
+                  <button onclick="insertResult()" style="display: inline;" class="cndInsBtn">작업완료</button>
                 </div>
                 <div class="card-content">
                   <table class="candyTab">
                     <tbody>
                       <tr style="display: none;">
-                        <input type="text" name="prcmPrcd" id="prcmPrcdF" required readonly>
+                        <input type="text" name="prpeCdF" id="prpeCdF" required readonly>
                         <input type="text" name="cmCd" id="cmCdF" required readonly>
                       </tr>
                       <tr>
@@ -131,15 +136,15 @@
                       </tr>
                       <tr>
                         <td><input type="text" name="" id="prpeMngF" value="" placeholder="담당자 이름" readonly></td>
-                        <td><input type="number" placeholder="작업량" name="" id="" value="" readonly></td>
+                        <td><input type="number" placeholder="작업량" name="" id="doneQnt" value="" readonly></td>
                       </tr>
                       <tr>
                         <th>생산량</th>
                         <th>불량량</th>
                       </tr>
                       <tr>
-                        <td><input type="number" placeholder="생산량" name="" id="" value=""></td>
-                        <td><input type="number" placeholder="불량량" name="" id="" value=""></td>
+                        <td><input type="number" placeholder="생산량" name="" id="makeQnt" value=""></td>
+                        <td><input type="number" placeholder="불량량" name="" id="badQntF" value="" readonly></td>
                       </tr>
                       <tr>
                         <th>작업시작일</th>
@@ -158,6 +163,34 @@
               </div>
             </div>
           </div>
+
+          <h2 id="modalCmm">불량등록</h2>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-action">불량항목</div>
+              <div class="card-content">
+                <div class="table-responsive">
+                  <div id="badCdListGrid"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-action">검사항목 </div>
+                <div class="card-content">
+                  <div class="table-responsive">
+                    <div id="badCdListInsertGrid"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
       </div>
     </div>
   </div>
@@ -303,7 +336,7 @@ Grid.setLanguage('ko');//생산지시 조회
         perPage: 30
           }
     });
-
+    //생산지시 리스트 불러오기
     function getProcOrderList(){
       $.ajax({
         url : "getProcCommand",
@@ -324,6 +357,7 @@ Grid.setLanguage('ko');//생산지시 조회
       })
     }
     getProcOrderList(); //시작시조회
+
 //====공정지시조회==================================================
     const ProcList = new Grid({
       el: document.getElementById('ProcessGrid'), // Container element
@@ -498,7 +532,7 @@ Grid.setLanguage('ko');//생산지시 조회
         },
         {
           header: '공정지시코드', //공정코드숨겨놨음====================== 
-          name: 'prpePrcd',
+          name: 'prcmPrcd',
           sortable: true,
           hidden: true,
         },
@@ -559,7 +593,6 @@ Grid.setLanguage('ko');//생산지시 조회
         async : false,
         
         success : function(data){
-          console.log(data +"진행공정 가져옴");
           ableFacData=data;
           ProcProgList.resetData(data);
         },
@@ -574,18 +607,20 @@ Grid.setLanguage('ko');//생산지시 조회
     //진행중 공정 더블클릭으로 해당공정 모달띄우기
     ProcProgList.on("dblclick", (e) => {
 			const rowDataF = ProcProgList.getRow(e.rowKey);
+      selectProcMtrl(rowDataF.prcmPrcd);
       //모달 정보 업데이트
-      prcmPrcdF.value=rowDataF.prpeCd;
+      prpeCdF.value=rowDataF.prpeCd;
       cmCdF.value=rowDataF.cmCd;
       cmNmF.value=rowDataF.cmNm;
       cprNmF.value=rowDataF.cprNm;
       usedFac.value=rowDataF.facNm;
       prpeMngF.value=rowDataF.prpeMng;
-      console.log(rowDataF.prpeWkStartDt);
       prpeWkStartDtF.value =formatTimestamp(rowDataF.prpeWkStartDt);
       resetTime(prpeWkEndDtF);
-      console.log(formatTimestamp(rowDataF.prpeWkStartDt));
       document.getElementById('procFinishModal').style.display='block';
+      getBadCd();
+      
+      setTimeout(()=>refreshModalGrid(), 100);
 		});
 
 //=========================================================
@@ -675,21 +710,258 @@ Grid.setLanguage('ko');//생산지시 조회
 
 
 
+//불량코드 리스트 그리드================================================================
+const badCdList = new Grid({
+      el: document.getElementById('badCdListGrid'), // Container element
+      data: null,//나중에 데이타 넣어!
+      columns: [
+        {
+            header: '불량코드', //===숨겨
+            name: 'prbdCd',
+            sortingType: 'asc',
+            sortable: true,
+            hidden:true
+        },
+        {
+            header: '불량명', 
+            name: 'prbdNm',
+            sortingType: 'asc',
+            sortable: true,
+        },
+        {
+            header: '불량상세', 
+            name: 'prbdCtt',
+            sortingType: 'asc',
+            sortable: true,
+        },
+      ],
+      bodyHeight: 500,
+      pageOptions: {
+        useClient: true,
+        type: 'scroll',
+        perPage: 30
+          }
+    });
+    //모달 GRID 리프래쉬
+    function refreshModalGrid(){
+      badCdList.refreshLayout();
+      badCdInsertList.refreshLayout();
+    }
+    //불량코드 리스트 불러오기
+    function getBadCd(){
+      $.ajax({
+        url : "getBadCd",
+        method :"GET",
+        async : false,
+        dataType : "JSON",
+        
+        success : function(data){
+          badCdList.clear();
+          badCdList.resetData(data);
+        },
+        error : function(reject){
+          console.log(reject);
+          console.log("통신오류");
+        },
+      })
+    }
+
+    //넣을 불량코드 그리드
+
+    let MtrlList = [];
+    const badCdInsertList = new Grid({
+      el: document.getElementById('badCdListInsertGrid'), // Container element
+      data: null,//나중에 데이타 넣어!
+      columns: [
+        {
+            header: '불량코드', //===숨겨
+            name: 'prbdCd',
+            sortingType: 'asc',
+            sortable: true,
+            hidden:true
+        },
+        {
+            header: '불량명', 
+            name: 'prbdNm',
+            sortingType: 'asc',
+            sortable: true,
+        },
+        {
+            header: '불량수', 
+            name: 'badQnt',
+            sortingType: 'asc',
+            sortable: true,
+            editor: 'text'
+        },
+        {
+        header: '자재',
+        name: 'cmmCd',
+        formatter: 'listItemText',
+        editor: {
+          type: 'select',
+          options: {
+            listItems: MtrlList,
+            }
+          }
+        }
+      ],
+      summary: {
+        position: 'bottom',
+        height: 20,  // by pixel
+        columnContent: {
+          badQnt: {
+            template(valueMap) {
+              return '불량합계'+valueMap.sum;
+            }
+          },
+        }
+      },
+      bodyHeight: 500,
+      pageOptions: {
+        useClient: true,
+        type: 'scroll',
+        perPage: 30
+          }
+    });
+    //불량코드 그리드 >> 블량 인서트그리드 옮겨넣기
+    badCdList.on("dblclick", (e) => {
+			const rowData = badCdList.getRow(e.rowKey);
+			//자재목록 Grid에 행이 없으면 해당 값을 집어넣고,	
+			//자재목록 Grid에 행이 하나라도 있으면 경고창을 띄운다
+			if (badCdInsertList.getRow(e.rowKey) == null) {
+				rowData.badQnt = 0;		//불량수량
+				badCdInsertList.appendRow(rowData);
+        badCdInsertList.sort("prbdNm", true); 
+			} else {
+				Swal.fire({
+					icon: 'warning',
+					title: '경고',
+					text: "(" + rowData.prbdCd + ")" + rowData.prbdNm + "은(는) 이미 있습니다.",
+				});
+			}
+		});
+
+    //인풋리스트 변형완료했을때 보여주는값 바꿔주기위한 트리거
+    makeQnt.addEventListener('input', BadInputValueEvent);
+    badCdInsertList.on("editingFinish",(e)=>{
+      BadInputValueEvent();
+    });
+
+    //value값 바뀔때마다 호출할 event
+    function BadInputValueEvent(){
+      console.log("이벤트일어남 생산량"+makeQnt.value);
+      console.log("이벤트일어남 불량량"+badCdInsertList.getSummaryValues('badQnt').sum);
+      doneQnt.value = parseInt(badCdInsertList.getSummaryValues('badQnt').sum)+parseInt(makeQnt.value);
+      badQntF.value = parseInt(badCdInsertList.getSummaryValues('badQnt').sum);
+    }
 
 
+    //실적 INSERT가즈아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
+
+    function insertResult(){
+      prcmPrcdF.value 
+      prpeWkEndDtF.value
+      makeQnt.value
+      badQntF.value
+      doneQnt.value
+      let badData=badCdInsertList.getData();
+      console.log(badData.length)
+      for(let i=0;i<badData.length;i++){
+      badData[i].prpeWkEndDt=prpeWkEndDtF.value;
+      badData[i].prpeProd=makeQnt.value;
+      badData[i].prpeBadQnt=badQntF.value;
+      badData[i].prpeAmntWk=doneQnt.value;
+      }
+      
+      console.log(badData);
+      $.ajax({
+        type : 'post',
+        url : 'insertResult',
+        data : badData,
+        dataType : 'json',
+        error: function(xhr, status, error){
+          Swal.fire({
+            icon: 'error',
+						title: '경고',
+						text: "입력실패",
+				});
+        },
+        success : function(data){
+          Swal.fire({
+					icon: 'success',
+					title: '입력완료 수고하셨습니다',
+					text: '작업코드'
+				  });
+          document.getElementById('procInsertModal').style.display='none';
+          setTimeout(()=>getProcProg(), 100);
+        }
+      });
+
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-
+    //사용자재 불러오기
+    
+    function selectProcMtrl(prcmPrcdM){
+      $.ajax({
+        type : 'post',
+        url : 'selectProcMtrl',
+        data : {prcmPrcd:prcmPrcdM},
+        dataType : "JSON",
+        error: function(xhr, status, error){
+          Swal.fire({
+            icon: 'error',
+						title: '경고',
+						text: "입력실패",
+				});
+        },
+        success : function(data){
+          MtrlList=[];
+          for(i=0;i<data.length;i++){
+            let mtrlData =new Object;
+            mtrlData.text=data[i].cmmNm;
+            mtrlData.value=data[i].cmmCd;
+            MtrlList.push(mtrlData);
+          }
+          //동적칼럼 지원안한데 개시ㅏ버라버라버ㅏㄹㄹㄹㄹㄹㄹㄹㄹㄹ 
+          badCdInsertList.setColumns(
+                          [
+                      {
+                          header: '불량코드', //===숨겨
+                          name: 'prbdCd',
+                          sortingType: 'asc',
+                          sortable: true,
+                          hidden:true
+                      },
+                      {
+                          header: '불량명', 
+                          name: 'prbdNm',
+                          sortingType: 'asc',
+                          sortable: true,
+                      },
+                      {
+                          header: '불량수', 
+                          name: 'badQnt',
+                          sortingType: 'asc',
+                          sortable: true,
+                          editor: 'text'
+                      },
+                      {
+                      header: '자재',
+                      name: 'cmmCd',
+                      formatter: 'listItemText',
+                      editor: {
+                        type: 'select',
+                        options: {
+                          listItems: MtrlList,
+                          }
+                        }
+                      }
+                    ]
+          )
+        }
+      });
+    };
 
 
 
