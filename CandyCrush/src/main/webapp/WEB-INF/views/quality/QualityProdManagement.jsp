@@ -129,7 +129,7 @@
 							<br/>
 							<div class="mtrlOrderRightBtn">
 								<label for="procCd">생산지시코드</label>
-								<input type="text" id="procCd" style="width: 200px;">
+								<input type="text" id="procCd" style="width: 200px;" readonly>
 								<button id="prodInsertBtn" class="cndInsBtn">등록</button>
 							</div>
 						</div>
@@ -301,16 +301,24 @@
 					}
 				},
 				{
-					header: '검사시작시간',
+					header: '검사시작일자',
 					name: 'piStrDt',
 					formatter: function (e) {
-						return timeString;
+						return getStartToday;
 					},
 				},
 				{
-					header: '검사종료시간',
+					header: '검사종료일자',
 					name: 'piEndDt',
-					editor: 'text'
+					editor: {
+						type: 'datePicker',
+						options: {
+							format: 'yyyy-MM-dd',
+							//시작일자와 종료일자를 설정해줌
+							selectableRanges : [[getStartToday, getOneMonthLater]],
+							language: 'ko'
+						}
+					}
 				},
 				{
 					header: '비고',
@@ -402,10 +410,6 @@
 
 		procCommandList.on('click', (e)=>{
 			let getPrcmCdData = procCommandList.getData()[e.rowKey].prcmCd;
-
-			if(getPrcmCdData === undefined){
-				return;
-			}
 			
 			$.ajax({
 				url : "procPrprDetailList",
@@ -469,31 +473,29 @@
 			let procCd = $('#procCd').val();		//생산지시코드
 
 			let checkRows = prodcProgressList.getCheckedRows();
+
+			checkRows.map((item) => {
+				item.prcmCd = procCd;					//생산지시코드
+				item.piCnt = item.prcmQnt			//검사수량
+				item.piPassCnt = item.prprQnt	//합격수량
+				item.piBadCnt = item.prprBad	//불량수량
+				item.piStrDt = getStartToday;	//검사시작일자
+			});
+
 			if(checkRows.length !== 0){
-				checkRows.map((item) => {
-					item.prcmCd = procCd;			//생산지시코드
-					item.piCnt = item.prcmQnt		//검사수량
-					item.piPassCnt = item.prprQnt	//합격수량
-					item.piBadCnt = item.prprBad	//불량수량
-					item.piStrDt = timeString;		//검사시작시간
-				});
-				console.log(JSON.stringify(checkRows));
-				//console.log(checkRows);
 				$.ajax({
-					url : "procPrprDetailList",
+					url : "prodInspInsert",
 					method :"POST",
 					data : JSON.stringify(checkRows),
-					dataType : "JSON",
 					contentType : "application/json",
 					success : function(data){
-						console.log(data);
-						/*Swal.fire({
+						Swal.fire({
 							icon: 'success',
 							title: "검사완료",
 							text:  "검사가 완료되었습니다."
 						});
 						prodcProgressList.removeCheckedRows();
-						procCommandIsNotNullList();*/
+						procCommandIsNotNullList();
 					} 
 				});
 			} else {
@@ -504,12 +506,6 @@
 				});
 			};
 		});
-
-
-
-
-
-
 
 
 		//생산지시 상세목록 Grid 쪽 등록버튼 누르면 모달창이 짠

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.mes.quality.service.QualityServcie;
 import com.yedam.mes.quality.service.vo.MtInspBadInsertVO;
+import com.yedam.mes.quality.service.vo.ProdInsertTestVO;
 import com.yedam.mes.quality.service.vo.ProdInspVO;
 import com.yedam.mes.quality.service.vo.QualityMtTestVO;
 
@@ -71,14 +72,14 @@ public class QaulityController {
 	
 	@PostMapping("prodInspInsert")
 	@ResponseBody
-	public Boolean prodInspInsert(@RequestBody List<ProdInspVO> vo) {
-		Boolean response = false;
-		
+	public Boolean prodInspInsert(@RequestBody List<ProdInsertTestVO> vo) {
+		Boolean response = true;
+
 		int result = qualityService.prodInspInsert(vo);
 		System.out.println("INSERT 잘 되고 있는거냐고 : " + result);
 		
 		if(result != 0) {
-			response = true;
+			response = false;
 		};
 		
 		return response;

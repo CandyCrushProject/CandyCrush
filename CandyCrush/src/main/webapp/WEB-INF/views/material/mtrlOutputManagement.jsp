@@ -37,7 +37,7 @@
 								<h5><b>출고등록</b></h5>
 								<div id="floatBtn">
 									<button type="button" class="cndInsBtn">저장</button>
-									<button type="reset" class="">초기화</button>
+									<button type="button" class="cndRstBtn">초기화</button>
 								</div>
 								<div>
 									<label for="outDt">출고일자</label>
