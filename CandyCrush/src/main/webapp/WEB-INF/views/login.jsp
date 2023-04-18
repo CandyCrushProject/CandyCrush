@@ -85,7 +85,7 @@
 							<span>비밀번호 </span><input type="password" id="password" name="password" class="form-control">
 						</div>
 						<div class="button-login-box">
-							<button type="button" id="loginBtn" class="btn btn-primary btn-xs" style="width: 100%">로그인</button>
+							<button type="submit" id="loginBtn" class="btn btn-primary btn-xs" style="width: 100%">로그인</button>
 						</div>
 					</div>
 				</form>
@@ -95,31 +95,31 @@
 
 
 	</main>
-	<script>
-		$(function () {
+<!-- 	<script> -->
+// 		$(function () {
 
-			$('#loginBtn').on('click', function () {
-				let user = $('#username').val();
-				let pass = $('#password').val();
-				let loginInfo = {
-					user: user,
-					pass: pass
-				};
-				$.ajax({
-					url: 'mainHome',
-					method: "POST",
-					contentType: 'application/json',
-					data: JSON.stringify(loginInfo),
-					dataType: 'json',
-					success: function (data) {
-						loginForm.submit();
-						console.log(data)
-					}, error: function (err) {
-					}
-				});
-			});
-		})
-	</script>
+// 			$('#loginBtn').on('click', function () {
+// 				let user = $('#username').val();
+// 				let pass = $('#password').val();
+// 				let loginInfo = {
+// 					user: user,
+// 					pass: pass
+// 				};
+// 				$.ajax({
+// 					url: 'mainHome',
+// 					method: "POST",
+// 					contentType: 'application/json',
+// 					data: JSON.stringify(loginInfo),
+// 					dataType: 'json',
+// 					success: function (data) {
+// 						loginForm.submit();
+// 						console.log(data)
+// 					}, error: function (err) {
+// 					}
+// 				});
+// 			});
+// 		})
+<!-- 	</script> -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<!-- Bootstrap Bundle with Popper -->
