@@ -164,11 +164,25 @@ public class procServiceImpl implements ProcService {
 	public int startProg(ProcResultAllVO startVO) {
 		// TODO Auto-generated method stub
 		return procMapper.startProg(startVO);
-	
-
-
 	}
-
+	
+	@Override //불량코드 불러오기
+	public List<ProcResultAllVO> getBadCd() {
+		// TODO Auto-generated method stub
+		return procMapper.getBadCd();
+	}
+	
+	
+	@Override
+	public List<ProcResultAllVO> selectProcMtrl(@Param("prcmPrcd") String prcmPrcd) {
+		// TODO Auto-generated method stub
+		return procMapper.selectProcMtrl(prcmPrcd);
+	}
+	
+	
+	
+	
+//================================================================
 
 
 	@Override
@@ -188,6 +202,10 @@ public class procServiceImpl implements ProcService {
 		}
 		return r;
 	}
+
+
+
+
 
 	
 	

@@ -444,8 +444,62 @@
 	    )
 	</insert>
 
-
-
+	<!-- 공장불량코드 호출용 -->
+	<select id="getBadCd" resultType="ProcResultAllVO">
+		select PRBD_CD,PRBD_NM,PRBD_CTT from proc_bad_cd
+	</select>
+	
+	
+	
+	<!-- 작업종료 업데이트 가즈아 -->
+	
+	<update id="insertResult" parameterType="ProcResultAllVO">
+	UPDATE PROC_PERF
+	SET (PRPE_WK_END_DT,
+	    PRPE_AMNT_WK,
+	    PRPE_PROD,
+	    PRPE_BAD_QNT)=
+	    (#{prpeWkEndDt},
+	    #{prpeAmntWk},
+	    #{prpeProd},
+	    #{prpeBadQnt})
+	WHERE PRPE_CD=#{prpeCd}
+	</update>
+	
+	<!-- 불량입력 -->
+	<insert id="insertBad" parameterType="ProcResultAllVO">
+		<selectKey resultType="string" keyProperty="prpeBadCd" order="BEFORE">
+			SELECT 'PEBD'||MAX(TO_NUMBER((NVL(SUBSTR(PRPE_BAD_CD,5),'1'))+1)) FROM PROC_BAD
+		</selectKey>
+		INSERT INTO PROC_BAD
+		    (PRPE_BAD_CD,
+		    PRPE_CD,
+		    PRBD_CD,
+		    CMM_CD,
+		    BAD_QNT)
+		    VALUES(
+		    #{prpeBadCd},
+		    #{prpeCd},
+		    #{prbdCd},
+		    #{cmmCd},
+		    #{badQnt}
+		    )
+	</insert>
+	
+	<!-- 공정지시코드를 받아서 사용자재 보내기 -->
+	<select id="selectProcMtrl" resultType="ProcResultAllVO">
+	select PRCM_PRCD,
+    PRMP_PUT_QNT,
+    P.CMM_CD,
+    CMM_NM,
+    CMM_TYP,
+    CMM_SPEC,
+    CMM_UNIT
+	from PROC_MTRL_PROGRESS P
+	LEFT JOIN CM_MTRL_MNG M
+	ON P.CMM_CD=M.CMM_CD
+	WHERE PRCM_PRCD=#{prcmPrcd}
+	</select>
 
 
 

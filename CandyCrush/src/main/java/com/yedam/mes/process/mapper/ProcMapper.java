@@ -111,7 +111,8 @@ public interface ProcMapper {
 	public List<ProcResultAllVO> getProcFac(@Param("prcmPrcd") String prcmPrcd);
 	public List<ProcResultAllVO> getProcProg();
 	public int startProg(ProcResultAllVO startVO);
-	
+	public List<ProcResultAllVO> getBadCd();
+	public List<ProcResultAllVO> selectProcMtrl(@Param("prcmPrcd") String prcmPrcd);
 	
 	
 	/* 생산공정 매퍼 끝 */
