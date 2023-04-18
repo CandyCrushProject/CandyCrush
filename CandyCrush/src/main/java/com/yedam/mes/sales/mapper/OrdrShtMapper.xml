@@ -15,7 +15,7 @@
 		  FROM order_sheet orsh JOIN cm_account cmacc
 		                          ON orsh.ca_no = cmacc.ca_no
 		 WHERE CA_TYP = '매출처'
-		 ORDER BY 1
+		 ORDER BY 5
 	</select>
 	
 	<!-- 주문서 검색조회 -->
@@ -35,7 +35,7 @@
 <!--            AND orsh_dt between #{orshStrDt} and #{orshEndDt} -->
 <!--        </if> -->
          </where>
-          ORDER BY 1
+          ORDER BY 5
     </select>
 		
 	<!-- 모달창 업체 전체조회 -->
@@ -78,7 +78,7 @@
 			<if test="caNm != null and !caNm.equals('')">
 				AND cmacc.ca_nm LIKE '%' || #{caNm} || '%'
 			</if>
-		 ORDER BY 1
+		 ORDER BY 5
 	</select>
 	
 	<!-- 주문서코드 자동생성 -->
@@ -131,6 +131,7 @@
 		                                  JOIN cm_product_mng cpm
 		                                    ON osd.cpr_cd = cpm.cpr_cd
 		 WHERE osd.ORSH_NO = #{orshNo}
+		 ORDER BY 3
 	</select>
 	
 	<!-- 상세조회 헤더 수정 -->
@@ -147,7 +148,7 @@
 		 WHERE ordr_dtl_cd = #{ordrDtlCd}
 	</update>
 	
-<!-- 	안되면 parameterType="List"로 해보 -->
+	<!-- 안되면 parameterType="List"로 해보 -->
 	<delete id="deleteOrdrShtHd" parameterType="String">
 		delete from order_sheet where orsh_no = #{orshNo}
 	</delete>
@@ -224,8 +225,8 @@
 		     , pi.pin_cnt
 		     , pi.input_mng
 		  FROM PROD_INPUT pi JOIN cm_product_mng cpm
-		     v                  ON pi.cpr_cd = cpm.cpr_cd
-		 WHERE pin_dt = #{pinDt}
+		                       ON pi.cpr_cd = cpm.cpr_cd
+		 WHERE TO_DATE(pin_dt, 'rrrr-MM-dd') = TO_DATE(#{pinDt}, 'rrrr-MM-dd')
 		 ORDER BY pin_dt DESC
 	</select>
 	

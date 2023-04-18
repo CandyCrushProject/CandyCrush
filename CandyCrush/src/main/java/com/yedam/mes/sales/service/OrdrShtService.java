@@ -67,5 +67,8 @@ public interface OrdrShtService {
 	// 제품입고관리 입고처리된 제품 리스트 날짜별 검색조회
 	public List<ProdInOutPutVO> prodInputListSrchDt(String pinDt);
 	
+	//----------------------------------------------------------------------------------------------------
+	// 제품출고관리 페이지 리턴
+	
 	
 }
