@@ -51,5 +51,13 @@ public interface OrdrShtService {
 	//----------------------------------------------------------------------------------------------------
 	// 제품입고관리 페이지 입고대기 리스트
 	public List<ProdInOutPutVO> prodInputList();
+
+	// 제품입고관리 거래처 검색조회
+	public List<ProdInOutPutVO> prodInputSrchList(String cprNm);
 	
+	// 제품입고관리 제품 등록
+	public int prodWaitingListInsert(List<ProdInOutPutVO> list);
+	
+	// 제품입고관리 멤버리스트
+	public List<OrdrShtVO> getMemberList();
 }

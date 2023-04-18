@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yedam.mes.material.service.MaterialInputVO;
 import com.yedam.mes.sales.service.OrdrShtService;
 import com.yedam.mes.sales.service.vo.OrdrShtVO;
 import com.yedam.mes.sales.service.vo.ProdInOutPutVO;
+
+import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 public class OrdrShtController {
@@ -136,8 +139,44 @@ public class OrdrShtController {
 	
 	// 제품입고관리 페이지 입고대기 리스트
 	@GetMapping("prodInputList")
+	@ResponseBody
 	public List<ProdInOutPutVO> prodInputList() {
 		
 		return service.prodInputList();
 	}
+	
+	// 제품입고관리 거래처 검색조회
+	@PostMapping("prodInputSrchList")
+	@ResponseBody
+	public List<ProdInOutPutVO> prodInputSrchList(@RequestParam(required = false) String cprNm) {
+
+		System.out.println("caNm" + cprNm);
+		return service.prodInputSrchList(cprNm);
+	}
+	
+	// 제품입고관리 멤버리스트
+	@GetMapping("getMemberList")
+	@ResponseBody
+	public List<OrdrShtVO> getMemberList() {
+		return service.getMemberList();
+	}
+	
+	// 제품입고관리 입고등록
+	@PostMapping("prodWaitingListInsert")
+	@ResponseBody
+	public Boolean prodWaitingListInsert(@RequestBody List<ProdInOutPutVO> list){
+		//MaterialInputVO newVO = new MaterialInputVO();
+		Boolean response = true;
+		int result = service.prodWaitingListInsert(list);
+		
+		System.out.println("result = " + result);
+		
+		if(result > 0) {
+			response = false;
+		};
+		
+		return response;
+	};
+	
+	
 }

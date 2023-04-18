@@ -15,6 +15,9 @@ public class ProdInOutPutVO {
 	private String orsNo; //주문서 번호
 	private String piPassCnt; // 제품검사코드
 	private String cprNm; // 제품명
+	private String prprQnt; // 생산량
+	private String memNm; // 멤버이름 
+	private String memId; // 멤버아이디
 	
 	// 제품입고
 	private String prodRcvNo; // 제품입고번호
@@ -32,6 +35,6 @@ public class ProdInOutPutVO {
 	private Date prodShpmntDt; // 제품출고일자
 	private String prodShpmntCnt; // 제품출고수량
 	private String caNo; // 거래처코드
-	private String ouputMng;
+	private String ouputMng; // 출고 담당자	
 	
 }

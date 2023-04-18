@@ -51,13 +51,20 @@
 						<div class="card-content">
 							<div>
 								<h5><b>▶입고대기목록</b></h5>
-								<div>
-									<label for="caNmInput">제품명</label> 
-									<input id="caNmInput" type="text" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+								<div style="display:flex; justify-content: space-between; align-items: center;">
+									<div style="display: block; align-items: center;">
+										<label for="productName">제품명</label>
+										<input id="productName" name="productName" type="text"
+											style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+									</div>
+									<div>
+										<button id="prdWtngBtn" type="button" class="cndInsBtn">저장</button>
+									</div>
 								</div>
+								
 							</div>
 							<div style="clear:both"></div>
-							<div id="prodInputList"></div>
+							<div id="inputWaitingList"></div>
 						</div>
 					</div>
 				</div>
@@ -67,7 +74,7 @@
 					<!-- Lot 부여 테이블 -->
 					<div class="card">
 						<div>
-							<div class="card-action">▶입고등록</div>
+							<div class="card-action">▶입고목록</div>
 							<div style="clear:both"></div>
 							<button type="button" class="cndInsBtn mtrlInputMngFloatBtn" id="mtrlInputSaveBtn">저장</button>
 							<button type="button" class="cndDelBtn mtrlInputMngFloatBtn">삭제</button>
@@ -87,7 +94,7 @@
 				<!-- 입고목록 테이블 -->
 				<div class="col-md-4">
 					<div class="card">
-						<div class="card-action">▶입고목록</div>
+						<div class="card-action">▶입고목록상세조회?</div>
 						<div class="card-content">
 							<div class="table-responsive">
 								<div id="mtrlInputList"></div>

@@ -1,15 +1,16 @@
 $(document).ready(function () {
-  console.log("ready!")
-  $.ajax({
-    url: "prodInputList",
-    type: "GET",
-    success: function(data) {
-      console.log(data);
-    },
-    error: function(error) {
-      console.log(error);
-    }
+  // 제품명 검색
+  $('#productName').on('input', function () {
+    prodInputSrchList();
   });
 
+  // 제품입고
+  $('#prdWtngBtn').on('click', function() {
+    inputWaitingList.blur();
+    prdWtngInptProcess();
+  });
 });
+
+//---------------------------------------------------------------------------------------------
+// 제품입고 등록
 
