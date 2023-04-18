@@ -65,7 +65,7 @@ public class QualityServiceImpl implements QualityServcie {
 			qualityMapper.InsertMtBadInsp(vo);
 		}
 		return 0;
-	}
+	};
 
 	//제품검사
 	public List<ProdInspVO> procProdList(){
@@ -74,18 +74,17 @@ public class QualityServiceImpl implements QualityServcie {
 	@Override
 	public List<ProdInspVO> procPrprEndIsNAllList(@Param("cprNm") String cprNm, @Param("start") String start, @Param("end") String end) {
 		return qualityMapper.procPrprEndIsNAllList(cprNm, start, end);
-	}
+	};
 	@Override
 	public List<ProdInspVO> procDetailList(String prcmCd) {
 		return qualityMapper.procDetailList(prcmCd);
-	}
+	};
 	
 	//검수DB INSERT
 	@Transactional
 	@Override
 	public int prodInspInsert(List<ProdInsertTestVO> vo) {
 		int cnt = 0;
-		System.out.println(vo);
 		
 		for(ProdInsertTestVO newVO : vo) {
 			//newVO.setPiCd(vo.get(0).getPiCd());
@@ -101,17 +100,20 @@ public class QualityServiceImpl implements QualityServcie {
 			newVO.setPiNote(vo.get(0).getPiNote());
 			
 			int result = qualityMapper.prodInspInsert(newVO);
+			int result2 = qualityMapper.prodInspUpdate(newVO);
+			int result3 = qualityMapper.procPeRfInsert(newVO);
 			
-			System.out.println(result);
-			
-			if(result != 0) {
+			if(result != 0 && result2 != 0 && result3 != 0) {
 				cnt++;
 			}
 		}
-		
-		
-		
 		return cnt;
+	};
+
+	//상태업데이트
+	@Override
+	public int procProgUpdate(ProdInsertTestVO vo) {
+		return qualityMapper.procProgUpdate(vo);
 	};
 	
 

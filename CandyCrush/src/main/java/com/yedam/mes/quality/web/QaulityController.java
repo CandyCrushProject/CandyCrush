@@ -70,13 +70,13 @@ public class QaulityController {
 		return qualityService.procDetailList(prcmCd);
 	};
 	
+	//제품검수 테이블로 INSERT
 	@PostMapping("prodInspInsert")
 	@ResponseBody
 	public Boolean prodInspInsert(@RequestBody List<ProdInsertTestVO> vo) {
 		Boolean response = true;
 
 		int result = qualityService.prodInspInsert(vo);
-		System.out.println("INSERT 잘 되고 있는거냐고 : " + result);
 		
 		if(result != 0) {
 			response = false;
@@ -84,6 +84,27 @@ public class QaulityController {
 		
 		return response;
 	};
+	
+	//INSERT 후 공정지시 6번 상태변경(UPDATE)
+	@PostMapping("prprEndUpdate")
+	@ResponseBody
+	public Boolean prprEndUpdate(@RequestBody ProdInsertTestVO vo) {
+		Boolean resp = false;
+		System.out.println(vo);
+		
+		int result = qualityService.procProgUpdate(vo);
+		
+		if(result != 0) {
+			resp = true;
+		}
+		
+		return	resp;
+	}
+	
+	
+	
+	
+	
 	
 	
 }

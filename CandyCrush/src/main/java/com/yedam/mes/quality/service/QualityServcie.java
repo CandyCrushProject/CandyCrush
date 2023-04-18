@@ -27,4 +27,6 @@ public interface QualityServcie {
 	public List<ProdInspVO> procDetailList(@Param("prcmCd") String prcmCd);
 	//검수DB INSERT
 	public int prodInspInsert(List<ProdInsertTestVO> vo);
+	//상태 업데이트
+	public int procProgUpdate(ProdInsertTestVO vo);
 }
