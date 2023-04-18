@@ -138,11 +138,11 @@ public class OrdrShtController {
 	}
 	
 	// 제품입고관리 페이지 입고대기 리스트
-	@GetMapping("prodInputList")
+	@GetMapping("prodInputListPage")
 	@ResponseBody
-	public List<ProdInOutPutVO> prodInputList() {
+	public List<ProdInOutPutVO> prodInputListPage() {
 		
-		return service.prodInputList();
+		return service.prodInputListPage();
 	}
 	
 	// 제품입고관리 거래처 검색조회
@@ -178,5 +178,18 @@ public class OrdrShtController {
 		return response;
 	};
 	
+	// 제품입고관리 입고된 제품 리스트
+	@GetMapping("prodInputList")
+	@ResponseBody
+	public List<ProdInOutPutVO> prodInputList() {
+		return service.prodInputList();
+	}
+	
+	// 제품입고관리 입고처리된 제품 리스트 날짜별 검색조회
+	@PostMapping("prodInputListSrchDt")
+	@ResponseBody
+	public List<ProdInOutPutVO> prodInputListSrchDt(@RequestParam(required = false) String pinDt) {
+		return service.prodInputListSrchDt(pinDt);
+	}
 	
 }

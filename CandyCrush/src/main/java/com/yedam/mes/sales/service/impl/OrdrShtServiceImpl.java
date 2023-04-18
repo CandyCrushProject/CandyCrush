@@ -147,9 +147,9 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	//----------------------------------------------------------------------------------------------------
 	// 제품입고관리 페이지 입고대기 리스트
 	@Override
-	public List<ProdInOutPutVO> prodInputList() {
+	public List<ProdInOutPutVO> prodInputListPage() {
 		
-		return mapper.prodInputList();
+		return mapper.prodInputListPage();
 	}
 
 	// 주문서관리페이지 거래처 검색조회
@@ -179,6 +179,22 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return mapper.getMemberList();
 	}
+
+	// 제품입고관리 입고된 제품 리스트
+	@Override
+	public List<ProdInOutPutVO> prodInputList() {
+		
+		return mapper.prodInputList();
+	}
+	
+	// 제품입고관리 입고처리된 제품 리스트 날짜별 검색조회
+	@Override
+	public List<ProdInOutPutVO> prodInputListSrchDt(String pinDt) {
+		
+		return mapper.prodInputListSrchDt(pinDt);
+	}
+	
+	
 
 	
 

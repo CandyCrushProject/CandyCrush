@@ -15,30 +15,38 @@ function prodmemberList() {
       }
       setTimeout(() => inputWaitingList.refreshLayout(), 0);
     },
-    error: function (reject) {
-      console.log(reject)
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
     }
   });
 }
 prodmemberList();
 
 // 제품입고 대기목록 데이터
-const prodInputList = () => {
+const prodInputListPage = () => {
   $.ajax({
-    url: "prodInputList",
+    url: "prodInputListPage",
     type: "GET",
     success: function (data) {
       // console.log(data);
       inputWaitingList.resetData(data);
     },
-    error: function (error) {
-      console.log(error);
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
     }
   });
 };
 
-let productName = "";
 // 제품명 검색
+let productName = "";
 const prodInputSrchList = () => {
   productName = document.getElementById('productName').value;
   $.ajax({
@@ -52,7 +60,11 @@ const prodInputSrchList = () => {
       setTimeout(() => inputWaitingList.refreshLayout(), 0);
     },
     error: function (rej) {
-      console.log("errorerrorerrorerrorerrorerrorerrorerror")
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
     }
   });
 };
@@ -107,37 +119,78 @@ const inputWaitingList = new Grid({
     perPage: 30
   }
 });
-prodInputList();
+prodInputListPage();
 
 //---------------------------------------------------------------------------------------------
-// 제품입고 등록
-function prdWtngInptProcess() {
-  let rows = inputWaitingList.getCheckedRows();
-  console.log(rows)
-  if (rows.length != 0) {
-    $.ajax({
-      url: "prodWaitingListInsert",
-      method: "POST",
-      data: JSON.stringify(rows),
-      dataType: "JSON",
-      contentType: "application/json",
-      success: function (data) {
-        console.log("prdWtngInptProcess : ", data);
-        Swal.fire({
-          icon: 'success',
-          title: "입고등록완료",
-        });
-        inputWaitingList.removeCheckedRows();
-      }
-    });
-  } else {
-    Swal.fire({
-      icon: 'error',
-      title: '경고',
-      text: "선택된 제품이 없거나 데이터가 없습니다.",
-    });
-  };
-}
+// 입고처리된 제품목록 데이터
+const prodInputListData = () => {
+  prodInputDt = document.getElementById('prodInputDt').value;
+  $.ajax({
+    url: "prodInputList",
+    method: "GET",
+    dataType: "JSON",
+    
+    success: function (data) {
+      prodInputList.resetData(data);
+      setTimeout(() => prodInputList.refreshLayout(), 0);
+    },
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
+    }
+  });
+};
+
+// 입고처리된 제품목록 데이터 조회 그리드
+const prodInputList = new Grid({
+  el: document.getElementById('prodInputList'),
+  columns: [
+    {
+      header: '제품LOT번호',
+      name: 'plsNo',
+      hidden: true,
+      sortingType: 'asc',
+      sortable: true
+    },
+    {
+      header: '제품명',
+      name: 'cprNm',
+      sortingType: 'asc',
+      sortable: true
+    },
+    {
+      header: '제품입고일자',
+      name: 'pinDt',
+      formatter: function (data) {
+        return dateChange(data.value);
+      },
+      sortingType: 'asc',
+      sortable: true
+    },
+    {
+      header: '입고수량',
+      name: 'pinCnt',
+      sortingType: 'asc',
+      sortable: true
+    },
+    {
+      header: '담당자',
+      name: 'inputMng',
+      sortingType: 'asc',
+      sortable: true
+    },
+  ],
+  bodyHeight: 700,
+  pageOptions: {
+    useClient: true,
+    type: 'scroll',
+    perPage: 30
+  }
+});
+prodInputListData();
 
 //---------------------------------------------------------------------------------------------
-// 제품입고 등록
+// 

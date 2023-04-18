@@ -11,8 +11,12 @@ const accntGetData = () => {
       // console.log(data);
       accntList.resetData(data);
     },
-    error: function(reject) {
-      console.log(reject)
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
     }
   });
 };
@@ -72,8 +76,12 @@ const ordrShtList = () => {
       // console.log(data);
       orderList.resetData(data);
     },
-    error: function (reject) {
-      console.log(reject)
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
     }
   });
 };
@@ -265,8 +273,12 @@ orderList.on('dblclick', (e) => {
         ordrProdList.resetData(data);
         setTimeout(() => ordrProdList.refreshLayout(), 0);
       },
-      error: function (reject) {
-        console.log(reject)
+      error: function (rej) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: rej
+        });
       }
     });
   }
@@ -288,8 +300,12 @@ function prodListItems() {
       }
       setTimeout(() => ordrProdList.refreshLayout(), 0);
     },
-    error: function (reject) {
-      console.log(reject)
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
     }
   });
 }
@@ -371,6 +387,13 @@ function ordrShtInsert() {
         ordrShtList();
         let ordrDtilMdl = $("#ordrDtilMdl");
         ordrDtilMdl.hide();
+      },
+      error: function (rej) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: rej
+        });
       }
     });
   } else {
