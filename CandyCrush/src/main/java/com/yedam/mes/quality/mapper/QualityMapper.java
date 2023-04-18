@@ -8,6 +8,7 @@ import com.yedam.mes.quality.service.vo.MtBadCodeVO;
 import com.yedam.mes.quality.service.vo.MtInspBadInsertVO;
 import com.yedam.mes.quality.service.vo.MtInspInsertVO;
 import com.yedam.mes.quality.service.vo.MtOrderInspStatVO;
+import com.yedam.mes.quality.service.vo.ProdInsertTestVO;
 import com.yedam.mes.quality.service.vo.ProdInspVO;
 import com.yedam.mes.quality.service.vo.QualityMtTestVO;
 
@@ -25,5 +26,5 @@ public interface QualityMapper {
 	public List<ProdInspVO> procPrprEndIsNAllList(@Param("cprNm") String cprNm, @Param("start") String start, @Param("end") String end);
 	public List<ProdInspVO> procDetailList(@Param("prcmCd") String prcmCd);
 	//검수DB INSERT
-	public int prodInspInsert(List<ProdInspVO> vo);
+	public int prodInspInsert(ProdInsertTestVO vo);
 }

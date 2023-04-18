@@ -97,7 +97,7 @@
   
   <!-- ///////////////////제품검수////////////////////- -->
   <!-- 생산지시 모달 검색 -->
-  <select id="procProdList" resultType="prodInspVO">
+  <select id="procProdList" resultType="ProdInspVO">
 	SELECT prcm_dt, pc.prcm_cd, pc.cpr_cd, cpr_nm, cpr_typ
 	FROM proc_command pc
 	    JOIN cm_product_mng cpr
@@ -110,7 +110,7 @@
   </select>
   
   <!-- 생산지시 리스트 -->
-  <select id="procPrprEndIsNAllList" resultType="prodInspVO">
+  <select id="procPrprEndIsNAllList" resultType="ProdInspVO">
   	SELECT proc.prcm_cd, cpr_nm, prcm_start_dt, prcm_end_dt
 	FROM proc_command proc
         JOIN cm_product_mng cpr
@@ -129,7 +129,7 @@
   </select>
   
   <!-- 생산지시 상세 -->
-  <select id="procDetailList" resultType="prodInspVO">
+  <select id="procDetailList" resultType="ProdInspVO">
   	SELECT prpr.prcm_cd, cpr_nm, prpr_end, prpr.cm_cd, pr.cpr_cd,
    		   prcm_qnt, prpr_qnt, prpr_bad
 	FROM proc_command pr
@@ -147,38 +147,19 @@
   </select>
   
   <!-- 검사코드등록 -->
-  <insert id="prodInspInsert" parameterType="prodInspVO">
-  	<selectKey resultType="string" keyProperty="piCd" order="BEFORE">
-  		SELECT 'PIC' || TO_CHAR(sysdate, 'yyMMdd') || prdct_inspc_seq.NEXTVAL
+  <insert id="prodInspInsert" parameterType="ProdInsertTestVO">
+  	<selectKey resultType="String" keyProperty="piCd" order="BEFORE">
+  		SELECT 'PIC' || TO_CHAR(sysdate, 'yyMMdd') || prdct_inspc_seq.NEXTVAL AS pi_cd
 		FROM dual
   	</selectKey>
   	INSERT INTO
-  		PRDCT_INSPC (
-			  			PI_CD,
-			  			PI_DT,
-			  			PI_STR_DT,
-			  			PI_END_DT,
-			  			PI_MNG,
-			  			PI_CNT,
-			  			PI_BAD_CNT,
-			  			PI_PASS_CNT,
-			  			PI_NOTE,
-			  			CPR_CD,
-			  			PRCM_CD
-			  		)
-  		VALUES (
-  					#{piCd},
-  					#{piDt},
-  					#{piStrDt},
-  					#{piEndDt},
-  					#{piMng},
-  					#{piCnt},
-  					#{piBadCnt},
-  					#{piPassCnt},
-  					#{piNote},
-  					#{cprCd},
-  					#{prcmCd}
-  				)
+	    prdct_inspc (
+	                    pi_cd, prcm_cd, pi_dt, pi_str_dt, pi_end_dt, pi_mng, pi_cnt, pi_bad_cnt, pi_pass_cnt, cpr_cd, pi_note
+	                )
+	        VALUES (
+	                    #{piCd}, #{prcmCd}, #{piDt}, #{piStrDt}, #{piEndDt}, #{piMng},
+	                    #{piCnt}, #{piBadCnt}, #{piPassCnt}, #{cprCd}, #{piNote}
+	                )           
   </insert>
 
 

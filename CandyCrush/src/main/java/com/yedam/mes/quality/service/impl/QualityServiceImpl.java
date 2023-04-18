@@ -2,14 +2,12 @@ package com.yedam.mes.quality.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yedam.mes.quality.mapper.QualityMapper;
 import com.yedam.mes.quality.service.QualityServcie;
@@ -17,6 +15,7 @@ import com.yedam.mes.quality.service.vo.MtBadCodeVO;
 import com.yedam.mes.quality.service.vo.MtInspBadInsertVO;
 import com.yedam.mes.quality.service.vo.MtInspInsertVO;
 import com.yedam.mes.quality.service.vo.MtOrderInspStatVO;
+import com.yedam.mes.quality.service.vo.ProdInsertTestVO;
 import com.yedam.mes.quality.service.vo.ProdInspVO;
 import com.yedam.mes.quality.service.vo.QualityMtTestVO;
 @Service
@@ -80,17 +79,39 @@ public class QualityServiceImpl implements QualityServcie {
 	public List<ProdInspVO> procDetailList(String prcmCd) {
 		return qualityMapper.procDetailList(prcmCd);
 	}
+	
 	//검수DB INSERT
+	@Transactional
 	@Override
-	public int prodInspInsert(List<ProdInspVO> vo) {
-		int result = 0;
+	public int prodInspInsert(List<ProdInsertTestVO> vo) {
+		int cnt = 0;
+		System.out.println(vo);
 		
-		if(result != 0) {
-			result = qualityMapper.prodInspInsert(vo);
-		} else {
-			result = -1;
+		for(ProdInsertTestVO newVO : vo) {
+			//newVO.setPiCd(vo.get(0).getPiCd());
+			newVO.setPrcmCd(vo.get(0).getPrcmCd());
+			newVO.setPiDt(vo.get(0).getPiDt());
+			newVO.setPiStrDt(vo.get(0).getPiStrDt());
+			newVO.setPiEndDt(vo.get(0).getPiEndDt());
+			newVO.setPiMng(vo.get(0).getPiMng());
+			newVO.setPiCnt(vo.get(0).getPiCnt());
+			newVO.setPiBadCnt(vo.get(0).getPiBadCnt());
+			newVO.setPiPassCnt(vo.get(0).getPiPassCnt());
+			newVO.setCprCd(vo.get(0).getCprCd());
+			newVO.setPiNote(vo.get(0).getPiNote());
+			
+			int result = qualityMapper.prodInspInsert(newVO);
+			
+			System.out.println(result);
+			
+			if(result != 0) {
+				cnt++;
+			}
 		}
-		return result;
+		
+		
+		
+		return cnt;
 	};
 	
 

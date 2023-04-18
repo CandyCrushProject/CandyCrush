@@ -252,11 +252,11 @@
 											자재입고관리
 										</a>
 									</li>
-									<!--<li>
+									<li>
 									<a href="${pageContext.request.contextPath}/mtrlOutputManagement" class="waves-effect waves-dark">
 										자재출고관리
 									</a>
-								</li>-->
+								</li>
 
 
 
