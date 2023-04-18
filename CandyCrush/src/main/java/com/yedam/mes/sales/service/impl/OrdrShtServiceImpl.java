@@ -152,6 +152,34 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		return mapper.prodInputList();
 	}
 
+	// 주문서관리페이지 거래처 검색조회
+	@Override
+	public List<ProdInOutPutVO> prodInputSrchList(String cprNm) {
+		
+		return mapper.prodInputSrchList(cprNm);
+	}
+
+	// 제품입고관리 제품 등록
+	@Override
+	public int prodWaitingListInsert(List<ProdInOutPutVO> list) {
+		// 주문서 디테일 등록(여러건)
+		int cnt = 0;
+		
+		for(ProdInOutPutVO vo : list) {
+			
+			cnt += mapper.prodWaitingListInsert(vo);
+		}
+		
+		return cnt;
+	}
+
+	// 제품입고관리 멤버리스트
+	@Override
+	public List<OrdrShtVO> getMemberList() {
+		
+		return mapper.getMemberList();
+	}
+
 	
 
 }

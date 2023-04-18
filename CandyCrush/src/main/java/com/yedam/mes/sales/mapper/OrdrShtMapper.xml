@@ -159,13 +159,46 @@
 <!-- ================================================================================================================================== -->
 	<!-- 제품입고관리 페이지 입고대기 리스트 -->
 	<select id="prodInputList" resultType="ProdInOutPutVO">
-		SELECT proc.cpr_cd
+		SELECT prpr.prcm_prcd
+			 , proc.cpr_cd
 		     , cpm.cpr_nm
-		     , prpr_qnt
+		     , prpr.prpr_qnt
 		  FROM proc_command proc JOIN cm_product_mng cpm
 		                           ON proc.cpr_cd = cpm.cpr_cd
 		                         JOIN PROC_PROGRESS prpr
 		                           ON proc.prcm_cd = prpr.prcm_cd
 		 WHERE cm_cd = 'cmprcd006' AND prpr_end = 'Y'
+		 ORDER BY 1
 	</select>
+	
+	<!-- 주문서관리페이지 거래처 검색조회 -->
+	<select id="prodInputSrchList" resultType="ProdInOutPutVO">
+		SELECT proc.cpr_cd
+		     , cpm.cpr_nm
+		     , prpr.prpr_qnt
+		  FROM proc_command proc JOIN cm_product_mng cpm
+		                           ON proc.cpr_cd = cpm.cpr_cd
+		                         JOIN PROC_PROGRESS prpr
+		                           ON proc.prcm_cd = prpr.prcm_cd
+		 WHERE cm_cd = 'cmprcd006' AND prpr_end = 'Y' 
+		 	   <if test="cprNm != null and !cprNm.equals('')">
+		 	   		AND cpr_nm LIKE '%' || #{cprNm} || '%'
+			   </if>
+		 ORDER BY 1
+	</select>
+	
+	<!-- 멤버리스트 목록 -->
+	<select id="getMemberList" resultType="ProdInOutPutVO">
+		SELECT mem_nm
+			 , mem_id
+		  FROM cm_member
+		 ORDER BY mem_id
+	</select>
+	
+	<!-- 제품입고관리 제품 등록 -->
+	<insert id="prodWaitingListInsert" parameterType="ProdInOutPutVO" statementType="CALLABLE">
+		{call prod_store_pro(#{cprCd}, #{prprQnt}, #{inputMng}, #{prcmPrcd})}
+	</insert>
+	
+	
 </mapper>

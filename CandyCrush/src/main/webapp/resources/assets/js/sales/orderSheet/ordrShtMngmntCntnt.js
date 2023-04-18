@@ -246,7 +246,6 @@ orderList.on('dblclick', (e) => {
   document.getElementById('caNoBox').style.display = 'none'; // 거래처코드 숨김
   document.getElementById('ordrShtInsert').style.display = 'none'; // 등록버튼 숨김
   document.getElementById('ordrShtSave').style.display = 'block'; // 저장버튼 보여줌
-  // select박스안에 제품명 list 내용 
 
   // 주문서관리페이지 주문서 상세조회 모달창
   function getOrdrShtDtlList() {
@@ -276,7 +275,6 @@ orderList.on('dblclick', (e) => {
 });
 
 //---------------------------------------------------------------------------------------------
-
 // select박스안에 제품명 list 내용 
 function prodListItems() {
   $.ajax({
