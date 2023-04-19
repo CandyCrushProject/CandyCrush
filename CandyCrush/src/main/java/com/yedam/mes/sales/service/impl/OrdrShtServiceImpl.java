@@ -78,13 +78,16 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	@Override
 	public int insertOrdrSht(Map<String,Object> map, List<Map<String,Object>> list, List<Map<String,Object>> list2, List<Map<String,Object>> list3) {
 		int cnt = 0;
-		
+		String ordrShtCode = null;
 		// 주문번호 때문
-		String ordrShtCode = mapper.getOrdrShtCode();
-		map.put("orshNo", ordrShtCode);
-		
-		// 주문서 헤더 등록 (한건)	
-		cnt = mapper.insertOrdrShtHdr(map); //delete
+		if(!list.isEmpty()) {
+			ordrShtCode = mapper.getOrdrShtCode();
+			map.put("orshNo", ordrShtCode);
+			
+			// 주문서 헤더 등록 (한건)	
+			cnt = mapper.insertOrdrShtHdr(map); //delete
+		}
+
 		
 		// 주문서 디테일 등록(여러건)
 		for(Map<String,Object> ordrShtMap : list) {
@@ -94,13 +97,13 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		// 주문서 디테일 수정(여러건)
 		for(Map<String,Object> ordrShtMap : list2) {
-			ordrShtMap.put("orshNo", ordrShtCode);
+			//ordrShtMap.put("orshNo", ordrShtCode);
 			cnt += mapper.updateOrdrShtDtl(ordrShtMap);
 		}
 		
 		// 주문서 디테일 삭제(여러건)
 		for(Map<String,Object> ordrShtMap : list3) {
-			ordrShtMap.put("orshNo", ordrShtCode);
+			//ordrShtMap.put("orshNo", ordrShtCode);
 			cnt += mapper.deleteOrdrShtDtl(ordrShtMap);
 		}
 		
@@ -192,6 +195,20 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 	public List<ProdInOutPutVO> prodInputListSrchDt(String pinDt) {
 		
 		return mapper.prodInputListSrchDt(pinDt);
+	}
+
+	// 제품출고페이지 주문서조회
+	@Override
+	public List<ProdInOutPutVO> OutputOrdrShtList() {
+		
+		return mapper.OutputOrdrShtList();
+	}
+
+	// 제품출고 주문서 디테일 조회
+	@Override
+	public List<ProdInOutPutVO> OutputOrdrShtDtlList(String orshNo) {
+		
+		return mapper.OutputOrdrShtDtlList(orshNo);
 	}
 	
 	

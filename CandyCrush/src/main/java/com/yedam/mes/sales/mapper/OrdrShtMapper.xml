@@ -168,7 +168,7 @@
 		                           ON proc.cpr_cd = cpm.cpr_cd
 		                         JOIN PROC_PROGRESS prpr
 		                           ON proc.prcm_cd = prpr.prcm_cd
-		 WHERE cm_cd = 'cmprcd006' AND prpr_end = 'Y'
+		 WHERE cm_cd = 'cmprcd007' AND prpr_end = 'Y'
 		 ORDER BY 1
 	</select>
 	
@@ -229,7 +229,40 @@
 		 WHERE TO_DATE(pin_dt, 'rrrr-MM-dd') = TO_DATE(#{pinDt}, 'rrrr-MM-dd')
 		 ORDER BY pin_dt DESC
 	</select>
+
+<!-- ================================================================================================================================== -->	
+	<!-- 제품출고페이지 주문서조회 -->
+	<select id="OutputOrdrShtList" resultType="ProdInOutPutVO">
+		SELECT os.orsh_no
+		     , COUNT(ordr_dtl_cd) ordr_dtl_cnt
+		     , ca.ca_nm
+		     , os.orsh_dt
+		     , os.dlvry_dt
+		  FROM order_sheet os
+		     , order_sheet_detail osd
+		     , cm_account ca
+		 WHERE os.orsh_no = osd.orsh_no AND os.ca_no = ca.ca_no AND ca_typ = '매출처'
+		 GROUP BY os.orsh_no, ca.ca_nm, os.orsh_dt, os.dlvry_dt
+		 ORDER BY os.orsh_no
+	</select>
 	
-	
-	
+	<!-- 제품출고 주문서 디테일 조회 -->
+	<select id="OutputOrdrShtDtlList">
+		SELECT osd.ordr_dtl_cd
+		     , osd.ordr_dtl_cnt
+		     , osd.cpr_cd
+		     , cpm.cpr_cd
+		     , cpm.cpr_nm
+		     , os.dlvry_dt
+		     , osd.orsh_pr
+		     , osd.stt_cng_dt
+		     , os.orsh_no
+		  FROM order_sheet os
+		     , order_sheet_detail osd
+		     , cm_product_mng cpm
+		 WHERE os.orsh_no = osd.orsh_no
+		   AND osd.cpr_cd = cpm.cpr_cd
+		   AND os.orsh_no = #{orshNo}
+		 ORDER BY os.dlvry_dt
+	</select>
 </mapper>
