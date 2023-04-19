@@ -175,7 +175,6 @@
 						type: 'GET',
 						dataType: 'json',
 						success: function (data) {
-							console.log(data)
 							for (let i = 0; i < data.length; i++) {
 								// 담당자 목록 그리드 셀렉트 배열로 만들어줌
 								managerList.push({ text: data[i].memNm, value: data[i].memNm })
@@ -206,7 +205,7 @@
 
 					// 목록추가 버튼 클릭 이벤트
 					$('#addOrderBefore').on('click', function () {
-						const rows = procOrderFormGrid.getCheckedRows();
+						let rows = procOrderFormGrid.getCheckedRows();
 						procOrderFormGrid.removeCheckedRows();
 						if (rows.length > 0) {
 							insertOrderFormGrid.resetData(rows);
@@ -223,7 +222,7 @@
 
 					// 지시등록 버튼 클릭 이벤트
 					$('#addProcOrder').on('click', function (ev) {
-						const insertOrder = insertOrderFormGrid.getCheckedRows();
+						let insertOrder = insertOrderFormGrid.getCheckedRows();
 						$.ajax({
 							url: 'insertProcOrder',
 							method: 'POST',
@@ -242,7 +241,7 @@
 
 				// 생산공정 정보 받는 함수
 				function insertProg() {
-					const insertProg = procGrid.getData();
+					let insertProg = procGrid.getData();
 					$.ajax({
 						url: 'insertProg',
 						method: 'POST',
@@ -259,7 +258,7 @@
 
 				// 공정자재 정보 받는 함수
 				function insertMtrl() {
-					const insertMtrl = mtrlGrid.getData();
+					let insertMtrl = mtrlGrid.getData();
 					$.ajax({
 						url: 'insertMtrl',
 						method: 'POST',

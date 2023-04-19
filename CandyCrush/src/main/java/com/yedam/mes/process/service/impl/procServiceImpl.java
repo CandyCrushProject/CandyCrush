@@ -211,10 +211,17 @@ public class procServiceImpl implements ProcService {
 
 	// 공정지시 등록
 	@Override
-	public int insertProgress(List<ProcOrderVO> poVO) {
+	public int insertProgressOne(ProcOrderVO poVO) {
 		int r = 0;
-		for(ProcOrderVO pvo:poVO) {
-			r += procMapper.insertProgress(pvo);
+			r += procMapper.insertProgressOne(poVO);
+		return r;
+	}
+	// 공정지시 등록
+	@Override
+	public int insertProgressFull(List<ProcOrderVO> poVO) {
+		int r = 0;
+		for(int i=1; i<poVO.size();i++) {
+			r += procMapper.insertProgressFull(poVO.get(i));
 		}
 		return r;
 	}

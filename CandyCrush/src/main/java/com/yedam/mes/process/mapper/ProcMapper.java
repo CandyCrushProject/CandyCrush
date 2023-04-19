@@ -66,13 +66,13 @@ public interface ProcMapper {
 	public int insertProcOrder(ProcOrderVO poVO);
 	
 	// 공정자재 - 공정 등록
-	public int insertProgress(ProcOrderVO poVO);
+	public int insertProgressOne(ProcOrderVO poVO);
+	// 공정자재 - 공정 등록
+	public int insertProgressFull(ProcOrderVO poVO);
 	// 자재지시 - 공정에 들어갈 자재 등록
 	public int insertProgMtrl(ProcOrderVO poVO);
 
 
-	
-	
 	
 	
 	
