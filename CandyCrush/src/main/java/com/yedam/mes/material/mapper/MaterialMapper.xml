@@ -264,4 +264,36 @@
 		}
 	</update>
 
+	<!-- 출고목록 -->
+	<select id="mtrlOutList" resultType="MaterialVO">
+		SELECT lot.cmm_cd, cmm_nm, cmm_spec, cmm_unit, cmm_typ,
+		        lot.cml_nm, cml_in_cnt, NVL(mot_cnt, 0) mot_cnt
+		FROM mtrl_otpt mot
+		    RIGHT OUTER JOIN cm_mtrl_lot lot
+		        ON mot.cml_nm = lot.cml_nm
+		            JOIN cm_mtrl_mng cmm
+		                ON lot.cmm_cd = cmm.cmm_cd
+		WHERE cml_in_cnt > mot_cnt OR NVL(mot_cnt, 0) = 0
+		ORDER BY lot.cml_nm
+	</select>
+	
+	<!-- 7일이이내 출고등록 리스트 -->
+	<select id="mtrlOut7DayList" resultType="MaterialVO">
+		SELECT COUNT(*) mot_cd_cnt, mot_cd, mot_dt
+		FROM mtrl_otpt
+		WHERE mot_dt >= TO_CHAR(SYSDATE-7,'yyyy-MM-dd')
+		GROUP BY mot_cd, mot_dt
+		ORDER BY mot_cd DESC
+	</select>
+	
+	<!-- 출고상세 -->
+	<select id="mtrlOutDetailList" resultType="MaterialVO">
+		SELECT mot_dt, lot.cmm_cd, cmm_nm, cmm_unit, cmm_spec, cmm_typ, mot_cnt, mot_note, mot_typ
+		FROM mtrl_otpt mot
+		    JOIN cm_mtrl_lot lot
+		        ON mot.cml_nm = lot.cml_nm
+		            JOIN cm_mtrl_mng cmm
+		                ON lot.cmm_cd = cmm.cmm_cd
+		WHERE mot_cd = #{motCd}
+	</select>
 </mapper>

@@ -246,4 +246,23 @@ public class MaterialController {
 	public String mtrlOutputManagement(Model model) {
 		return "material/mtrlOutputManagement";
 	};
+	
+	@PostMapping("mtrlOutList")
+	@ResponseBody
+	public List<MaterialVO> mtrlOutList(){
+		return service.mtrlOutList();
+	};
+	
+	@PostMapping("mtrlOut7DayList")
+	@ResponseBody
+	public List<MaterialVO> mtrlOut7DayList(){
+		return service.mtrlOut7DayList();
+	};
+	
+	@PostMapping("mtrlOutDetail")
+	@ResponseBody
+	public List<MaterialVO> mtrlOutDetail(@RequestParam String motCd){
+		return service.mtrlOutDetailList(motCd);
+	}
+	
 }

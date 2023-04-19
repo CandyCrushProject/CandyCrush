@@ -111,7 +111,7 @@
   
   <!-- 생산지시 리스트 -->
   <select id="procPrprEndIsNAllList" resultType="ProdInspVO">
-  	SELECT proc.prcm_cd, cpr_nm, prcm_start_dt, prcm_end_dt
+  	SELECT proc.prcm_cd, cpr_nm, prcm_start_dt, prcm_end_dt, prpr.prcm_prcd
 	FROM proc_command proc
         JOIN cm_product_mng cpr
 	        ON proc.cpr_cd = cpr.cpr_cd
@@ -122,7 +122,7 @@
 	WHERE prcm_end_dt IS NOT NULL
 	AND pi_cd IS NULL
     AND PRPR_END = 'Y'
-    AND PRCM_TURN = '5'
+    AND PRCM_TURN = '6'
 	<if test="cprNm != null and !cprNm.equals('')">
 	AND cpr_nm LIKE '%' || #{cprNm} || '%'
 	</if>
@@ -134,7 +134,7 @@
   
   <!-- 생산지시 상세 -->
   <select id="procDetailList" resultType="ProdInspVO">
-  	SELECT prpr.prcm_cd, cpr_nm, prpr_end, prpr.cm_cd, pr.cpr_cd,
+  	SELECT prpr.prcm_cd, cpr_nm, prpr_end, prpr.cm_cd, pr.cpr_cd, prpr.prcm_prcd,
    		   prcm_qnt, prpr_qnt, prpr_bad
 	FROM proc_command pr
 	    JOIN proc_progress prpr
@@ -147,7 +147,7 @@
                                     	ON prpr.prcm_prcd = prpe.prcm_prcd
 	WHERE UPPER(pr.prcm_cd) = #{prcmCd} OR LOWER(prpr.prcm_cd) = #{prcmCd}
 	AND prpr_end = 'Y'
-	AND PRCM_TURN = '5'
+	AND PRCM_TURN = '6'
   </select>
   
   <!-- 검사코드등록 -->
@@ -177,7 +177,7 @@
 	WHERE
 		PRCM_CD = #{prcmCd}
 	AND
-		PRCM_TURN = '6'
+		PRCM_TURN = '7'
   </update>
   
   <insert id="procPeRfInsert" parameterType="ProdInsertTestVO">
@@ -195,15 +195,15 @@
 	)
 	VALUES(
 	    (SELECT 'PRPE'||MAX(TO_NUMBER((NVL(SUBSTR(PRPE_CD,5),'1'))+1)) FROM PROC_PERF),
-	    (SELECT max(prcm_prcd) prcm_prcd FROM proc_progress WHERE prcm_cd = #{prcmCd}),
+	    #{prcmPrcd},
 	    #{piMng},
 	    #{piStrDt},
 	    #{piEndDt},
 	    #{piCnt},
-	    'cmprcd006',
+	    'cmprcd007',
 	    #{piPassCnt},
 	    #{piBadCnt},
-	    'fac6'
+	    'fac7'
 	)
   </insert>
 	

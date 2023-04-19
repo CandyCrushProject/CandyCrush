@@ -160,4 +160,21 @@ public class MaterialServiceImpl implements MaterialService {
 	public int mtrlMoSttUpdate(MaterialInputVO vo) {
 		return mapper.mtrlMoSttUpdate(vo);
 	}
+
+	//--자재출고관리
+	//출고목록
+	@Override
+	public List<MaterialVO> mtrlOutList() {
+		return mapper.mtrlOutList();
+	}
+	//출고 7일이내 목록 
+	@Override
+	public List<MaterialVO> mtrlOut7DayList() {
+		return mapper.mtrlOut7DayList();
+	}
+	//출고 상세목록
+	@Override
+	public List<MaterialVO> mtrlOutDetailList(@Param("motCd") String motCd) {
+		return mapper.mtrlOutDetailList(motCd);
+	}
 }

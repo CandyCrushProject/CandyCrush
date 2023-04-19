@@ -252,6 +252,10 @@
 			el: document.getElementById('prodcProgressList'),
 			rowHeaders: ['checkbox'],
 			columns: [
+				/*{
+					header: '공정지시코드',
+					name: 'prcmPrcd'
+				},*/
 				{
 					header: '제품번호',
 					name: 'cprCd',
@@ -426,6 +430,7 @@
 						})
 						return;
 					} else {
+						console.log(data);
 						$('#procCd').val(getPrcmCdData);
 						prodcProgressList.resetData(data);
 					};
