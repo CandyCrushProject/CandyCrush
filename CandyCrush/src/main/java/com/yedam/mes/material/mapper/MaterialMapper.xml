@@ -28,8 +28,10 @@
 	<!-- 업체명 또는 자재명을 통한 자재검색 -->
 	<select id="mtrlSearch" resultType="MaterialVO">
 		SELECT cmm.cmm_cd, cmm_nm, cmm_typ, cmm_spec,
-		        cmm_unit, cmm_saf_stc, NVL(mot_cnt, 0) mot_cnt, NVL(cml_in_cnt, 0) cml_in_cnt, ca_nm, cmm.ca_no,
-		        NVL(TO_NUMBER(cml_in_cnt) - TO_NUMBER(mot_cnt), 0) AS "cmm_inven"
+		        cmm_unit, cmm_saf_stc,
+                SUM(NVL(mot_cnt, 0)) mot_cnt,
+                SUM(NVL(cml_in_cnt, 0)) cml_in_cnt, ca_nm, cmm.ca_no,
+		        NVL(SUM(TO_NUMBER(cml_in_cnt)) - SUM(TO_NUMBER(mot_cnt)), 0) AS "cmm_inven"
 		FROM cm_account ca JOIN cm_mtrl_mng cmm
 		ON ca.ca_no = cmm.ca_no
 		 JOIN cm_mtrl_lot clot
@@ -43,6 +45,7 @@
 			<if test="cmmNm != null and !cmmNm.equals('')">
 			AND cmm_nm LIKE '%' || #{cmmNm} || '%' 
 			</if>
+		GROUP BY cmm.cmm_cd, cmm_nm, cmm_typ, cmm_spec, cmm_unit, cmm_saf_stc, ca_nm, cmm.ca_no
 		ORDER BY cmm_cd
 	</select>
 	
@@ -85,22 +88,23 @@
 	<!-- 자재발주 디테일 단건조회 -->
 	<!-- 발주코드, 업체코드, 업체명, 자재코드, 자재명, 발주수량, 안전재고, 납기요청일, 현재재고, 예상재고량 -->
 	<select id="mtrlOrderDetailList" resultType="MaterialOrderVO">
-		SELECT mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, mo_cnt, cmm_saf_stc, mo_req_dt, mod_cd,
-		        TO_NUMBER(cml_in_cnt) - TO_NUMBER(mot_cnt) AS "cmm_inven",
-		        TO_NUMBER(cml_in_cnt) - TO_NUMBER(mot_cnt) + TO_NUMBER(mo_cnt) "cmm_est_inven"
+		SELECT mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, SUM(mo_cnt), cmm_saf_stc, mo_req_dt, mod_cd,
+		        SUM(TO_NUMBER(cml_in_cnt)) - SUM(TO_NUMBER(mot_cnt)) AS "cmm_inven",
+		        SUM(TO_NUMBER(cml_in_cnt)) - SUM(TO_NUMBER(mot_cnt)) + SUM(TO_NUMBER(mo_cnt)) "cmm_est_inven"
 		FROM mtrl_order mo
-			JOIN mtrl_order_detail mod
-			  ON mo.mo_cd = mod.mo_cd
-			   JOIN cm_account ca
-			    ON mod.ca_no = ca.ca_no
-			     JOIN cm_mtrl_mng cmm
-			      ON mod.cmm_cd = cmm.cmm_cd
-				   JOIN cm_mtrl_lot cml
-				    ON mod.cmm_cd = cml.cmm_cd
-				     JOIN mtrl_otpt mot
-				      ON cml.cml_nm = mot.cml_nm
-		where mo.mo_cd = #{moCd}
-		order by 4 asc
+		    JOIN mtrl_order_detail mod
+		      ON mo.mo_cd = mod.mo_cd
+		       JOIN cm_account ca
+		        ON mod.ca_no = ca.ca_no
+		         JOIN cm_mtrl_mng cmm
+		          ON mod.cmm_cd = cmm.cmm_cd
+		           JOIN cm_mtrl_lot cml
+		            ON mod.cmm_cd = cml.cmm_cd
+		             JOIN mtrl_otpt mot
+		              ON cml.cml_nm = mot.cml_nm
+		WHERE mo.mo_cd = #{moCd}
+		GROUP BY mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, cmm_saf_stc, mo_req_dt, mod_cd
+		ORDER BY 4 ASC
 	</select>
 	
 	<!-- 자재발주코드 자동생성 -->
@@ -311,8 +315,7 @@
 	 		FROM(
 	 			<foreach collection="list" item="vo" separator="UNION ALL">
 	 			SELECT
-					#{vo.motCd} AS mot_cd, #{vo.motCnt} AS mot_cnt,
-					#{vo.motDt} AS mot_dt, #{vo.motTyp} AS mot_typ,
+					#{vo.motCnt} AS mot_cnt, #{vo.motDt} AS mot_dt, #{vo.motTyp} AS mot_typ,
 					#{vo.motNote} AS mot_note, #{vo.cmlNm} AS cml_nm, #{vo.minCd} AS min_cd
 				FROM
 					DUAL
