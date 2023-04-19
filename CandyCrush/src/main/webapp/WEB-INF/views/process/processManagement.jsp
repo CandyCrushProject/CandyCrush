@@ -141,10 +141,31 @@
 				let orshNoList = [];
 				let ordrDtlCdSet = "";
 				let orshNoSet = "";
+				let managerList = [];
 				$(function () {
 					getOrder();
 					$('#prplDt').val(getToday());
 				})
+
+				// 관리자 목록 받아오기
+				function getManagerList() {
+					$.ajax({
+						url: 'managerList',
+						type: 'GET',
+						dataType: 'json',
+						success: function (data) {
+							console.log(data)
+							for (let i = 0; i < data.length; i++) {
+								managerList.push({ text: data[i].memNm, value: data[i].memNm })
+							}
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				}
+
 				// 처음 뿌려주는 미계획주문서 리스트
 				function getOrder() {
 					$.ajax({
@@ -186,7 +207,6 @@
 					// 미계획 주문서 리스트 체크된 데이터를 가져와 db에서 정보 가져옴
 					$('#planAddBtn').on('click', function () {
 						const rows = orderSheetGrid.getCheckedRows();
-						console.log(rows);
 						for (let i = 0; i < rows.length; i++) {
 							orshNoSet += rows[i].orshNo + ",";
 						}
@@ -206,6 +226,7 @@
 									let op = data.orderNPlan;
 									addOrderPlanGrid.resetData(op);
 									orderSheetGrid.removeCheckedRows();
+									getManagerList();
 								}, error: function (err) {
 									Swal.fire({
 										icon: 'error',
@@ -225,6 +246,7 @@
 
 				});
 
+				// 주문서 디테일 현재상태 값 변경 함수
 				function addUpdate() {
 					$.ajax({
 						url: 'orderUpdate',
@@ -241,11 +263,12 @@
 				}
 				$(document).ready(function () {
 
-
+					// 생산계획 등록 버튼 이벤트
 					$('#addPlanBtn').on('click', function () {
 						$.ajax({
 							url: 'insertProcPlan',
 							method: 'POST',
+							// 그리드의 모든 데이타를 읽어들여 보냄
 							data: JSON.stringify(addOrderPlanGrid.getData({ ignoredColumns: ['_attributes', 'rowKey'] })),
 							contentType: 'application/json',
 							dataType: 'json',
@@ -422,8 +445,13 @@
 						{
 							header: '계획관리자',
 							name: 'prplMng',
-							editor: 'text',
 							align: 'center',
+							editor: {
+								type: 'select',
+								options: {
+									listItems: managerList
+								},
+							},
 						}
 					]
 				});
@@ -437,6 +465,7 @@
 					findMtrlCntSum();
 				});
 
+				// 자재 재고 확인 함수
 				function findMtrlCntSum() {
 					$.ajax({
 						url: 'findMtrlCntSum',
@@ -453,6 +482,7 @@
 					});
 				}
 
+				// 자재 로트별 재고 확인 함수
 				function findMtrlLot() {
 					$.ajax({
 						url: 'findMtrlLot',

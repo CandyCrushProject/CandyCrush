@@ -32,7 +32,7 @@
 						</div>
 					</div>
 				</div>
-				<!-- /. NAV SIDE  -->
+				<!-- 페이지 네브 -->
 				<div id="page-wrapper">
 					<div class="header">
 						<h1 class="page-header">생산지시</h1>
@@ -44,6 +44,7 @@
 
 					</div>
 
+					<!-- 페이지 바디 -->
 					<div id="page-inner">
 
 						<div class="row">
@@ -136,6 +137,7 @@
 			</main>
 
 			<script>
+				// 생산지시일자 당일일자 입력
 				$('#prcmDt').val(getToday());
 
 				// 날짜 포맷 변경 함수
@@ -157,15 +159,38 @@
 					return formattedDate;
 				}
 
-				let cprNm = "";
-				let rowKey = "";
-				let columnName = "";
-				let row = "";
-				let prplCdSet;
-				let mtrlMapArr = [];
+				let cprNm = ""; // 제품 이름 모음
+				let rowKey = ""; // 그리드 행의 행키 값
+				let columnName = ""; // 그리드 열 이름
+				let row = ""; // 그리드 행 값
+				let prplCdSet; // 생산계획코드 모음
+				let mtrlMapArr = []; // 자재 목록 배열
+				let managerList = []; // 담당자 목록 배열
+				let result = 0; // 예상소모량 계산 값
+
+				// 관리자 목록 받아오기
+				function getManagerList() {
+					$.ajax({
+						url: 'managerList',
+						type: 'GET',
+						dataType: 'json',
+						success: function (data) {
+							console.log(data)
+							for (let i = 0; i < data.length; i++) {
+								// 담당자 목록 그리드 셀렉트 배열로 만들어줌
+								managerList.push({ text: data[i].memNm, value: data[i].memNm })
+							}
+						},
+						error: function (xhr, status, error) {
+							// 요청이 실패했을 때 처리할 로직
+							console.error('요청 실패:', error);
+						}
+					});
+				}
+
 				$(document).ready(function () {
 
-
+					// 계획조회 버튼 클릭 이벤트
 					$('#planBtn').on('click', function () {
 						$.ajax({
 							url: 'ProcPlanOrder',
@@ -179,13 +204,14 @@
 						});
 					})
 
-
+					// 목록추가 버튼 클릭 이벤트
 					$('#addOrderBefore').on('click', function () {
 						const rows = procOrderFormGrid.getCheckedRows();
 						procOrderFormGrid.removeCheckedRows();
 						if (rows.length > 0) {
 							insertOrderFormGrid.resetData(rows);
 							insertOrderFormGrid.uncheckAll();
+							getManagerList();
 						} else {
 							Swal.fire({
 								icon: 'error',
@@ -195,9 +221,7 @@
 						};
 					})
 
-
-
-
+					// 지시등록 버튼 클릭 이벤트
 					$('#addProcOrder').on('click', function (ev) {
 						const insertOrder = insertOrderFormGrid.getCheckedRows();
 						$.ajax({
@@ -216,6 +240,7 @@
 
 				});
 
+				// 생산공정 정보 받는 함수
 				function insertProg() {
 					const insertProg = procGrid.getData();
 					$.ajax({
@@ -232,6 +257,7 @@
 					});
 				}
 
+				// 공정자재 정보 받는 함수
 				function insertMtrl() {
 					const insertMtrl = mtrlGrid.getData();
 					$.ajax({
@@ -255,6 +281,7 @@
 					});
 				}
 
+				// 생산 계획 조회 그리드
 				const procPlanGrid = new tui.Grid({
 					el: document.getElementById('procPlanList'),
 					scrollX: false,
@@ -296,6 +323,7 @@
 					procPlanDetail();
 				});
 
+				// 계획 상세 조회 함수
 				function procPlanDetail() {
 					$.ajax({
 						url: 'ProcPlanOrderDetail',
@@ -312,6 +340,7 @@
 				}
 
 
+				// 생산 지시 대기 그리드
 				const procOrderFormGrid = new tui.Grid({
 					el: document.getElementById('procOrderFormGrid'),
 					scrollX: false,
@@ -362,6 +391,7 @@
 					]
 				});
 
+				// 생산 지시 등록 그리드
 				const insertOrderFormGrid = new tui.Grid({
 					el: document.getElementById('insertOrderForm'),
 					scrollX: false,
@@ -396,22 +426,21 @@
 							editor: 'text',
 							onAfterChange: function (data) { // 값이 변경되면 실행되는 함수
 								let tt = procGrid.getData();
-								let result = 0;
 
 								result = data.value * (tt[0].cbmtCnsm / 1000);
-								mtrlGrid.setValue(0, 'prmpPutQnt', result, false)
+								mtrlGrid.setValue(0, 'prmpPutQnt', result, false);
 
 								result = data.value * (tt[1].cbmtCnsm / 1000);
-								mtrlGrid.setValue(1, 'prmpPutQnt', result, false)
+								mtrlGrid.setValue(1, 'prmpPutQnt', result, false);
 
 								result = data.value * (tt[2].cbmtCnsm / 1000);
-								mtrlGrid.setValue(2, 'prmpPutQnt', result, false)
+								mtrlGrid.setValue(2, 'prmpPutQnt', result, false);
 
 								result = data.value * (tt[5].cbmtCnsm / 1000);
-								mtrlGrid.setValue(3, 'prmpPutQnt', result, false)
+								mtrlGrid.setValue(3, 'prmpPutQnt', result, false);
 
 								result = data.value * (tt[4].cbmtCnsm / 1000);
-								mtrlGrid.setValue(4, 'prmpPutQnt', result, false)
+								mtrlGrid.setValue(4, 'prmpPutQnt', result, false);
 
 
 							}
@@ -438,8 +467,8 @@
 							}
 						},
 						{
-							header: '생산종료일자',
-							name: 'prcmEndDt',
+							header: '생산마감일자',
+							name: 'prcmDeadline',
 							align: 'center',
 							formatter: function (data) {
 								let dateVal = '';
@@ -462,7 +491,12 @@
 							header: '지시담당자',
 							name: 'prcmMng',
 							align: 'center',
-							editor: 'text'
+							editor: {
+								type: 'select',
+								options: {
+									listItems: managerList
+								},
+							},
 						},
 					]
 				});
@@ -473,6 +507,7 @@
 					setBom(row.cprCd);
 				});
 
+				// 생산공정 정보 받는 함수
 				function getBom(cprCd) {
 					let ccd = { cprCd: cprCd };
 					$.ajax({
@@ -490,7 +525,7 @@
 				}
 
 
-
+				// 생산공정 그리드
 				const procGrid = new tui.Grid({
 					el: document.getElementById('procGrid'),
 					scrollX: false,
@@ -548,7 +583,7 @@
 				});
 
 
-
+				// 공정자재지시 그리드에 들어갈 정보
 				function setBom(cprCd) {
 					let cmm = {
 						cprCd: cprCd
@@ -567,6 +602,7 @@
 					});
 				}
 
+				// 공정자재지시 그리드
 				const mtrlGrid = new tui.Grid({
 					el: document.getElementById('mtrlGrid'),
 					scrollX: false,

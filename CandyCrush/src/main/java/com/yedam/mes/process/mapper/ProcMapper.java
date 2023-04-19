@@ -46,8 +46,8 @@ public interface ProcMapper {
 	public List<OrderPlanVO> findMtrlCntSum(OrderPlanVO opVO);
 	public List<OrderPlanVO> findMtrlLot(OrderPlanVO opVO);
 
-	
-	
+	// 담당자 목록 불러오기
+	public List<ProcPlanVO> getManagerList();
 	
 	
 	

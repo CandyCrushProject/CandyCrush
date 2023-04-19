@@ -13,6 +13,7 @@ public class ProcOrderVO {
 	private String prcmEndDt; // 생산종료일자
 	private String prcmMng; // 지시담당자
 	private String prpldCd; // 계획상세코드
+	private String prcmDeadline; // 생산마감일자
 
 	// 공정지시
 	private String prcmPrcd; // 공정지시코드
