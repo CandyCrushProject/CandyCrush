@@ -8,14 +8,12 @@ $(document).ready(function () {
   $('#prdWtngBtn').on('click', function() {
     inputWaitingList.blur();
     prdWtngInptProcess();
-
   });
 
   // 제품날짜별 입고된 목록 조회
   $('#prodInputDt').on('change', function() {
     prodInputListSrchDt();
   });
-  
 });
 //---------------------------------------------------------------------------------------------
 // ajax로 불러온 날짜데이터(시간으로 불러와짐) 변환
@@ -31,7 +29,6 @@ function dateChange(date) {
 // 제품입고 등록
 function prdWtngInptProcess() {
   let rows = inputWaitingList.getCheckedRows();
-  console.log(rows)
   if (rows.length != 0) {
     $.ajax({
       url: "prodWaitingListInsert",

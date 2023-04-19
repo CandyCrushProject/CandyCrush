@@ -305,13 +305,8 @@
 					}, 10);
 					materialOutAdd.setValue(e.rowKey, 'motCntPlus', outMotCntPlus);
 				};
-
-
-
-
 			}; // End else
-
-		})
+		});
 
 		//출고목록
 		const materialOutCheck = new Grid({
@@ -436,10 +431,8 @@
 					item.motDt = date;				//출고등록일자
 					item.motTyp = type;				//출고유형
 					item.motNote = note;			//출고상세정보
-					//item.motCntPlus = Number(item.motCntPlus);	//출고추가수량
 					item.motCnt = Number(item.motCntPlus);	//출고추가수량
 				});
-				console.log(rowCheckData);
 
 				if(note === '내용없음'){
 					Swal.fire({
@@ -463,26 +456,41 @@
 								contentType: "application/json",
 								data: JSON.stringify(rowCheckData),
 								success : function(data){
-									console.log(data);
-									/*Swal.fire(
+									Swal.fire(
 										'등록되었습니다',
 										'자세한 내용은 출고목록에서 확인가능합니다',
 										'success'
-									);*/
-									//materialInspGetList.removeCheckedRows();	//체크된 행을 그리드에서 삭제한다
-									//mtrlOutList(); //출고목록 아작스 재호출
+									);
+									mtrlOutList(); //출고목록 아작스 재호출
+									mtrlOut7DayList();
 								},
 								error : function(reject){
 									console.log(reject);
 								}
 							});
-
-							
 						};
 					});
 				} else {
 					//상세정보없어도 출고관리에 데이터를 집어넣을 수 있도록
-					console.log("eee");
+					$.ajax({
+						url : "mtrlOutInsert",
+						method :"POST",
+						dataType : "JSON",
+						contentType: "application/json",
+						data: JSON.stringify(rowCheckData),
+						success : function(data){
+							Swal.fire(
+								'등록되었습니다',
+								'자세한 내용은 출고목록에서 확인가능합니다',
+								'success'
+							);
+							mtrlOutList(); //출고목록 아작스 재호출
+							mtrlOut7DayList();
+						},
+						error : function(reject){
+							console.log(reject);
+						}
+					});
 				};
 			}
 		});

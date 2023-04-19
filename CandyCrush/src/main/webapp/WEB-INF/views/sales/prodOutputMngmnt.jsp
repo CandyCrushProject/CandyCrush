@@ -3,6 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <script src="assets/js/sales/prodOutputMngmnt/prodOutputMngmntCall.js"></script>
+	<style>
+		.tui-grid-cell.cell-red {background-color: rgba(255, 121, 121, 0.432)}
+		.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
+	</style>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">

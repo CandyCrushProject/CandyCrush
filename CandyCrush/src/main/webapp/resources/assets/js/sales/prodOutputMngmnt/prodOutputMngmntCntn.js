@@ -1,4 +1,6 @@
-let cprCdArr =[];
+let cprCdArr =[]; // 제품코드 배열
+let cprCdSet = ""; // 제품코드 임시변수
+
 const Grid = tui.Grid;
 //---------------------------------------------------------------------------------------------
 // 출고관리 주문서 목록 데이터
@@ -21,9 +23,6 @@ const outputOrdrShtListData = () => {
 };
 outputOrdrShtListData();
 
-//---------------------------------------------------------------------------------------------
-
-
 // 출고관리 주문서 목록 그리드
 const outputOrdrShtList = new Grid({
   el: document.getElementById('outputOrdrShtList'),
@@ -35,7 +34,7 @@ const outputOrdrShtList = new Grid({
       sortable: true
     },
     {
-      header: '제품건수?',
+      header: '주문상세건수',
       name: 'ordrDtlCnt',
       sortingType: 'asc',
       sortable: true
@@ -73,28 +72,22 @@ const outputOrdrShtList = new Grid({
     perPage: 30
   }
 });
-let cprCdSet = "";
+//---------------------------------------------------------------------------------------------
 // 주문서 더블 클릭시 주문서 상세조회 데이터
 outputOrdrShtList.on("dblclick", (e) => {
   const rowData = outputOrdrShtList.getRow(e.rowKey);
   let orshNo = rowData.orshNo
-  console.log("rowData : ", rowData);
-  console.log("orshNo : ", orshNo);
-
   $.ajax({
     url: "OutputOrdrShtDtlList",
     method: "POST",
     data: { orshNo: orshNo },
     dataType: "JSON",
     success: function (data) {
-      console.log("datadatadata", data);
       outputOrdrShtDtlList.resetData(data);
       cprCdSet = "";
       for(let i=0;i<data.length;i++){
-        console.log(data[i].cprCd)
         cprCdSet += data[i].cprCd + ",";
       }
-      console.log(cprCdSet);
       cprCdArr = { cprCd: cprCdSet };
       Swal.fire({
         icon: 'success',
@@ -113,27 +106,6 @@ outputOrdrShtList.on("dblclick", (e) => {
     }
   });
 });
-
-function cprCdSetFind(){
-  $.ajax({
-    url:'cprCdSetFind',
-    method:'post',
-    data:JSON.stringify(cprCdArr),
-    dataType: "JSON",
-    contentType: "application/json",
-    success: function (data) {
-
-      prdctInstt.resetData(data);
-    },
-    error: function (rej) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: rej
-      });
-    }
-  });
-}
 
 // 주문서 더블 클릭시 주문서 상세조회 그리드
 const outputOrdrShtDtlList = new Grid({
@@ -176,6 +148,7 @@ const outputOrdrShtDtlList = new Grid({
     {
       header: '현재상태 ',
       name: 'orshPr',
+      hidden : true,
       sortingType: 'asc',
       sortable: true
     },
@@ -197,6 +170,27 @@ const outputOrdrShtDtlList = new Grid({
     perPage: 30
   }
 });
+//---------------------------------------------------------------------------------------------
+// 더블클릭한 주문서에 해당하는 제품 리스트를 받아옴
+function cprCdSetFind(){
+  $.ajax({
+    url:'cprCdSetFind',
+    method:'post',
+    data:JSON.stringify(cprCdArr),
+    dataType: "JSON",
+    contentType: "application/json",
+    success: function (data) {
+      prdctInstt.resetData(data);
+    },
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
+    }
+  });
+}
 
 const prdctInstt = new Grid({
   el: document.getElementById('prdctInstt'),
@@ -229,3 +223,57 @@ const prdctInstt = new Grid({
     perPage: 30
   }
 });
+
+//---------------------------------------------------------------------------------------------
+//해당하는 제품의 LOT재고조회
+// function cprCdSetFind(){
+//   $.ajax({
+//     url:'cprCdSetFind',
+//     method:'post',
+//     data:JSON.stringify(cprCdArr),
+//     dataType: "JSON",
+//     contentType: "application/json",
+//     success: function (data) {
+//       prdctInsttLot.resetData(data);
+//     },
+//     error: function (rej) {
+//       Swal.fire({
+//         icon: 'error',
+//         title: 'Error',
+//         text: rej
+//       });
+//     }
+//   });
+// }
+
+// const prdctInsttLot = new Grid({
+//   el: document.getElementById('prdctInstt'),
+//   columns: [
+//     {
+//       header: '제품코드',
+//       name: 'cprCd',
+//       hidden: true,
+//       sortingType: 'asc',
+//       sortable: true
+//     },
+//     {
+//       header: '제품명',
+//       name: 'cprNm',
+//       sortingType: 'asc',
+//       sortable: true
+//     },
+//     {
+//       header: '재고수량',
+//       name: 'sumPlsCnt',
+//       sortingType: 'asc',
+//       sortable: true
+//     },
+
+//   ],
+//   bodyHeight: 300,
+//   pageOptions: {
+//     useClient: true,
+//     type: 'scroll',
+//     perPage: 30
+//   }
+// });

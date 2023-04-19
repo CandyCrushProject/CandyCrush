@@ -68,7 +68,7 @@ function accntSrch() {
     }
   });
   $.ajax({
-    url: "ordrAccntSrch",
+    url: "ordrShtMngnSrch",
     method: "POST",
     dataType: "JSON",
     data: { caNm: accountName },
