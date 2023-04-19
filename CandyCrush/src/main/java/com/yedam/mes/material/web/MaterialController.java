@@ -263,6 +263,22 @@ public class MaterialController {
 	@ResponseBody
 	public List<MaterialVO> mtrlOutDetail(@RequestParam String motCd){
 		return service.mtrlOutDetailList(motCd);
-	}
+	};
+	
+	//자재출고 등록
+	@PostMapping("mtrlOutInsert")
+	@ResponseBody
+	public Boolean mtrlOutInsert(@RequestBody List<MaterialVO> vo) {
+		Boolean response = true;
+		
+		int result = service.mtrlOutInsert(vo);
+		System.out.println("result : " + result);
+		
+		if(result < 1) {
+			response = false;
+		}
+		
+		return response;
+	};
 	
 }

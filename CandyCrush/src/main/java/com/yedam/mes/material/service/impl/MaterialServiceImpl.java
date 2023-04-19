@@ -177,4 +177,18 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> mtrlOutDetailList(@Param("motCd") String motCd) {
 		return mapper.mtrlOutDetailList(motCd);
 	}
+
+	@Override
+	public int mtrlOutInsert(List<MaterialVO> vo) {
+		int cnt = 0;
+		
+		int result = mapper.mtrlOutInsert(vo);
+		System.out.println(result);
+		
+		if(result != 0) {
+			cnt++;
+		}
+		
+		return cnt;
+	}
 }

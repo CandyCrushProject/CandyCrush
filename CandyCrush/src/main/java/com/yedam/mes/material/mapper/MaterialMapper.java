@@ -75,7 +75,8 @@ public interface MaterialMapper {
 	public List<MaterialVO> mtrlOut7DayList();
 	//출고상세목록
 	public List<MaterialVO> mtrlOutDetailList(@Param("motCd") String motCd);
-	
+	//출고INSERT
+	public int mtrlOutInsert(List<MaterialVO> vo);
 	
 	
 }
