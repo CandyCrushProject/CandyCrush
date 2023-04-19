@@ -49,7 +49,7 @@ public interface MaterialMapper {
 								 @Param("moCd") String moCd,
 								 @Param("cmmCd") String cmmCd);
 	
-	//--발주입고관리
+	//--자재입고관리
 	//검사일자 : 시작일자 ~ 종료일자 & 업체명을 통한 데이터 조회
 	public List<MaterialInputVO> mtrlInputGetList(@Param("caNm") String caNm,
 												  @Param("start") String start,
@@ -68,6 +68,14 @@ public interface MaterialMapper {
 	
 	//진행여부 업데이트
 	public int mtrlMoSttUpdate(MaterialInputVO vo);
+	
+	//--자재출고관리
+	public List<MaterialVO> mtrlOutList();
+	//출고등록목록7일이내
+	public List<MaterialVO> mtrlOut7DayList();
+	//출고상세목록
+	public List<MaterialVO> mtrlOutDetailList(@Param("motCd") String motCd);
+	
 	
 	
 }
