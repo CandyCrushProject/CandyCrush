@@ -61,14 +61,14 @@ public class OrdrShtController {
 	}
 
 	// 주문서관리페이지 거래처 검색조회
-//	@PostMapping("ordrMngntAccntSrch")
-//	@ResponseBody
-//	public List<OrdrShtVO> ordrMngntAccntSrch(@RequestParam(required = false) String caNm,
-//			@RequestParam(required = false) String caNo) {
-//
-//		System.out.println("caNm" + caNm + ", caNo" + caNo);
-//		return service.accoutnSrchList(caNm, caNo);
-//	}
+	@PostMapping("ordrMngntAccntSrch")
+	@ResponseBody
+	public List<OrdrShtVO> ordrMngntAccntSrch(@RequestParam(required = false) String caNm,
+			@RequestParam(required = false) String caNo) {
+
+		System.out.println("caNm" + caNm + ", caNo" + caNo);
+		return service.accoutnSrchList(caNm, caNo);
+	}
 
 	// 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌
 	@PostMapping("ordrShtMngnSrch")
@@ -215,4 +215,16 @@ public class OrdrShtController {
 		
 		return service.OutputOrdrShtDtlList(orshNo);
 	}
+	
+	
+	@PostMapping("cprCdSetFind")
+	@ResponseBody
+	public List<ProdInOutPutVO> cprCdSetFindProcess(@RequestBody ProdInOutPutVO pipVO){
+		String[] cprCdSet = pipVO.getCprCd().split(",");
+		
+		return service.cprCdSetFind(cprCdSet);
+			
+		
+	}
+	
 }

@@ -30,9 +30,6 @@
 										<input id="accountName" name="accountName" type="text"
 											style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
 									</div>
-									<div>
-										<button id="prdWtngBtn" type="button" class="cndInsBtn">저장</button>
-									</div>
 								</div>
 								
 							</div>
@@ -49,10 +46,6 @@
 						<div>
 							<div class="card-action">▶주문서 상세목록</div>
 							<div style="clear:both"></div>
-							<div id="inputReset" style="padding-left: 5px;">
-								<label for="prodInputDt" style="margin-left: 10px; width: 80px;">입고일자</label>
-								<input type="date" id="prodInputDt" style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
-							</div>
 						</div>
 						<div style="clear:both"></div>
 						<div class="card-content">
@@ -66,7 +59,7 @@
 				<!-- 제품재고 확인 테이블 -->
 				<div class="col-md-6">
 					<div class="card">
-						<div class="card-action">▶입고목록상세조회?</div>
+						<div class="card-action">▶제품재고조회</div>
 						<div class="card-content">
 							<div class="table-responsive">
 								<div id="prdctInstt"></div>
