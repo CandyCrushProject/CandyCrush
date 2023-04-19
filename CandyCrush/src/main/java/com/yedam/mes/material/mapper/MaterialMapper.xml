@@ -31,12 +31,12 @@
 		        cmm_unit, cmm_saf_stc,
                 SUM(NVL(mot_cnt, 0)) mot_cnt,
                 SUM(NVL(cml_in_cnt, 0)) cml_in_cnt, ca_nm, cmm.ca_no,
-		        NVL(SUM(TO_NUMBER(cml_in_cnt)) - SUM(TO_NUMBER(mot_cnt)), 0) AS "cmm_inven"
+		        SUM(NVL(TO_NUMBER(cml_in_cnt),0)) - SUM(NVL(TO_NUMBER(mot_cnt),0)) AS "cmm_inven"
 		FROM cm_account ca JOIN cm_mtrl_mng cmm
 		ON ca.ca_no = cmm.ca_no
-		 JOIN cm_mtrl_lot clot
+		 LEFT OUTER JOIN cm_mtrl_lot clot
 		  ON cmm.cmm_cd = clot.cmm_cd
-		    JOIN mtrl_otpt mot
+		    LEFT OUTER JOIN mtrl_otpt mot
 		        ON clot.cml_nm = mot.cml_nm
 		WHERE 1 = 1
 			<if test="caNm != null and !caNm.equals('')">
@@ -88,9 +88,9 @@
 	<!-- 자재발주 디테일 단건조회 -->
 	<!-- 발주코드, 업체코드, 업체명, 자재코드, 자재명, 발주수량, 안전재고, 납기요청일, 현재재고, 예상재고량 -->
 	<select id="mtrlOrderDetailList" resultType="MaterialOrderVO">
-		SELECT mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, SUM(mo_cnt), cmm_saf_stc, mo_req_dt, mod_cd,
-		        SUM(TO_NUMBER(cml_in_cnt)) - SUM(TO_NUMBER(mot_cnt)) AS "cmm_inven",
-		        SUM(TO_NUMBER(cml_in_cnt)) - SUM(TO_NUMBER(mot_cnt)) + SUM(TO_NUMBER(mo_cnt)) "cmm_est_inven"
+		SELECT mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, TO_NUMBER(mo_cnt) mo_cnt, cmm_saf_stc, mo_req_dt, mod_cd,
+		        NVL(SUM(TO_NUMBER(cml_in_cnt)) - SUM(TO_NUMBER(mot_cnt)), 0) AS "cmm_inven",
+		        NVL(SUM(TO_NUMBER(cml_in_cnt)) - SUM(TO_NUMBER(mot_cnt)) + TO_NUMBER(mo_cnt), 0) "cmm_est_inven"
 		FROM mtrl_order mo
 		    JOIN mtrl_order_detail mod
 		      ON mo.mo_cd = mod.mo_cd
@@ -98,12 +98,12 @@
 		        ON mod.ca_no = ca.ca_no
 		         JOIN cm_mtrl_mng cmm
 		          ON mod.cmm_cd = cmm.cmm_cd
-		           JOIN cm_mtrl_lot cml
+		           LEFT OUTER JOIN cm_mtrl_lot cml
 		            ON mod.cmm_cd = cml.cmm_cd
-		             JOIN mtrl_otpt mot
+		             LEFT OUTER JOIN mtrl_otpt mot
 		              ON cml.cml_nm = mot.cml_nm
 		WHERE mo.mo_cd = #{moCd}
-		GROUP BY mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, cmm_saf_stc, mo_req_dt, mod_cd
+		GROUP BY mo.mo_cd, mod.ca_no, ca_nm, mod.cmm_cd, cmm_nm, cmm_saf_stc, mo_req_dt, mod_cd, mo_cnt
 		ORDER BY 4 ASC
 	</select>
 	
@@ -283,22 +283,25 @@
 	
 	<!-- 7일이이내 출고등록 리스트 -->
 	<select id="mtrlOut7DayList" resultType="MaterialVO">
-		SELECT COUNT(*) mot_cd_cnt, mot_cd, mot_dt
+		SELECT count(*) mot_cd_cnt, mot_dt, mot_typ, mot_note
 		FROM mtrl_otpt
 		WHERE mot_dt >= TO_CHAR(SYSDATE-7,'yyyy-MM-dd')
-		GROUP BY mot_cd, mot_dt
-		ORDER BY mot_cd DESC
+		GROUP BY mot_dt, mot_typ, mot_note
+		ORDER BY 2 DESC
 	</select>
 	
 	<!-- 출고상세 -->
 	<select id="mtrlOutDetailList" resultType="MaterialVO">
-		SELECT mot_dt, lot.cmm_cd, cmm_nm, cmm_unit, cmm_spec, cmm_typ, mot_cnt, mot_note, mot_typ
+		SELECT mot_dt, lot.cmm_cd, cmm_nm, cmm_unit, cmm_spec, cmm_typ, mot_cnt, mot_note, mot_typ, mot_cd
 		FROM mtrl_otpt mot
 		    JOIN cm_mtrl_lot lot
 		        ON mot.cml_nm = lot.cml_nm
 		            JOIN cm_mtrl_mng cmm
 		                ON lot.cmm_cd = cmm.cmm_cd
-		WHERE mot_cd = #{motCd}
+		WHERE 1=1
+		AND TO_CHAR(mot_dt, 'yyyy-MM-dd') = #{motDt}
+		AND mot_typ = #{motTyp}
+		AND mot_note = #{motNote}
 	</select>
 	
 	<!-- 출고관리 테이블 INSERT -->
