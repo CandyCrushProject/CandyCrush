@@ -257,7 +257,7 @@
 			num number := 1;
 		BEGIN
 			LOOP
-				IF <![CDATA[i = 1]]>THEN
+				IF <![CDATA[num = 1]]>THEN
 					INSERT INTO proc_progress
 							(
 							 prcm_prcd
@@ -291,8 +291,9 @@
 								)
 							, 'N'
 							);
-				ELSIF <![CDATA[i > 1]]>THEN
-						INSERT INTO proc_progress
+							num := num + 1;
+			ELSIF <![CDATA[num > 1]]>THEN
+					INSERT INTO proc_progress
 							(
 							prcm_prcd
 							, prcm_cd
@@ -317,8 +318,9 @@
 							, 0
 							, 'N'
 							);
-					END IF;
-					EXIT WHEN NUM >7; 
+							num := num + 1;
+				END IF;
+				EXIT WHEN NUM >7; 
 			END LOOP;
 			
 		END;
