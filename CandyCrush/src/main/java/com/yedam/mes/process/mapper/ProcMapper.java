@@ -45,7 +45,7 @@ public interface ProcMapper {
 	// 생산계획시 보이는 자재 재고 및 로트정보
 	public List<OrderPlanVO> findMtrlCntSum(OrderPlanVO opVO);
 	public List<OrderPlanVO> findMtrlLot(OrderPlanVO opVO);
-	
+
 	
 	
 	
@@ -116,5 +116,8 @@ public interface ProcMapper {
 	public int insertResult(ProcResultAllVO finishVO);
 	public int insertBad(ProcResultAllVO finishVO);
 	public int updateProcProg(ProcResultAllVO finishVO);
+	public ProcResultAllVO PselectNextProc(ProcResultAllVO PrcmPrcd);
+	public int PupdateProcQnt(ProcResultAllVO pvo);
+	public int PupdateProcFin(ProcResultAllVO pvo);
 	/* 생산공정 매퍼 끝 */
 }
