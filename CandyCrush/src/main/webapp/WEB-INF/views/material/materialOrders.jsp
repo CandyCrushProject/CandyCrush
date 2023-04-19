@@ -264,6 +264,14 @@
 				data : {cmmNm : cmmNm, caNm : caNm},
 				success : function(data){
 					material.resetData(data);
+					material.getData().forEach(row => {
+						//Grid Row color change
+						let cmmInven = row.cmmInven;		//현재재고
+						let cmmSafStc = row.cmmSafStc; 	//안전재고
+						if(cmmInven < cmmSafStc){
+							material.addRowClassName(row.rowKey, 'cell-red');
+						};
+					});
 				},
 				error : function(reject){
 					console.log(reject);
@@ -566,7 +574,7 @@
 				{
 					header: '발주신청일',
 					name: 'moReoDt',
-					sortingType: 'asc',
+					sortingType: 'desc',
 					sortable: true,
 					formatter: function (e) {
 						return dateChange(e.value);
@@ -583,7 +591,7 @@
 				{
 					header : '진행상황',
 					name : 'moStt',
-					sortingType: 'asc',
+					sortingType: 'desc',
 					sortable: true
 				}
 			],

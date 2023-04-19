@@ -50,11 +50,11 @@ public class MaterialController {
 	};
 	
 	//자재발주관리/자재목록 -> 자재발주로 List 뿌리기
-	@PostMapping("mtrlOrderOneCheck")
+	/*@PostMapping("mtrlOrderOneCheck")
 	@ResponseBody
 	public List<MaterialOrderVO> mtrlOrderOneCheck(@Param("cmmCd") String cmmCd){
 		return service.mtrlOrderOneCheck(cmmCd);
-	};
+	};*/
 	
 	//자재발주관리/자재발주 헤더와 디테일에 데이터 등록
 	@PostMapping("mtrlOrder")
