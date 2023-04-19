@@ -119,5 +119,6 @@ public interface ProcMapper {
 	public ProcResultAllVO PselectNextProc(ProcResultAllVO PrcmPrcd);
 	public int PupdateProcQnt(ProcResultAllVO pvo);
 	public int PupdateProcFin(ProcResultAllVO pvo);
+	public List<ProcResultAllVO> getProcResult();
 	/* 생산공정 매퍼 끝 */
 }

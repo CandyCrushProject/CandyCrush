@@ -26,7 +26,6 @@ public class QaulityController {
 	public String QualityMat(Model model) {
 		model.addAttribute("OrderList",qualityService.selectMtOrderInspStat());
 		model.addAttribute("BadList",qualityService.selectMtBadCode());
-		model.addAttribute("NewMiCd",qualityService.getNewMiCd());
 		return "quality/QualityMtrlManagement";
 	}
 	

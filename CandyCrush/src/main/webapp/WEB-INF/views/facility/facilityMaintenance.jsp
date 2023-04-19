@@ -9,7 +9,7 @@
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
 		<div class="header">
-			<h1 class="page-header">설비조회</h1>
+			<h1 class="page-header">설비정비</h1>
 			<ol class="breadcrumb">
 				<li><a href="#">Home</a></li>
 				<li><a href="#">Tables</a></li>
@@ -43,7 +43,7 @@
 						</td>
 						<td>
 						<select name="facCd" id="facCdSelect" form="mtnInsertForm" style="display: inline; width: 70%;" required>
-								<option value="">--Please choose an option--</option>
+								<option value="">--Please choose an option--</option>statList
 								<c:forEach items="${statList }" var="stat">
 								<option value="${stat.facCd }">${stat.facCd } | ${stat.facNm }</option>
 							</c:forEach>
@@ -158,8 +158,8 @@
 				<div class="col-md-12">
 					<!--   Kitchen Sink -->
 					<div class="card">
-						<div class="card-action">점검이력</div>
-						<button onclick="document.getElementById('mtnInsertModal').style.display='block'" style="display: inline;" class="cndInsBtn">점검내역입력</button>
+						<div class="card-action">점검이력 <button onclick="document.getElementById('mtnInsertModal').style.display='block'" style="display: inline;" class="cndInsBtn">점검내역입력</button></div>
+						
 						<div class="card-content">
 							<div class="table-responsive">
 								<div id="mtnListGrid"></div>
@@ -193,38 +193,35 @@
 		let data = statJsonPharsed;
 		const statListGrid = new Grid({
 			el: document.getElementById('statListGrid'), // Container element
-			//rowHeaders: ['checkbox'],
 			columns: [
+				{
+					header: '점검예정일',
+					name: 'mtnPlanned',
+					sortable: true,
+					sortingType: 'asc',
+					
+				},
 				{
 					header: '설비코드',
 					name: 'facCd',
-					sortable: true
+					hidden: true,
 				},
 				{
 					header: '설비명',
 					name: 'facNm',
-					sortable: true
 				},
 				{
 					header: '최근점검일',
 					name: 'facRctMtn'
 				},
-				{
-					header: '점검예정일',
-					name: 'mtnPlanned',
-					sortable: true,
-					sortingType: 'desc',
-					
-				},
+
 				{
 					header: '도입일',
 					name: 'facDt',
-					sortable: true
 				},
 				{
 					header: '점검주기',
 					name: 'facCy',
-					sortable: true
 				},
 				
 				{
@@ -240,6 +237,9 @@
 				perPage: 30
   		}
 		});
+		setTimeout(()=>statListGrid.sort("mtnPlanned", true,false), 200);
+
+		
 	
 		// 설비점검기록----------------------------------------------------------------
 		let mtnList=document.getElementById("mtnInfo").innerHTML
