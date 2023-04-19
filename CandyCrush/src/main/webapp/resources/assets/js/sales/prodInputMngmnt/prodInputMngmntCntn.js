@@ -57,7 +57,6 @@ const prodInputSrchList = () => {
     success: function (data) {
       console.log(data);
       inputWaitingList.resetData(data);
-      setTimeout(() => inputWaitingList.refreshLayout(), 0);
     },
     error: function (rej) {
       Swal.fire({
@@ -129,10 +128,8 @@ const prodInputListData = () => {
     url: "prodInputList",
     method: "GET",
     dataType: "JSON",
-    
     success: function (data) {
       prodInputList.resetData(data);
-      setTimeout(() => prodInputList.refreshLayout(), 0);
     },
     error: function (rej) {
       Swal.fire({
@@ -191,6 +188,3 @@ const prodInputList = new Grid({
   }
 });
 prodInputListData();
-
-//---------------------------------------------------------------------------------------------
-// 

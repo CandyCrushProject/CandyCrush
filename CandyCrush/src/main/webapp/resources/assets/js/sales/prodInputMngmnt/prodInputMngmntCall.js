@@ -8,6 +8,7 @@ $(document).ready(function () {
   $('#prdWtngBtn').on('click', function() {
     inputWaitingList.blur();
     prdWtngInptProcess();
+
   });
 
   // 제품날짜별 입고된 목록 조회
@@ -44,6 +45,7 @@ function prdWtngInptProcess() {
           title: "입고등록완료",
         });
         inputWaitingList.removeCheckedRows();
+        prodInputListData();
       },
       error: function (rej) {
         Swal.fire({
@@ -71,21 +73,12 @@ function prodInputListSrchDt() {
     data: { pinDt: prodInputDt },
     contentType: "application/json",
     success: function (data) {
-      console.log("prodInputListSrchDt : ", data);
-      if (data.length != 0) {
-        Swal.fire({
-          icon: 'success',
-          title: prodInputDt + "조회완료",
-        });
-        setTimeout(() => inputWaitingList.refreshLayout(), 0);
-        prodInputList.resetData(data);
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: '경고',
-          text: "해당 날짜에 데이터가 없습니다.",
-        });
-      }
+      Swal.fire({
+        icon: 'success',
+        title: prodInputDt + "조회완료",
+      });
+      setTimeout(() => inputWaitingList.refreshLayout(), 0);
+      prodInputList.resetData(data);
     },
     error: function (rej) {
       Swal.fire({
@@ -98,8 +91,3 @@ function prodInputListSrchDt() {
 }
 
 //---------------------------------------------------------------------------------------------
-// 입고처리된 목록 행 더블클릭
-function prodInputLotList() {
-  
-
-} 

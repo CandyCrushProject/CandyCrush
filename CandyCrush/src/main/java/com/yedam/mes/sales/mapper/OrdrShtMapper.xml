@@ -246,6 +246,24 @@
 		 ORDER BY os.orsh_no
 	</select>
 	
+	<!-- 제품출고페이지 거래처 검색조회 -->
+	<select id="OutputOrdrShtSrchList" resultType="ProdInOutPutVO">
+		SELECT os.orsh_no
+		     , COUNT(ordr_dtl_cd) ordr_dtl_cnt
+		     , ca.ca_nm
+		     , os.orsh_dt
+		     , os.dlvry_dt
+		  FROM order_sheet os
+		     , order_sheet_detail osd
+		     , cm_account ca
+		 WHERE os.orsh_no = osd.orsh_no AND os.ca_no = ca.ca_no AND ca_typ = '매출처' 
+		 	<if test="cprNm != null and !cprNm.equals('')">
+		 	   	AND ca.ca_nm LIKE '%' || #{caNm} || '%'
+		   	</if>
+		 GROUP BY os.orsh_no, ca.ca_nm, os.orsh_dt, os.dlvry_dt
+		 ORDER BY os.orsh_no
+	</select>
+	
 	<!-- 제품출고 주문서 디테일 조회 -->
 	<select id="OutputOrdrShtDtlList" resultType="ProdInOutPutVO">
 		SELECT osd.ordr_dtl_cd
@@ -265,7 +283,7 @@
 		 ORDER BY os.dlvry_dt
 	</select>
 	
-	
+	<!-- 주문서에 제품명 재고 찾을때 -->
 	<select id="cprCdSetFind" resultType="ProdInOutPutVO">
 		SELECT sum(pls_cnt) sum_pls_cnt
 		     , cpm.cpr_cd
@@ -274,17 +292,12 @@
 		     , prod_lot_stock pls
 		 WHERE cpm.cpr_cd = pls.cpr_cd
 		   AND cpm.cpr_cd IN 
-		   <foreach collection='cprCd' index='index' item='cprCd' open='(' close=')' separator=','>
-            #{cprCd}
-       	 	</foreach>
+		 	<foreach collection='cprCd' index='index' item='cprCd' open='(' close=')' separator=','>
+            	#{cprCd}
+       	  	</foreach>
 		 GROUP BY cpm.cpr_cd, cpr_nm
 		 ORDER BY cpm.cpr_cd
 	</select>
-	
-	
-	
-	
-	
 	
 	
 	
