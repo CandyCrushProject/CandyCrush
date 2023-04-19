@@ -119,10 +119,10 @@
 								<div class="card">
 									<div class="clearBoth"></div>
 									<div class="card-content">
-										<h4>자재재고현황</h4>
+										<h4>제품재고</h4>
 										<div id="findMtrlCntSumGrid"></div>
 										<br>
-										<h4>자재LOT상세정보</h4>
+										<h4>자재정보</h4>
 										<div id="findMtrlLotGrid"></div>
 									</div>
 									<div class="clearBoth">
@@ -142,6 +142,8 @@
 				let ordrDtlCdSet = "";
 				let orshNoSet = "";
 				let managerList = [];
+				let mtrlCprCd = [];
+				let sumDtlCnt = "";
 				$(function () {
 					getOrder();
 					$('#prplDt').val(getToday());
@@ -455,10 +457,10 @@
 						}
 					]
 				});
-				let mtrlCprCd = [];
 				addOrderPlanGrid.on('click', function (ev) {
 					let rkInfo = addOrderPlanGrid.getRow(ev.rowKey)
-
+					sumDtlCnt = rkInfo.sumDtlCnt;
+					console.log(sumDtlCnt);
 					mtrlCprCd = {
 						cprCd: rkInfo.cprCd
 					};
@@ -481,7 +483,7 @@
 						}
 					});
 				}
-
+				let result = 0;
 				// 자재 로트별 재고 확인 함수
 				function findMtrlLot() {
 					$.ajax({
@@ -492,6 +494,21 @@
 						dataType: 'json',
 						success: function (data) {
 							findMtrlLotGrid.resetData(data);
+
+							result = sumDtlCnt * (15 / 1000);
+							findMtrlLotGrid.setValue(0, 'needCnt', result, false);
+
+							result = sumDtlCnt * (5 / 1000);
+							findMtrlLotGrid.setValue(1, 'needCnt', result, false);
+
+							result = sumDtlCnt * (300 / 1000);
+							findMtrlLotGrid.setValue(2, 'needCnt', result, false);
+
+							result = sumDtlCnt * (50 / 1000);
+							findMtrlLotGrid.setValue(3, 'needCnt', result, false);
+
+							result = sumDtlCnt * (1000 / 1000);
+							findMtrlLotGrid.setValue(4, 'needCnt', result, false);
 						}, error: function (rej) {
 							console.log("안되는데요?")
 						}
@@ -532,23 +549,28 @@
 					rowHeaders: ['rowNum'],
 					columns: [
 						{
-							header: '제품코드',
-							name: 'cprCd',
+							header: '자재코드',
+							name: 'cmmCd',
 							hidden: true
 						},
 						{
-							header: '제품명',
-							name: 'cprNm',
-							hidden: true
+							header: '자재명',
+							name: 'cmmNm',
+							align: 'center'
 						},
 						{
-							header: '자재LOT',
-							name: 'plsNo',
+							header: '재고수량',
+							name: 'stockInven',
 							align: 'center',
 						},
 						{
-							header: '자재LOT수량',
-							name: 'plsCnt',
+							header: '필요수량',
+							name: 'needCnt',
+							align: 'center',
+						},
+						{
+							header: '단위',
+							name: 'cmmSpec',
 							align: 'center',
 						},
 					]
