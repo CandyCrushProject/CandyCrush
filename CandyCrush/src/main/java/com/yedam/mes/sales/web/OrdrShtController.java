@@ -61,14 +61,14 @@ public class OrdrShtController {
 	}
 
 	// 주문서관리페이지 거래처 검색조회
-	@PostMapping("ordrMngntAccntSrch")
-	@ResponseBody
-	public List<OrdrShtVO> ordrMngntAccntSrch(@RequestParam(required = false) String caNm,
-			@RequestParam(required = false) String caNo) {
-
-		System.out.println("caNm" + caNm + ", caNo" + caNo);
-		return service.accoutnSrchList(caNm, caNo);
-	}
+//	@PostMapping("ordrMngntAccntSrch")
+//	@ResponseBody
+//	public List<OrdrShtVO> ordrMngntAccntSrch(@RequestParam(required = false) String caNm,
+//			@RequestParam(required = false) String caNo) {
+//
+//		System.out.println("caNm" + caNm + ", caNo" + caNo);
+//		return service.accoutnSrchList(caNm, caNo);
+//	}
 
 	// 주문서관리페이지 거래처 검색하면 검색한 거래처에 해당하는 주문서 보여줌
 	@PostMapping("ordrShtMngnSrch")
@@ -129,7 +129,7 @@ public class OrdrShtController {
 		return service.getOrdrShtDtlList(orshNo);
 	}
 	
-	//----------------------------------------------------------------------------------------------------
+//==================================================================================================================================
 	// 제품입고 관리페이지(페이지 리턴)
 	@GetMapping("prodInputMngmnt")
 	public String prodInputMngmnt() {
@@ -192,13 +192,27 @@ public class OrdrShtController {
 		return service.prodInputListSrchDt(pinDt);
 	}
 	
-	//----------------------------------------------------------------------------------------------------
+//==================================================================================================================================
 	// 출고관리 페이지 리턴
 	@GetMapping("outputMngntPage")
-	public String outputMngntPage(Model model) {
+	public String outputMngntPage() {
 
 		return "sales/prodOutputMngmnt";
 	}
 	
+	// 제품출고페이지 주문서조회
+	@GetMapping("OutputOrdrShtList")
+	@ResponseBody
+	public List<ProdInOutPutVO> OutputOrdrShtList() {
+		
+		return service.OutputOrdrShtList();
+	}
 	
+	// 제품출고 주문서 디테일 조회
+	@PostMapping("OutputOrdrShtDtlList")
+	@ResponseBody
+	public List<ProdInOutPutVO> OutputOrdrShtDtlList(@RequestParam(required = false) String orshNo) {
+		
+		return service.OutputOrdrShtDtlList(orshNo);
+	}
 }

@@ -72,5 +72,11 @@ public interface OrdrShtMapper {
 
 	// 제품입고관리 입고처리된 제품 리스트 날짜별 검색조회
 	public List<ProdInOutPutVO> prodInputListSrchDt(String pinDt);
+
+	// 제품출고페이지 주문서조회
+	public List<ProdInOutPutVO> OutputOrdrShtList();
+
+	// 제품출고 주문서 디테일 조회
+	public List<ProdInOutPutVO> OutputOrdrShtDtlList(String orshNo);
 	
 }
