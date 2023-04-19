@@ -70,9 +70,14 @@ public interface OrdrShtService {
 	// 제품출고페이지 주문서조회
 	public List<ProdInOutPutVO> OutputOrdrShtList();
 	
+	// 제품출고페이지 거래처 검색조회
+	public List<ProdInOutPutVO> OutputOrdrShtSrchList(String caNm);
+	
 	// 제품출고 주문서 디테일 조회
 	public List<ProdInOutPutVO> OutputOrdrShtDtlList(String orshNo);
 	
-
+	// 주문서에 제품명 재고 찾을때
 	public List<ProdInOutPutVO> cprCdSetFind(@Param("cprCd")String[] cprCd);
+	
+	
 }

@@ -208,6 +208,14 @@ public class OrdrShtController {
 		return service.OutputOrdrShtList();
 	}
 	
+	// 제품출고 주문서 거래처 검색 조회
+	@PostMapping("OutputOrdrShtSrchList")
+	@ResponseBody
+	public List<ProdInOutPutVO> OutputOrdrShtSrchList(@RequestParam(required = false) String caNm) {
+		
+		return service.OutputOrdrShtSrchList(caNm);
+	}
+	
 	// 제품출고 주문서 디테일 조회
 	@PostMapping("OutputOrdrShtDtlList")
 	@ResponseBody
@@ -216,15 +224,13 @@ public class OrdrShtController {
 		return service.OutputOrdrShtDtlList(orshNo);
 	}
 	
-	
+	// 주문서에 제품명 재고 찾을때
 	@PostMapping("cprCdSetFind")
 	@ResponseBody
 	public List<ProdInOutPutVO> cprCdSetFindProcess(@RequestBody ProdInOutPutVO pipVO){
 		String[] cprCdSet = pipVO.getCprCd().split(",");
 		
 		return service.cprCdSetFind(cprCdSet);
-			
-		
 	}
 	
 }

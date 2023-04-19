@@ -20,9 +20,9 @@ let accountName = "";
 const prodInputSrchList = () => {
   accountName = document.getElementById('accountName').value;
   $.ajax({
-    url: "ordrShtMngnSrch",
+    url: "OutputOrdrShtSrchList",
     method: "POST",
-    data: { caNm: accountName },
+    data: { caNm : accountName },
     dataType: "JSON",
     success: function (data) {
       console.log("ordrAccntSrch", data);
