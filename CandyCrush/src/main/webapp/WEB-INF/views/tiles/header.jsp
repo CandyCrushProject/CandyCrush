@@ -160,7 +160,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="${pageContext.request.contextPath}/" class="waves-effect waves-dark">
+										<a href="${pageContext.request.contextPath}/outputMngntPage" class="waves-effect waves-dark">
 											제품출고관리
 										</a>
 									</li>

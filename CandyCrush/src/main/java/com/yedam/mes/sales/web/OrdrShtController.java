@@ -192,4 +192,13 @@ public class OrdrShtController {
 		return service.prodInputListSrchDt(pinDt);
 	}
 	
+	//----------------------------------------------------------------------------------------------------
+	// 출고관리 페이지 리턴
+	@GetMapping("outputMngntPage")
+	public String outputMngntPage(Model model) {
+
+		return "sales/prodOutputMngmnt";
+	}
+	
+	
 }

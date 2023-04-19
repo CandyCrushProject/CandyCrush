@@ -14,11 +14,7 @@ $(document).ready(function () {
   $('#prodInputDt').on('change', function() {
     prodInputListSrchDt();
   });
-
-  // 입고처리된 목록 행 더블클릭
-  accntList.on('dblclick', (e) => {
-    if (e.targetType != 'cell') return;
-  });
+  
 });
 //---------------------------------------------------------------------------------------------
 // ajax로 불러온 날짜데이터(시간으로 불러와짐) 변환
