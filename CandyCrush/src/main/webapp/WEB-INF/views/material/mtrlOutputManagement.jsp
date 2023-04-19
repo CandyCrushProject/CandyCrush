@@ -59,7 +59,7 @@
 							<div>
 								<h5><b>출고등록</b></h5>
 								<div id="floatBtn">
-									<button type="button" class="cndInsBtn">저장</button>
+									<button type="button" class="cndInsBtn" id="mtrlOutSaveBtn">저장</button>
 									<button type="button" class="cndRstBtn">초기화</button>
 								</div>
 								<div>
@@ -69,14 +69,14 @@
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									<!--<input type="text" id="outNote" style="width: 150px; border: 1px solid rgba(128, 128, 128, 0.61);">-->
 									<label for="outType">&nbsp;&nbsp;&nbsp;출고유형</label>
-									<select id="motTyp" style="display: inline; width: 100px; border: 1px solid rgba(128, 128, 128, 0.61);">
+									<select id="outType" style="display: inline; width: 100px; border: 1px solid rgba(128, 128, 128, 0.61);">
 										<option value="부서">부서</option>
 										<option value="협력업체">협력업체</option>
 									</select>
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									<label for="outNote">&nbsp;&nbsp;&nbsp;상세정보</label>
-									<select id="motTyp" style="display: inline; width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
-										<option value="0">---선택하세요---</option>
+									<select id="outNote" style="display: inline; width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
+										<option value="내용없음">---선택하세요---</option>
 										<option value="생산팀으로 출고">생산팀으로 출고</option>
 										<option value="협력업체로 출고">협력업체로 출고</option>
 									</select>
@@ -159,7 +159,7 @@
 				url : "mtrlOutList",
 				method :"POST",
 				dataType : "JSON",
-				success : function(data){					
+				success : function(data){	
 					materialOutAdd.resetData(data);
 					materialOutAdd.getData().forEach(row=>{
 						materialOutAdd.addCellClassName(row.rowKey, 'motCntCheck', 'cell-green')
@@ -263,19 +263,13 @@
 			}
 		});
 
-		let outCmlInCnt = 0;
-		let outMotCnt = 0;
-		let outMotCntCheck = 0;
-		let outMotCntPlus = 0;
+		let outMotCntPlus = 1;
 
-		materialOutAdd.on('editingStart',(e)=>{
-			let outCmlInCnt = materialOutAdd.getRow(e.rowKey).cmlInCnt;		//LOT수량
-			let outMotCnt = materialOutAdd.getRow(e.rowKey).motCnt;				//현재출고수량
-			let outMotCntCheck = materialOutAdd.getRow(e.rowKey).motCntCheck;//출고가능수량
+		materialOutAdd.on('editingStart',(e) => {
 			let outMotCntPlus = materialOutAdd.getRow(e.rowKey).motCntPlus;//출고추가수량
 		});
 
-		materialOutAdd.on('editingFinish',(e)=>{
+		materialOutAdd.on('editingFinish',(e) => {
 			let rowData = materialOutAdd.getRow(e.rowKey);
 			let plus = Number(rowData.motCntPlus);
 			if(isNaN(plus)){
@@ -291,16 +285,31 @@
 			} else {
 				let rowDatas = materialOutAdd.getRow(e.rowKey);
 
-				let testCmlInCnt = Number(rowDatas.cmlInCnt);	//LOT수량
-				let testMotCnt = Number(rowDatas.motCnt);	//현재출고수량
-				let testMotCntCheck = Number(rowDatas.motCntCheck);	//출고가능수량
-				let testMotCntPlus = Number(rowDatas.motCntPlus);	//출고추가수량
+				let testCmlInCnt = Number(rowDatas.cmlInCnt);				//LOT수량
+				let testMotCnt = Number(rowDatas.motCnt);					 //현재출고수량
+				let test2 = Number(testCmlInCnt - testMotCnt);		//출고가능수량
+				let testMotCntPlus = Number(rowDatas.motCntPlus);	//출고추가수량(입력값)
+				
+				// console.log("LOT수량 - 현재출고수량 : ", test2);
+				// console.log("입력값 : ", testMotCntPlus);
 
-				console.log("LOT수량 : " ,testCmlInCnt);
-				console.log("현재출고수량 : ", testMotCnt);
-				console.log("출고가능수량 : ", testMotCntCheck);
-				console.log("입력값 : " , testMotCntPlus);
-			};
+				//입력값이 출고가능수량보다 크거나 0일 때 예외처리
+				if(test2 < testMotCntPlus || testMotCntPlus <= 0){
+					setTimeout(() => {
+						Swal.fire({
+							icon : 'error',
+							title : '경고',
+							text: '출고가능수량보다 크거나 값이 입력되지 않았습니다',
+						});
+						return;
+					}, 10);
+					materialOutAdd.setValue(e.rowKey, 'motCntPlus', outMotCntPlus);
+				};
+
+
+
+
+			}; // End else
 
 		})
 
@@ -409,7 +418,83 @@
 			});
 		});
 
-				//엑셀버튼 클릭 이벤트
+		$('#mtrlOutSaveBtn').on('click',()=>{
+			let date = $('#outDt').val();
+			let type = $('#outType').val();
+			let note = $('#outNote').val();
+			let rowCheckData = materialOutAdd.getCheckedRows();
+
+			if(rowCheckData.length === 0){
+				Swal.fire({
+					icon: 'error',
+					title: '경고',
+					text: "선택된 행이 없습니다.",
+				});
+				return;
+			} else {
+				rowCheckData.map((item)=>{
+					item.motDt = date;				//출고등록일자
+					item.motTyp = type;				//출고유형
+					item.motNote = note;			//출고상세정보
+					//item.motCntPlus = Number(item.motCntPlus);	//출고추가수량
+					item.motCnt = Number(item.motCntPlus);	//출고추가수량
+				});
+				console.log(rowCheckData);
+
+				if(note === '내용없음'){
+					Swal.fire({
+						title: '알림',
+						text: "상세정보없이 진행하시겠습니까?",
+						icon: 'question',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						cancelButtonColor: '#d33',
+						confirmButtonText: '승인',
+						cancelButtonText: '취소',
+						reverseButtons: true, // 버튼 순서 거꾸로
+						
+					}).then((result) => {
+						if (result.isConfirmed) {
+							//승인버튼을 눌렀을 때
+							$.ajax({
+								url : "mtrlOutInsert",
+								method :"POST",
+								dataType : "JSON",
+								contentType: "application/json",
+								data: JSON.stringify(rowCheckData),
+								success : function(data){
+									console.log(data);
+									/*Swal.fire(
+										'등록되었습니다',
+										'자세한 내용은 출고목록에서 확인가능합니다',
+										'success'
+									);*/
+									//materialInspGetList.removeCheckedRows();	//체크된 행을 그리드에서 삭제한다
+									//mtrlOutList(); //출고목록 아작스 재호출
+								},
+								error : function(reject){
+									console.log(reject);
+								}
+							});
+
+							
+						};
+					});
+				} else {
+					//상세정보없어도 출고관리에 데이터를 집어넣을 수 있도록
+					console.log("eee");
+				};
+			}
+		});
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------
+		//엑셀버튼 클릭 이벤트
 		const options = {
 			includeHiddenColumns: true,
 			onlySelected: true,

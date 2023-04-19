@@ -266,7 +266,7 @@
 
 	<!-- 출고목록 -->
 	<select id="mtrlOutList" resultType="MaterialVO">
-		SELECT lot.cmm_cd, cmm_nm, cmm_spec, cmm_unit, cmm_typ,
+		SELECT lot.cmm_cd, cmm_nm, cmm_spec, cmm_unit, cmm_typ, lot.min_cd,
 		        lot.cml_nm, cml_in_cnt, NVL(mot_cnt, 0) mot_cnt
 		FROM mtrl_otpt mot
 		    RIGHT OUTER JOIN cm_mtrl_lot lot
@@ -296,4 +296,27 @@
 		                ON lot.cmm_cd = cmm.cmm_cd
 		WHERE mot_cd = #{motCd}
 	</select>
+	
+	<!-- 출고관리 테이블 INSERT -->
+	<insert id="mtrlOutInsert" parameterType="MaterialVO">
+		INSERT INTO
+			MTRL_OTPT
+					(
+					  MOT_CD, MOT_CNT, MOT_DT, MOT_TYP,
+				      MOT_NOTE, CML_NM, MIN_CD
+					 )
+	 		SELECT
+	 			'mot' || mot_seq.NEXTVAL || TO_CHAR(sysdate , 'yyMMdd'),
+	 			A.*
+	 		FROM(
+	 			<foreach collection="list" item="vo" separator="UNION ALL">
+	 			SELECT
+					#{vo.motCd} AS mot_cd, #{vo.motCnt} AS mot_cnt,
+					#{vo.motDt} AS mot_dt, #{vo.motTyp} AS mot_typ,
+					#{vo.motNote} AS mot_note, #{vo.cmlNm} AS cml_nm, #{vo.minCd} AS min_cd
+				FROM
+					DUAL
+				</foreach>
+			  ) A
+	</insert>
 </mapper>
