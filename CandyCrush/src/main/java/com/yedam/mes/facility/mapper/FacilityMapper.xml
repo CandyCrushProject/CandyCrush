@@ -93,29 +93,28 @@
 		SELECT
 		F.FAC_CD,
 		FAC_NM,
-		FDM_CD,
-		FDM_MGR,
+		FAC_CY,
+		FAC_INFO,
+		FAC_DT,
+		FAC_RUN,
 		RCT_STP,
-		FDM_RUN,
-		D.CFD_CD,
-		CFD_TITLE,
-		CFD_CONTENT,
-		FAC_RUN
-        from
-        FAC F
-        LEFT JOIN FAC_STAT S
-        ON F.FAC_CD = S.FAC_CD
-        LEFT JOIN FAC_DWN_MNG D
-        ON D.FAC_CD = F.FAC_CD
-		LEFT JOIN CM_FAC_DWN_CODE C
-        ON D.CFD_CD = C.CFD_CD
-        LEFT JOIN(
+		FDM_STOP,
+		FDM_MGR,
+		CFD_CD,
+		FDM_CD
+		FROM
+		FAC F
+		LEFT JOIN FAC_STAT S
+		ON F.FAC_CD = S.FAC_CD
+		LEFT JOIN(
 		SELECT FAC_CD, MAX(FDM_STOP) RCT_STP
 		FROM FAC_DWN_MNG
 		GROUP BY FAC_CD
 		) R
-        ON D.FAC_CD = R.FAC_CD AND D.FDM_STOP = R.RCT_STP
-		ORDER BY D.FAC_CD
+		ON F.FAC_CD = R.FAC_CD
+		LEFT JOIN FAC_DWN_MNG D
+		ON R.RCT_STP = D.FDM_STOP AND R.FAC_CD=D.FAC_CD
+		ORDER BY F.FAC_CD
 	</select>
 
 	<select id="getFacilityDownCode" resultType="FacilityDownVO">

@@ -155,7 +155,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="${pageContext.request.contextPath}/ProdProcManagement" class="waves-effect waves-dark">
+										<a href="${pageContext.request.contextPath}/ProcResult" class="waves-effect waves-dark">
 											생산공정관리
 										</a>
 									</li>
