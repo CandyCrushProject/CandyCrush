@@ -37,7 +37,7 @@
 		                ON cbm.cm_cd = cm.cm_cd
 		                    JOIN cm_bom_mtrl cbmt
 		                        ON cbm.cbm_cd = cbmt.cbm_cd
-		                            JOIN cm_mtrl_mng cmm
+		                            LEFT OUTER JOIN cm_mtrl_mng cmm
 		                                ON cbmt.cmm_cd = cmm.cmm_cd
 		                                    JOIN cm_product_mng cpr
 		                                        ON bom.cpr_cd = cpr.cpr_cd

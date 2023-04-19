@@ -148,16 +148,16 @@
 	<script>
 		const Grid = tui.Grid;
 		let procProdAllList = [
-														<c:forEach items="${procProdList}" var="item">
-															{
-																prcmDt : '${item.prcmDt}',
-																prcmCd : '${item.prcmCd}',
-																cprCd : '${item.cprCd}',
-																cprNm : '${item.cprNm}',
-																cprTyp : '${item.cprTyp}',
-															},
-														</c:forEach>
-													]
+								<c:forEach items="${procProdList}" var="item">
+									{
+										prcmDt : '${item.prcmDt}',
+										prcmCd : '${item.prcmCd}',
+										cprCd : '${item.cprCd}',
+										cprNm : '${item.cprNm}',
+										cprTyp : '${item.cprTyp}',
+									},
+								</c:forEach>
+							]
 		let cprNm = "";
 		let start = "";
 		let end = "";
@@ -218,26 +218,7 @@
 									+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
 						return result;
 					}
-				},
-				// {//PRCM_END_DT
-				// 	header: '작업종료일자',
-				// 	name: 'prcmEndDt',		//생산지시/생산시작일자
-				// 	formatter: function (e) {
-				// 		let newData = new Date(e.value);
-				// 		let result = "";
-				// 		if(newData){
-				// 			result = newData.getFullYear() + "-" +
-				// 						(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
-				// 						+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
-				// 		} else {
-				// 			result = "";
-				// 		}
-						
-				// 		return result;
-				// 	},
-				// 	sortingType: 'desc',
-				// 	sortable: true
-				// }
+				}
 			],
 			bodyHeight: 250,
 			pageOptions: {
@@ -252,10 +233,6 @@
 			el: document.getElementById('prodcProgressList'),
 			rowHeaders: ['checkbox'],
 			columns: [
-				/*{
-					header: '공정지시코드',
-					name: 'prcmPrcd'
-				},*/
 				{
 					header: '제품번호',
 					name: 'cprCd',
@@ -480,8 +457,8 @@
 			let checkRows = prodcProgressList.getCheckedRows();
 
 			checkRows.map((item) => {
-				item.prcmCd = procCd;					//생산지시코드
-				item.piCnt = item.prcmQnt			//검사수량
+				item.prcmCd = procCd;			//생산지시코드
+				item.piCnt = item.prcmQnt		//검사수량
 				item.piPassCnt = item.prprQnt	//합격수량
 				item.piBadCnt = item.prprBad	//불량수량
 				item.piStrDt = getStartToday;	//검사시작일자
@@ -513,18 +490,5 @@
 				});
 			};
 		});
-
-
-		//생산지시 상세목록 Grid 쪽 등록버튼 누르면 모달창이 짠
-		/*$('#prodInsertBtn').on('click',()=>{
-			document.getElementById('inspModal').style.display='block';
-			setTimeout(()=> inspInsert.refreshLayout() , 0);
-		});*/
-		/*$('#modalHide').on('click',()=>{
-			$('#inspModal').hide();
-		});*/
-
-
-
 	</script>
 </main>
