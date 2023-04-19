@@ -188,7 +188,18 @@ public class ProcessController {
 	@ResponseBody
 	public Map<String, Object> insertProg(@RequestBody List<ProcOrderVO> progVO){
 		
-		int insertOrder = procService.insertProgress(progVO);
+		for(ProcOrderVO vo : progVO) {
+		System.out.println(vo);
+		}
+		int insertOrder = 0;
+				
+		insertOrder += procService.insertProgressOne(progVO.get(0));
+
+		System.out.println("0번봅고..."+ progVO.get(0));
+		
+		insertOrder += procService.insertProgressFull(progVO);
+		
+		
 		Map<String, Object> message = new HashMap<>();
 		
 		
