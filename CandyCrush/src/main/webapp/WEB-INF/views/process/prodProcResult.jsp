@@ -38,7 +38,7 @@
             <div class="col-md-16">
               <div class="card">
                 <div class="card-action">작업시작등록
-                  
+                  <td><button onclick="startInsert();" style="display: inline;" class="cndInsBtn">작업시작</button></td>
                 </div>
                 <div class="card-content">
                   <table class="candyTab">
@@ -72,10 +72,11 @@
                         </tr>
                         <tr>
                           <th>작업시작일</th>
+                          <th>생산목표수량</th>
                         </tr>
                         <tr>
                           <td><input type="datetime-local" placeholder="작업시작" name="prpeWkStartDt" id="ProgStartTime" required readonly></td>
-                          <td><button onclick="startInsert();" style="display: inline;" class="cndInsBtn">작업시작</button></td>
+                          <td><input type="text" id="targetAmount"></td>
                         </tr>
                       </form>
                     </tbody>
@@ -488,6 +489,7 @@ Grid.setLanguage('ko');//생산지시 조회
       prcmPrcd.value=rowData.prcmPrcd;
       cprNm.value=rowData.cprNm;
       cmNm.value=rowData.cmNm;
+      targetAmount.value = rowData.prcmQnt;
       resetTime(ProgStartTime);
       getProcFac(rowData.prcmPrcd);
       console.log(rowData.prcmPrcd+'이거 설비 가져와야됨');
@@ -576,6 +578,11 @@ Grid.setLanguage('ko');//생산지시 조회
           name: 'prpeMng',
           sortable: true,
         },
+        {
+          header: '작업자',
+          name: 'prcmQnt',
+          sortable: true,
+        },
       ],
       bodyHeight: 500,
       pageOptions: {
@@ -620,6 +627,7 @@ Grid.setLanguage('ko');//생산지시 조회
       prpeWkStartDtF.value =formatTimestamp(rowDataF.prpeWkStartDt);
       resetTime(prpeWkEndDtF);
       document.getElementById('procFinishModal').style.display='block';
+      doneQnt.value=rowDataF.prcmQnt;//====여기수정함
       getBadCd();
       
       setTimeout(()=>refreshModalGrid(), 100);
@@ -846,16 +854,10 @@ const badCdList = new Grid({
     //인풋리스트 변형완료했을때 보여주는값 바꿔주기위한 트리거
     makeQnt.addEventListener('input', BadInputValueEvent);
     badCdInsertList.on("editingFinish",(e)=>{
-      BadInputValueEvent();
+      badQntF.value = parseInt(badCdInsertList.getSummaryValues('badQnt').sum);
+      makeQnt=doneQnt.value-badQntF.value//==================================★==========★==========★==========★==========★==========★==========★==========★==========★==========★==========★==========★==========★==========★
     });
 
-    //value값 바뀔때마다 호출할 event
-    function BadInputValueEvent(){
-      console.log("이벤트일어남 생산량"+makeQnt.value);
-      console.log("이벤트일어남 불량량"+badCdInsertList.getSummaryValues('badQnt').sum);
-      doneQnt.value = parseInt(badCdInsertList.getSummaryValues('badQnt').sum)+parseInt(makeQnt.value);
-      badQntF.value = parseInt(badCdInsertList.getSummaryValues('badQnt').sum);
-    }
 
 
     //실적 INSERT가즈아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
