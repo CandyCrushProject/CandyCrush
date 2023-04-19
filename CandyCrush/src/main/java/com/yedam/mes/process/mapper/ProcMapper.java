@@ -42,9 +42,9 @@ public interface ProcMapper {
 	// 자재확인 - 자재입고된 로트조회
 	public List<BomInfoVO> selectMtrlInput(BomInfoVO biVO);
 	
-	
-	
-	
+	// 생산계획시 보이는 자재 재고 및 로트정보
+	public List<OrderPlanVO> findMtrlCntSum(OrderPlanVO opVO);
+	public List<OrderPlanVO> findMtrlLot(OrderPlanVO opVO);
 	
 	
 	

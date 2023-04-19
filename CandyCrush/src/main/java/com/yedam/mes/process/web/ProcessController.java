@@ -221,19 +221,19 @@ public class ProcessController {
 		return message;
 	}
 	
+	@PostMapping("findMtrlCntSum")
+	@ResponseBody
+	public List<OrderPlanVO> findMtrlCntSumProcess(@RequestBody OrderPlanVO opVO) {
+		System.out.println(opVO);
+		return procService.findMtrlCntSum(opVO);
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@PostMapping("findMtrlLot")
+	@ResponseBody
+	public List<OrderPlanVO> findMtrlLotProcess(@RequestBody OrderPlanVO opVO) {
+		System.out.println(opVO);
+		return procService.findMtrlLot(opVO);
+	}
 	
 	
 	

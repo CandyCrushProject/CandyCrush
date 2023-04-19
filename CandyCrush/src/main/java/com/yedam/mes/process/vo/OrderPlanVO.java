@@ -19,5 +19,7 @@ public class OrderPlanVO {
 	private String sttCngDt; // 상태변경일자
 	private int ordrCdCnt; // 주문건수
 	private String sumDtlCnt; // 상품별 주문 개수
-	
+	private String plsNo; // 자재로트번호
+	private String plsCnt; // 자재로트 입고량
+	private int plsCntSum; // 자재 총 합계
 }

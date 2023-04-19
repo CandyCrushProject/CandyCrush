@@ -108,7 +108,7 @@
 		   AND mnf.cbm_cd = mtr.cbm_cd(+)
 		   AND mnf.cm_cd = cpc.cm_cd (+)
 		   AND cpr_cd = #{cprCd}
-		 ORDER BY cm_cd
+		 ORDER BY cm_cd, cmm_cd
 	</select>
 	
 	<!-- 주문서 상세 현재상태 업데이트 -->
@@ -144,11 +144,12 @@
 				   ) p
 			 WHERE ROWNUM BETWEEN 1 AND 1
 		</selectKey>
-		INSERT INTO proc_plan_detail (prpld_cd, prpl_cd, cpr_cd, prpld_cnt)
+		INSERT INTO proc_plan_detail (prpld_cd, prpl_cd, cpr_cd, prcm_start_dt, prpld_cnt)
 		VALUES (
 				   'plandtl'||TO_CHAR(SYSDATE,'yyMMdd')||TRIM(TO_CHAR(prpl_dtl_seq.nextval,'099'))
 				 , #{prplCd}
 				 , #{cprCd}
+				 , TO_DATE(#{prcmStartDt}, 'rrrr-MM-dd')
 				 , #{prpldCnt}
 			   )
 	</insert>
@@ -187,15 +188,21 @@
 	</select>
 		 
 		<select id="selectMtrlInput" resultType="BomInfoVO">
-		select cmm.cmm_cd
-             , cmm.cmm_nm
-             , cbmt_cd
-		  from cm_mtrl_mng cmm
+		SELECT cmm_nm
+		     , cml.cmm_cd
+     		 , cbmt_ms
+		  FROM cm_mtrl_lot cml
+		     , cm_mtrl_mng cmm
 		     , cm_bom_mtrl cbm
 		     , cm_bom_mng bmg
-		 WHERE cmm.cmm_cd = cbm.cmm_cd
+		     , cm_bom_mnfct mnf
+		 WHERE cml.cmm_cd = cmm.cmm_cd
+		   AND cml.cmm_cd = cbm.cmm_cd
 		   AND cbm.bom_cd = bmg.bom_cd
-		   AND bmg.cpr_cd = #{cprCd}
+		   AND cbm.bom_cd = mnf.bom_cd
+		   AND cpr_cd = #{cprCd}
+		 GROUP BY cmm_nm, cml.cmm_cd, cbmt_ms
+		 ORDER BY cml.cmm_cd
 	</select>
 
 	<insert id="insertProcOrder" parameterType="ProcOrderVO">
@@ -211,6 +218,7 @@
 			       , cpr_cd
 			       , prcm_dt
 			       , prcm_start_dt
+			       , prcm_end_dt
 			       , prcm_mng
 			       )
 			VALUES ( 
@@ -219,6 +227,7 @@
 			       , #{cprCd}
 			       , TO_DATE(SYSDATE, 'rrrr-MM-dd')
 			       , #{prcmStartDt}
+			       , #{prcmEndDt}
 			       , #{prcmMng}
 			       );
 			       
@@ -296,10 +305,28 @@
 			   )
 	</insert>
 		 
+	<select id="findMtrlCntSum" parameterType="OrderPlanVO" resultType="OrderPlanVO">
+		SELECT sum(pls_cnt) pls_cnt_sum
+		     , cpm.cpr_cd
+		     , cpr_nm
+		  FROM cm_product_mng cpm
+		     , prod_lot_stock pls
+		 WHERE cpm.cpr_cd = pls.cpr_cd
+		   AND cpm.cpr_cd = #{cprCd}
+		 GROUP BY cpm.cpr_cd, cpr_nm
+	</select>
 		 
-		 
-		 
-		 
+	<select id="findMtrlLot" parameterType="OrderPlanVO" resultType="OrderPlanVO">
+		SELECT pls_no
+		     , pls_cnt
+		     , cpm.cpr_cd
+		     , cpr_nm
+		  FROM cm_product_mng cpm
+		     , prod_lot_stock pls
+		 WHERE cpm.cpr_cd = pls.cpr_cd
+		   AND cpm.cpr_cd = #{cprCd}
+		 ORDER BY pls_mk_dt, pls_no
+	</select>
 		 
 		 
 		 

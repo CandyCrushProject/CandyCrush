@@ -51,7 +51,10 @@ public interface ProcService {
 	// 자재지시 - 공정에 들어갈 자재 등록
 	public int insertProgMtrl(List<ProcOrderVO> poVO);
 	
-	
+
+	// 생산계획시 보이는 자재 재고 및 로트정보
+	public List<OrderPlanVO> findMtrlCntSum(OrderPlanVO opVO);
+	public List<OrderPlanVO> findMtrlLot(OrderPlanVO opVO);
 	
 	
 	
