@@ -45,10 +45,10 @@
                     <tbody>
                       <!-- 데이터전송용 숨겨진데이터 -->
                       <form name="startForm" action="startProg" onsubmit="return false">
-                        <tr style="display: none;">
-                          <input type="text" name="prcmPrcd" id="prcmPrcd" required readonly>
-                          <input type="text" name="cmCd" id="cmCd" required readonly>
-                          <input type="text" name="prcmCd" id="prcmCd" required readonly>
+                        <tr style="display: none;" class="hidden">
+                          <input type="text" name="prcmPrcd" id="prcmPrcd" required readonly style="display: none;">
+                          <input type="text" name="cmCd" id="cmCd" required readonly style="display: none;">
+                          <input type="text" name="prcmCd" id="prcmCd" required readonly style="display: none;">
                         </tr>
                         <!-- ========================= -->
                         <tr>
@@ -116,7 +116,7 @@
                 <div class="card-content">
                   <table class="candyTab">
                     <tbody>
-                      <tr style="display: none;">
+                      <tr style="display: none;" class="hidden">
                         <input type="text" name="prcmPrcdF" id="prcmPrcdF" required readonly>
                         <input type="text" name="prpeCdF" id="prpeCdF" required readonly>
                         <input type="text" name="cmCd" id="cmCdF" required readonly>
@@ -285,6 +285,13 @@
 
 
 const Grid = tui.Grid;
+
+//실시간 시간표시
+setInterval(clock, 1000);
+function clock(){
+  resetTime(ProgStartTime);
+  resetTime(prpeWkEndDtF);
+};
 Grid.setLanguage('ko');//생산지시 조회
     const ProcOdList = new Grid({
       el: document.getElementById('ProcOrderListGrid'), // Container element
@@ -493,7 +500,7 @@ Grid.setLanguage('ko');//생산지시 조회
         cprNm.value=rowData.cprNm;
         cmNm.value=rowData.cmNm;
         targetAmount.value = rowData.prcmQnt;
-        resetTime(ProgStartTime);
+
         getProcFac(rowData.prcmPrcd);
         console.log(rowData.prcmPrcd+'이거 설비 가져와야됨');
         document.getElementById('procInsertModal').style.display='block';
@@ -632,7 +639,7 @@ Grid.setLanguage('ko');//생산지시 조회
       usedFac.value=rowDataF.facNm;
       prpeMngF.value=rowDataF.prpeMng;
       prpeWkStartDtF.value =formatTimestamp(rowDataF.prpeWkStartDt);
-      resetTime(prpeWkEndDtF);
+      
       document.getElementById('procFinishModal').style.display='block';
       doneQnt.value=rowDataF.prcmQnt;//====여기수정함
       makeQnt.value=rowDataF.prcmQnt;
@@ -968,7 +975,6 @@ const badCdList = new Grid({
     //모달시간 input에 현재시간 넣기
 		function resetTime(id){
       id.value=timestamp();
-      console.log("reset timestamp");
     };
 	  //현재시간 htmlinput format
 		function timestamp(){

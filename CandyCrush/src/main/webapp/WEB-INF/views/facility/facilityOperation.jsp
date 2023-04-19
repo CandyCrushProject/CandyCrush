@@ -283,13 +283,16 @@
 	//모달시간 input에 현재시간 넣기
 		init();
 		function init(){
-			
+			setInterval(setTime, 1000);
+		};
+
+		function setTime(){
 			let stopDtInput=document.getElementsByClassName("fdmTimeInput");
 			for(let i = 0; i <stopDtInput.length; i++){
 				stopDtInput[i].value=timestamp();
 				console.log("Initializing");
 			}
-		};
+		}
 	//현재시간 htmlinput format
 		function timestamp(){
 		    var today = new Date();
