@@ -51,7 +51,7 @@
 								<ul class="nav nav-second-level">
 									<li>
 										<a href="${pageContext.request.contextPath}/bomCheck" class="waves-effect waves-dark">
-											BOM관리
+											BOM조회
 										</a>
 									</li>
 									<!-- <li>
@@ -118,7 +118,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="${pageContext.request.contextPath}/" class="waves-effect waves-dark">
+										<a href="${pageContext.request.contextPath}/outputMngntPage" class="waves-effect waves-dark">
 											제품출고관리
 										</a>
 									</li>
@@ -214,12 +214,11 @@
 											자재입고관리
 										</a>
 									</li>
-									<li>
-										<a href="${pageContext.request.contextPath}/mtrlOutputManagement" class="waves-effect waves-dark">
-											자재출고관리
-										</a>
-									</li>
-
+								 <li>
+									<a href="${pageContext.request.contextPath}/mtrlOutputManagement" class="waves-effect waves-dark">
+										자재출고관리
+									</a>
+								</li>
 
 
 

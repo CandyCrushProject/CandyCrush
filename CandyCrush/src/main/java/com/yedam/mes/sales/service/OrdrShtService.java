@@ -10,7 +10,6 @@ import com.yedam.mes.sales.service.vo.ProdInOutPutVO;
 
 public interface OrdrShtService {
 	
-	
 	// 주문서 전체조회
 	public List<OrdrShtVO> ordrShtAllList();
 	
@@ -48,11 +47,11 @@ public interface OrdrShtService {
 	// 주문서목록 조회 그리드에서 삭제하기(디테일도 지워져야함)
 	public int deleteOrdrShtDtl(List<OrdrShtVO> vo);
 	
-	//----------------------------------------------------------------------------------------------------
+//==================================================================================================================================
 	// 제품입고관리 페이지 입고대기 리스트
 	public List<ProdInOutPutVO> prodInputListPage();
 
-	// 제품입고관리 거래처 검색조회
+	// 제품입고관리 제품명 검색조회
 	public List<ProdInOutPutVO> prodInputSrchList(String cprNm);
 	
 	// 제품입고관리 제품 등록
@@ -67,5 +66,10 @@ public interface OrdrShtService {
 	// 제품입고관리 입고처리된 제품 리스트 날짜별 검색조회
 	public List<ProdInOutPutVO> prodInputListSrchDt(String pinDt);
 	
+//==================================================================================================================================
+	// 제품출고페이지 주문서조회
+	public List<ProdInOutPutVO> OutputOrdrShtList();
 	
+	// 제품출고 주문서 디테일 조회
+	public List<ProdInOutPutVO> OutputOrdrShtDtlList(String orshNo);
 }

@@ -181,10 +181,21 @@ public class procServiceImpl implements ProcService {
 	public int insertResult(List<ProcResultAllVO> finishVO) {
 		// TODO Auto-generated method stub
 		int result=0;
+		ProcResultAllVO pvo = new ProcResultAllVO();
 		for(int i =0;i<finishVO.size();i++) {
-			if (i==0) {
+			if (i==0) { //불량이 여러건이든 한건이든 한번만 실행됨
 				result+=procMapper.insertResult(finishVO.get(0));
 				result+=procMapper.updateProcProg(finishVO.get(0));
+				
+				
+				System.out.println(finishVO.get(0).getPrcmPrcd());
+				pvo = procMapper.PselectNextProc(finishVO.get(0));//다음공정 가져오기
+				pvo.setPrcmQnt(finishVO.get(0).getPrpeProd());//생산목표량에 이전작업한 생산량을넣어서
+				procMapper.PupdateProcQnt(pvo);//업데이트해주기
+				if(pvo.getCmCd().equals("cmprcd007")) //다음공정이 검수라면
+				{
+					procMapper.PupdateProcFin(pvo);//해당생산지시 생산종료넣어주기
+				}
 			}
 			if(finishVO.get(i).getBadQnt()>0) {
 				result+=procMapper.insertBad(finishVO.get(i));

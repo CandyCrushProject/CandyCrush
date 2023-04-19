@@ -436,39 +436,43 @@
 	<!-- 실적페이지 생산지시 데이터 조회용 -->
 	<select id="getProcCommand" resultType="ProcResultAllVO">
 		SELECT PRCM_CD,
-		PRCM_CNT,
-		C.CPR_CD,
-		CPR_NM,
-		PRCM_DT,
-		PRCM_START_DT,
-		PRCM_END_DT,
-		PRCM_MNG
+
+		    PRCM_CNT,
+		    C.CPR_CD,
+		    CPR_NM,
+		    PRCM_DT,
+		    PRCM_START_DT,
+		    PRCM_END_DT,
+		    PRCM_MNG,
+		    PRCM_DEADLINE
 		FROM PROC_COMMAND C
 		LEFT JOIN CM_PRODUCT_MNG M
 		ON C.CPR_CD = M.CPR_CD
+		WHERE PRCM_END_DT IS NULL
 	</select>
-	<!-- 실적페이지 공정 조회용 -->
-	<select id="getProc" resultType="ProcResultAllVO">
-		SELECT
-		PRCM_PRCD,
-		P.PRCM_CD,
-		P.CM_CD,
-		M.CPR_NM,
-		CM_NM,
-		PRCM_TURN,
-		PRCM_QNT,
-		PRPR_QNT,
-		PRPR_BAD,
-		(PRPR_QNT+PRPR_BAD)PR_QNT_SUM,
-		PRPR_END
-		FROM PROC_PROGRESS P
-		LEFT JOIN CM_PROCESS_CODE C
-		ON P.CM_CD = C.CM_CD
-		LEFT JOIN PROC_COMMAND PC
-		ON P.PRCM_CD = PC.PRCM_CD
-		LEFT JOIN CM_PRODUCT_MNG M
-		ON PC.CPR_CD=M.CPR_CD
-		WHERE P.PRCM_CD = #{prcmCd}
+
+	<!-- 	실적페이지 공정 조회용 -->
+	<select id="getProc" resultType="ProcResultAllVO" >
+		SELECT PRCM_PRCD,
+            P.PRCM_CD,
+            P.CM_CD,
+            M.CPR_NM,
+            CM_NM,
+            PRCM_TURN,
+            PRCM_QNT,
+            PRPR_QNT,
+            PRPR_BAD,
+            (PRPR_QNT+PRPR_BAD)PR_QNT_SUM,
+            PRPR_END   
+        FROM PROC_PROGRESS P
+        LEFT JOIN CM_PROCESS_CODE C
+        ON P.CM_CD = C.CM_CD
+        LEFT JOIN PROC_COMMAND PC
+        ON P.PRCM_CD = PC.PRCM_CD
+        LEFT JOIN CM_PRODUCT_MNG M
+        ON PC.CPR_CD=M.CPR_CD
+        WHERE P.PRCM_CD = #{prcmCd}
+        ORDER BY PRCM_TURN DESC
 	</select>
 
 	<!-- 실적페이지 가용 설비 조회용 -->
@@ -489,8 +493,7 @@
 
 	<!-- 실적페이지 현재 작업현황 조회용 -->
 	<select id="getProcProg" resultType="ProcResultAllVO">
-		SELECT
-		PRPE_CD,P.PRCM_PRCD,P.CM_CD,CM_NM,PRPE_MNG,PC.CPR_CD,CPR_NM,C.FAC_CD,FAC_NM,PRPE_WK_START_DT
+		SELECT PRPE_CD,P.PRCM_PRCD,P.CM_CD,CM_NM,PRPE_MNG,PC.CPR_CD,CPR_NM,C.FAC_CD,FAC_NM,PRPE_WK_START_DT,PRCM_QNT
 		FROM proc_perf P
 		LEFT JOIN CM_PROCESS_CODE C
 		ON P.CM_CD=C.CM_CD
@@ -591,17 +594,44 @@
 	</select>
 
 	<update id="updateProcProg" parameterType="ProcResultAllVO">
-		UPDATE PROC_PROGRESS
-		SET
-		PRPR_QNT=(NVL(PRPR_QNT,0)+TO_NUMBER(#{prpeProd})),
-		PRPR_BAD=(NVL(PRPR_BAD,0)+TO_NUMBER(#{prpeBadQnt}))
-		where PRCM_PRCD=#{prcmPrcd}
+	UPDATE PROC_PROGRESS 
+	SET 
+	    PRPR_QNT=(NVL(PRPR_QNT,0)+TO_NUMBER(#{prpeProd})),
+	    PRPR_BAD=(NVL(PRPR_BAD,0)+TO_NUMBER(#{prpeBadQnt})),
+	    PRPR_END = 'Y'
+	where PRCM_PRCD=#{prcmPrcd}
 	</update>
+	
+	<select id="PselectNextProc" resultType="ProcResultAllVO">
+	SELECT 
+		PRCM_PRCD,
+		PRCM_CD,
+		CM_CD,
+		PRCM_TURN,
+		PRCM_QNT,
+		PRPR_QNT,
+		PRPR_BAD,
+		PRPR_END
+	from proc_progress
+	where PRCM_CD = 
+		(select prcm_cd from proc_progress
+		where PRCM_PRCD=#{prcmPrcd}) 
+	AND PRCM_TURN=
+		((select prcm_turn from proc_progress
+		where PRCM_PRCD=#{prcmPrcd})+1)
+	</select>
 
-
-
-
-
+	<update id="PupdateProcQnt" parameterType="ProcResultAllVO">
+	update PROC_PROGRESS
+	set PRCM_QNT = #{prcmQnt}
+	where PRCM_PRCD = #{prcmPrcd}
+	</update>
+	
+	<update id="PupdateProcFin" parameterType="ProcResultAllVO">
+	update PROC_COMMAND
+	set PRCM_END_DT = SYSDATE
+	where PRCM_CD = #{prcmCd}
+	</update>
 
 
 

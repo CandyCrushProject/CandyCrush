@@ -219,25 +219,25 @@
 						return result;
 					}
 				},
-				{//PRCM_END_DT
-					header: '작업종료일자',
-					name: 'prcmEndDt',		//생산지시/생산시작일자
-					formatter: function (e) {
-						let newData = new Date(e.value);
-						let result = "";
-						if(newData){
-							result = newData.getFullYear() + "-" +
-										(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
-										+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
-						} else {
-							result = "";
-						}
+				// {//PRCM_END_DT
+				// 	header: '작업종료일자',
+				// 	name: 'prcmEndDt',		//생산지시/생산시작일자
+				// 	formatter: function (e) {
+				// 		let newData = new Date(e.value);
+				// 		let result = "";
+				// 		if(newData){
+				// 			result = newData.getFullYear() + "-" +
+				// 						(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
+				// 						+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+				// 		} else {
+				// 			result = "";
+				// 		}
 						
-						return result;
-					},
-					sortingType: 'desc',
-					sortable: true
-				}
+				// 		return result;
+				// 	},
+				// 	sortingType: 'desc',
+				// 	sortable: true
+				// }
 			],
 			bodyHeight: 250,
 			pageOptions: {
@@ -252,6 +252,10 @@
 			el: document.getElementById('prodcProgressList'),
 			rowHeaders: ['checkbox'],
 			columns: [
+				/*{
+					header: '공정지시코드',
+					name: 'prcmPrcd'
+				},*/
 				{
 					header: '제품번호',
 					name: 'cprCd',
@@ -426,6 +430,7 @@
 						})
 						return;
 					} else {
+						console.log(data);
 						$('#procCd').val(getPrcmCdData);
 						prodcProgressList.resetData(data);
 					};
@@ -481,6 +486,8 @@
 				item.piBadCnt = item.prprBad	//불량수량
 				item.piStrDt = getStartToday;	//검사시작일자
 			});
+			console.log(checkRows);
+			console.log(JSON.stringify(checkRows));
 
 			if(checkRows.length !== 0){
 				$.ajax({

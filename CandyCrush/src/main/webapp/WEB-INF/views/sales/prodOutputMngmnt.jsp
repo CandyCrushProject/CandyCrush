@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<script src="assets/js/sales/prodInputMngmnt/prodOutputMngmntCall.js"></script>
+<script src="assets/js/sales/prodOutputMngmnt/prodOutputMngmntCall.js"></script>
 <main>
 	<!-- /. NAV SIDE  -->
 	<div id="page-wrapper">
@@ -23,11 +23,11 @@
 						<!--<div class="card-action">자재발주조회</div>-->
 						<div class="card-content">
 							<div>
-								<h5><b>▶입고대기목록</b></h5>
+								<h5><b>▶주문서 목록</b></h5>
 								<div style="display:flex; justify-content: space-between; align-items: center;">
 									<div style="display: block; align-items: center;">
-										<label for="productName">제품명</label>
-										<input id="productName" name="productName" type="text"
+										<label for="accountName">거래처명</label>
+										<input id="accountName" name="accountName" type="text"
 											style="width: 200px; border: 1px solid rgba(128, 128, 128, 0.61);">
 									</div>
 									<div>
@@ -37,17 +37,17 @@
 								
 							</div>
 							<div style="clear:both"></div>
-							<div id="inputWaitingList"></div>
+							<div id="outputOrdrShtList"></div>
 						</div>
 					</div>
 				</div>
 			</div> <!--END row-->
 			<div class="row">
-				<!-- 입고목록 그리드 -->
-				<div class="col-md-7">
+				<!-- 주문서 상세조회 테이블 -->
+				<div class="col-md-6">
 					<div class="card">
 						<div>
-							<div class="card-action">▶입고목록</div>
+							<div class="card-action">▶주문서 상세목록</div>
 							<div style="clear:both"></div>
 							<div id="inputReset" style="padding-left: 5px;">
 								<label for="prodInputDt" style="margin-left: 10px; width: 80px;">입고일자</label>
@@ -57,27 +57,27 @@
 						<div style="clear:both"></div>
 						<div class="card-content">
 							<div class="table-responsive">
-								<div id="prodInputList"></div>
+								<div id="outputOrdrShtDtlList"></div>
 							</div>
 						</div>
 					</div>
 				</div><!-- End Lot 부여 테이블 -->
 				
-				<!-- 입고목록 테이블 -->
-				<div class="col-md-5">
+				<!-- 제품재고 확인 테이블 -->
+				<div class="col-md-6">
 					<div class="card">
 						<div class="card-action">▶입고목록상세조회?</div>
 						<div class="card-content">
 							<div class="table-responsive">
-								<div id="mtrlInputList"></div>
+								<div id="prdctInstt"></div>
 							</div>
 						</div>
 					</div> 
-				</div> <!--End 입고목록 테이블 -->
+				</div> <!--End 제품재고 확인 테이블 -->
 			</div> <!--END row-->
 		</div>
 		<!-- /. PAGE INNER  -->
 	</div>
-	<script src="assets/js/sales/prodInputMngmnt/prodOutputMngmntCntn.js"></script>
+	<script src="assets/js/sales/prodOutputMngmnt/prodOutputMngmntCntn.js"></script>
 	
 </main>

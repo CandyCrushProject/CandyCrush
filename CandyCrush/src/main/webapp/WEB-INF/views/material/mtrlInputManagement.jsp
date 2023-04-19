@@ -9,7 +9,10 @@
 		margin-bottom: 30px !important;
 		margin-top:10px !important;
 	}
-	.tui-grid-cell.cell-green {background-color: rgba(118, 228, 118, 0.575)}
+	.tui-grid-cell.cell-green {background-color: rgba(146, 238, 146, 0.575)}
+	.tui-grid-cell.cell-none {
+		font-weight: bold;
+	}
 </style>
 <main>
 	<!-- /. NAV SIDE  -->
@@ -117,8 +120,8 @@
 								<div id="mtrlInputList"></div>
 							</div>
 						</div>
-					</div> <!--End 입고목록 테이블 -->
-				</div>
+					</div> 
+				</div><!--End 입고목록 테이블 -->
 			</div> <!--END row-->
 		</div>
 		<!-- /. PAGE INNER  -->
@@ -127,8 +130,26 @@
 	<script>
 		const Grid = tui.Grid;
 
+		Grid.applyTheme('default', {
+			cell: {
+				normal: {
+					background: '#fff',
+					border: '#e0e0e0',
+					showVerticalBorder: true,
+					showHorizontalBorder: true
+				},
+				header: {
+					background: '#dcdcdc',
+					border: '#e0e0e0'
+				},
+				selectedHeader: {
+					background: '#e0e0e0'
+				}
+			}
+		});
+
 		//input에 오늘날짜 부여하기
-		$('#mtrlInput').val(new Date().toISOString().substring(0, 10))
+		$('#mtrlInput').val(new Date().toISOString().substring(0, 10));
 
 		//업체명 input 클릭하면 업체명 모달창 뛰우기
 		$('#companySearch').on('click',(e)=>{
@@ -405,6 +426,7 @@
 					materialInspGetList.resetData(data);			//아작스 결과를 그리드에 그려준다
 					materialInspGetList.getData().forEach(row => {	//입고수량의 Cell에 바탕화면을 연두색으로 변경
 						materialInspGetList.addCellClassName(row.rowKey, 'minCnt', 'cell-green');
+						materialInspGetList.addCellClassName(row.rowKey, 'moCd', 'cell-none');
 					});
 				}
 			});
@@ -499,7 +521,6 @@
 			let getRowData = mtrlMngInputList.getRow(e.rowKey);
 			let rowDataMinCd = getRowData.minCd;
 			$('#modalMinCd').val(rowDataMinCd);
-			console.log(rowDataMinCd);
 			document.getElementById('inputDetailModal').style.display='block';
 
 			setTimeout(()=> materialInspDetail.refreshLayout() , 0);
@@ -542,8 +563,7 @@
 					materialInspDetail.export('xlsx', options);
 				} else {
 					Swal.fire({
-						title: '취소되었습니다',
-						icon : 'success'
+						title: '취소되었습니다'
 					});
 				}
 			});

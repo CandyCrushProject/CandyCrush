@@ -10,12 +10,24 @@ import lombok.Data;
 public class ProdInOutPutVO {
 
 	// 공통
-	private String cprCd; // 제품코드
-	private String prcmPrcd; // 공정지시코드
-	private String orsNo; // 주문서 번호
+	private String orshNo; // 주문서 번호
+	private String caNm; // 거래처명
+	private String orshDt; // 주문일자
+	private String dlvryDt; // 납기일자
+	
+	private String ordrDtlCd; // 주문서디테일 주문코드
+	private String ordrDtlCnt; // 주문서디테일 주문수량
+	private String orshPr; // 주문서디테일 현재상태
+	private String sttCngDt; // 주문서디테일 상태변경일자
+	
 	private String piPassCnt; // 제품검사코드
+	
+	private String cprCd; // 제품코드
 	private String cprNm; // 제품명
+	
+	private String prcmPrcd; // 공정지시코드
 	private String prprQnt; // 생산량
+	
 	private String memNm; // 멤버이름
 	private String memId; // 멤버아이디
 
