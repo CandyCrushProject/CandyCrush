@@ -58,9 +58,9 @@
                     </tr>
                     <tr>
                       <td><input type="text" name="inspMgr" id="inspMgr" value="" placeholder="담당자 이름"></td>
-                      <td><input type="number" placeholder="정상자재수 입력" name="passMat" id="passMat" value="0"></td>
+                      <td><input type="number" placeholder="정상자재" name="passMat" id="passMat" readonly></td>
                       <td><input type="number" placeholder="불량자재" name="badMat" id="badMat" readonly></td>
-                      <td><input type="number" name="inspMat" id="inspMat" value=""  readonly></td>
+                      <td><input type="number" name="inspMat" id="inspMat" value="0" placeholder="검사량 입력"></td>
                     </tr>
                   </table>
                   <div class="table-responsive">
@@ -155,10 +155,24 @@
 
 
     function openInsertModal(){
+      console.log(sumMoWait.innerText);
+      if(sumMoWait.innerText<=0||sumMoWait.innerText==null){
+        Swal.fire({
+					icon: 'warning',
+					title: '경고',
+					text: "작업이 선택되지 않았거나,이미 작업이 완료된 건입니다",
+				});
+      }
+      else{
       document.getElementById('inspInsertModal').style.display='block';
       BadCodeList.refreshLayout();
       BadInputList.refreshLayout();
-
+      BadInputList.clear();
+      inspMat.value=0;
+      inspMgr.value="";
+      BadInputValueEvent();
+      }
+      
     }
     //-발주목록 검사현황================================================================
       const Grid = tui.Grid;
@@ -240,7 +254,12 @@
         {
           header: '검사진행도',
           name:'inspDone',
-          sortable: true
+          sortable: true,
+          filter: {
+            type: 'select',
+            showApplyBtn: true,
+            showClearBtn: true
+          }
         }
       ],
       bodyHeight: 500,
@@ -363,14 +382,14 @@
       BadInputList.removeRow(e.rowKey);
     })
     //인풋리스트 변형완료했을때 보여주는값 바꿔주기위한 트리거
-    passMat.addEventListener('input', BadInputValueEvent);
+    inspMat.addEventListener('input', BadInputValueEvent);
     BadInputList.on("editingFinish",(e)=>{
       BadInputValueEvent();
     });
 
     //value값 바뀔때마다 호출할 event
     function BadInputValueEvent(){
-      inspMat.value = parseInt(BadInputList.getSummaryValues('mbhCnt').sum)+parseInt(passMat.value);
+      passMat.value=inspMat.value-BadInputList.getSummaryValues('mbhCnt').sum;
       badMat.value = parseInt(BadInputList.getSummaryValues('mbhCnt').sum);
     }
     //================================================================
@@ -385,13 +404,13 @@
     //odlist 클릭한 행의 modcd값 담기
     odList.on("dblclick", (e) => {
 			const rowData = odList.getRow(e.rowKey);
-      let selectedModCd=rowData.modCd;
-      pubSelectedModCd=rowData.modCd;
-      PubCmmNm = rowData.cmmNm;
-      pubMoCnt = rowData.moCnt;
-      //클릭한 항목의 검사이력 가져오기
-      getTestList(selectedModCd);
-      console.log(selectedModCd);
+        let selectedModCd=rowData.modCd;
+        pubSelectedModCd=rowData.modCd;
+        PubCmmNm = rowData.cmmNm;
+        pubMoCnt = rowData.moCnt;
+        //클릭한 항목의 검사이력 가져오기
+        getTestList(selectedModCd);
+        console.log(selectedModCd);
 		});
 
 
@@ -539,6 +558,13 @@
             console.log(reject);
             console.log("mtrlOrderList Insert error!");
           }
+        });
+        Swal.fire({
+					icon: 'success',
+					title: '등록완료',
+					text: "수고하셨습니다!",
+				}).then(function(){
+          window.location.reload()
         });
       });
     });

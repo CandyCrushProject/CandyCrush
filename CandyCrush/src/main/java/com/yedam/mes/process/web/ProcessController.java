@@ -307,5 +307,10 @@ public class ProcessController {
 		return procService.insertResult(FinishVO);
 	};
 	
+	@GetMapping("getProcResult")
+	@ResponseBody
+	public List<ProcResultAllVO> getProcResult() {
+		return procService.getProcResult();
+	}
 	
 }

@@ -49,11 +49,6 @@ public class QualityServiceImpl implements QualityServcie {
 		return 0;
 	}
 
-	@Override
-	public String getNewMiCd() {
-		// TODO Auto-generated method stub
-		return qualityMapper.getNewMiCd();
-	}
 
 
 	@Override

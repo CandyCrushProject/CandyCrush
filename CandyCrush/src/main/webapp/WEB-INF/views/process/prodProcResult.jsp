@@ -527,8 +527,10 @@ Grid.setLanguage('ko');//생산지시 조회
 					title: '입력완료 작업개시!',
 					text: '작업코드'
 				  });
+          
           document.getElementById('procInsertModal').style.display='none';
           setTimeout(()=>getProcProg(), 100);
+          setTimeout(()=>getProcResult(), 100);
         }
       });
     }
@@ -641,13 +643,13 @@ Grid.setLanguage('ko');//생산지시 조회
 		});
     
 //=========================================================
-    const odResultList = new Grid({
+    const ResultList = new Grid({
       el: document.getElementById('resultListGrid'), // Container element
       data: null,//나중에 데이타 넣어!
       columns: [
         {
             header: '공정실적코드', //===숨겨
-            name: '',
+            name: 'prpeCd',
             sortingType: 'asc',
             sortable: true,
             hidden:true
@@ -655,65 +657,71 @@ Grid.setLanguage('ko');//생산지시 조회
         
       	{
           header: '공정지시코드',
-          name: '',
+          name: 'prcmPrcd',
           sortingType: 'asc',
           sortable: true,
           hidden:true
         },
         {
           header: '공정코드',
-          name: '',
+          name: 'cmCd',
           sortable: true,
           hidden:true
         },
         {
           header: '제품코드',
-          name: '',
+          name: 'cprCd',
           sortingType: 'asc',
           sortable: true,
           hidden:true
         },
         {
           header: '제품명',
-          name: '',
+          name: 'cprNm',
           sortingType: 'asc',
           sortable: true,
         },
         {
           header: '공정명',
-          name: '',
+          name: 'cmNm',
           sortable: true,
         },
         {
           header: '작업자',
-          name: '',
+          name: 'prpeMng',
           sortingType: 'asc',
-          sortable: true
+          sortable: true,
         },
         {
           header: '작업시작일시',
-          name: '',
+          name: 'prpeWkStartDt',
           sortingType: 'asc',
-          sortable: true
+          sortable: true,
+          formatter: function (e) {
+						return dateChange(e.value);
+          },
         },
         {
           header: '작업종료일시',
-          name: '',
-          sortable: true
+          name: 'prpeWkEndDt',
+          sortable: true,
+          formatter: function (e) {
+						return dateChange(e.value);
+          },
         },
         {
           header: '작업량',
-          name: '',
+          name: 'prpeAmntWk',
           sortable: true
         },
         {
           header: '생산량',
-          name: '',
+          name: 'prpeProd',
           sortable: true
         },
         {
           header: '불량량',
-          name: '',
+          name: 'prpeBadQnt',
           sortable: true
         },
       ],
@@ -724,6 +732,25 @@ Grid.setLanguage('ko');//생산지시 조회
         perPage: 30
           }
     });
+    //실적조회
+    function getProcResult(){
+      console.log();
+      $.ajax({
+        url : "getProcResult",
+        method :"GET",
+        async : false,
+        
+        success : function(data){
+          ableFacData=data;
+          ResultList.resetData(data);
+        },
+        error : function(reject){
+          console.log(reject);
+          console.log("통신오류");
+        },
+      })
+    }
+    getProcResult();
 
 
 
@@ -910,7 +937,7 @@ const badCdList = new Grid({
 					text: '작업코드'
 				  });
           document.getElementById('procFinishModal').style.display='none'
-
+          setTimeout(()=>getProcResult(), 100);
           setTimeout(()=>getProcProg(), 100);
           setTimeout(()=>getProc(prcmCd.value),100);
           setTimeout(()=>getProcOrderList(), 100);

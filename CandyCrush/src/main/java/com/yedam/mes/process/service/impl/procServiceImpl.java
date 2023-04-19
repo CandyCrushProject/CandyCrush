@@ -203,9 +203,14 @@ public class procServiceImpl implements ProcService {
 		}
 		return result;
 	}
-
-
 	
+	
+
+	@Override
+	public List<ProcResultAllVO> getProcResult() {
+		// TODO Auto-generated method stub
+		return procMapper.getProcResult();
+	}
 	
 //================================================================
 
@@ -228,6 +233,8 @@ public class procServiceImpl implements ProcService {
 		}
 		return r;
 	}
+
+
 
 
 

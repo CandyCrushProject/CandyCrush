@@ -50,12 +50,7 @@
 	    CMB_CTT
 	FROM cm_mtrl_bad_code
   </select>
-  <select id="getNewMiCd" resultType="String">
-  	SELECT 'MI' 
-        ||mi_seq.NEXTVAL ||
-        TO_CHAR(SYSDATE, 'yyMMdd')
-	FROM DUAL
-  </select>
+
   <insert id="InsertMtInsp" parameterType='MtInspInsertVO'>
   	INSERT INTO MTRL_INSP
 	    (
@@ -68,9 +63,9 @@
 	    MI_PASS_CNT
 	    )
 	VALUES(
-	    #{miCd},
+	    ('mi'||mi_seq.NEXTVAL||TO_CHAR(SYSDATE, 'yyMMdd')),
 	    #{modCd},
-	    #{miDt},
+	    SYSDATE,
 	    #{miMng},
 	    #{miCnt},
 	    #{miBadCnt},
@@ -90,7 +85,7 @@
 		(SELECT NVL(MAX(TO_NUMBER(MBH_CD)),0)+1 MBH_CD FROM MTRL_BAD_HSTR),
 		#{mbhCnt},
 		#{mbhNote},
-		#{miCd},
+		('mi'||mi_seq.NEXTVAL||TO_CHAR(SYSDATE, 'yyMMdd')),
 		#{cmbCd}
 		)
   </insert>
