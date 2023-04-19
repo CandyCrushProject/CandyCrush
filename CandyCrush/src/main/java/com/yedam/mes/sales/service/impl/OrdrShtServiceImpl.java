@@ -210,6 +210,11 @@ public class OrdrShtServiceImpl implements OrdrShtService{
 		
 		return mapper.OutputOrdrShtDtlList(orshNo);
 	}
+
+	@Override
+	public List<ProdInOutPutVO> cprCdSetFind(String[] cprCd) {
+		return mapper.cprCdSetFind(cprCd);
+	}
 	
 	
 

@@ -24,6 +24,7 @@ public class ProdInOutPutVO {
 	
 	private String cprCd; // 제품코드
 	private String cprNm; // 제품명
+	private int sumPlsCnt; // 제품재고
 	
 	private String prcmPrcd; // 공정지시코드
 	private String prprQnt; // 생산량

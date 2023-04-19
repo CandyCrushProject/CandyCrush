@@ -1,11 +1,10 @@
 $(document).ready(function () {
   // 거래처 검색
-  $('#productName').on('input', function () {
+  $('#accountName').on('input', function () {
     prodInputSrchList();
   });
-
-  
 });
+
 //---------------------------------------------------------------------------------------------
 // ajax로 불러온 날짜데이터(시간으로 불러와짐) 변환
 function dateChange(date) {
@@ -16,6 +15,25 @@ function dateChange(date) {
   return date2;
 }
 
-function outputOrdrShtDtlData () {
-  
-}
+// 거래처명 검색
+let accountName = "";
+const prodInputSrchList = () => {
+  accountName = document.getElementById('accountName').value;
+  $.ajax({
+    url: "ordrShtMngnSrch",
+    method: "POST",
+    data: { caNm: accountName },
+    dataType: "JSON",
+    success: function (data) {
+      console.log("ordrAccntSrch", data);
+      outputOrdrShtList.resetData(data);
+    },
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
+    }
+  });
+};

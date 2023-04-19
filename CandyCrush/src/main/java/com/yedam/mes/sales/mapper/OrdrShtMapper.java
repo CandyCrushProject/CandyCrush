@@ -79,4 +79,6 @@ public interface OrdrShtMapper {
 	// 제품출고 주문서 디테일 조회
 	public List<ProdInOutPutVO> OutputOrdrShtDtlList(String orshNo);
 	
+	public List<ProdInOutPutVO> cprCdSetFind(@Param("cprCd")String[] cprCd);
+	
 }

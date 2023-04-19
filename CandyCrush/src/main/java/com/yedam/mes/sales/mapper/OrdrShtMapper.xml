@@ -247,10 +247,9 @@
 	</select>
 	
 	<!-- 제품출고 주문서 디테일 조회 -->
-	<select id="OutputOrdrShtDtlList">
+	<select id="OutputOrdrShtDtlList" resultType="ProdInOutPutVO">
 		SELECT osd.ordr_dtl_cd
 		     , osd.ordr_dtl_cnt
-		     , osd.cpr_cd
 		     , cpm.cpr_cd
 		     , cpm.cpr_nm
 		     , os.dlvry_dt
@@ -265,4 +264,28 @@
 		   AND os.orsh_no = #{orshNo}
 		 ORDER BY os.dlvry_dt
 	</select>
+	
+	
+	<select id="cprCdSetFind" resultType="ProdInOutPutVO">
+		SELECT sum(pls_cnt) sum_pls_cnt
+		     , cpm.cpr_cd
+		     , cpr_nm
+		  FROM cm_product_mng cpm
+		     , prod_lot_stock pls
+		 WHERE cpm.cpr_cd = pls.cpr_cd
+		   AND cpm.cpr_cd IN 
+		   <foreach collection='cprCd' index='index' item='cprCd' open='(' close=')' separator=','>
+            #{cprCd}
+       	 	</foreach>
+		 GROUP BY cpm.cpr_cd, cpr_nm
+		 ORDER BY cpm.cpr_cd
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>
