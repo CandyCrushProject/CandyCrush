@@ -9,7 +9,6 @@ function prodmemberList() {
     method: "GET",
     dataType: "JSON",
     success: function (data) {
-      console.log(data);
       for (let i = 0; i < data.length; i++) {
         memberList[i] = { text: data[i].memNm, value: data[i].memNm };
       }
@@ -55,7 +54,6 @@ const prodInputSrchList = () => {
     dataType: "JSON",
     data: { cprNm: productName },
     success: function (data) {
-      console.log(data);
       inputWaitingList.resetData(data);
     },
     error: function (rej) {
