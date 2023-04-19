@@ -20,42 +20,4 @@ public class MesController {
 	public String login() {
 		return "login";
 	}
-	
-
-	@GetMapping("dashboard")
-	public String dashboard() {
-		return "sample/dashboard";
-	}
-	
-	
-	@GetMapping("ulElements")
-	public String ulElements() {
-		return "sample/uielements";
-	}
-
-	@GetMapping("chart")
-	public String chart() {
-		return "sample/chart";
-	}
-	
-	@GetMapping("tabpnel")
-	public String tabpnel() {
-		return "sample/tabpnel";
-	}
-	
-
-	@GetMapping("table")
-	public String table() {
-		return "sample/table";
-	}
-
-
-	@GetMapping("form")
-	public String form() {
-		return "sample/form";
-	}
-	@GetMapping("empty")
-	public String empty() {
-		return "sample/empty";
-	}
 }

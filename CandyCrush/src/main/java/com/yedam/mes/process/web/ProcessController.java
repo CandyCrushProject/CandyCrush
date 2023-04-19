@@ -139,19 +139,19 @@ public class ProcessController {
 		return "process/processOrder";
 	}
 	
-
+	// 생산관리 -> 생산지시관리 -> 생산계획 디테일정보
 	@PostMapping("ProcPlanOrderDetail")
 	@ResponseBody
 	public List<ProcPlanVO> procPlanOrderDetail(@RequestBody ProcPlanVO ppVO){
 		return procService.searchPlanList(ppVO);
 	}
-	
+	// 생산계획 -> 생산지시관리 -> 생산계획헤더 목록
 	@GetMapping("ProcPlanOrder")
 	@ResponseBody
 	public List<ProcPlanVO> getProcPlanOrder(){
 		return procService.getPlan();
 	}
-	
+	// 생산계획 -> 생산지시관리 -> bom 정보 불러오기
 	@PostMapping("getBomInfo")
 	@ResponseBody
 	public List<BomInfoVO> getBomInfoProcess(@RequestBody OrderPlanVO opVO){
@@ -159,7 +159,7 @@ public class ProcessController {
 		return procService.getBom(opVO);
 	}
 	
-	
+	// 생산계획 -> 생산지시관리 -> 생산지시에 필요한 자재 확인
 	@PostMapping("getMtrlInput")
 	@ResponseBody
 	public Map<String, Object> getMtrlInput(@RequestBody BomInfoVO biVO){
@@ -169,7 +169,7 @@ public class ProcessController {
 		
 		return mtrlMap;
 	}
-	
+	// 생산계획 -> 생산지시관리 -> 생산지시 등록
 	@PostMapping("insertProcOrder")
 	@ResponseBody
 	public Map<String, Object> insertProcOrder(@RequestBody List<ProcOrderVO> poVO){
@@ -183,7 +183,7 @@ public class ProcessController {
 		return message;
 	}
 	
-	
+	// 생산계획 -> 생산지시관리 -> 공정지시 등록
 	@PostMapping("insertProg")
 	@ResponseBody
 	public Map<String, Object> insertProg(@RequestBody List<ProcOrderVO> progVO){
@@ -202,7 +202,7 @@ public class ProcessController {
 		return message;
 	}
 	
-	
+	// 생산계획 -> 생산지시관리 -> 공정자재 등록
 	@PostMapping("insertMtrl")
 	@ResponseBody
 	public Map<String, Object> insertMtrl(@RequestBody List<ProcOrderVO> mtrlVO){
@@ -220,24 +220,26 @@ public class ProcessController {
 
 		return message;
 	}
-	
+	// 생산계획 -> 생산지시관리 -> 자재 총 재고
 	@PostMapping("findMtrlCntSum")
 	@ResponseBody
 	public List<OrderPlanVO> findMtrlCntSumProcess(@RequestBody OrderPlanVO opVO) {
 		System.out.println(opVO);
 		return procService.findMtrlCntSum(opVO);
 	}
-	
+	// 생산계획 -> 생산지시관리 -> 자재 로트별 재고
 	@PostMapping("findMtrlLot")
 	@ResponseBody
 	public List<OrderPlanVO> findMtrlLotProcess(@RequestBody OrderPlanVO opVO) {
 		System.out.println(opVO);
 		return procService.findMtrlLot(opVO);
 	}
-	
-	
-	
-	
+	// 생산계획 -> 담당자 목록
+	@GetMapping("managerList")
+	@ResponseBody
+	public List<ProcPlanVO> getManagerList(){
+		return procService.getManagerList();
+	}
 	
 	
 	

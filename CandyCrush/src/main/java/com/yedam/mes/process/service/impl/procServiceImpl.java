@@ -61,18 +61,18 @@ public class procServiceImpl implements ProcService {
 		return procMapper.selectOrderDetail(opVO);
 	}
 
-	@Override
+	@Override // bom 정보 
 	public List<BomInfoVO> getBom(OrderPlanVO opVO) {
 		return procMapper.selectBom(opVO);
 	}
-	@Override
+	@Override // 생산계획 등록
 	public int addPlan(ProcPlanVO planVO) {
 		int r = procMapper.insertPlan(planVO);
 			
 		return r;
 	}
 
-	@Override
+	@Override // 생산계획 디테일
 	public int addPlanDetail(List<ProcPlanVO> planVO) { 
 		int r = 0;
 		for(ProcPlanVO pvo:planVO) {
@@ -80,12 +80,12 @@ public class procServiceImpl implements ProcService {
 		}
 		return r;
 	}
-	@Override
+	@Override // 생산계획 목록
 	public List<ProcPlanVO> getPlan() {
 		return procMapper.seletPlanList();
 	}
 
-	@Override
+	@Override // 생산지시 등록
 	public int addOrder(ProcOrderVO poVO) {
 		return procMapper.insertProcOrder(poVO);
 	}
@@ -105,29 +105,29 @@ public class procServiceImpl implements ProcService {
 		return null;
 	}
 
-	@Override
+	@Override 
 	public List<ProcProgVO> getProgList(ProcProgVO progVO) {
 		return null;
 	}
 
-	@Override
+	@Override // 계획 검색 정보
 	public List<ProcPlanVO> searchPlanList(ProcPlanVO ppVO) {
 		return procMapper.searchPlanList(ppVO);
 	}
 
-	@Override
+	@Override // 자재 총 재고
 	public List<OrderPlanVO> findMtrlCntSum(OrderPlanVO opVO) {
 		return procMapper.findMtrlCntSum(opVO);
 	}
 
-	@Override
+	@Override // 자재 로트별 재고
 	public List<OrderPlanVO> findMtrlLot(OrderPlanVO opVO) {
 		return procMapper.findMtrlLot(opVO);
 	}
-
-	
-	
-
+	@Override // 담당자 목록
+	public List<ProcPlanVO> getManagerList() {
+		return procMapper.getManagerList();
+	}
 	//V이거 왜 맨아래있음 누구꺼?
 	
 	@Override
@@ -198,7 +198,7 @@ public class procServiceImpl implements ProcService {
 	
 //================================================================
 
-
+	// 공정지시 등록
 	@Override
 	public int insertProgress(List<ProcOrderVO> poVO) {
 		int r = 0;
@@ -208,6 +208,7 @@ public class procServiceImpl implements ProcService {
 		return r;
 	}
 
+	// 공정자재등록
 	@Override
 	public int insertProgMtrl(List<ProcOrderVO> poVO) {
 		int r = 0;

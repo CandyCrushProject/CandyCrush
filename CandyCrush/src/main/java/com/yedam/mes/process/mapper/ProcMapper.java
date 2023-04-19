@@ -45,9 +45,9 @@ public interface ProcMapper {
 	// 생산계획시 보이는 자재 재고 및 로트정보
 	public List<OrderPlanVO> findMtrlCntSum(OrderPlanVO opVO);
 	public List<OrderPlanVO> findMtrlLot(OrderPlanVO opVO);
-	
-	
-	
+
+	// 담당자 목록 불러오기
+	public List<ProcPlanVO> getManagerList();
 	
 	
 	

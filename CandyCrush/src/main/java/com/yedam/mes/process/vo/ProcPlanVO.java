@@ -4,6 +4,9 @@ import lombok.Data;
 
 @Data
 public class ProcPlanVO {
+	// 사원 목록 불러오기
+	private String memNm; // 담당자 목록
+	
 	// 생산계획
 	private String prplCd; // 생산계획코드
 	private String orshNo; // 주문서번호
