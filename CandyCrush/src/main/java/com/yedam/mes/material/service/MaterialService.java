@@ -69,7 +69,7 @@ public interface MaterialService {
 	//출고등록목록7일이내
 	public List<MaterialVO> mtrlOut7DayList();
 	//출고상세목록
-	public List<MaterialVO> mtrlOutDetailList(@Param("motCd") String motCd);
+	public List<MaterialVO> mtrlOutDetailList(@Param("motDt") String motDt, @Param("motTyp") String motTyp, @Param("motNote") String motNote);
 	//출고INSERT
 	public int mtrlOutInsert(List<MaterialVO> vo);
 	

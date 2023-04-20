@@ -45,7 +45,7 @@
                     <tbody>
                       <!-- 데이터전송용 숨겨진데이터 -->
                       <form name="startForm" action="startProg" onsubmit="return false">
-                        <tr style="display: none;" class="hidden">
+                        <tr style="display: none !important;" class="hidden">
                           <input type="text" name="prcmPrcd" id="prcmPrcd" required readonly style="display: none;">
                           <input type="text" name="cmCd" id="cmCd" required readonly style="display: none;">
                           <input type="text" name="prcmCd" id="prcmCd" required readonly style="display: none;">
@@ -116,11 +116,11 @@
                 <div class="card-content">
                   <table class="candyTab">
                     <tbody>
-                      <tr style="display: none;" class="hidden">
+                      <div style="display: none !important;" class="hidden">
                         <input type="text" name="prcmPrcdF" id="prcmPrcdF" required readonly>
                         <input type="text" name="prpeCdF" id="prpeCdF" required readonly>
                         <input type="text" name="cmCd" id="cmCdF" required readonly>
-                      </tr>
+                      </div>
                       <tr>
                         <th>제품명</th>
                         <th>공정명</th>

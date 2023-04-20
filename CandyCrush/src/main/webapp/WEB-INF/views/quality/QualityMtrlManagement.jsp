@@ -117,9 +117,9 @@
         <div class="col-md-12">
           <!-- Advanced Tables -->
           <div class="card">
-            <div class="card-action">자재검사이력
-              <br>
-              <button onclick="openInsertModal()" style="display: inline;" class="cndInsBtn">검사내역입력</button>
+            <div class="card-action">자재검사이력<button onclick="openInsertModal()" style="display: inline; float: right;" class="cndInsBtn">검사내역입력</button>
+             <br>
+              
               <div>
                 <table class="candyTab">
                   <tr>
