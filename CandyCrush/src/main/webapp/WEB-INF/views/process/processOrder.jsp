@@ -232,7 +232,11 @@
 							success: function (data) {
 								insertProg();
 							}, error: function (err) {
-								console.log(err);
+								Swal.fire({
+									icon: 'error',
+									title: '실패',
+									text: "생산지시에 실패했습니다.",
+								});
 							}
 						});
 					})

@@ -157,39 +157,38 @@
 				)
 	</insert>
 	<!-- 생산계획 리스트 -->
-	<select id="seletPlanList" parameterType="ProcPlanVO"
-		resultType="ProcPlanVO">
+	<select id="seletPlanList" parameterType="ProcPlanVO" resultType="ProcPlanVO">
 		SELECT pp.prpl_cd
-			, COUNT(ppd.cpr_cd) cpr_cnt
-			, prpld_status
-			, prpl_mng
-			, TO_CHAR(prpl_dt,'rrrr-MM-dd') as prpl_dt
-		FROM proc_plan pp, proc_plan_detail ppd
-		WHERE pp.prpl_cd = ppd.prpl_cd(+)
-		AND prpld_status = '미지시'
-		GROUP BY prpld_status
-			, prpl_mng
-			, TO_CHAR(prpl_dt,'rrrr-MM-dd')
-			, pp.prpl_cd
-		ORDER BY 1
+			 , COUNT(ppd.cpr_cd) cpr_cnt
+			 , prpld_status
+			 , prpl_mng
+			 , TO_CHAR(prpl_dt,'rrrr-MM-dd') as prpl_dt
+		  FROM proc_plan pp, proc_plan_detail ppd
+		 WHERE pp.prpl_cd = ppd.prpl_cd(+)
+		   AND prpld_status = '미지시'
+		 GROUP BY prpld_status
+		 	 , prpl_mng
+			 , TO_CHAR(prpl_dt,'rrrr-MM-dd')
+			 , pp.prpl_cd
+		 ORDER BY 1
 	</select>
+	
 	<!-- 생산계획 디테일 검색 -->
-	<select id="searchPlanList" parameterType="ProcPlanVO"
-		resultType="ProcPlanVO">
+	<select id="searchPlanList" parameterType="ProcPlanVO" resultType="ProcPlanVO">
 		SELECT prpld_cd
-			, cpm.cpr_cd
-			, cpr_nm
-			, prpld_cnt
-			, prpld_status
-			, prpl_mng
-			, TO_CHAR(prpl_dt,'rrrr-MM-dd') as prpl_dt
-			, pp.prpl_cd
-		FROM proc_plan pp, proc_plan_detail ppd, cm_product_mng cpm
-		WHERE pp.prpl_cd = ppd.prpl_cd(+)
-			AND ppd.cpr_cd = cpm.cpr_cd(+)
-			AND prpld_status = '미지시'
-			AND pp.prpl_cd = #{prplCd}
-		ORDER BY 1
+			 , cpm.cpr_cd
+			 , cpr_nm
+			 , prpld_cnt
+			 , prpld_status
+			 , prpl_mng
+			 , TO_CHAR(prpl_dt,'rrrr-MM-dd') as prpl_dt
+			 , pp.prpl_cd
+		  FROM proc_plan pp, proc_plan_detail ppd, cm_product_mng cpm
+		 WHERE pp.prpl_cd = ppd.prpl_cd(+)
+		   AND ppd.cpr_cd = cpm.cpr_cd(+)
+		   AND prpld_status = '미지시'
+		   AND pp.prpl_cd = #{prplCd}
+		 ORDER BY 1
 	</select>
 	<!-- 자재 정보 -->
 	<select id="selectMtrlInput" resultType="BomInfoVO">
@@ -311,8 +310,7 @@
 	</insert>
 	<!-- 공정자재지시 등록 -->
 	<insert id="insertProgMtrl" parameterType="ProcOrderVO">
-		<selectKey keyProperty="prmpWkNo" resultType="String"
-			order="BEFORE">
+		<selectKey keyProperty="prmpWkNo" resultType="String" order="BEFORE">
 			SELECT
 			'pimt'||TO_CHAR(SYSDATE,'rrrrMMdd')||TRIM(TO_CHAR(proc_mtrl_seq.nextval,'099'))
 			as prmp_wk_no
@@ -340,32 +338,43 @@
 				, #{cmmCd}
 				)
 	</insert>
-	<!-- 자재 총 재고 -->
-	<select id="findMtrlCntSum" parameterType="OrderPlanVO"
-		resultType="OrderPlanVO">
+	<!-- 제품 총 재고 -->
+	<select id="findMtrlCntSum" parameterType="OrderPlanVO" resultType="OrderPlanVO">
 		SELECT sum(pls_cnt) pls_cnt_sum
-		, cpm.cpr_cd
-		, cpr_nm
-		FROM cm_product_mng cpm
-		, prod_lot_stock pls
-		WHERE cpm.cpr_cd = pls.cpr_cd
-		AND cpm.cpr_cd = #{cprCd}
-		GROUP BY cpm.cpr_cd, cpr_nm
+			 , cpm.cpr_cd
+			 , cpr_nm
+		  FROM cm_product_mng cpm
+		     , prod_lot_stock pls
+		 WHERE cpm.cpr_cd = pls.cpr_cd
+		   AND cpm.cpr_cd = #{cprCd}
+		 GROUP BY cpm.cpr_cd, cpr_nm
 	</select>
 	<!-- 자재 로트별 재고 -->
-	<select id="findMtrlLot" parameterType="OrderPlanVO"
-		resultType="OrderPlanVO">
-		SELECT pls_no
-		, pls_cnt
-		, cpm.cpr_cd
-		, cpr_nm
-		FROM cm_product_mng cpm
-		, prod_lot_stock pls
-		WHERE cpm.cpr_cd = pls.cpr_cd
-		AND cpm.cpr_cd = #{cprCd}
-		ORDER BY pls_mk_dt, pls_no
+	<select id="findMtrlLot" parameterType="OrderPlanVO" resultType="OrderPlanVO">
+		SELECT cml.cmm_cd
+    		 , cmm_nm
+		     , sum(cml_in_cnt) - sum(mot_cnt) as stock_inven
+		     , cmm_spec
+		  FROM cm_mtrl_lot cml 
+		     , mtrl_otpt mo
+		     , cm_mtrl_mng cmm
+		 WHERE cml.cml_nm = mo.cml_nm
+		   AND cml.cmm_cd = cmm.cmm_cd
+		   AND cml.cmm_cd IN (
+			                    SELECT cmm_cd
+			                      FROM cm_bom_mtrl bmt
+			                         , cm_bom_mnfct bmn
+			                         , cm_bom_mng bmng
+			                     WHERE bmt.bom_cd = bmn.bom_cd
+			                       AND bmt.bom_cd = bmng.bom_cd
+			                       AND bmt.cbm_cd = bmn.cbm_cd
+			                       AND cpr_cd = #{cprCd}
+			                       AND cmm_cd IS NOT NULL
+			                     GROUP BY cmm_cd, cm_sq, cm_cd
+		                 	  )
+		 GROUP BY cml.cmm_cd, cmm_nm, cmm_spec
+		 ORDER BY cml.cmm_cd
 	</select>
-
 	<!-- 담당자 목록 -->
 	<select id="getManagerList" resultType="ProcPlanVO">
 		SELECT mem_nm

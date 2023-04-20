@@ -174,8 +174,8 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 	//출고 상세목록
 	@Override
-	public List<MaterialVO> mtrlOutDetailList(@Param("motCd") String motCd) {
-		return mapper.mtrlOutDetailList(motCd);
+	public List<MaterialVO> mtrlOutDetailList(@Param("motDt") String motDt, @Param("motTyp") String motTyp, @Param("motNote") String motNote) {
+		return mapper.mtrlOutDetailList(motDt, motTyp, motNote);
 	}
 
 	@Override

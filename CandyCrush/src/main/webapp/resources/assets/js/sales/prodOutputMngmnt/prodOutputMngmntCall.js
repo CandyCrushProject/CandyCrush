@@ -25,7 +25,6 @@ const prodInputSrchList = () => {
     data: { caNm : accountName },
     dataType: "JSON",
     success: function (data) {
-      console.log("ordrAccntSrch", data);
       outputOrdrShtList.resetData(data);
     },
     error: function (rej) {
@@ -37,3 +36,5 @@ const prodInputSrchList = () => {
     }
   });
 };
+
+//---------------------------------------------------------------------------------------------
