@@ -87,7 +87,25 @@ function accntSrch() {
 }
 //---------------------------------------------------------------------------------------------
 function ordrShtDelete() {
-  
+  $.ajax({
+    url: "ordrDeleteProcess",
+    method: "POST",
+    data: { orshNo : orshNo},
+    contentType: "application/json",
+    success: function (response) {
+      Swal.fire({
+        icon: 'success',
+        title: "주문서삭제완료",
+      });
+    },
+    error: function (rej) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: rej
+      });
+    }
+  });
 }
 
 //---------------------------------------------------------------------------------------------

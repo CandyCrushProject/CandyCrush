@@ -134,7 +134,7 @@ const orderList = new Grid({
   }
 });
 ordrShtList();
-
+prodListItems();
 //---------------------------------------------------------------------------------------------
 //거래처 행 더블클릭 이벤트
 accntList.on('dblclick', (e) => {
@@ -173,8 +173,6 @@ accntList.on('dblclick', (e) => {
   let today = new Date(now_utc-timeOff).toISOString().split("T")[0];
   document.getElementById("dlvryDt").setAttribute("min", today);
   $('#dlvryDt').attr("min", today);
-
-  prodListItems();
 
   //---------------------------------------------------------------------------------------------
   // 주문서 모달창에 입력한 숫자값을 저장함
@@ -263,9 +261,9 @@ orderList.on('dblclick', (e) => {
       data : { orshNo : rowDataOrshNo,  },
       dataType: "JSON",
       success: function (data) {
-        console.log(data);
-        console.log("caMng", data[0].caMng);
-        console.log("caMngPh", data[0].caMngPh);
+        //console.log(data);
+        //console.log("caMng", data[0].caMng);
+        //console.log("caMngPh", data[0].caMngPh);
 
         $("#caMng").val(data[0].caMng); // 담당자
         $("#caMngPh").val(data[0].caMngPh); // 담당자번호
@@ -361,7 +359,6 @@ function ordrShtInsert() {
   const updateRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).updatedRows;
   const deleteRows = ordrProdList.getModifiedRows({ignoredColumns: ['_attributes', 'rowKey']}).deletedRows;
   
-  console.log(deleteRows, "deleteRowsdeleteRowsdeleteRowsdeleteRowsdeleteRowsdeleteRows");
   let rowLength = rows.length;
   let updateLength = updateRows.length;
   let deleteLength = deleteRows.length;
@@ -378,7 +375,6 @@ function ordrShtInsert() {
       
       contentType: "application/json",
       success: function (response) {
-        console.log("ordrShtFormdata : ", response);
         
         Swal.fire({
           icon: 'success',
