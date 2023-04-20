@@ -124,10 +124,10 @@ public class OrdrShtServiceImpl implements OrdrShtService {
 	// 주문서목록 조회 그리드에서 삭제하기
 	@Override
 	public int deleteOrdrShtDtl(List<OrdrShtVO> vo) {
-//i		int cnt = 0;
+//		int cnt = 0;
 //		
 //		// 주문번호 때문
-//		String ordrShtCode = vo.addAll("orstNo", vo.);
+//		String ordrShtCode = vo.addAll("orshNo", vo.);
 //		map.put("orshNo", ordrShtCode);
 //		
 //		// 주문서 헤더 등록 (한건)	
@@ -138,13 +138,14 @@ public class OrdrShtServiceImpl implements OrdrShtService {
 //			ordrShtMap.put("orshNo", ordrShtCode);
 //			cnt += mapper.insertOrdrShtDtl(ordrShtMap);
 //		}
+		
 		return 0;
 	}
-
+	
 	@Override
 	public int deleteOrdrShtHd() {
 
-		return 0;
+		return mapper.deleteOrdrShtHd();
 	}
 
 //==================================================================================================================================
