@@ -353,13 +353,13 @@
 	<select id="findMtrlLot" parameterType="OrderPlanVO" resultType="OrderPlanVO">
 		SELECT cml.cmm_cd
     		 , cmm_nm
-		     , sum(cml_in_cnt) - sum(mot_cnt) as stock_inven
+		     , SUM(NVL(TO_NUMBER(cml_in_cnt),0)) - SUM(NVL(TO_NUMBER(mot_cnt),0)) as stock_inven
 		     , cmm_spec
 		  FROM cm_mtrl_lot cml 
 		     , mtrl_otpt mo
 		     , cm_mtrl_mng cmm
-		 WHERE cml.cml_nm = mo.cml_nm
-		   AND cml.cmm_cd = cmm.cmm_cd
+		 WHERE cml.cml_nm = mo.cml_nm(+)
+		   AND cml.cmm_cd = cmm.cmm_cd(+)
 		   AND cml.cmm_cd IN (
 			                    SELECT cmm_cd
 			                      FROM cm_bom_mtrl bmt
