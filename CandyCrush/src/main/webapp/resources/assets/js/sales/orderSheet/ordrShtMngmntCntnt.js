@@ -141,6 +141,7 @@ accntList.on('dblclick', (e) => {
   if (e.targetType != 'cell') return; // cell이 아닌타입을 클릭했을 때 종료
 
   ordrProdList.clear();
+  setTimeout(() => ordrProdList.refreshLayout(), 0);
 
   const rowData = accntList.getRow(e.rowKey); // 그리드 row값
   // console.log(e, rowData);
