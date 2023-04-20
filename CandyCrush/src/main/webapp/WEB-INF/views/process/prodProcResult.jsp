@@ -66,7 +66,7 @@
                         <tr>
                           <td><input type="text" name="prpeMng" id="prpeMng" value="" placeholder="담당자 이름" required></td>
                           <td>
-                            <select name="facCd" id="facAble">
+                            <select name="facCd" id="facAble" required>
                             </select>
                           </td>
                         </tr>
