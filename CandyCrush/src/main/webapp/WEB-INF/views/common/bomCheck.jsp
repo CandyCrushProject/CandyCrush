@@ -104,11 +104,11 @@
 					<div class="card">
 						<div class="card-action">제품리스트</div>
 					<button type="button" id="prodExcelBtn" class="cndInsBtn">EXCEL</button>
-					<div class="mtrlOrderRightBtn">
+					<!--<div class="mtrlOrderRightBtn">
 							<button id="bomInAndUp" class="cndInsBtn">저장</button>
 							<button id="bomInsert" class="cndUdtBtn">추가</button>
 							<button id="bomDelete" class="cndDelBtn">삭제</button>
-					</div>
+					</div>-->
 							<div class="card-content">
 							<div style="clear:both"></div>
 							<div class="table-responsive">
@@ -122,11 +122,11 @@
 					<div class="card">
 						<div class="card-action">공정리스트</div>
 							<button type="button" id="procDetailExcelBtn" class="cndInsBtn">EXCEL</button>
-						<div class="mtrlOrderRightBtn">
+						<!--<div class="mtrlOrderRightBtn">
 								<button id="bomDetailInAndUp" class="cndInsBtn">저장</button>
 								<button id="bomDetailInsert" class="cndUdtBtn">추가</button>
 								<button id="bomDetailDelete" class="cndDelBtn">삭제</button>
-						</div>
+						</div>-->
 						<div class="card-content">
 								<div style="clear:both"></div>
 								<div class="table-responsive">
@@ -294,12 +294,6 @@
             rowHeaders: ['rowNum', 'checkbox'],
             scrollX: false,
 			columns: [
-				/*{
-					header: 'BOM코드',
-					name: 'bomCd',
-					sortingType: 'asc',
-					sortable: true
-				},*/
 				{
 					header: '제품코드',
 					name: 'cprCd',

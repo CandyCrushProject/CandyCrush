@@ -202,6 +202,7 @@
 									},
 								</c:forEach>
 							];
+
 		const initData = () => {
 			$.ajax({
 				url: "test",
@@ -210,6 +211,7 @@
 				contentType: "application/json",
 				success: (response) => {
 					mtrlMngInputList.resetData(response);
+					mtrlMngInputList.addRowClassName(response.rowKey, 'cell-green');	//등록완료된 행을 연두색으로 표시한다
 				}
 				
 			});
@@ -499,6 +501,7 @@
 							title: '성공',
 							text: "입고완료되었습니다.",
 						});
+						
 						materialInspGetList.removeCheckedRows();	//체크된 행을 그리드에서 삭제한다
 						initData();									//입고목록 AJAX 재호출
 						mtrlMngInputList.addRowClassName(data.rowKey, 'cell-green');	//등록완료된 행을 연두색으로 표시한다

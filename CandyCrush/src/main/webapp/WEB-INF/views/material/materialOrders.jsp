@@ -204,7 +204,7 @@
 
 		//검색/날짜기준
 		let start = null;
-		let end = null;
+		let end = null;		
 		
 		const metarialGetData = (cmmNm = undefined, caNm = undefined) => {
 			$.ajax({
@@ -406,14 +406,6 @@
 					sortingType: 'asc',
 					sortable: true
 				},
-				/*{
-					header: '업체코드',
-					name: 'caNo'
-				},
-				{
-					header: '업체명',
-					name: 'caNm'
-				},*/
 				{
 					header: '자재유형',
 					name: 'cmmTyp'
@@ -470,12 +462,6 @@
 			el: document.getElementById('materialOrder'),
 			rowHeaders: ["checkbox"],
 			columns: [
-				/*{
-					header: '발주코드',
-					name: 'moCd',
-					sortingType: 'asc',
-					sortable: true
-				},*/
 				{
 					header: '업체코드',
 					name: 'caNo',
@@ -484,17 +470,7 @@
 				},
 				{
 					header: '업체명',
-					name: 'caNm',
-					editor: {
-					type: 'select',
-						options: {
-							listItems: [
-							{ text: '업체1', value: '1' },
-							{ text: '업체2', value: '2' },
-							{ text: '업체3', value: '3' }
-							]
-						}
-					}
+					name: 'caNm'
 				},
 				{
 					header: '자재코드',
@@ -622,7 +598,7 @@
 				delMocd += rows[i].moCd + ',';
 				delMoStt[i] = {value : rows[i].moStt};
 
-				if(delMoStt[i].value === '진행중' || delMoStt[i].value === '입고완료'){
+				if(delMoStt[i].value === '진행중' || delMoStt[i].value === '진행완료'){
 					setTimeout(() => {
 						Swal.fire({
 							icon: 'error',
@@ -829,16 +805,7 @@
 				/*console.log(realMoReqDt);
 				console.log(cmmCd);*/
 
-				if(moStt === '입고완료' || moStt === '진행중'){
-					setTimeout(() => {
-						Swal.fire({
-							icon: 'error',
-							title: '경고',
-							text: "해당 발주는 수정이 불가합니다",
-						});
-					return;
-					}, 10);
-				};
+				
 
 				$.ajax({
 					url : "mtrlOrderDetailUpdate",
@@ -846,19 +813,30 @@
 					dataType : "JSON",
 					data : { moCd : moCd, moCnt : moCnt, moReqDt : realMoReqDt, cmmCd : cmmCd },
 					success : function(result){
-						if(moCnt == 0){
-							Swal.fire({
-								icon: 'warning',
-								title: '경고',
-								text: "수량이 올바르게 입력되지 않았습니다",
-							});
+						if(moStt === '진행완료' || moStt === '진행중'){
+							setTimeout(() => {
+								Swal.fire({
+									icon: 'error',
+									title: '경고',
+									text: "해당 발주는 수정이 불가합니다",
+								});
 							return;
+							}, 10);
 						} else {
-							Swal.fire({
-								icon: 'success',
-								title: '수정완료',
-								text: "발주코드 : " + moCd + "가 수정되었습니다",
-							});
+							if(moCnt == 0){
+								Swal.fire({
+									icon: 'warning',
+									title: '경고',
+									text: "수량이 올바르게 입력되지 않았습니다",
+								});
+								return;
+							} else {
+								Swal.fire({
+									icon: 'success',
+									title: '수정완료',
+									text: "발주코드 : " + moCd + "가 수정되었습니다",
+								});
+							};
 						};
 					},
 					error : function(reject){
@@ -881,7 +859,7 @@
 		moModal.on('editingFinish', (e) => {
 			
 			let oneMoStt = $('#modalMoStt').val();
-			if(oneMoStt === '진행중' || oneMoStt ==='입고완료'){
+			if(oneMoStt === '진행중' || oneMoStt ==='진행완료'){
 				setTimeout(() => {
 					Swal.fire({
 						icon: 'error',
@@ -967,7 +945,7 @@
 				delModCd += moModal.getRow(rowKey[i]).modCd + ",";		//삭제할 발주상세코드 -> mo001, mo002, mo003, ...
 			};
 
-			if(oneMoStt === '진행중' || oneMoStt ==='입고완료'){
+			if(oneMoStt === '진행중' || oneMoStt ==='진행완료'){
 				//setTimeout(() => {
 					Swal.fire({
 						icon: 'error',

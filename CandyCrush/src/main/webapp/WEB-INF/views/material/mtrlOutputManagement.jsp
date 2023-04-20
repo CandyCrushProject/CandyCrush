@@ -43,8 +43,8 @@
 						<button type="button" id="excelBtn" class="cndInsBtn">EXCEL</button>
 						<!--<button type="button" id="dateUpdateBtn" class="cndUdtBtn">수정</button>-->
 					</div>
-					<label for="modalMotCd">출고코드</label>
-					<input type="text" id="modalMotCd" style="width: 300px;" readonly>
+					<!--<label for="modalMotCd">출고코드</label>
+					<input type="text" id="modalMotCd" style="width: 300px;" readonly>-->
 					<div id="outModal"></div>
 				</div>
 			</div>
@@ -132,6 +132,15 @@
 	<script>
 		const Grid = tui.Grid;
 
+		function dataGet(data){
+			let newData = new Date(data);
+			let newGetDate = newData.getFullYear() + "-" +
+					(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
+					+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+			return newGetDate;
+		}
+
+
 		Grid.applyTheme('default', {
 			cell: {
 				normal: {
@@ -211,10 +220,6 @@
 					header: '단위',
 					name: 'cmmUnit'
 				},
-				/*{
-					header: '유형',
-					name: 'cmmTyp'
-				},*/
 				{
 					header: 'LOT번호',
 					name: 'cmlNm',
@@ -313,12 +318,10 @@
 			el: document.getElementById('materialOutCheck'), // Container element
 			columns: [
 				{
-					header: '출고번호',
-					name: 'motCd',
-				},
-				{
 					header: '출고일자',
 					name: 'motDt',
+					sortingType: 'desc',
+					sortable: true,
 					formatter: function (e) {
 						let newData = new Date(e.value);
 						let result = newData.getFullYear() + "-" +
@@ -328,8 +331,21 @@
 					}
 				},
 				{
+					header: '출고유형',
+					name: 'motTyp',
+					sortingType: 'asc',
+					sortable: true
+				},
+				{
+					header: '비고',
+					name: 'motNote',
+					
+				},
+				{
 					header: '건수',
-					name: 'motCdCnt'
+					name: 'motCdCnt',
+					sortingType: 'asc',
+					sortable: true
 				}
 				
 			],
@@ -341,15 +357,28 @@
 			rowHeaders: ['checkbox'],
 			columns: [
 				{
+					header: '출고코드',
+					name: 'motCd',
+					sortingType: 'asc',
+					sortable: true
+				},
+				{
 					header: '출고일자',
 					name: 'motDt',
 					sortingType: 'asc',
 					sortable: true,
-				},
+					formatter: function (e) {
+						let newData = new Date(e.value);
+						let result = newData.getFullYear() + "-" +
+									(newData.getMonth() < 10 ? "0" + (newData.getMonth() + 1) : newData.getMonth() + 1)
+									+ "-" + (newData.getDate() < 10 ? "0" + newData.getDate() : newData.getDate());
+							return result;
+					}
+				}/*,
 				{
 					header: '출고유형',
 					name: 'motTyp'
-				},
+				}*/,
 				{
 					header: '자재코드',
 					name: 'cmmCd',
@@ -369,10 +398,6 @@
 				{
 					header: '단위',
 					name: 'cmmUnit'
-				},
-				{
-					header: '유형',
-					name: 'cmmTyp'
 				},
 				{
 					header : '출고수량',
@@ -396,9 +421,12 @@
 
 		//상세모달
 		materialOutCheck.on('dblclick',(e)=>{
-			let motCdData = materialOutCheck.getRow(e.rowKey).motCd;
-			$('#modalMotCd').val(motCdData);
-
+			let getData = materialOutCheck.getRow(e.rowKey);
+			//let getData = materialOutCheck.getRow(e.rowKey);
+			let motDt = getData.motDt;
+			let motTyp = getData.motTyp;
+			let motNote = getData.motNote;
+			
 			document.getElementById('outDetailModal').style.display='block';
 			setTimeout(()=> outModal.refreshLayout() , 0);
 
@@ -406,7 +434,7 @@
 				url : "mtrlOutDetail",
 				method : "POST",
 				dataType : "JSON",
-				data : {motCd : motCdData},
+				data : {motDt : dataGet(motDt), motTyp : motTyp, motNote : motNote},
 				success : function(data){
 					outModal.resetData(data);
 				}

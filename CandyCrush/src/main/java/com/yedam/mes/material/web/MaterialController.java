@@ -181,28 +181,17 @@ public class MaterialController {
 	@ResponseBody
 	public Boolean mtrlInputInsert(@RequestBody List<MaterialInputVO> vo){
 		//MaterialInputVO newVO = new MaterialInputVO();
+		MaterialInputVO newVO = new MaterialInputVO();
 		Boolean response = true;
 		int result = service.mtrlInputALLInsert(vo);
+		
+		newVO.setMoCd(vo.get(0).getMoCd());
+		int result2 = service.mtrlMoSttUpdate(newVO);		//상태업데이트
+		
 		System.out.println("result = " + result);
-		if(result < 1) {
+		if(result < 1 && result2 < 1) {
 			response = false;
 		};
-		
-		return response;
-	};
-	
-	//상태업데이트
-	@PostMapping("moSttUpdate")
-	@ResponseBody
-	public Boolean moSttUpdate(@RequestBody MaterialInputVO vo) {
-		Boolean response = false;
-		System.out.println(vo);
-		
-		int result = service.mtrlMoSttUpdate(vo);
-		
-		if(result != 0) {
-			response = true;
-		}
 		
 		return response;
 	};
@@ -261,8 +250,8 @@ public class MaterialController {
 	
 	@PostMapping("mtrlOutDetail")
 	@ResponseBody
-	public List<MaterialVO> mtrlOutDetail(@RequestParam String motCd){
-		return service.mtrlOutDetailList(motCd);
+	public List<MaterialVO> mtrlOutDetail(@RequestParam("motDt") String motDt, @RequestParam("motTyp") String motTyp, @RequestParam("motNote") String motNote){
+		return service.mtrlOutDetailList(motDt, motTyp, motNote);
 	};
 	
 	//자재출고 등록
