@@ -494,21 +494,25 @@
 						dataType: 'json',
 						success: function (data) {
 							findMtrlLotGrid.resetData(data);
-
+							console.log(sumDtlCnt);
 							result = sumDtlCnt * (15 / 1000);
 							findMtrlLotGrid.setValue(0, 'needCnt', result, false);
-
+							console.log(result)
 							result = sumDtlCnt * (5 / 1000);
 							findMtrlLotGrid.setValue(1, 'needCnt', result, false);
+							console.log(result)
 
 							result = sumDtlCnt * (300 / 1000);
 							findMtrlLotGrid.setValue(2, 'needCnt', result, false);
+							console.log(result)
 
 							result = sumDtlCnt * (50 / 1000);
 							findMtrlLotGrid.setValue(3, 'needCnt', result, false);
+							console.log(result)
 
 							result = sumDtlCnt * (1000 / 1000);
 							findMtrlLotGrid.setValue(4, 'needCnt', result, false);
+							console.log(result)
 						}, error: function (rej) {
 							console.log("안되는데요?")
 						}
