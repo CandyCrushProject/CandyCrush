@@ -69,7 +69,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="card">
-						<div class="card-action">자재입고검사조회</div>
+						<div class="card-action">자재재고조회</div>
 							<div class="card-content">
 							<div>
 								<div class="table-responsive">
